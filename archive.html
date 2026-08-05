@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>预测复盘档案 · JOYBOY</title>
+<style>
+:root{
+  --bg:#09090d; --card:#111118; --border:#1c1c2a; --text:#c8c8d4; --muted:#5a5a6e;
+  --accent:#f0a838; --green:#3fb950; --red:#f85149; --blue:#58a6ff;
+  --cyan:#00d4ff; --pink:#ff6b9d; --purple:#a78bfa;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+.layout{display:flex;min-height:100vh;max-width:1280px;min-width:1024px;margin:0 auto;padding:24px}
+
+/* ═══ 左侧 JOYBOY ═══ */
+.left{width:130px;min-width:130px;background:linear-gradient(180deg,#050510 0%,#0c0c20 40%,#080818 60%,#050510 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-right:1px solid #1a1a2e;position:relative;flex-shrink:0}
+.left::before{content:'';position:absolute;top:15%;left:0;right:0;height:70%;background:radial-gradient(ellipse at center,rgba(0,212,255,0.04) 0%,transparent 60%);pointer-events:none}
+.left::after{content:'';position:absolute;bottom:10%;left:25%;right:25%;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.3),transparent)}
+
+.jb{display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1}
+.jb span{font-family:'Georgia','Palatino','Times New Roman',serif;font-size:3.6em;font-weight:900;line-height:0.95;background:linear-gradient(180deg,#00d4ff 0%,#a78bfa 30%,#ff6b9d 55%,#f0a838 80%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:letterPulse 3s ease-in-out infinite}
+.jb span:nth-child(1){animation-delay:0s}.jb span:nth-child(2){animation-delay:0.1s}
+.jb span:nth-child(3){animation-delay:0.2s}.jb span:nth-child(4){animation-delay:0.3s}
+.jb span:nth-child(5){animation-delay:0.4s}.jb span:nth-child(6){animation-delay:0.5s}
+@keyframes letterPulse{0%,100%{filter:drop-shadow(0 0 14px rgba(0,212,255,0.4))}50%{filter:drop-shadow(0 0 28px rgba(240,168,56,0.6))}}
+.jb .tag{font-size:0.55em;color:var(--muted);font-family:'PingFang SC','Microsoft YaHei',sans-serif;letter-spacing:8px;font-weight:300;writing-mode:vertical-rl;margin-top:10px;opacity:0.4}
+
+/* ═══ 中部内容 ═══ */
+.main{flex:1;padding:0 0 0 30px;overflow-y:auto}
+
+h1{font-size:1.25em;font-weight:800;margin-bottom:2px;letter-spacing:-0.3px}
+h1 em{color:var(--accent);font-style:normal}
+.sub{font-size:0.66em;color:var(--muted);margin-bottom:18px}
+
+.summary{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.si{flex:1;min-width:70px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:11px 9px;text-align:center}
+.si:hover{border-color:#2a2a3e}.si .n{font-size:1.3em;font-weight:800}.si .l{font-size:0.56em;color:var(--muted);margin-top:2px}
+
+.day{margin-bottom:7px;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--card)}
+.day:hover{border-color:#2a2a3e}
+.day-hdr{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;user-select:none;transition:background .15s}
+.day-hdr:hover{background:rgba(255,255,255,0.015)}
+.day-hdr .dt{font-weight:700;font-size:0.9em}.day-hdr .dn{font-size:0.65em;color:var(--muted)}
+.day-hdr .arw{font-size:0.56em;color:var(--muted);margin-left:auto;transition:transform .2s}
+.day.open .arw{transform:rotate(180deg)}
+.day-body{display:none;padding:6px 16px 12px;border-top:1px solid var(--border)}
+.day.open .day-body{display:block}
+
+.link{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.015);flex-wrap:wrap}
+.link:last-child{border-bottom:none}
+.link .icon{font-size:0.8em;min-width:20px;text-align:center}
+.link a{color:var(--cyan);text-decoration:none;font-size:0.83em;font-weight:500;transition:color .15s}
+.link a:hover{color:var(--accent)}
+.link .lbl{font-size:0.6em;color:var(--muted);min-width:46px}
+.link .note{font-size:0.66em;color:var(--muted);margin-left:auto}
+
+.tag{display:inline-block;padding:1px 5px;border-radius:4px;font-size:0.55em;font-weight:600}
+.tp{background:rgba(63,185,80,0.1);color:var(--green)}
+.tr{background:rgba(248,81,73,0.1);color:var(--red)}
+.tb{background:rgba(88,166,255,0.1);color:var(--blue)}
+.ts{background:rgba(240,168,56,0.1);color:var(--accent)}
+
+.sec-label{font-size:0.65em;color:var(--muted);margin:5px 0 2px}
+.ft{text-align:center;padding:22px;color:var(--muted);font-size:0.55em;opacity:0.35}
+
+@media(max-width:768px){
+  .layout{flex-direction:column;min-width:0!important;max-width:100%;padding:0;overflow-x:hidden}
+  .left{width:100%;min-width:0;flex-direction:row;align-items:center;padding:8px 14px;border-right:none;border-bottom:1px solid #1a1a2e;overflow:hidden;position:relative;z-index:1}
+  .left::before{display:none}.left::after{display:none}
+  .jb{flex-direction:row;align-items:center;gap:10px;z-index:2}
+  .jb span{font-size:1.3em;writing-mode:horizontal-tb}
+  .jb .tag{writing-mode:horizontal-tb;letter-spacing:3px;margin-top:0;font-size:0.6em}
+  .main{position:relative;z-index:2;padding:12px 10px;max-width:100%;overflow-x:hidden}
+}
+@media(max-width:480px){
+  .jb span{font-size:1.1em}.jb{gap:6px}
+  .main{padding:8px 6px}
+  .day-hdr{padding:8px 10px}.day-hdr .dt{font-size:0.78em}
+  .link{flex-wrap:wrap}.link .note{width:100%;margin-left:0}
+  .link a{padding:4px 0}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<div class="left">
+  <div class="jb">
+    <span>J</span><span>O</span><span>Y</span><span>B</span><span>O</span><span>Y</span>
+    <div class="tag">足球预测</div>
+  </div>
+</div>
+
+<div class="main">
+<h1>⚽ <em>预测复盘档案</em></h1>
+<p class="sub">日期为一级菜单 · 点击展开</p>
+
+<div class="summary">
+  <div class="si"><div class="n">2</div><div class="l">预测日</div></div>
+  <div class="si"><div class="n" style="color:var(--green)">5</div><div class="l">预测报告</div></div>
+  <div class="si"><div class="n" style="color:var(--red)">3</div><div class="l">复盘报告</div></div>
+  <div class="si"><div class="n" style="color:var(--blue)">4</div><div class="l">系统文档</div></div>
+</div>
+
+<div class="day open">
+  <div class="day-hdr" onclick="this.parentElement.classList.toggle('open')">
+    <span class="dt">8月5日 (周三)</span><span class="dn">7场 · 3正式投注 · 300</span><span class="arw">▼</span>
+  </div>
+  <div class="day-body">
+    <div class="link"><span class="icon">⚽</span><span class="lbl"><span class="tag tp">预测</span></span><a href="today_final.html" target="_blank">终盘预测 v2</a><span class="note">22:00 · 决策链标注</span></div>
+    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tp">预测</span></span><a href="today_aug5_v1.html" target="_blank">午盘分析 v1</a><span class="note">16:00</span></div>
+    <div class="link"><span class="icon">⏳</span><span class="lbl"><span class="tag tr">复盘</span></span><span style="color:var(--muted)">等待赛果...</span></div>
+  </div>
+</div>
+
+<div class="day">
+  <div class="day-hdr" onclick="this.parentElement.classList.toggle('open')">
+    <span class="dt">8月4日 (周二)</span><span class="dn">8场 · 3胜3负 · -51</span><span class="arw">▼</span>
+  </div>
+  <div class="day-body">
+    <div class="sec-label">预测</div>
+    <div class="link"><span class="icon">⚽</span><span class="lbl"><span class="tag tp">预测</span></span><a href="predict_v2.html" target="_blank">六维预测 (表格版)</a><span class="note">联赛Tab · 一行一赛</span></div>
+    <div class="link"><span class="icon">🔬</span><span class="lbl"><span class="tag tp">预测</span></span><a href="final_tonight.html" target="_blank">六维预测 (卡片版)</a><span class="note">6市场/场</span></div>
+    <div class="link"><span class="icon">🧠</span><span class="lbl"><span class="tag tp">预测</span></span><a href="bayesian_tonight.html" target="_blank">贝叶斯融合预测</a><span class="note">Dirichlet动态权重</span></div>
+    <div class="sec-label">复盘</div>
+    <div class="link"><span class="icon">📋</span><span class="lbl"><span class="tag tr">复盘</span></span><a href="review_aug4.html" target="_blank">8月4日 复盘报告</a><span class="note">盈亏-51 · 6项调整</span></div>
+    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tr">复盘</span></span><a href="six_dimension_review.html" target="_blank">六维全面复盘</a><span class="note">大小球67%</span></div>
+    <div class="link"><span class="icon">🔍</span><span class="lbl"><span class="tag tr">复盘</span></span><a href="self_analysis_report.html" target="_blank">模型自诊断报告</a></div>
+  </div>
+</div>
+
+<div class="day">
+  <div class="day-hdr" onclick="this.parentElement.classList.toggle('open')">
+    <span class="dt">系统文档 & 校准</span><span class="dn">4份 · 39赛季 · 14公式</span><span class="arw">▼</span>
+  </div>
+  <div class="day-body">
+    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tb">校准</span></span><a href="calibration_report.html" target="_blank">多赛季校准报告</a><span class="note">39赛季×11联赛</span></div>
+    <div class="link"><span class="icon">🔧</span><span class="lbl"><span class="tag tb">校准</span></span><a href="league_adaptive_analysis.html" target="_blank">联赛自适应分析</a></div>
+    <div class="link"><span class="icon">📐</span><span class="lbl"><span class="tag ts">框架</span></span><a href="SYSTEM_ARCHITECTURE.md" target="_blank">系统架构文档</a></div>
+    <div class="link"><span class="icon">📝</span><span class="lbl"><span class="tag ts">框架</span></span><a href="FORMULAS_REFERENCE.md" target="_blank">公式参考手册</a></div>
+  </div>
+</div>
+
+<div class="ft">© JOYBOY · <span id="t"></span></div>
+</div>
+
+</div>
+<script>document.getElementById('t').textContent=new Date().toLocaleDateString('zh-CN')</script>
+</body>
+</html>

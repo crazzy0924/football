@@ -1,0 +1,42 @@
+# ============================================
+# 足球分析智能体 - Python 依赖
+# ============================================
+
+# --- Anthropic API (核心) ---
+anthropic>=0.45.0
+
+# --- Web 框架 ---
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+jinja2>=3.1.0
+
+# --- HTTP 请求 ---
+httpx>=0.28.0
+requests>=2.32.0
+
+# --- 数据处理 ---
+numpy>=2.0.0
+pandas>=2.2.0
+scipy>=1.14.0
+
+# --- 环境配置 ---
+python-dotenv>=1.0.0
+
+# --- 数据缓存 ---
+diskcache>=5.6.0
+
+# --- 向量数据库 (RAG 知识库) ---
+# ChromaDB: 语义向量检索。首次启动自动降级为内置 TF-IDF。
+chromadb>=0.5.0
+
+# --- 雷达图 (可选) ---
+matplotlib>=3.8.0
+
+# --- 前端界面 ---
+streamlit>=1.40.0
+plotly>=5.20.0          # Fallback 图表 (matplotlib 不可用时)
+nest-asyncio>=1.6.0     # Streamlit 中运行 asyncio
+
+# --- 日志 & 工具 ---
+loguru>=0.7.0
+pydantic>=2.0.0

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ 足球预测分析系统</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --card: #1e293b; --border: #334155;
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+  --green: #22c55e; --yellow: #eab308; --red: #ef4444; --pink: #f472b6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+.header { text-align: center; padding: 30px 20px 20px; }
+.header h1 { font-size: 2em; margin-bottom: 4px; }
+.header h1 span { color: var(--accent); }
+.header p { color: var(--muted); font-size: 0.95em; }
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+.tab { padding: 10px 20px; cursor: pointer; border-radius: 8px 8px 0 0; color: var(--muted); font-weight: 500; transition: all .2s; border: none; background: none; font-size: 0.95em; }
+.tab:hover { color: var(--text); background: rgba(56,189,248,0.05); }
+.tab.active { color: var(--accent); border-bottom: 2px solid var(--accent); margin-bottom: -2px; background: rgba(56,189,248,0.08); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.card h2 { font-size: 1.15em; color: var(--accent); margin-bottom: 16px; }
+.card h3 { font-size: 1em; color: var(--text); margin-bottom: 10px; }
+.input-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.input-row input, .input-row select { flex: 1; min-width: 140px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--text); font-size: 15px; }
+.input-row input:focus, .input-row select:focus { outline: none; border-color: var(--accent); }
+.vs-text { font-size: 1.4em; font-weight: bold; color: var(--muted); white-space: nowrap; }
+.btn { padding: 12px 28px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all .2s; }
+.btn-primary { background: #0284c7; color: white; }
+.btn-primary:hover { background: #0369a1; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-sm { padding: 8px 16px; font-size: 13px; border-radius: 8px; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.prob-cards { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+.prob-card { flex: 1; min-width: 120px; text-align: center; padding: 20px 16px; background: var(--bg); border-radius: 12px; border: 1px solid var(--border); }
+.prob-card.recommend { border: 2px solid var(--accent); background: #0c1929; }
+.prob-card .prob-label { font-size: 0.85em; color: var(--muted); }
+.prob-card .prob-value { font-size: 2.4em; font-weight: 700; margin: 4px 0; }
+.prob-card .prob-bar { height: 6px; border-radius: 3px; margin-top: 8px; }
+.prob-home { color: var(--green); } .prob-home.bg { background: var(--green); }
+.prob-draw { color: var(--yellow); } .prob-draw.bg { background: var(--yellow); }
+.prob-away { color: var(--red); } .prob-away.bg { background: var(--red); }
+.scores-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.score-chip { padding: 8px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 20px; font-size: 0.9em; }
+.score-chip span { color: var(--accent); font-weight: 600; }
+.recommend-badge { display: inline-block; padding: 6px 16px; background: #0284c7; color: white; border-radius: 20px; font-weight: 600; font-size: 0.9em; margin-top: 8px; }
+.market-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.market-chip { padding: 8px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-size: 0.9em; }
+.market-chip b { color: var(--accent); }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.9em; }
+th, td { padding: 8px 12px; border: 1px solid var(--border); text-align: left; }
+th { background: var(--bg); color: var(--muted); font-weight: 600; }
+tr.highlight { background: rgba(56,189,248,0.05); }
+td.correct { color: var(--green); } td.wrong { color: var(--red); }
+.chart-wrap { max-width: 500px; margin: 0 auto; }
+@media (max-width: 600px) {
+  .prob-cards { flex-direction: column; }
+  .input-row { flex-direction: column; }
+  .vs-text { text-align: center; }
+}
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.status-dot.on { background: var(--green); }
+.status-dot.warn { background: var(--yellow); }
+.footer { text-align: center; padding: 20px; color: var(--muted); font-size: 0.8em; }
+.gap-sm { margin-top: 8px; }
+.gap-md { margin-top: 16px; }
+.hidden { display: none; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>⚽ 足球预测<span>分析系统</span></h1>
+  <p>泊松分布 · ELO 评分 · 赔率对比 · 全中文 · 纯浏览器运行</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('predict')">🔮 比赛预测</button>
+  <button class="tab" onclick="switchTab('compare')">📊 球队对比</button>
+  <button class="tab" onclick="switchTab('review')">📋 复盘回测</button>
+</div>
+
+<!-- ═══ 预测页 ═══ -->
+<div id="tab-predict" class="tab-content active">
+  <div class="card">
+    <h2>🔮 比赛预测</h2>
+    <div class="input-row">
+      <input id="homeTeam" placeholder="主队名称" value="阿森纳" list="teamList" autocomplete="off">
+      <span class="vs-text">VS</span>
+      <input id="awayTeam" placeholder="客队名称" value="利物浦" list="teamList" autocomplete="off">
+      <datalist id="teamList"></datalist>
+    </div>
+    <div class="input-row gap-sm">
+      <input id="homeForm" placeholder="近期战绩 胜-平-胜-胜-负" value="胜-平-胜-胜-负">
+      <select id="leagueSelect">
+        <option value="PL">英超</option><option value="PD">西甲</option>
+        <option value="BL1">德甲</option><option value="SA">意甲</option>
+        <option value="FL1">法甲</option><option value="CL">欧冠</option>
+      </select>
+      <input id="awayForm" placeholder="近期战绩 负-胜-平-胜-负" value="负-胜-平-胜-负">
+    </div>
+    <div class="gap-sm">
+      <button class="btn btn-primary" onclick="runPrediction()">⚡ 开始预测</button>
+      <button class="btn btn-outline btn-sm" onclick="quickFill()" style="margin-left:8px">🎲 随机对阵</button>
+    </div>
+  </div>
+  <div id="resultCard" class="card hidden"><div id="resultContent"></div></div>
+</div>
+
+<!-- ═══ 对比页 ═══ -->
+<div id="tab-compare" class="tab-content">
+  <div class="card">
+    <h2>📊 球队能力对比</h2>
+    <div class="input-row">
+      <input id="compTeamA" placeholder="球队 A" value="阿森纳" list="teamList" autocomplete="off">
+      <span class="vs-text">VS</span>
+      <input id="compTeamB" placeholder="球队 B" value="曼城" list="teamList" autocomplete="off">
+    </div>
+    <div class="gap-sm">
+      <button class="btn btn-primary" onclick="runComparison()">🔍 对比分析</button>
+    </div>
+  </div>
+  <div id="compareResult" class="card hidden">
+    <div class="chart-wrap"><canvas id="radarChart"></canvas></div>
+    <div id="compareStats"></div>
+  </div>
+</div>
+
+<!-- ═══ 复盘页 ═══ -->
+<div id="tab-review" class="tab-content">
+  <div class="card">
+    <h2>📋 复盘回测</h2>
+    <p style="color:var(--muted);margin-bottom:12px">模拟昨日比赛，对比模型预测与真实赛果，检测系统性偏差</p>
+    <div class="flex-between">
+      <select id="reviewLeague" style="padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:14px">
+        <option value="PL">英超</option><option value="PD">西甲</option>
+        <option value="BL1">德甲</option><option value="SA">意甲</option>
+        <option value="FL1">法甲</option>
+      </select>
+      <button class="btn btn-primary" onclick="runReview()">📅 模拟复盘</button>
+    </div>
+  </div>
+  <div id="reviewResult" class="card hidden"><div id="reviewContent"></div></div>
+</div>
+
+<div class="footer">⚽ 足球预测分析系统 · 纯浏览器运行 · 泊松分布 + ELO 评分 · 数据仅供参考</div>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!--          JavaScript 引擎            -->
+<!-- ═══════════════════════════════════ -->
+<script>
+// ============================================================
+// 球队数据库 (全中文名称 + ELO 评分)
+// ============================================================
+const TEAM_DB = {
+  "曼城":           {elo:1880, league:"PL"},
+  "阿森纳":         {elo:1840, league:"PL"},
+  "利物浦":         {elo:1820, league:"PL"},
+  "切尔西":         {elo:1720, league:"PL"},
+  "热刺":           {elo:1710, league:"PL"},
+  "曼联":           {elo:1700, league:"PL"},
+  "纽卡斯尔联":     {elo:1690, league:"PL"},
+  "阿斯顿维拉":     {elo:1670, league:"PL"},
+  "布莱顿":         {elo:1620, league:"PL"},
+  "西汉姆联":       {elo:1600, league:"PL"},
+  "水晶宫":         {elo:1580, league:"PL"},
+  "富勒姆":         {elo:1560, league:"PL"},
+  "布伦特福德":     {elo:1550, league:"PL"},
+  "埃弗顿":         {elo:1540, league:"PL"},
+  "狼队":           {elo:1530, league:"PL"},
+  "诺丁汉森林":     {elo:1510, league:"PL"},
+  "伯恩茅斯":       {elo:1500, league:"PL"},
+  "莱斯特城":       {elo:1480, league:"PL"},
+  "伊普斯维奇":     {elo:1440, league:"PL"},
+  "南安普顿":       {elo:1430, league:"PL"},
+  "皇家马德里":     {elo:1900, league:"PD"},
+  "巴塞罗那":       {elo:1840, league:"PD"},
+  "马德里竞技":     {elo:1780, league:"PD"},
+  "拜仁慕尼黑":     {elo:1860, league:"BL1"},
+  "多特蒙德":       {elo:1740, league:"BL1"},
+  "巴黎圣日耳曼":   {elo:1800, league:"FL1"},
+  "国际米兰":       {elo:1820, league:"SA"},
+  "AC米兰":         {elo:1760, league:"SA"},
+  "尤文图斯":       {elo:1760, league:"SA"},
+};
+
+// 联赛平均数据
+const LEAGUE_DEFAULTS = {
+  PL:  {homeGoals:1.53, awayGoals:1.14, avgScored:1.40, avgConceded:1.40, name:"英超"},
+  PD:  {homeGoals:1.45, awayGoals:1.05, avgScored:1.35, avgConceded:1.35, name:"西甲"},
+  BL1: {homeGoals:1.70, awayGoals:1.25, avgScored:1.55, avgConceded:1.55, name:"德甲"},
+  SA:  {homeGoals:1.35, awayGoals:0.95, avgScored:1.25, avgConceded:1.25, name:"意甲"},
+  FL1: {homeGoals:1.50, awayGoals:1.10, avgScored:1.35, avgConceded:1.35, name:"法甲"},
+  CL:  {homeGoals:1.50, awayGoals:1.10, avgScored:1.35, avgConceded:1.35, name:"欧冠"},
+};
+
+// ============================================================
+// 核心算法
+// ============================================================
+
+function poissonPMF(k, lambda) {
+  if (lambda <= 0) return k === 0 ? 1 : 0;
+  let logP = -lambda + k * Math.log(lambda);
+  for (let i = 2; i <= k; i++) logP -= Math.log(i);
+  return Math.exp(logP);
+}
+
+function eloExpected(eloA, eloB, homeA) {
+  if (homeA) eloA += 100;
+  return 1 / (1 + Math.pow(10, (eloB - eloA) / 400));
+}
+
+function eloToProb(eloHome, eloAway) {
+  var expHome = eloExpected(eloHome, eloAway, true);
+  var expAway = 1 - expHome;
+  var gap = Math.abs(eloHome - eloAway);
+  var drawProb = 0.26 * Math.exp(-gap / 400);
+  var hw = expHome - drawProb * expHome / (expHome + expAway + 0.001);
+  var aw = expAway - drawProb * expAway / (expHome + expAway + 0.001);
+  hw = Math.max(0, hw); aw = Math.max(0, aw);
+  var total = hw + drawProb + aw;
+  return { home: hw/total, draw: drawProb/total, away: aw/total };
+}
+
+function parseForm(formStr) {
+  if (!formStr) return { pts: 1.5, list: [] };
+  var chars = [];
+  var s = formStr.toUpperCase();
+  // 支持中文: 胜/W → W, 平/D → D, 负/L → L
+  s = s.replace(/胜/g,'W').replace(/平/g,'D').replace(/负/g,'L');
+  var m = s.match(/[WDL]/g);
+  if (!m) return { pts: 1.5, list: [] };
+  var pts = m.reduce(function(sum, c) { return sum + (c === 'W' ? 3 : c === 'D' ? 1 : 0); }, 0);
+  return { pts: m.length ? pts / m.length : 1.5, list: m };
+}
+
+function estimateGoals(elo, isHome) {
+  var strength = (elo - 1500) / 400;
+  var gf = Math.max(0.6, 1.0 + strength * 0.7 + (isHome ? 0.2 : -0.1));
+  var ga = Math.max(0.5, 1.2 - strength * 0.5 + (isHome ? -0.1 : 0.2));
+  return { gf: +gf.toFixed(2), ga: +ga.toFixed(2) };
+}
+
+// ============================================================
+// 预测引擎
+// ============================================================
+
+function predictMatch(homeTeam, awayTeam, league, homeFormStr, awayFormStr) {
+  var lg = LEAGUE_DEFAULTS[league] || LEAGUE_DEFAULTS.PL;
+  var ht = TEAM_DB[homeTeam] || { elo: 1500 };
+  var at = TEAM_DB[awayTeam] || { elo: 1500 };
+
+  var hEst = estimateGoals(ht.elo, true);
+  var aEst = estimateGoals(at.elo, false);
+
+  var hForm = parseForm(homeFormStr);
+  var aForm = parseForm(awayFormStr);
+
+  var hAtt = hEst.gf / lg.avgScored;
+  var hDef = hEst.ga / lg.avgConceded;
+  var aAtt = aEst.gf / lg.avgScored;
+  var aDef = aEst.ga / lg.avgConceded;
+
+  var hFormFactor = Math.max(0.85, 1 + (hForm.pts - 1.5) * 0.06);
+  var aFormFactor = Math.max(0.85, 1 + (aForm.pts - 1.5) * 0.06);
+
+  var hLambda = Math.max(0.2, lg.homeGoals * hAtt * aDef * hFormFactor);
+  var aLambda = Math.max(0.2, lg.awayGoals * aAtt * hDef * aFormFactor);
+
+  var MAX_G = 8;
+  var hProbs = [], aProbs = [];
+  for (var i = 0; i <= MAX_G; i++) { hProbs.push(poissonPMF(i, hLambda)); aProbs.push(poissonPMF(i, aLambda)); }
+
+  var hw = 0, dr = 0, aw = 0;
+  var scores = [];
+  for (var i = 0; i <= MAX_G; i++) {
+    for (var j = 0; j <= MAX_G; j++) {
+      var p = hProbs[i] * aProbs[j];
+      if (i > j) hw += p; else if (i === j) dr += p; else aw += p;
+      scores.push({ home: i, away: j, prob: p });
+    }
+  }
+  scores.sort(function(a,b) { return b.prob - a.prob; });
+
+  var over25 = 0, over35 = 0, btts = 0;
+  for (var k = 0; k < scores.length; k++) {
+    var s = scores[k];
+    if (s.home + s.away > 2.5) over25 += s.prob;
+    if (s.home + s.away > 3.5) over35 += s.prob;
+    if (s.home > 0 && s.away > 0) btts += s.prob;
+  }
+
+  var eloP = eloToProb(ht.elo, at.elo);
+
+  var fh = hw * 0.6 + eloP.home * 0.4;
+  var fd = dr * 0.6 + eloP.draw * 0.4;
+  var fa = aw * 0.6 + eloP.away * 0.4;
+  var total = fh + fd + fa;
+  fh /= total; fd /= total; fa /= total;
+
+  var rec;
+  if (fh >= fd && fh >= fa) rec = "主胜（" + homeTeam + "）";
+  else if (fa >= fh && fa >= fd) rec = "客胜（" + awayTeam + "）";
+  else rec = "平局";
+
+  var margin = 1.06;
+  var oddsHome = +(margin / Math.max(fh, 0.05)).toFixed(2);
+  var oddsDraw = +(margin / Math.max(fd, 0.05)).toFixed(2);
+  var oddsAway = +(margin / Math.max(fa, 0.05)).toFixed(2);
+
+  return {
+    homeTeam: homeTeam, awayTeam: awayTeam, league: lg.name,
+    prediction: {
+      homeWin: +(fh * 100).toFixed(1),
+      draw: +(fd * 100).toFixed(1),
+      awayWin: +(fa * 100).toFixed(1),
+      recommendation: rec,
+    },
+    expectedGoals: { home: +hLambda.toFixed(2), away: +aLambda.toFixed(2) },
+    topScores: scores.slice(0, 5).map(function(s) { return { score: s.home+"-"+s.away, pct: +(s.prob*100).toFixed(1) }; }),
+    betting: {
+      over25: +(over25 * 100).toFixed(1),
+      over35: +(over35 * 100).toFixed(1),
+      btts: +(btts * 100).toFixed(1),
+    },
+    odds: { home: oddsHome, draw: oddsDraw, away: oddsAway },
+    betfairIndex: { home: +(fh*100).toFixed(1), draw: +(fd*100).toFixed(1), away: +(fa*100).toFixed(1) },
+    teamStats: {
+      home: { elo: ht.elo, attack: +hAtt.toFixed(2), defense: +hDef.toFixed(2), form: hForm.pts.toFixed(1) },
+      away: { elo: at.elo, attack: +aAtt.toFixed(2), defense: +aDef.toFixed(2), form: aForm.pts.toFixed(1) },
+    },
+    raw: { poisson: {home:hw,draw:dr,away:aw}, elo: eloP },
+  };
+}
+
+// ============================================================
+// 雷达图数据
+// ============================================================
+
+function buildRadarData(teamName) {
+  var t = TEAM_DB[teamName] || { elo: 1500 };
+  var strength = (t.elo - 1500) / 400;
+  return {
+    name: teamName,
+    进攻火力: Math.min(100, 45 + strength * 35),
+    防守稳固: Math.min(100, 45 + strength * 30),
+    控球组织: Math.min(100, 48 + strength * 25),
+    纪律性:   Math.min(100, 50 - strength * 15),
+    终结效率: Math.min(100, 50 + strength * 20),
+    近期状态: Math.min(100, 50 + strength * 25),
+  };
+}
+
+// ============================================================
+// 复盘模拟
+// ============================================================
+
+function simulateReview(league) {
+  var teams = [];
+  var names = Object.keys(TEAM_DB);
+  for (var i = 0; i < names.length; i++) {
+    if (TEAM_DB[names[i]].league === league) teams.push(names[i]);
+  }
+  if (teams.length < 4) return null;
+
+  // 随机洗牌
+  var arr = teams.slice();
+  for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i+1)); var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; }
+
+  var matches = [];
+  var count = Math.min(6, Math.floor(arr.length/2));
+  for (var i = 0; i < count; i++) {
+    var homeName = arr[i*2], awayName = arr[i*2+1];
+    var pred = predictMatch(homeName, awayName, league, null, null);
+    var r = Math.random();
+    var actual, hg, ag;
+    if (r < pred.prediction.homeWin / 100) {
+      actual = "主胜"; hg = Math.floor(pred.expectedGoals.home + Math.random() * 2);
+      ag = Math.min(hg - 1, Math.max(0, Math.floor(pred.expectedGoals.away + Math.random() * 1.5)));
+    } else if (r < (pred.prediction.homeWin + pred.prediction.draw) / 100) {
+      actual = "平局"; hg = ag = Math.floor((pred.expectedGoals.home + pred.expectedGoals.away) / 2);
+      if (hg < 0) hg = ag = 0;
+    } else {
+      actual = "客胜"; ag = Math.floor(pred.expectedGoals.away + Math.random() * 2);
+      hg = Math.min(ag - 1, Math.max(0, Math.floor(pred.expectedGoals.home + Math.random() * 1.5)));
+    }
+    hg = Math.max(0, hg); ag = Math.max(0, ag);
+
+    var pick = pred.prediction.homeWin >= pred.prediction.awayWin && pred.prediction.homeWin >= pred.prediction.draw ? "主胜"
+      : pred.prediction.awayWin >= pred.prediction.homeWin ? "客胜" : "平局";
+    var marketPick = pred.betfairIndex.home >= pred.betfairIndex.away && pred.betfairIndex.home >= pred.betfairIndex.draw ? "主胜"
+      : pred.betfairIndex.away >= pred.betfairIndex.home ? "客胜" : "平局";
+
+    matches.push({
+      home: homeName, away: awayName,
+      score: hg+"-"+ag, actual: actual,
+      pred: pick, correct: pick === actual,
+      probs: "主"+pred.prediction.homeWin+"%/平"+pred.prediction.draw+"%/客"+pred.prediction.awayWin+"%",
+      marketPick: marketPick,
+      marketCorrect: marketPick === actual,
+    });
+  }
+
+  var correct = matches.filter(function(m) { return m.correct; }).length;
+  var marketCorrect = matches.filter(function(m) { return m.marketCorrect; }).length;
+  var modelAcc = (correct / matches.length * 100).toFixed(1);
+  var marketAcc = (marketCorrect / matches.length * 100).toFixed(1);
+
+  // 简化的 Brier Score
+  var brierSum = 0;
+  for (var i = 0; i < matches.length; i++) {
+    var m = matches[i];
+    var pct = m.probs;
+    var ph = parseFloat((pct.match(/主([\d.]+)%/)||[0,0])[1]);
+    var pd = parseFloat((pct.match(/平([\d.]+)%/)||[0,0])[1]);
+    var pa = parseFloat((pct.match(/客([\d.]+)%/)||[0,0])[1]);
+    var ah = m.actual === "主胜" ? 1 : 0;
+    var ad = m.actual === "平局" ? 1 : 0;
+    var aa = m.actual === "客胜" ? 1 : 0;
+    brierSum += Math.pow(ph/100 - ah, 2) + Math.pow(pd/100 - ad, 2) + Math.pow(pa/100 - aa, 2);
+  }
+  var brier = (brierSum / matches.length).toFixed(3);
+
+  return { matches: matches, modelAcc: modelAcc, marketAcc: marketAcc, brier: brier, total: matches.length };
+}
+
+// ============================================================
+// UI 渲染
+// ============================================================
+
+function runPrediction() {
+  var home = document.getElementById('homeTeam').value.trim();
+  var away = document.getElementById('awayTeam').value.trim();
+  if (!home || !away) return alert('请输入主队和客队名称');
+
+  var league = document.getElementById('leagueSelect').value;
+  var hForm = document.getElementById('homeForm').value.trim();
+  var aForm = document.getElementById('awayForm').value.trim();
+  var p = predictMatch(home, away, league, hForm, aForm);
+  var pred = p.prediction, eg = p.expectedGoals, odds = p.odds, bf = p.betfairIndex;
+  var recLabel = pred.recommendation;
+
+  document.getElementById('resultContent').innerHTML =
+    '<h3>' + p.homeTeam + ' vs ' + p.awayTeam + ' <span style="color:var(--muted);font-size:0.8em">' + p.league + '</span></h3>' +
+    '<div class="prob-cards">' +
+      '<div class="prob-card' + (recLabel.indexOf('主胜')>=0?' recommend':'') + '">' +
+        '<div class="prob-label">主胜</div>' +
+        '<div class="prob-value prob-home">' + pred.homeWin + '%</div>' +
+        '<div class="prob-bar prob-home bg" style="width:' + pred.homeWin + '%"></div>' +
+      '</div>' +
+      '<div class="prob-card' + (recLabel.indexOf('平局')>=0?' recommend':'') + '">' +
+        '<div class="prob-label">平局</div>' +
+        '<div class="prob-value prob-draw">' + pred.draw + '%</div>' +
+        '<div class="prob-bar prob-draw bg" style="width:' + pred.draw + '%"></div>' +
+      '</div>' +
+      '<div class="prob-card' + (recLabel.indexOf('客胜')>=0?' recommend':'') + '">' +
+        '<div class="prob-label">客胜</div>' +
+        '<div class="prob-value prob-away">' + pred.awayWin + '%</div>' +
+        '<div class="prob-bar prob-away bg" style="width:' + pred.awayWin + '%"></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="recommend-badge">📊 推荐: ' + recLabel + '</div>' +
+    '<div class="gap-md"><strong>⚽ 预期进球:</strong> ' + p.homeTeam + ' ' + eg.home + ' — ' + eg.away + ' ' + p.awayTeam + '</div>' +
+    '<div><strong>最可能比分:</strong></div>' +
+    '<div class="scores-row">' + p.topScores.map(function(s) { return '<div class="score-chip">' + s.score + ' <span>' + s.pct + '%</span></div>'; }).join('') + '</div>' +
+    '<div class="gap-md"><strong>💰 市场数据 (模拟赔率与必发指数):</strong></div>' +
+    '<table>' +
+      '<tr><th>指标</th><th>主胜</th><th>平局</th><th>客胜</th></tr>' +
+      '<tr><td>模型概率</td><td class="prob-home">' + pred.homeWin + '%</td><td class="prob-draw">' + pred.draw + '%</td><td class="prob-away">' + pred.awayWin + '%</td></tr>' +
+      '<tr><td>模拟欧赔</td><td>' + odds.home + '</td><td>' + odds.draw + '</td><td>' + odds.away + '</td></tr>' +
+      '<tr><td>必发指数</td><td>' + bf.home + '</td><td>' + bf.draw + '</td><td>' + bf.away + '</td></tr>' +
+    '</table>' +
+    '<div class="market-row">' +
+      '<div class="market-chip">大 2.5 球: <b>' + p.betting.over25 + '%</b></div>' +
+      '<div class="market-chip">大 3.5 球: <b>' + p.betting.over35 + '%</b></div>' +
+      '<div class="market-chip">双方进球: <b>' + p.betting.btts + '%</b></div>' +
+    '</div>' +
+    '<div class="gap-md"><strong>📈 球队数据对比:</strong></div>' +
+    '<table>' +
+      '<tr><th>指标</th><th>' + p.homeTeam + '</th><th>' + p.awayTeam + '</th></tr>' +
+      '<tr><td>ELO 评分</td><td>' + p.teamStats.home.elo + '</td><td>' + p.teamStats.away.elo + '</td></tr>' +
+      '<tr><td>攻击力指数</td><td>' + p.teamStats.home.attack + '</td><td>' + p.teamStats.away.attack + '</td></tr>' +
+      '<tr><td>防守力指数</td><td>' + p.teamStats.home.defense + '</td><td>' + p.teamStats.away.defense + '</td></tr>' +
+      '<tr><td>近期状态 (场均积分)</td><td>' + p.teamStats.home.form + '</td><td>' + p.teamStats.away.form + '</td></tr>' +
+    '</table>' +
+    '<p style="color:var(--muted);font-size:0.8em;margin-top:12px">⚠️ 预测基于泊松分布与 ELO 统计模型，足球比赛存在不确定性，仅供参考</p>';
+
+  document.getElementById('resultCard').classList.remove('hidden');
+  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ---------- 球队对比 ----------
+
+var radarChart = null;
+
+function runComparison() {
+  var a = document.getElementById('compTeamA').value.trim();
+  var b = document.getElementById('compTeamB').value.trim();
+  if (!a || !b) return alert('请输入两支球队名称');
+
+  var da = buildRadarData(a);
+  var db = buildRadarData(b);
+
+  document.getElementById('compareStats').innerHTML =
+    '<table>' +
+      '<tr><th>维度</th><th>' + a + '</th><th>' + b + '</th></tr>' +
+      '<tr><td>进攻火力</td><td>' + da.进攻火力.toFixed(1) + '</td><td>' + db.进攻火力.toFixed(1) + '</td></tr>' +
+      '<tr><td>防守稳固</td><td>' + da.防守稳固.toFixed(1) + '</td><td>' + db.防守稳固.toFixed(1) + '</td></tr>' +
+      '<tr><td>控球组织</td><td>' + da.控球组织.toFixed(1) + '</td><td>' + db.控球组织.toFixed(1) + '</td></tr>' +
+      '<tr><td>纪律性</td><td>' + da.纪律性.toFixed(1) + '</td><td>' + db.纪律性.toFixed(1) + '</td></tr>' +
+      '<tr><td>终结效率</td><td>' + da.终结效率.toFixed(1) + '</td><td>' + db.终结效率.toFixed(1) + '</td></tr>' +
+      '<tr><td>近期状态</td><td>' + da.近期状态.toFixed(1) + '</td><td>' + db.近期状态.toFixed(1) + '</td></tr>' +
+    '</table>';
+
+  var ctx = document.getElementById('radarChart').getContext('2d');
+  if (radarChart) radarChart.destroy();
+
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['进攻火力','防守稳固','控球组织','纪律性','终结效率','近期状态'],
+      datasets: [
+        { label: a, data: [da.进攻火力, da.防守稳固, da.控球组织, da.纪律性, da.终结效率, da.近期状态],
+          borderColor: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.2)', borderWidth: 2, pointRadius: 4 },
+        { label: b, data: [db.进攻火力, db.防守稳固, db.控球组织, db.纪律性, db.终结效率, db.近期状态],
+          borderColor: '#f472b6', backgroundColor: 'rgba(244,114,182,0.15)', borderWidth: 2, pointRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: { r: { min: 0, max: 100, ticks: { stepSize: 20, color: '#94a3b8', backdropColor:'transparent' },
+              grid: { color: '#334155' }, pointLabels: { color: '#e2e8f0', font: { size: 12 } } } },
+      plugins: { legend: { labels: { color: '#e2e8f0' } } },
+    }
+  });
+
+  document.getElementById('compareResult').classList.remove('hidden');
+}
+
+// ---------- 复盘 ----------
+
+function runReview() {
+  var league = document.getElementById('reviewLeague').value;
+  var lgName = LEAGUE_DEFAULTS[league] ? LEAGUE_DEFAULTS[league].name : league;
+  var data = simulateReview(league);
+  if (!data) return alert('该联赛球队数据不足，无法复盘');
+
+  document.getElementById('reviewContent').innerHTML =
+    '<h3>📅 ' + lgName + ' 模拟复盘（近一轮）</h3>' +
+    '<div class="prob-cards">' +
+      '<div class="prob-card"><div class="prob-label">模型准确率</div><div class="prob-value" style="color:' + (parseFloat(data.modelAcc)>=50?'var(--green)':'var(--red)') + '">' + data.modelAcc + '%</div></div>' +
+      '<div class="prob-card"><div class="prob-label">市场准确率</div><div class="prob-value" style="color:' + (parseFloat(data.marketAcc)>=50?'var(--green)':'var(--red)') + '">' + data.marketAcc + '%</div></div>' +
+      '<div class="prob-card"><div class="prob-label">Brier 评分</div><div class="prob-value" style="color:' + (parseFloat(data.brier)<0.2?'var(--green)':'var(--yellow)') + '">' + data.brier + '</div></div>' +
+      '<div class="prob-card"><div class="prob-label">比赛场次</div><div class="prob-value">' + data.total + '</div></div>' +
+    '</div>' +
+    '<table>' +
+      '<tr><th>比赛</th><th>比分</th><th>实际结果</th><th>模型预测</th><th>结果</th><th>概率分布</th></tr>' +
+      data.matches.map(function(m) {
+        return '<tr>' +
+          '<td>' + m.home + ' vs ' + m.away + '</td>' +
+          '<td>' + m.score + '</td>' +
+          '<td>' + m.actual + '</td>' +
+          '<td>' + m.pred + '</td>' +
+          '<td class="' + (m.correct ? 'correct' : 'wrong') + '">' + (m.correct ? '✅ 正确' : '❌ 错误') + '</td>' +
+          '<td>' + m.probs + '</td>' +
+        '</tr>';
+      }).join('') +
+    '</table>' +
+    '<p style="color:var(--muted);font-size:0.8em">⚠️ 模拟数据 · 接入 API-Football 可复盘真实历史比赛</p>';
+
+  document.getElementById('reviewResult').classList.remove('hidden');
+}
+
+// ---------- 导航 ----------
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ---------- 随机对阵 ----------
+
+function quickFill() {
+  var teams = Object.keys(TEAM_DB);
+  var h = teams[Math.floor(Math.random() * teams.length)];
+  var a = teams[Math.floor(Math.random() * teams.length)];
+  while (a === h) a = teams[Math.floor(Math.random() * teams.length)];
+  document.getElementById('homeTeam').value = h;
+  document.getElementById('awayTeam').value = a;
+  var chars = ['胜','平','负'];
+  var hf = [], af = [];
+  for (var i = 0; i < 5; i++) { hf.push(chars[Math.floor(Math.random()*3)]); af.push(chars[Math.floor(Math.random()*3)]); }
+  document.getElementById('homeForm').value = hf.join('-');
+  document.getElementById('awayForm').value = af.join('-');
+}
+
+// 初始化——填充球队下拉列表
+(function() {
+  var dl = document.getElementById('teamList');
+  dl.innerHTML = Object.keys(TEAM_DB).map(function(n) { return '<option value="' + n + '">'; }).join('');
+})();
+</script>
+</body>
+</html>

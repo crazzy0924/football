@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ 8月4日 贝叶斯预测</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#21262d;--text:#c9d1d9;--muted:#8b949e;--accent:#f0a838;--green:#3fb950;--red:#f85149;--blue:#58a6ff;--purple:#bc8cff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.w{max-width:700px;margin:0 auto;padding:12px 16px}
+
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;border-bottom:2px solid var(--border);margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.top h1{font-size:1.2em}.top h1 em{color:var(--accent);font-style:normal}
+.top .meta{font-size:0.7em;color:var(--muted)}
+
+/* 联赛分组 */
+.league-section{margin-bottom:20px}
+.league-hdr{display:flex;align-items:center;gap:8px;padding:0 0 10px;cursor:pointer;user-select:none}
+.league-hdr .icon{font-size:1.1em}
+.league-hdr .lname{font-size:1em;font-weight:700}
+.league-hdr .lcount{font-size:0.7em;color:var(--muted);margin-left:4px}
+.league-hdr .larrow{font-size:0.7em;color:var(--muted);margin-left:auto;transition:transform .2s}
+.league-section.collapsed .larrow{transform:rotate(-90deg)}
+.league-section.collapsed .league-body{display:none}
+
+/* 比赛行 */
+.match-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(33,38,45,0.4);transition:background .15s}
+.match-row:hover{background:rgba(240,168,56,0.02)}
+.match-row .time{font-size:0.72em;color:var(--muted);min-width:58px}
+.match-row .teams{flex:1;min-width:0}
+.match-row .teams .tn{font-weight:600;font-size:0.9em}
+.match-row .teams .tvs{color:var(--muted);margin:0 4px;font-size:0.8em}
+.match-row .teams .sub{font-size:0.65em;color:var(--muted);display:block}
+.match-row .elo{font-size:0.65em;color:var(--muted);min-width:70px;text-align:center}
+
+/* 预测区 */
+.match-row .pred{text-align:center;min-width:80px}
+.match-row .pred .dir{font-size:0.72em;color:var(--muted)}
+.match-row .pred .pick{font-weight:700;font-size:0.9em}
+.pick-h{color:var(--green)}.pick-d{color:var(--accent)}.pick-a{color:var(--red)}
+
+.match-row .odds{min-width:60px;text-align:center}
+.match-row .odds .ov{font-weight:700;font-size:0.95em;color:var(--accent)}
+.match-row .odds .ol{font-size:0.62em;color:var(--muted)}
+
+.match-row .conf{min-width:55px;text-align:center}
+.match-row .conf .cv{font-weight:700;font-size:0.9em}
+.conf-h{color:var(--green)}.conf-m{color:var(--accent)}.conf-l{color:var(--muted)}
+
+.match-row .btag{padding:3px 8px;border-radius:10px;font-size:0.65em;font-weight:600;white-space:nowrap}
+.btag-h{background:rgba(63,185,80,0.1);color:var(--green)}
+.btag-m{background:rgba(240,168,56,0.1);color:var(--accent)}
+.btag-l{background:rgba(139,148,158,0.1);color:var(--muted)}
+
+.match-row .expand{color:var(--muted);font-size:0.8em;cursor:pointer;min-width:20px;text-align:center;transition:transform .2s}
+.match-row .expand.open{transform:rotate(180deg)}
+
+/* 展开详情 */
+.match-detail{display:none;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:4px 12px 8px;font-size:0.78em}
+.match-detail.show{display:block}
+.dt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;text-align:center}
+@media(max-width:500px){.dt-grid{grid-template-columns:1fr}}
+.dt-cell{background:var(--bg);border-radius:6px;padding:8px}
+.dt-cell .dl{font-size:0.6em;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.dt-cell .dv{font-size:1em;font-weight:700}
+.dt-cell .ds{font-size:0.62em;color:var(--muted)}
+.dt-cell.prior .dv{color:var(--blue)}.dt-cell.like .dv{color:var(--accent)}.dt-cell.post .dv{color:var(--purple)}
+.dt-bar{display:flex;height:4px;border-radius:2px;overflow:hidden;margin:6px 0}
+.dt-bar .bm{background:var(--blue)}.dt-bar .bk{background:var(--accent)}
+.dt-bar-leg{font-size:0.65em;color:var(--muted);text-align:center;margin-bottom:6px}
+.dt-reason{font-size:0.8em;color:var(--muted);line-height:1.55;padding:6px 10px;background:var(--bg);border-radius:4px}
+
+/* 台账 */
+.ledger{margin-top:28px;border-top:2px solid var(--border);padding-top:16px}
+.ledger h2{font-size:1em;margin-bottom:10px}.ledger em{color:var(--accent);font-style:normal}
+.lt{width:100%;border-collapse:collapse;font-size:0.72em}
+.lt th{color:var(--muted);font-weight:500;padding:6px 4px;border-bottom:1px solid var(--border);font-size:0.75em;text-align:center}
+.lt td{padding:6px 4px;border-bottom:1px solid rgba(33,38,45,0.4);text-align:center}
+.lt .tdl{text-align:left}.lt .pn{color:var(--accent);font-weight:600}
+.lsum{display:flex;gap:8px;flex-wrap:wrap;font-size:0.72em;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-top:10px}
+.lsum b{font-size:1.05em}
+
+.foot{text-align:center;padding:20px;color:var(--muted);font-size:0.65em;border-top:1px solid var(--border);margin-top:18px}
+.ov-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;font-size:0.72em}
+.ov-summary span{background:var(--card);border:1px solid var(--border);padding:5px 10px;border-radius:5px}
+</style>
+</head>
+<body>
+<div class="w">
+
+<div class="top">
+  <h1>⚽ <em>贝叶斯融合</em>预测</h1>
+  <div class="meta">2026.08.04 · 8场 · 泊松×ELO×市场 · 点击行展开详情</div>
+</div>
+
+<div class="ov-summary">
+  <span>📋 <b>8</b> 场</span><span>💵 总投 <b>800</b></span>
+  <span style="color:var(--green)">⭐高 <b>3</b></span><span style="color:var(--accent)">中 <b>2</b></span><span style="color:var(--muted)">低 <b>3</b></span>
+  <span style="color:var(--purple)">🔬 贝叶斯动态权重</span>
+</div>
+
+<div id="leagues"></div>
+
+<div class="ledger">
+  <h2>📒 <em>投注台账</em></h2>
+  <div style="overflow-x:auto"><table class="lt"><thead><tr><th>#</th><th>时间</th><th>比赛</th><th>玩法</th><th>选项</th><th>赔率</th><th>贝叶斯置信</th><th>结果</th><th>盈亏</th></tr></thead><tbody id="ledgerBody"></tbody></table></div>
+  <div class="lsum" id="lsum"></div>
+</div>
+<div class="foot">贝叶斯融合: P(结果|模型,市场) ∝ P(模型|结果)×P(市场|结果) · Dirichlet共轭 · 纯研究</div>
+
+</div>
+
+<script>
+// ============================================================
+// 引擎
+// ============================================================
+function oddsToProbs(ho,dr,aw){
+  var inv=[1/ho,1/dr,1/aw],ov=inv[0]+inv[1]+inv[2];
+  return {probs:[inv[0]/ov,inv[1]/ov,inv[2]/ov],margin:ov-1};
+}
+function bayesian(modelP,marketP,conf,margin,disp){
+  var N=Math.max(8,Math.min(65,Math.floor(10+conf*50)));
+  var mf=Math.min(1,0.025/Math.max(margin,0.01));
+  var cf=Math.max(0.4,1-disp*6);
+  var M=Math.max(4,Math.min(22,Math.floor((5+mf*18)*cf)));
+  var tot=N+M;
+  var post=[(modelP[0]*N+marketP[0]*M)/tot,(modelP[1]*N+marketP[1]*M)/tot,(modelP[2]*N+marketP[2]*M)/tot];
+  var gain=Math.max.apply(null,post)-Math.max.apply(null,modelP);
+  return {post:post.map(function(v){return +v.toFixed(4)}),N:N,M:M,mw:+(N/tot).toFixed(2),kw:+(M/tot).toFixed(2),gain:+gain.toFixed(4)};
+}
+
+// ============================================================
+// 数据 (按联赛分组)
+// ============================================================
+var LEAGUES=[
+  {name:"欧冠资格赛",icon:"🏆",cls:"lcl",matches:[
+    {id:2,h:"奥林匹亚科斯",a:"奈梅亨",time:"01:00",elo:"1580 vs 1460",ah:"-1.0",
+     cf:"高",cfv:66,cfc:"conf-h",btc:"btag-h",
+     modelP:[0.658,0.225,0.117],odds:{h:1.53,d:4.20,a:5.61},margin:0.052,disp:0.03,
+     bet:["让球","奥林匹亚科斯 -1.0","1.92"],
+     reason:"对手5人伤缺+欧冠首秀。模型市场双高共识→后验几乎不变。穿盘>55%。"},
+    {id:4,h:"贝尔谢巴夏普尔",a:"贝尔格莱德红星",time:"01:00",elo:"1420 vs 1600",ah:"红星 -0.75",
+     cf:"高",cfv:63,cfc:"conf-h",btc:"btag-h",
+     modelP:[0.152,0.220,0.628],odds:{h:4.46,d:3.70,a:1.72},margin:0.056,disp:0.04,
+     bet:["让球","红星 -0.75","1.85"],
+     reason:"中立场地+180ELO。客胜持续降水。模型77%权重主导→维持。今日最强价值信号(+7%)。"},
+    {id:6,h:"沙姆洛克流浪",a:"伊格纳迪亚",time:"02:00",elo:"1360 vs 1280",ah:"沙姆洛克 -0.5",
+     cf:"中",cfv:59,cfc:"conf-m",btc:"btag-m",
+     modelP:[0.585,0.245,0.170],odds:{h:1.92,d:3.40,a:3.88},margin:0.051,disp:0.05,
+     bet:["胜平负","主胜","1.92"],
+     note:"欧联资格赛",reason:"人工草+客队零欧战经验。73%权重维持主胜方向。"},
+    {id:1,h:"布拉格斯巴达",a:"里昂",time:"01:00",elo:"1560 vs 1680",ah:"斯巴达 +0.5",
+     cf:"中",cfv:44,cfc:"conf-m",btc:"btag-m",
+     modelP:[0.285,0.273,0.442],odds:{h:3.42,d:3.50,a:1.98},margin:0.048,disp:0.07,
+     bet:["让球","斯巴达 +0.5","1.85"],
+     reason:"1X2/AH背离+高离散(7%)=市场权重最高(36%)。受让保护=安全边际。"},
+    {id:3,h:"圣吉罗斯",a:"博德闪耀",time:"01:00",elo:"1540 vs 1570",ah:"平手盘",
+     cf:"低",cfv:39,cfc:"conf-l",btc:"btag-l",
+     modelP:[0.308,0.307,0.385],odds:{h:2.29,d:3.55,a:2.82},margin:0.053,disp:0.08,
+     bet:["大小球","大 2.5","1.72"],
+     reason:"方向完全不确定(离散8%)→贝叶斯无帮助。但大球信号明确:总球2.53+升盘。"},
+    {id:5,h:"米亚尔比",a:"布拉迪斯拉发",time:"01:00",elo:"1430 vs 1500",ah:"平手",
+     cf:"低",cfv:34,cfc:"conf-l",btc:"btag-l",
+     modelP:[0.325,0.342,0.333],odds:{h:2.04,d:3.40,a:3.40},margin:0.055,disp:0.10,
+     bet:["大小球","小 2.5","1.62"],
+     reason:"🔴 最高离散(10%)+蒸汽移动(-11%)→市场38%最大权重。方向仍不确定→小球最安全。"},
+  ]},
+  {name:"北美联杯",icon:"🌎",cls:"llc",matches:[
+    {id:7,h:"温哥华白帽",a:"亚特兰特",time:"10:30",elo:"1450 vs 1330",ah:"温哥华 -1.5",
+     cf:"高",cfv:81,cfc:"conf-h",btc:"btag-h",
+     modelP:[0.812,0.125,0.063],odds:{h:1.25,d:5.50,a:10.30},margin:0.048,disp:0.02,
+     bet:["让球","温哥华 -1.5","1.88"],
+     reason:"今日极少数模市双高共识(模型82%权重)。MLS vs 墨乙=实力悬殊。铁胆。"},
+    {id:8,h:"辛辛那提",a:"帕丘卡",time:"10:30",elo:"1500 vs 1550",ah:"平手盘",
+     cf:"低",cfv:43,cfc:"conf-l",btc:"btag-l",
+     modelP:[0.425,0.320,0.255],odds:{h:2.04,d:3.55,a:3.11},margin:0.058,disp:0.06,
+     bet:["让球","辛辛那提 +0","1.82"],
+     reason:"低置信+高抽水(5.8%)=信号打折。贝叶斯三方更接近。平手盘博不败安全。"},
+  ]},
+];
+
+// 补充欧联到欧冠组后面 (沙姆洛克 id=6 数据上已放到欧冠组)
+
+// ============================================================
+// 渲染
+// ============================================================
+var html='',ledgerHtml='',cnt=0,totalStake=0,sumConf=0;
+
+for(var g=0;g<LEAGUES.length;g++){
+  var lg=LEAGUES[g];
+  html+='<div class="league-section">'+
+    '<div class="league-hdr" onclick="this.parentElement.classList.toggle(\'collapsed\')">'+
+      '<span class="icon">'+lg.icon+'</span><span class="lname">'+lg.name+'</span>'+
+      '<span class="lcount">'+lg.matches.length+' 场</span>'+
+      '<span class="larrow">▼</span>'+
+    '</div><div class="league-body">';
+
+  for(var i=0;i<lg.matches.length;i++){
+    var m=lg.matches[i];cnt++;
+    var mk=oddsToProbs(m.odds.h,m.odds.d,m.odds.a);
+    var bu=bayesian(m.modelP,mk.probs,m.cfv/100,m.margin,m.disp);
+    var post=bu.post,postMax=Math.round(Math.max.apply(null,post)*100);
+    sumConf+=postMax;
+
+    // 推荐方向
+    var pickIdx=post[0]>=post[2]?0:2; if(post[1]>=post[0]&&post[1]>=post[2]) pickIdx=1;
+    var pickDir=["主胜","平局","客胜"][pickIdx];
+    var pickCls=["pick-h","pick-d","pick-a"][pickIdx];
+
+    // 先验/似然/后验 百分比
+    var priorPct=[Math.round(m.modelP[0]*100),Math.round(m.modelP[1]*100),Math.round(m.modelP[2]*100)];
+    var likePct=[Math.round(mk.probs[0]*100),Math.round(mk.probs[1]*100),Math.round(mk.probs[2]*100)];
+    var postPct=[Math.round(post[0]*100),Math.round(post[1]*100),Math.round(post[2]*100)];
+
+    html+=
+    '<div class="match-row" onclick="var d=this.nextElementSibling;d.classList.toggle(\'show\');this.querySelector(\'.expand\').classList.toggle(\'open\')">'+
+      '<span class="time">'+m.time+'</span>'+
+      '<span class="teams"><span class="tn">'+m.h+'</span><span class="tvs">vs</span><span class="tn">'+m.a+'</span><span class="sub">'+m.ah+'</span></span>'+
+      '<span class="elo">ELO '+m.elo+'</span>'+
+      '<span class="pred"><span class="dir">'+pickDir+'</span></span>'+
+      '<span class="odds"><span class="ov">'+m.bet[2]+'</span><span class="ol">赔率</span></span>'+
+      '<span class="conf"><span class="cv '+m.cfc+'">'+postMax+'%</span></span>'+
+      '<span class="btag '+m.btc+'">'+m.cf+'</span>'+
+      '<span class="expand">▼</span>'+
+    '</div>'+
+
+    '<div class="match-detail">'+
+      '<div class="dt-grid">'+
+        '<div class="dt-cell prior"><div class="dl">📐 先验 (模型)</div><div class="dv">主'+priorPct[0]+'% 平'+priorPct[1]+'% 客'+priorPct[2]+'%</div><div class="ds">伪计数 N='+bu.N+'</div></div>'+
+        '<div class="dt-cell like"><div class="dl">📊 似然 (市场)</div><div class="dv">主'+likePct[0]+'% 平'+likePct[1]+'% 客'+likePct[2]+'%</div><div class="ds">margin '+(m.margin*100).toFixed(1)+'% · M='+bu.M+'</div></div>'+
+        '<div class="dt-cell post"><div class="dl">🎯 后验 (融合)</div><div class="dv">主'+postPct[0]+'% 平'+postPct[1]+'% 客'+postPct[2]+'%</div><div class="ds">增益 '+(bu.gain>=0?'+':'')+(bu.gain*100).toFixed(1)+'%</div></div>'+
+      '</div>'+
+      '<div class="dt-bar"><div class="bm" style="width:'+(bu.mw*100)+'%"></div><div class="bk" style="width:'+(bu.kw*100)+'%"></div></div>'+
+      '<div class="dt-bar-leg">模型权重 '+(bu.mw*100).toFixed(0)+'% ('+bu.N+' 伪计数) · 市场权重 '+(bu.kw*100).toFixed(0)+'% ('+bu.M+' 伪计数) · 离散 '+(m.disp*100).toFixed(0)+'%</div>'+
+      '<div class="dt-reason">💡 '+m.reason+'</div>'+
+    '</div>';
+
+    totalStake+=100;
+    ledgerHtml+=
+    '<tr><td>'+cnt+'</td><td>'+m.time+'</td><td class="tdl">'+m.h+' vs '+m.a+'</td>'+
+      '<td>'+m.bet[0]+'</td><td style="font-weight:600;color:var(--purple)">'+m.bet[1]+'</td>'+
+      '<td>'+m.bet[2]+'</td><td style="color:var(--purple);font-weight:600">'+postMax+'%</td>'+
+      '<td class="pn">⏳</td><td>—</td></tr>';
+  }
+
+  html+='</div></div>';
+}
+
+document.getElementById('leagues').innerHTML=html;
+document.getElementById('ledgerBody').innerHTML=ledgerHtml;
+
+var avgPost=Math.round(sumConf/cnt);
+document.getElementById('lsum').innerHTML=
+  '<span>📋 <b>'+cnt+'</b> 注</span><span>💵 总投 <b>'+totalStake+'</b></span><span>🎯 均后验置信 <b>'+avgPost+'%</b></span><span>🔬 动态权重范围 <b>62-82%</b></span>';
+</script>
+</body>
+</html>

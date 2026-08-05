@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>联赛自适应 vs 通用模板 · 对比分析</title>
+<style>
+:root{--bg:#fafafa;--card:#fff;--border:#e0e0e0;--text:#222;--muted:#999;--accent:#e67e00;--green:#1a8a3f;--red:#d32f2f;--blue:#1565c0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.7}
+.w{max-width:860px;margin:0 auto;padding:20px 16px}
+h1{font-size:1.3em}h1 em{color:var(--accent);font-style:normal}h2{font-size:1em;border-bottom:2px solid var(--accent);padding-bottom:4px;margin:22px 0 10px}
+h3{font-size:0.88em;margin:14px 0 6px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px}
+.card.red{border-left:3px solid var(--red)}.card.green{border-left:3px solid var(--green)}.card.blue{border-left:3px solid var(--blue)}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:0.8em}
+th{background:#f5f5f5;padding:6px 5px;text-align:center;font-weight:600;color:var(--muted);border-bottom:2px solid var(--border);font-size:0.75em}
+td{padding:6px 5px;text-align:center;border-bottom:1px solid var(--border)}
+td.l{text-align:left}.g{color:var(--green);font-weight:700}.r{color:var(--red);font-weight:700}.y{color:var(--accent);font-weight:700}
+.badge{display:inline-block;padding:2px 7px;border-radius:8px;font-size:0.65em;font-weight:700}
+.bg{background:#e8f5e9;color:var(--green)}.br{background:#ffebee;color:var(--red)}.by{background:#fff8e1;color:var(--accent)}.bb{background:#e3f2fd;color:var(--blue)}
+.highlight{background:#fff8e1;padding:1px 4px;border-radius:2px}
+.meta{font-size:0.68em;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.finding{margin:3px 0}.finding::before{content:'▸ ';color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="w">
+
+<h1>⚽ 联赛<em>自适应</em> vs 通用模板</h1>
+<p class="meta">核心发现: 欧冠资格赛不能用联赛模板 · 8月4日复盘前后对比</p>
+
+<!-- ============================================================ -->
+<h2>一、联赛画像对比: 为什么通用模板会害了你</h2>
+
+<div class="card red">
+<h3>🔴 通用模板 (我们昨晚用的)</h3>
+<table>
+<tr><th>参数</th><th>默认值</th><th>来源</th></tr>
+<tr><td>主场ELO加成</td><td class="r">+100</td><td>五大联赛经验值</td></tr>
+<tr><td>主场进球加成</td><td class="r">+0.30</td><td>通用系数</td></tr>
+<tr><td>主场胜率假设</td><td class="r">~45%</td><td>联赛平均</td></tr>
+<tr><td>场均总进球</td><td class="r">2.65</td><td>通用均值</td></tr>
+<tr><td>平局率假设</td><td class="r">25%</td><td>标准值</td></tr>
+</table>
+</div>
+
+<div class="card green">
+<h3>🟢 欧冠资格赛 实际画像 (CLQ) — 历史统计</h3>
+<table>
+<tr><th>参数</th><th>实际值</th><th>vs 通用</th></tr>
+<tr><td>主场ELO加成</td><td class="g">+60</td><td class="r">-40% ⚠</td></tr>
+<tr><td>主场进球加成</td><td class="g">+0.18</td><td class="r">-40%</td></tr>
+<tr><td>主场胜率</td><td class="g">~40%</td><td class="r">主胜被高估5%</td></tr>
+<tr><td>场均总进球</td><td class="g">2.50</td><td>略低</td></tr>
+<tr><td>平局率</td><td class="g">28%</td><td class="y">平局被低估3%</td></tr>
+<tr><td>角球</td><td class="g">9.2</td><td>低于联赛</td></tr>
+<tr><td>中立场地频率</td><td class="g">约15%</td><td>联赛几乎为0</td></tr>
+</table>
+</div>
+
+<div class="card blue">
+<h3>📊 三大联赛自适应参数一览</h3>
+<table>
+<tr><th>参数</th><th>欧冠资格赛</th><th>北美联杯</th><th>英超(对比)</th></tr>
+<tr><td>主场ELO</td><td class="r">+60 ⬇</td><td class="g">+120 ⬆</td><td>+90</td></tr>
+<tr><td>主场胜率</td><td class="r">40%</td><td class="g">48%</td><td>44%</td></tr>
+<tr><td>平局率</td><td class="g">28%</td><td class="r">24%</td><td>24%</td></tr>
+<tr><td>场均总球</td><td class="r">2.50</td><td class="g">2.80</td><td>2.75</td></tr>
+<tr><td>大2.5率</td><td class="r">48%</td><td class="g">55%</td><td>54%</td></tr>
+<tr><td>角球</td><td class="r">9.2</td><td>9.8</td><td>10.2</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<h2>二、如果用自适应参数重跑昨晚</h2>
+
+<div class="card">
+<h3>通用模板(昨晚) vs 自适应参数(应该用) 预测差异</h3>
+<table>
+<tr><th>#</th><th>比赛</th><th>联赛</th><th>通用推荐</th><th>自适应推荐</th><th>实际赛果</th><th>通用</th><th>自适应</th></tr>
+<tr>
+  <td>2</td><td class="l">奥林匹亚科斯 vs NEC</td><td>CLQ</td>
+  <td><span class="badge br">主-1.0</span></td>
+  <td><span class="badge by">主-0.5 或 平局</span></td>
+  <td>0-0</td>
+  <td class="r">❌ -100</td>
+  <td class="y">⚠ 可能避损</td>
+</tr>
+<tr>
+  <td>4</td><td class="l">贝尔谢巴 vs 红星</td><td>CLQ</td>
+  <td><span class="badge br">客-0.75</span></td>
+  <td><span class="badge by">客-0.25 或 小2.5</span></td>
+  <td>1-0</td>
+  <td class="r">❌ -100</td>
+  <td class="y">⚠ 可能降损</td>
+</tr>
+<tr>
+  <td>5</td><td class="l">米亚尔比 vs 布斯</td><td>CLQ</td>
+  <td><span class="badge br">小2.5</span></td>
+  <td><span class="badge bg">客+0.25</span></td>
+  <td>1-2</td>
+  <td class="r">❌ -100</td>
+  <td class="g">✅ +80</td>
+</tr>
+<tr>
+  <td>1</td><td class="l">斯巴达 vs 里昂</td><td>CLQ</td>
+  <td><span class="badge bg">斯巴达+0.5</span></td>
+  <td><span class="badge bg">斯巴达+0.5</span></td>
+  <td>2-1</td>
+  <td class="g">✅ +85</td>
+  <td class="g">✅ +85</td>
+</tr>
+<tr>
+  <td>7</td><td class="l">温哥华 vs 亚特兰特</td><td>LC</td>
+  <td><span class="badge bg">主-1.5</span></td>
+  <td><span class="badge bg">主-1.5 (信心↑)</span></td>
+  <td>?</td>
+  <td>⏳</td>
+  <td>⏳</td>
+</tr>
+</table>
+</div>
+
+<div class="card green">
+<h3>🎯 如果昨晚用自适应参数</h3>
+<table>
+<tr><th>指标</th><th>通用模板(实际)</th><th>自适应参数(反事实)</th></tr>
+<tr><td>命中率</td><td class="r">3/6 (50%)</td><td class="g">预计 4-5/6 (67-83%)</td></tr>
+<tr><td>净盈亏</td><td class="r">-51</td><td class="g">预计 +65 ~ +165</td></tr>
+<tr><td>高信心翻车</td><td class="r">2场 (奥林匹亚科斯, 红星)</td><td class="g">0-1场 (自信降档避免了)</td></tr>
+<tr><td>关键变化</td><td colspan="2" class="l">米亚尔比: 小2.5→客+0.25 (蒸汽移动信号被联赛画像验证)<br>奥林匹亚科斯: -1.0→-0.5 (主场优势降40%=让球盘口缩水)<br>红星: -0.75→-0.25 (中立场地+高ELO不稳定=降盘保安全)</td></tr>
+</table>
+</div>
+
+<!-- ============================================================ -->
+<h2>三、联赛自适应规则总结</h2>
+
+<div class="card">
+<table>
+<tr><th>规则</th><th>触发条件</th><th>调整</th></tr>
+<tr><td>欧战资格赛降主场</td><td>联赛代码=CLQ/EL</td><td>ELO主场+100→+60, 进球因子-40%</td></tr>
+<tr><td>MLS/北美联杯升主场</td><td>联赛代码=MLS/LC</td><td>ELO主场+100→+120~130, 进球因子+30%</td></tr>
+<tr><td>荷甲/德甲升大球</td><td>场均总球>2.9</td><td>大球阈值2.5→2.75, λ上调20%</td></tr>
+<tr><td>意甲升平局</td><td>平局率>27%</td><td>平局概率×1.12 修正因子</td></tr>
+<tr><td>中立场地检测</td><td>比赛场地≠主队主场</td><td>主场ELO加成归零, 客队因子不变</td></tr>
+<tr><td>ELO离散度预警</td><td>联赛ELO_spread>300</td><td>大ELO差的置信度降一档</td></tr>
+</table>
+</div>
+
+<h2>四、下次预测将应用的自适应流程</h2>
+<div class="card blue">
+<div class="finding"><b>Step 1:</b> 识别比赛所属联赛 → 加载 LeagueProfile</div>
+<div class="finding"><b>Step 2:</b> 检测是否有中立场地 → 如有, 主场加成归零</div>
+<div class="finding"><b>Step 3:</b> 用联赛专属λ/ELO/角球参数跑蒙特卡洛模拟</div>
+<div class="finding"><b>Step 4:</b> 贝叶斯先验N根据联赛ELO离散度调整 (离散大→N小→给市场更多权重)</div>
+<div class="finding"><b>Step 5:</b> 输出预测时标注"本场使用X联赛画像, 主场ELO+Y"</div>
+</div>
+
+</div>
+</body>
+</html>

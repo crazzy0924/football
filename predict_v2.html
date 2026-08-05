@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8月4日 六维预测</title>
+<style>
+:root{--bg:#f5f5f5;--text:#222;--muted:#999;--accent:#e67e00;--green:#1a8a3f;--red:#d32f2f;--blue:#1565c0;--border:#e8e8e8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.4}
+.w{max-width:100%;margin:0 auto;padding:12px 16px}
+.hd{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:16px 20px;border-radius:8px;margin-bottom:14px}
+.hd h1{font-size:1.15em}.hd h1 span{color:#ffb347}.hd .sub{font-size:0.68em;color:rgba(255,255,255,0.5);margin-top:2px}
+
+/* 联赛一级菜单 */
+.tabs{display:flex;gap:0;margin-bottom:16px;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.tab{flex:1;text-align:center;padding:10px 8px;cursor:pointer;font-size:0.8em;font-weight:600;border-bottom:3px solid transparent;transition:all .15s;color:var(--muted);background:#fff;user-select:none}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+thead th{background:#fafafa;color:var(--muted);font-weight:600;padding:7px 5px;text-align:center;font-size:0.67em;white-space:nowrap}
+tbody td{padding:6px 5px;text-align:center;border-top:1px solid var(--border);font-size:0.76em;white-space:nowrap}
+tbody tr:hover{background:#fafafa}
+td.l{text-align:left}.mw{white-space:normal;min-width:110px}
+.mw .sub{font-size:0.68em;color:var(--muted);font-weight:400;display:block}
+.tag{display:inline-block;padding:1px 6px;border-radius:8px;font-size:0.72em;font-weight:600}
+.t-h{background:#e8f5e9;color:var(--green)}.t-a{background:#ffebee;color:var(--red)}.t-d{background:#fff8e1;color:var(--accent)}
+.odds{font-weight:700;color:var(--accent)}
+.pn{color:var(--accent);font-weight:600}
+
+.tb{margin-top:20px}.tb h2{font-size:0.9em;margin-bottom:8px}
+.sum{display:flex;gap:6px;margin-top:8px;font-size:0.7em;flex-wrap:wrap}
+.sum span{background:#fff;padding:5px 10px;border-radius:5px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.ft{text-align:center;padding:16px;color:var(--muted);font-size:0.6em}
+</style>
+</head>
+<body>
+<div class="w">
+<div class="hd"><h1>⚽ 今晚<span>六维预测</span></h1><div class="sub">2026.08.04 · 蒙特卡洛泊松解析 · Shin去水 · 贝叶斯融合 · 表格式一目十行</div></div>
+
+<div class="tabs" id="tabs"></div>
+
+<div style="overflow-x:auto"><table><thead><tr>
+  <th>时间</th><th>比赛</th><th>ELO</th><th>①胜平负</th><th>②波胆</th><th>③全场大小</th><th>④上半场</th><th>④下半场</th><th>⑤上半场<br>让球</th><th>⑤下半场<br>让球</th><th>⑥角球</th><th>推荐</th>
+</tr></thead><tbody id="tb"></tbody></table></div>
+
+<div class="tb"><h2>📒 投注台账</h2>
+<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>时间</th><th>杯赛</th><th>比赛</th><th>玩法</th><th>选项</th><th>赔率</th><th>置信</th><th>结果</th><th>盈亏</th></tr></thead><tbody id="ledger"></tbody></table></div>
+<div class="sum" id="lsum"></div></div>
+<div class="ft">蒙特卡洛泊松解析 · Shin去水 · 贝叶斯融合 · 纯研究用途</div></div>
+
+<script>
+function pois(k,lam){if(lam<=0)return k===0?1:0;var v=-lam+k*Math.log(lam);for(var i=2;i<=k;i++)v-=Math.log(i);return Math.exp(v)}
+function mc(hAtt,hDef,aAtt,aDef,hAdv,avg){
+  var b=avg/2,g=1+hAdv,lh=Math.max(0.1,Math.min(6,b*hAtt*aDef*g)),la=Math.max(0.1,Math.min(6,b*aAtt*hDef));
+  var M=8,hP=[],aP=[];
+  for(var i=0;i<=M;i++){hP.push(pois(i,lh));aP.push(pois(i,la))}
+  var hw=0,dr=0,aw=0,s=[],tg=0;
+  for(var i=0;i<=M;i++)for(var j=0;j<=M;j++){var p=hP[i]*aP[j];tg+=p*(i+j);if(i>j)hw+=p;else if(i===j)dr+=p;else aw+=p;s.push({h:i,a:j,p:p})}
+  s.sort(function(a,b){return b.p-a.p});
+  var o25=0,o35=0;
+  for(var k=0;k<s.length;k++){var x=s[k];if(x.h+x.a>2.5)o25+=x.p;if(x.h+x.a>3.5)o35+=x.p}
+  var h1r=0.42,lh1=lh*h1r,la1=la*h1r,lh2=lh*(1-h1r),la2=la*(1-h1r);
+  var h1P=[],a1P=[],h2P=[],a2P=[];
+  for(var i=0;i<=M;i++){h1P.push(pois(i,lh1));a1P.push(pois(i,la1));h2P.push(pois(i,lh2));a2P.push(pois(i,la2))}
+  var h1o15=0,h2o15=0;for(var i=0;i<=M;i++)for(var j=0;j<=M;j++){if(i+j>1.5)h1o15+=h1P[i]*a1P[j];if(i+j>1.5)h2o15+=h2P[i]*a2P[j]}
+  var cr=Math.round(9.5+avg*0.8),hc=Math.round(cr*0.55*(0.85+hAtt*0.15)),ac=Math.round(cr*0.45*(0.85+aAtt*0.15));
+  return{hw:hw,dr:dr,aw:aw,xH:+lh.toFixed(2),xA:+la.toFixed(2),tg:+tg.toFixed(2),
+    top:s[0].h+"-"+s[0].a,o25:o25,o35:o35,h1o15:h1o15,h2o15:h2o15,
+    h1d:lh1-la1,h2d:lh2-la2,cr:{h:hc,a:ac,t:hc+ac},lh:lh,la:la,h1r:h1r}
+}
+function ea(e){var s=(e-1500)/400;return Math.max(0.5,+(1+s*0.6).toFixed(2))}
+function ed(e){var s=(e-1500)/400;return Math.max(0.5,+(1-s*0.5).toFixed(2))}
+
+var DATA=[
+  {lg:"欧冠资格赛",a:2.65,ms:[
+    {id:2,h:"奥林匹亚科斯",a:"奈梅亨",t:"01:00",eH:1580,eA:1460,ah:"-1.0",cf:"高",cfv:66,bet:["让球","奥林匹亚科斯 -1.0","1.92"]},
+    {id:4,h:"贝尔谢巴夏普尔",a:"贝尔格莱德红星",t:"01:00",eH:1420,eA:1600,ah:"红星 -0.75",cf:"高",cfv:63,bet:["让球","红星 -0.75","1.85"]},
+    {id:6,h:"沙姆洛克流浪",a:"伊格纳迪亚",t:"02:00",eH:1360,eA:1280,ah:"沙姆洛克 -0.5",cf:"中",cfv:59,bet:["胜平负","主胜","1.92"]},
+    {id:1,h:"布拉格斯巴达",a:"里昂",t:"01:00",eH:1560,eA:1680,ah:"斯巴达 +0.5",cf:"中",cfv:44,bet:["让球","斯巴达 +0.5","1.85"]},
+    {id:3,h:"圣吉罗斯",a:"博德闪耀",t:"01:00",eH:1540,eA:1570,ah:"平手",cf:"低",cfv:39,bet:["大小球","大 2.5","1.72"]},
+    {id:5,h:"米亚尔比",a:"布拉迪斯拉发",t:"01:00",eH:1430,eA:1500,ah:"平手",cf:"低",cfv:34,bet:["大小球","小 2.5","1.62"]},
+  ]},
+  {lg:"北美联杯",a:2.80,ms:[
+    {id:7,h:"温哥华白帽",a:"亚特兰特",t:"10:30",eH:1450,eA:1330,ah:"温哥华 -1.5",cf:"高",cfv:81,bet:["让球","温哥华 -1.5","1.88"]},
+    {id:8,h:"辛辛那提",a:"帕丘卡",t:"10:30",eH:1500,eA:1550,ah:"平手",cf:"低",cfv:43,bet:["让球","辛辛那提 +0","1.82"]},
+  ]},
+];
+
+var tabs='',allRows={},ledgerRows='',cnt=0,stake=0,sumC=0,total=0;
+
+for(var g=0;g<DATA.length;g++){var lg=DATA[g];total+=lg.ms.length;
+  tabs+='<div class="tab'+(g===0?' on':'')+'" onclick="switchLg(\''+lg.lg+'\')">'+lg.lg+' ('+lg.ms.length+')</div>';
+  var rows='';
+  for(var i=0;i<lg.ms.length;i++){var m=lg.ms[i];cnt++;
+    var s=mc(ea(m.eH),ed(m.eH),ea(m.eA),ed(m.eA),0.3,lg.a);
+    var maxP=Math.max(s.hw,s.dr,s.aw);sumC+=maxP;
+    var pick,pc;if(s.hw>=s.aw&&s.hw>=s.dr){pick="主胜";pc="t-h"}else if(s.aw>=s.hw&&s.aw>=s.dr){pick="客胜";pc="t-a"}else{pick="平局";pc="t-d"}
+    var ou=s.o25>0.55?"大":s.o25>0.45?"偏大":"小";
+    var ouC=s.o25>0.55?"#1a8a3f":s.o25>0.45?"#e67e00":"#d32f2f";
+    var h1Ah=Math.abs(s.h1d)<0.15?"平手":s.h1d>0.5?m.h+" -0.5":s.h1d>0.2?m.h+" -0.25":s.h1d<-0.5?m.a+" -0.5":s.h1d<-0.2?m.a+" -0.25":"平手";
+    var h2Ah=Math.abs(s.h2d)<0.15?"平手":s.h2d>0.7?m.h+" -0.75":s.h2d>0.3?m.h+" -0.5":s.h2d<-0.7?m.a+" -0.75":s.h2d<-0.3?m.a+" -0.5":"平手";
+
+    rows+='<tr>'+
+      '<td>'+m.t+'</td>'+
+      '<td class="l mw"><b>'+m.h+' vs '+m.a+'</b><span class="sub">'+m.ah+'</span></td>'+
+      '<td style="font-size:0.72em;color:var(--muted)">'+m.eH+'/'+m.eA+'</td>'+
+      '<td><span class="tag '+pc+'">'+pick+'</span><br><span style="font-size:0.62em;color:var(--muted)">主'+(s.hw*100).toFixed(0)+'% 平'+(s.dr*100).toFixed(0)+'% 客'+(s.aw*100).toFixed(0)+'%</span></td>'+
+      '<td><b style="color:var(--accent)">'+s.top+'</b></td>'+
+      '<td><span style="font-weight:600;color:'+ouC+'">'+ou+' 2.5</span><br><span style="font-size:0.62em;color:var(--muted)">'+(s.o25*100).toFixed(0)+'% · '+s.tg+'球</span></td>'+
+      '<td><span style="font-weight:600;color:'+(s.h1o15>0.45?"#1a8a3f":"#999")+'">大1.5 '+(s.h1o15*100).toFixed(0)+'%</span></td>'+
+      '<td><span style="font-weight:600;color:'+(s.h2o15>0.5?"#1a8a3f":"#999")+'">大1.5 '+(s.h2o15*100).toFixed(0)+'%</span></td>'+
+      '<td style="color:var(--blue);font-weight:600;font-size:0.78em">'+h1Ah+'</td>'+
+      '<td style="color:var(--blue);font-weight:600;font-size:0.78em">'+h2Ah+'</td>'+
+      '<td>'+s.cr.t+'角<br><span style="font-size:0.62em;color:var(--muted)">'+s.cr.h+'/'+s.cr.a+'</span></td>'+
+      '<td><span class="tag '+pc+'">'+m.bet[1]+'</span><br><span class="odds">@'+m.bet[2]+'</span></td>'+
+    '</tr>';
+  }
+  allRows[lg.lg]=rows;
+
+  for(var i=0;i<lg.ms.length;i++){var m=lg.ms[i];
+    var s2=mc(ea(m.eH),ed(m.eH),ea(m.eA),ed(m.eA),0.3,lg.a);
+    var mp2=Math.max(s2.hw,s2.dr,s2.aw);stake+=100;
+    ledgerRows+='<tr><td>'+(Object.keys(allRows).reduce(function(s,k){return s+(k<lg.lg?DATA.filter(function(d){return d.lg===k})[0].ms.length:0)},0)+i+1)+'</td><td>'+m.t+'</td><td>'+lg.lg+'</td><td class="l">'+m.h+' vs '+m.a+'</td><td>'+m.bet[0]+'</td><td style="font-weight:600;color:#e67e00">'+m.bet[1]+'</td><td>'+m.bet[2]+'</td><td style="font-weight:600;color:'+(m.cf==="高"?"#1a8a3f":m.cf==="中"?"#e67e00":"#999")+'">'+m.cf+' '+(mp2*100).toFixed(0)+'%</td><td class="pn">⏳</td><td>—</td></tr>';
+  }
+}
+
+document.getElementById('tabs').innerHTML=tabs;
+document.getElementById('tb').innerHTML=allRows[DATA[0].lg];
+document.getElementById('ledger').innerHTML=ledgerRows;
+
+var avgC=Math.round(sumC/total);
+var hc=DATA.reduce(function(s,lg){return s+lg.ms.filter(function(m){return m.cf==="高"}).length},0);
+document.getElementById('lsum').innerHTML='<span>📋 <b>'+total+'</b> 注</span><span>💵 总投 <b>'+stake+'</b></span><span>🎯 均置信 <b>'+avgC+'%</b></span><span>⭐高信 <b>'+hc+'</b> 场</span>';
+
+function switchLg(lg){
+  document.getElementById('tb').innerHTML=allRows[lg];
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.textContent.indexOf(lg)>=0)});
+}
+</script>
+</body>
+</html>

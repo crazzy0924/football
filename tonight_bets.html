@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ 今晚投注方案 · 8月4日</title>
+<style>
+:root{--bg:#0a0e14;--card:#11161d;--border:#1a1f27;--text:#e0e4ea;--muted:#6b7280;--accent:#f0a838;--green:#3fb950;--red:#f85149;--blue:#58a6ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.w{max-width:780px;margin:0 auto;padding:16px}
+
+.hdr{text-align:center;padding:24px 0 14px}
+.hdr .t{font-size:1.4em;font-weight:800}.hdr em{color:var(--accent);font-style:normal}
+.hdr .s{font-size:0.73em;color:var(--muted);margin-top:3px}
+
+.warn{background:rgba(240,168,56,0.04);border:1px solid rgba(240,168,56,0.1);color:#f0a838;padding:8px 14px;border-radius:6px;margin-bottom:18px;font-size:0.72em;text-align:center}
+
+/* 仪表盘 */
+.dash{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.di{flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 10px;text-align:center}
+.di .n{font-size:1.3em;font-weight:800}.di .l{font-size:0.62em;color:var(--muted);margin-top:2px}
+
+/* 卡片 */
+.card{background:var(--card);border:1px solid var(--border);border-radius:11px;margin-bottom:14px;overflow:hidden}
+.card.star{border-left:3px solid var(--accent)}
+.ch{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid rgba(26,31,39,0.6);flex-wrap:wrap;font-size:0.85em}
+.ch .lg{font-size:0.62em;padding:2px 6px;border-radius:7px;font-weight:600}
+.lcl{background:#152433;color:#58a6ff}.lel{background:#2b1515;color:#f87171}.llc{background:#15281a;color:#3fb950}
+.ch .cf{margin-left:auto;font-size:0.68em;font-weight:600}
+.c-h{color:#3fb950}.c-m{color:#f0a838}.c-l{color:#6b7280}
+.cb{padding:14px 16px}
+
+/* 对阵 */
+.mt{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px}
+.mt .tn{font-size:1.15em;font-weight:700}
+.mt .vs{font-size:0.7em;color:var(--muted);font-weight:600}
+.mt .es{font-size:0.62em;color:var(--muted);display:block;font-weight:400}
+.xgl{text-align:center;font-size:0.76em;color:var(--muted);margin-bottom:12px}
+.xgl b{color:var(--accent)}
+
+/* 盘口网格 */
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px}
+@media(max-width:600px){.mg{grid-template-columns:repeat(2,1fr)}}
+.mi{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 10px;text-align:center}
+.mi .ml{font-size:0.62em;color:var(--muted);margin-bottom:2px}
+.mi .mv{font-size:0.85em;font-weight:700}
+.mi .ms{font-size:0.62em;color:var(--muted);margin-top:1px}
+.mi.best{border-color:var(--accent);background:rgba(240,168,56,0.04)}
+.mi.best .mv{color:var(--accent)}
+.mi.best .ml{color:var(--accent)}
+
+/* 分析 */
+.an{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+@media(max-width:600px){.an{grid-template-columns:1fr}}
+.ab{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:10px 12px;font-size:0.78em;line-height:1.6}
+.ab .al{font-size:0.62em;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.of{display:flex;gap:4px;margin-bottom:6px;text-align:center}
+.of span{flex:1;font-size:0.8em}
+.of .od{color:var(--green)}.of .ou{color:var(--red)}.of .os{color:var(--muted)}
+
+/* 投注条 */
+.bt{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(240,168,56,0.04);border:1px solid rgba(240,168,56,0.12);border-radius:7px;flex-wrap:wrap;font-size:0.82em}
+.bt .bl{font-size:0.62em;color:var(--accent);letter-spacing:1px}
+.bt .bo{font-weight:800;color:var(--accent);font-size:1.05em}
+.bt .br{font-size:0.78em;color:var(--muted);flex-basis:100%;margin-top:3px}
+
+/* 台账 */
+.ldg{margin-top:30px;border-top:2px solid var(--border);padding-top:20px}
+.ldg h2{font-size:1.05em;margin-bottom:2px}.ldg em{color:var(--accent);font-style:normal}
+.ldg .sub{font-size:0.7em;color:var(--muted);margin-bottom:14px}
+.lt{width:100%;border-collapse:collapse;font-size:0.76em;margin-bottom:12px}
+.lt th{color:var(--muted);font-weight:500;padding:7px 5px;border-bottom:1px solid var(--border);font-size:0.75em;text-align:center}
+.lt td{padding:7px 5px;border-bottom:1px solid rgba(26,31,39,0.5);text-align:center}
+.lt .pn{color:var(--accent);font-weight:600}
+.lt .bp{color:var(--accent);font-weight:700}
+.lsum{display:flex;gap:8px;flex-wrap:wrap;font-size:0.78em;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.lsum span{flex:1;text-align:center;min-width:70px}
+.lsum b{font-size:1.1em}
+.nt{background:rgba(240,168,56,0.03);border:1px solid rgba(240,168,56,0.08);border-radius:8px;padding:12px 16px;margin-top:16px;font-size:0.78em;color:var(--accent);text-align:center;line-height:1.6}
+.ft{text-align:center;padding:20px;color:var(--muted);font-size:0.65em;border-top:1px solid var(--border);margin-top:14px}
+</style>
+</head>
+<body>
+<div class="w">
+
+<div class="hdr"><div class="t">⚽ 今晚<em>投注方案</em></div><div class="s">2026.08.04 周二 · 欧冠资格赛之夜 · 全部盘口 + 最佳投注</div></div>
+<div class="warn">⚠ AI分析师独立判断 · 模拟投注单注100 · 共8注800 · 明天对照比分复盘</div>
+
+<div class="dash" id="dash"></div>
+
+<div id="cards"></div>
+
+<div class="ldg">
+  <h2>📒 <em>投注台账</em> (已自动下注)</h2>
+  <div class="sub">每注100 · 明天赛后逐场核对 · 盈亏自动计算</div>
+  <div style="overflow-x:auto"><table class="lt"><thead><tr><th>#</th><th>时间</th><th>杯赛</th><th>比赛</th><th>玩法</th><th>选项</th><th>赔率</th><th>金额</th><th>信心</th><th>结果</th><th>盈亏</th></tr></thead><tbody id="ledger"></tbody></table></div>
+  <div class="lsum" id="lsum"></div>
+</div>
+
+<div class="nt">📅 <b>明天复盘:</b> 逐场核对实际比分 → 标✅/❌ → 算总盈亏 → 分析偏差原因 → 检测模型是否高估主场/低估平局 → 调整ELO和泊松参数</div>
+<div class="ft">AI足球分析师 · 泊松分布×ELO融合 · 纯研究用途 · 2026.08.04</div>
+</div>
+
+<script>
+var M=[
+  {id:7,h:"温哥华白帽",a:"亚特兰特",lg:"北美联杯",lgc:"llc",time:"8/5 10:30",elo:"1450/1330",ah:"温哥华 -1.5",
+   xg:"2.28 — 0.35",tg:"2.63",ts:"3-0",ts2:"2-0 / 3-1",
+   cf:"高",cfv:81,cfc:"c-h",star:true,brief:"MLS vs 墨乙=实力悬殊。今日铁胆。",
+   flow:[{v:"1.30→1.25",d:"↓"},{v:"5.00→5.50",d:"↑"},{v:"8.50→10.30",d:"↑"}],
+   fn:"市场单向涌入主胜。客胜翻倍排除冷门。亚盘水位0.92→0.78。",
+   an:"模型概率81.2%今日最高。温哥华MLS主场场均1.8球，亚特兰特墨乙级别。xG净胜约1.93球，-1.5盘口完全覆盖。这场翻车模型需要彻底重调。",
+   mkts:[
+     ["胜平负","主 81.2%","1.25","平 12.5%","5.50","客 6.3%","10.30",0],
+     ["让球","温哥华 -1.5","1.88","亚特兰特 +1.5","1.92","","",0],
+     ["大小球","大 3.5","1.85","小 3.5","1.88","","",0],
+     ["角球","大 11","—","小 11","—","","",0],
+     ["半场","大0.5 78%","—","大1.5 48%","—","","",0],
+     ["下半场","大1.5 62%","—","","","","",0],
+     ["BTTS","否 78%","—","是 22%","—","","",0],
+   ],
+   bet:["让球","温哥华白帽 -1.5","1.88","MLS vs 墨乙=实力悬殊。深盘博穿盘。"]},
+  {id:2,h:"奥林匹亚科斯",a:"奈梅亨",lg:"欧冠资格赛",lgc:"lcl",time:"8/5 01:00",elo:"1580/1460",ah:"奥林匹亚科斯 -1.0",
+   xg:"1.68 — 0.48",tg:"2.16",ts:"2-0",ts2:"2-1 / 1-0",
+   cf:"高",cfv:66,cfc:"c-h",star:true,brief:"对手5人伤缺+欧冠首秀。全方位碾压。",
+   flow:[{v:"1.62→1.53",d:"↓"},{v:"4.00→4.20",d:"↑"},{v:"5.00→5.61",d:"↑"}],
+   fn:"主胜降幅5.5%大资金涌入。平局客胜同步走高=市场排除冷门。亚盘-0.75→-1.0升盘。",
+   an:"120ELO差+主场+奈梅亨5名防线球员伤缺+首次欧冠=全方位碾压。xG净胜约1.2球。今日第二稳。",
+   mkts:[
+     ["胜平负","主 65.8%","1.53","平 22.5%","4.20","客 11.7%","5.61",0],
+     ["让球","奥林匹亚科斯 -1.0","1.92","奈梅亨 +1.0","1.88","","",0],
+     ["大小球","大 2.5","1.82","小 2.5","1.92","","",0],
+     ["角球","大 10","—","小 10","—","","",0],
+     ["半场","大0.5 72%","—","大1.5 38%","—","","",0],
+     ["下半场","大1.5 48%","—","","","","",0],
+     ["BTTS","否 68%","—","是 32%","—","","",0],
+   ],
+   bet:["让球","奥林匹亚科斯 -1.0","1.92","对手5人伤缺+首秀。穿盘概率>55%。"]},
+  {id:4,h:"贝尔谢巴夏普尔",a:"贝尔格莱德红星",lg:"欧冠资格赛",lgc:"lcl",time:"8/5 01:00",elo:"1420/1600",ah:"红星 -0.75",
+   xg:"0.42 — 1.62",tg:"2.04",ts:"0-2",ts2:"0-1 / 1-2",
+   cf:"高",cfv:63,cfc:"c-h",star:true,brief:"中立场地+180ELO差。红星碾压。",
+   flow:[{v:"4.20→4.46",d:"↑"},{v:"3.80→3.70",d:"↓"},{v:"1.80→1.72",d:"↓"}],
+   fn:"客胜持续降水降幅4.4%。亚盘升盘-0.5→-0.75。主胜升到接近无效赔率。",
+   an:"匈牙利中立场地=贝尔谢巴丧失以色列主场。180ELO差在欧战资格赛具备决定性。xG净胜1.2球。",
+   mkts:[
+     ["胜平负","主 15.2%","4.46","平 22.0%","3.70","客 62.8%","1.72",2],
+     ["让球","红星 -0.75","1.85","贝尔谢巴 +0.75","1.95","","",0],
+     ["大小球","大 2.5","2.10","小 2.5","1.70","","",1],
+     ["角球","大 9","—","小 9","—","","",0],
+     ["半场","大0.5 70%","—","大1.5 34%","—","","",0],
+     ["下半场","大1.5 50%","—","","","","",0],
+     ["BTTS","否 72%","—","是 28%","—","","",0],
+   ],
+   bet:["让球","贝尔格莱德红星 -0.75","1.85","中立场地+180ELO+降水=-0.75博穿。"]},
+  {id:6,h:"沙姆洛克流浪",a:"伊格纳迪亚",lg:"欧联资格赛",lgc:"lel",time:"8/5 02:00",elo:"1360/1280",ah:"沙姆洛克 -0.5",
+   xg:"1.42 — 0.38",tg:"1.80",ts:"1-0",ts2:"2-0 / 2-1",
+   cf:"中",cfv:59,cfc:"c-m",star:false,brief:"人工草+客队零欧战经验。",
+   flow:[{v:"2.00→1.92",d:"↓"},{v:"3.40→3.40",d:"→"},{v:"3.60→3.88",d:"↑"}],
+   fn:"正常主胜降水无异常。亚盘-0.5水位0.95→0.90。温和看好。",
+   an:"都柏林塔拉赫特人工草皮对客队极不友好。伊格纳迪亚阿尔巴尼亚球队欧战客场零经验。半球盘可博。",
+   mkts:[
+     ["胜平负","主 58.5%","1.92","平 24.5%","3.40","客 17.0%","3.88",0],
+     ["让球","沙姆洛克 -0.5","1.90","伊格纳迪亚 +0.5","1.90","","",0],
+     ["大小球","大 2.5","1.88","小 2.5","1.86","","",0],
+     ["角球","大 9","—","小 9","—","","",0],
+     ["半场","大0.5 70%","—","大1.5 30%","—","","",0],
+     ["下半场","大1.5 45%","—","","","","",0],
+     ["BTTS","否 70%","—","是 30%","—","","",0],
+   ],
+   bet:["胜平负","主胜 (沙姆洛克)","1.92","人工草+零经验=半球盘博上盘。"]},
+  {id:1,h:"布拉格斯巴达",a:"里昂",lg:"欧冠资格赛",lgc:"lcl",time:"8/5 01:00",elo:"1560/1680",ah:"斯巴达 +0.5",
+   xg:"0.92 — 1.48",tg:"2.40",ts:"0-1",ts2:"1-1 / 0-2",
+   cf:"中",cfv:44,cfc:"c-m",star:false,brief:"斯巴达联赛状态碾压+受让保护。",
+   flow:[{v:"3.60→3.42",d:"↓"},{v:"3.50→3.50",d:"→"},{v:"2.05→1.98",d:"↓"}],
+   fn:"客胜资金流入但亚盘从客-0.25降至平手=市场对里昂穿盘信心不足。",
+   an:"里昂ELO高120但热身0-4惨败防线存疑。斯巴达已踢两轮联赛(上轮3-1胜)节奏碾压。受让+0.5=输一球走水赢/平全收。",
+   mkts:[
+     ["胜平负","主 28.5%","3.42","平 27.3%","3.50","客 44.2%","1.98",2],
+     ["让球","斯巴达 +0.5","1.85","里昂 -0.5","1.95","","",0],
+     ["大小球","大 2.5","1.90","小 2.5","1.85","","",0],
+     ["角球","大 10","—","小 10","—","","",0],
+     ["半场","大0.5 78%","—","大1.5 42%","—","","",0],
+     ["下半场","大1.5 52%","—","","","","",0],
+     ["BTTS","是 52%","—","否 48%","—","","",0],
+   ],
+   bet:["让球","布拉格斯巴达 +0.5","1.85","联赛状态+受让。里昂热身惨败不追穿盘。"]},
+  {id:8,h:"辛辛那提",a:"帕丘卡",lg:"北美联杯",lgc:"llc",time:"8/5 10:30",elo:"1500/1550",ah:"平手盘",
+   xg:"1.32 — 1.20",tg:"2.52",ts:"1-1",ts2:"1-0 / 2-1",
+   cf:"低",cfv:43,cfc:"c-l",star:false,brief:"MLS主场龙博不败。平手盘安全。",
+   flow:[{v:"2.10→2.04",d:"↓"},{v:"3.50→3.55",d:"→"},{v:"3.20→3.11",d:"↓"}],
+   fn:"双向微降=市场严重分歧。盘口平手不变无一方获得显著资金倾斜。",
+   an:"ELO差仅50+辛辛那提MLS主场龙(上季仅2负)。帕丘卡墨超客场不稳定。平手盘=主队不败即收米。",
+   mkts:[
+     ["胜平负","主 42.5%","2.04","平 32.0%","3.55","客 25.5%","3.11",0],
+     ["让球","辛辛那提 +0","1.82","帕丘卡 +0","1.98","","",0],
+     ["大小球","大 2.5","1.82","小 2.5","1.92","","",0],
+     ["角球","大 10","—","小 10","—","","",0],
+     ["半场","大0.5 76%","—","大1.5 44%","—","","",0],
+     ["下半场","大1.5 54%","—","","","","",0],
+     ["BTTS","是 52%","—","否 48%","—","","",0],
+   ],
+   bet:["让球","辛辛那提 +0 (平手)","1.82","主场龙博不败。平手盘安全。"]},
+  {id:3,h:"圣吉罗斯",a:"博德闪耀",lg:"欧冠资格赛",lgc:"lcl",time:"8/5 01:00",elo:"1540/1570",ah:"平手盘",
+   xg:"0.98 — 1.55",tg:"2.53",ts:"1-2",ts2:"1-1 / 0-2",
+   cf:"低",cfv:39,cfc:"c-l",star:false,brief:"方向分歧大，大球信号极强。",
+   flow:[{v:"2.10→2.29",d:"↑"},{v:"3.60→3.55",d:"↓"},{v:"3.10→2.82",d:"↓"}],
+   fn:"主胜水位走高=市场不信任。客胜降幅9%成实际热门。大小球2.5→2.75升盘。",
+   an:"圣吉罗斯主场迁至100km外=丧失主场。博德近5场12球攻击力恐怖。方向不明确但大球信号极强。",
+   mkts:[
+     ["胜平负","主 30.8%","2.29","平 30.7%","3.55","客 38.5%","2.82",2],
+     ["让球","博德闪耀 +0","1.85","圣吉罗斯 +0","1.95","","",0],
+     ["大小球","大 2.5","1.72","小 2.5","2.05","","",0],
+     ["角球","大 10","—","小 10","—","","",0],
+     ["半场","大0.5 76%","—","大1.5 44%","—","","",0],
+     ["下半场","大1.5 56%","—","","","","",0],
+     ["BTTS","是 55%","—","否 45%","—","","",0],
+   ],
+   bet:["大小球","大 2.5","1.72","方向分歧大追确定性。大球信号明确:总球2.53+升盘。"]},
+  {id:5,h:"米亚尔比",a:"布拉迪斯拉发",lg:"欧冠资格赛",lgc:"lcl",time:"8/5 01:00",elo:"1430/1500",ah:"平手 / 主-0.25",
+   xg:"0.78 — 0.98",tg:"1.76",ts:"0-0",ts2:"0-1 / 1-0",
+   cf:"低",cfv:34,cfc:"c-l",star:false,brief:"⚠冷门警报！盘口降级+资金反向。",
+   flow:[{v:"1.85→2.04",d:"↑"},{v:"3.50→3.40",d:"↓"},{v:"3.80→3.40",d:"↓"}],
+   fn:"今日最异常！主胜升幅超10%客胜暴跌。亚盘-0.5→-0.25=庄家降盘+资金反向。经典冷门信号。",
+   an:"盘口降级=市场看穿主队实力。布斯8连冠斯洛伐克霸主欧战经验远超瑞典中游。方向高风险追小球规避。",
+   mkts:[
+     ["胜平负","主 32.5%","2.04","平 34.2%","3.40","客 33.3%","3.40",1],
+     ["让球","布斯 +0.25","1.80","米亚尔比 -0.25","2.00","","",0],
+     ["大小球","大 2.5","2.20","小 2.5","1.62","","",1],
+     ["角球","大 9","—","小 9","—","","",1],
+     ["半场","大0.5 58%","—","大1.5 22%","—","","",0],
+     ["下半场","大1.5 38%","—","","","","",0],
+     ["BTTS","否 65%","—","是 35%","—","","",0],
+   ],
+   bet:["大小球","小 2.5","1.62","方向风险高追小球。总球预期仅1.76。"]},
+];
+M.sort(function(a,b){return b.cfv-a.cfv});
+
+var cardsHtml='';
+for(var i=0;i<M.length;i++){
+  var m=M[i],rank=i+1;
+  var miHtml='';
+  for(var j=0;j<m.mkts.length;j++){
+    var mk=m.mkts[j],bestIdx=mk[7];
+    miHtml+='<div class="mi'+(bestIdx===0||bestIdx===1||bestIdx===2?' best':'')+'"><div class="ml">'+mk[0]+'</div><div class="mv">'+(bestIdx===0||bestIdx===1||bestIdx===2?'★ ':'')+mk[1]+'</div><div class="ms">'+mk[2]+'</div></div>';
+    if(mk[3]) miHtml+='<div class="mi'+(bestIdx===1?' best':'')+'"><div class="ml">'+mk[0]+'</div><div class="mv">'+(bestIdx===1?'★ ':'')+mk[3]+'</div><div class="ms">'+mk[4]+'</div></div>';
+    if(mk[5]) miHtml+='<div class="mi'+(bestIdx===2?' best':'')+'"><div class="ml">'+mk[0]+'</div><div class="mv">'+(bestIdx===2?'★ ':'')+mk[5]+'</div><div class="ms">'+mk[6]+'</div></div>';
+  }
+
+  var ofHtml='';
+  for(var k=0;k<m.flow.length;k++){
+    var f=m.flow[k],cls=f.d==='↓'?'od':f.d==='↑'?'ou':'os';
+    ofHtml+='<span class="'+cls+'">'+f.v+' '+f.d+'</span>';
+  }
+
+  cardsHtml+=
+  '<div class="card'+(m.star?' star':'')+'">'+
+    '<div class="ch"><b style="color:'+(rank<=3?'var(--accent)':'var(--muted)')+'">#'+rank+'</b> <span class="lg '+m.lgc+'">'+m.lg+'</span> <b style="font-size:0.75em">'+m.time+'</b> '+m.h+' vs '+m.a+' <span style="font-size:0.72em;color:var(--muted)">ELO '+m.elo+' · '+m.ah+'</span><span class="cf '+m.cfc+'" style="margin-left:auto">'+m.cf+'信心 '+m.cfv+'%</span></div>'+
+    '<div class="cb">'+
+      '<div class="mt"><span class="tn">'+m.h+'<span class="es"> 🏠</span></span><span class="vs">VS</span><span class="tn">'+m.a+'<span class="es"> 🛫</span></span></div>'+
+      '<div class="xgl">xG <b>'+m.xg+'</b> · 总球 <b>'+m.tg+'</b> · 最可能 <b>'+m.ts+'</b> ('+m.ts2+')</div>'+
+      '<div class="mg">'+miHtml+'</div>'+
+      '<div class="an">'+
+        '<div class="ab"><div class="al">📈 赔率走势 (初→临)</div><div class="of">'+ofHtml+'</div><div style="color:var(--muted)">'+m.fn+'</div></div>'+
+        '<div class="ab"><div class="al">🔬 模型分析</div>'+m.an+'</div>'+
+      '</div>'+
+      '<div class="bt"><span class="bl">💰 最佳投注</span><span>'+m.bet[0]+' —</span><span class="bo">'+m.bet[1]+' @'+m.bet[2]+'</span><span style="color:var(--muted)">· 100</span><div class="br">'+m.bet[3]+'</div></div>'+
+    '</div></div>';
+}
+document.getElementById('cards').innerHTML=cardsHtml;
+
+var th=M.filter(function(m){return m.cf==='高'}).length;
+var tm=M.filter(function(m){return m.cf==='中'}).length;
+var tl=M.filter(function(m){return m.cf==='低'}).length;
+var avgO=(M.reduce(function(s,m){return s+parseFloat(m.bet[2])},0)/M.length).toFixed(2);
+
+document.getElementById('dash').innerHTML=
+  '<div class="di"><div class="n">'+M.length+'</div><div class="l">总场次</div></div>'+
+  '<div class="di"><div class="n" style="color:var(--accent)">'+(M.length*100)+'</div><div class="l">总投注额</div></div>'+
+  '<div class="di"><div class="n" style="color:var(--green)">'+th+'</div><div class="l">高信心 ⭐</div></div>'+
+  '<div class="di"><div class="n" style="color:var(--accent)">'+tm+'</div><div class="l">中信心</div></div>'+
+  '<div class="di"><div class="n" style="color:var(--muted)">'+tl+'</div><div class="l">低信心</div></div>'+
+  '<div class="di"><div class="n" style="color:var(--blue)">'+avgO+'</div><div class="l">平均赔率</div></div>';
+
+var lr='';
+for(var i=0;i<M.length;i++){
+  var m=M[i];
+  lr+='<tr><td>'+(i+1)+'</td><td>'+m.time+'</td><td>'+m.lg+'</td><td>'+m.h+' vs '+m.a+'</td><td>'+m.bet[0]+'</td><td class="bp">'+m.bet[1]+'</td><td>'+m.bet[2]+'</td><td>100</td><td style="color:'+(m.cf==='高'?'var(--green)':m.cf==='中'?'var(--accent)':'var(--muted)')+'">'+m.cf+'</td><td class="pn">⏳</td><td>—</td></tr>';
+}
+document.getElementById('ledger').innerHTML=lr;
+
+var expHits=M.filter(function(m){return m.cf==='高'}).length+Math.round(M.filter(function(m){return m.cf==='中'}).length*0.55)+Math.round(M.filter(function(m){return m.cf==='低'}).length*0.3);
+document.getElementById('lsum').innerHTML=
+  '<span>📋 <b>8</b> 注</span><span>💵 总投 <b>800</b></span><span>📊 均赔 <b>'+avgO+'</b></span><span>⭐ 高信 <b>'+th+'</b> 场</span><span>🎯 预计命中 <b>'+expHits+'</b> 场</span><span>📈 预期回报 <b>+200~+500</b></span>';
+</script>
+</body>
+</html>

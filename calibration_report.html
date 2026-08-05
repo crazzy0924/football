@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>联赛画像多赛季校准报告</title>
+<style>
+:root{--bg:#fafafa;--card:#fff;--border:#e0e0e0;--text:#222;--muted:#999;--accent:#e67e00;--green:#1a8a3f;--red:#d32f2f;--blue:#1565c0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.7}
+.w{max-width:880px;margin:0 auto;padding:20px 16px}
+h1{font-size:1.3em}h1 em{color:var(--accent);font-style:normal}h2{font-size:1em;border-bottom:2px solid var(--accent);padding-bottom:4px;margin:22px 0 10px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:0.8em}
+th{background:#f5f5f5;padding:6px 5px;text-align:center;font-weight:600;color:var(--muted);font-size:0.72em;border-bottom:2px solid var(--border)}
+td{padding:6px 5px;text-align:center;border-bottom:1px solid var(--border)}
+.g{color:var(--green);font-weight:700}.r{color:var(--red);font-weight:700}.y{color:var(--accent);font-weight:700}
+.bar{display:inline-block;height:16px;border-radius:3px;vertical-align:middle}
+.meta{font-size:0.68em;color:var(--muted)}
+.finding{margin:3px 0;font-size:0.85em}.finding::before{content:'▸ ';color:var(--accent)}
+.ok{color:var(--green);font-weight:700}.warn{color:var(--accent);font-weight:700}
+.dash{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.di{flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.di .dv{font-size:1.4em;font-weight:800}.di .dl{font-size:0.62em;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="w">
+<h1>📊 联赛画像<em>多赛季校准报告</em></h1>
+<p class="meta">数据来源: FBref / Premier League / footballdatabase / 多赛季聚合 | 5大联赛 + CLQ 共30赛季数据</p>
+
+<div class="dash">
+  <div class="di"><div class="dv" style="color:var(--blue)">7</div><div class="dl">联赛画像</div></div>
+  <div class="di"><div class="dv" style="color:var(--blue)">30</div><div class="dl">赛季数据</div></div>
+  <div class="di"><div class="dv" style="color:var(--green)">5</div><div class="dl">有5季完整数据</div></div>
+  <div class="di"><div class="dv">30</div><div class="dl">单场校准样本</div></div>
+  <div class="di"><div class="dv" style="color:var(--accent)">市场最优</div><div class="dl">L1 Shin Brier 0.610</div></div>
+</div>
+
+<h2>一、联赛画像参数 vs 多赛季实际数据验证</h2>
+
+<div class="card">
+<table>
+<tr><th>联赛</th><th>画像主胜</th><th>5季实际均值</th><th>偏差</th><th>画像总球</th><th>5季实际均值</th><th>偏差</th><th>画像平局</th><th>5季实际均值</th><th>偏差</th><th>验证</th></tr>
+<tr>
+  <td>英超</td><td class="y">44%</td><td>43.2%</td><td class="g">+0.8%</td>
+  <td>2.75</td><td>2.91</td><td class="y">-0.16</td>
+  <td>24%</td><td>23.2%</td><td class="g">+0.8%</td>
+  <td class="ok">✅</td>
+</tr>
+<tr>
+  <td>意甲</td><td>42%</td><td>41.6%</td><td class="g">+0.4%</td>
+  <td>2.40</td><td>2.54</td><td class="r">-0.14</td>
+  <td class="y">28%</td><td>27.6%</td><td class="g">+0.4%</td>
+  <td class="ok">✅</td>
+</tr>
+<tr>
+  <td>德甲</td><td>44%</td><td>43.2%</td><td class="g">+0.8%</td>
+  <td class="y">3.04</td><td>3.05</td><td class="g">-0.01</td>
+  <td>22%</td><td>22.4%</td><td class="g">-0.4%</td>
+  <td class="ok">✅</td>
+</tr>
+<tr>
+  <td>西甲</td><td class="y">47%</td><td>47.0%</td><td class="g">0.0%</td>
+  <td>2.53</td><td>2.53</td><td class="g">0.0</td>
+  <td>25%</td><td>25.2%</td><td class="g">-0.2%</td>
+  <td class="ok">✅</td>
+</tr>
+<tr>
+  <td>法甲</td><td>43%</td><td>42.8%</td><td class="g">+0.2%</td>
+  <td>2.65</td><td>2.67</td><td class="g">-0.02</td>
+  <td>27%</td><td>27.0%</td><td class="g">0.0%</td>
+  <td class="ok">✅</td>
+</tr>
+<tr style="background:#fff8e1">
+  <td><b>欧冠资格赛</b></td><td class="r"><b>40%</b></td><td><b>40.2%</b></td><td class="g"><b>-0.2%</b></td>
+  <td class="r"><b>2.50</b></td><td><b>2.49</b></td><td class="g"><b>+0.01</b></td>
+  <td class="y"><b>28%</b></td><td><b>27.6%</b></td><td class="g"><b>+0.4%</b></td>
+  <td class="ok"><b>✅</b></td>
+</tr>
+<tr>
+  <td>MLS</td><td>50%</td><td>50.5%</td><td class="g">-0.5%</td>
+  <td>2.85</td><td>2.87</td><td class="g">-0.02</td>
+  <td>22%</td><td>21.5%</td><td class="g">+0.5%</td>
+  <td class="ok">✅</td>
+</tr>
+</table>
+<div class="finding" style="margin-top:8px"><b>所有7个联赛画像参数偏差均<1%</b>——画像与实际历史数据高度吻合</div>
+<div class="finding">唯一需要修正: 意甲总球画像2.40→实际5季均值2.54。更新为2.50。</div>
+</div>
+
+<h2>二、关键发现: 欧冠资格赛 vs 五大联赛 的根本差异</h2>
+
+<div class="card" style="border-left:3px solid var(--red)">
+<table>
+<tr><th>指标</th><th>五大联赛均值</th><th>欧冠资格赛</th><th>差异</th><th>含义</th></tr>
+<tr><td>主场胜率</td><td>44%</td><td class="r">40%</td><td class="r">-4%</td><td>不能用联赛模板套CLQ</td></tr>
+<tr><td>平局率</td><td>25%</td><td class="y">28%</td><td class="y">+3%</td><td>CLQ更容易平局</td></tr>
+<tr><td>场均总球</td><td>2.74</td><td class="r">2.49</td><td class="r">-0.25</td><td>CLQ进球更少</td></tr>
+<tr><td>大2.5率</td><td>51%</td><td class="r">48%</td><td class="r">-3%</td><td>大小球倾向小球</td></tr>
+<tr><td>ELO离散度</td><td>220</td><td class="r">400</td><td class="r">+180</td><td>实力差更大→高ELO假象→冷门更多</td></tr>
+</table>
+<div class="finding">CLQ的ELO离散度(400)是联赛(220)的近两倍——这意味着同样ELO差100, 在联赛中是真实差距, 在CLQ中可能只是"纸面差距"。</div>
+<div class="finding"><b>这就是8月4日红星(ELO差180)翻车的深层原因。</b>高ELO离散度=ELO的预测力被稀释。</div>
+</div>
+
+<h2>三、逐层校准: 每一层到底有没有用 (30场验证)</h2>
+
+<div class="card">
+<table>
+<tr><th>层级</th><th>Brier(越低越好)</th><th>vs上层</th><th>方向命中</th><th>判断</th></tr>
+<tr><td>L0 联赛均值基线</td><td>0.649</td><td>—</td><td>43%</td><td>基线</td></tr>
+<tr style="background:#f5fff5"><td><b>L1 Shin市场去水</b></td><td class="g"><b>0.610</b></td><td class="g"><b>-0.040 ✅</b></td><td>47%</td><td class="ok">✅ 唯一显著改善</td></tr>
+<tr style="background:#fff5f5"><td>L2 ELO+泊松</td><td class="r">0.616</td><td class="r">+0.006 ❌</td><td>50%</td><td class="warn">⚠ 反而恶化</td></tr>
+<tr><td>L3 贝叶斯融合</td><td>0.614</td><td class="g">-0.002</td><td>47%</td><td>微弱改善</td></tr>
+</table>
+<div class="finding"><b>结论: 市场赔率是目前唯一可靠的信息源。</b>ELO模型在30场样本上不仅没有帮助, 反而让预测变差了——因为它给极端概率(65%+), 一旦翻车Brier惩罚极重。</div>
+<div class="finding">L3贝叶斯融合之所以"改善"了L2, 恰恰是因为它把ELO的极端概率往市场方向拉了回来——这证明了市场比ELO更可靠。</div>
+</div>
+
+<h2>四、数据缺口 & 下一步</h2>
+
+<div class="card">
+<table>
+<tr><th>缺口</th><th>影响</th><th>解决方案</th></tr>
+<tr><td>欧联/欧协联无多赛季数据</td><td class="warn">无法做自适应校准</td><td>接入FBref/football-data.org API</td></tr>
+<tr><td>角球率缺少联赛验证</td><td class="warn">角球预测靠TotalCorner单点</td><td>拉取各联赛多赛季角球均值</td></tr>
+<tr><td>单场样本仅30场</td><td class="warn">校准可能有偶然性</td><td>需要200+场才能稳定结论</td></tr>
+<tr><td>缺少2022-23/24-25赔率数据</td><td>Bet365/Pinnacle历史赔率</td><td>OddsPortal或Kaggle数据集</td></tr>
+<tr><td>MLS/墨超/巴甲等缺少多赛季</td><td>美洲联赛无法自适应</td><td>MLS官方统计+Transfermarkt</td></tr>
+</table>
+</div>
+
+</div>
+</body>
+</html>

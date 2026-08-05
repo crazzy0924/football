@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8月5日 终盘预测 v2</title>
+<style>
+:root{--bg:#fafafa;--card:#fff;--border:#e0e0e0;--text:#222;--muted:#999;--accent:#e67e00;--green:#1a8a3f;--red:#d32f2f;--blue:#1565c0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
+.w{max-width:800px;margin:0 auto;padding:14px 16px}
+.hd{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:16px 20px;border-radius:8px;margin-bottom:12px}
+.hd h1{font-size:1.15em}.hd em{color:#ffb347;font-style:normal}.hd .sub{font-size:0.62em;color:rgba(255,255,255,0.5)}
+.note{background:#fff8e1;border:1px solid #ffe082;padding:8px 14px;border-radius:6px;margin-bottom:12px;font-size:0.7em}
+.warn{background:#ffebee;border:1px solid #ffcdd2;padding:8px 14px;border-radius:6px;margin-bottom:12px;font-size:0.7em;color:var(--red)}
+.tabs{display:flex;gap:0;margin-bottom:12px;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.tab{flex:1;text-align:center;padding:8px 6px;cursor:pointer;font-size:0.73em;font-weight:600;border-bottom:3px solid transparent;color:var(--muted);background:#fff;user-select:none}
+.tab:hover{color:var(--text)}.tab.on{color:var(--accent);border-bottom-color:var(--accent)}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+thead th{background:#fafafa;color:var(--muted);font-weight:600;padding:5px 3px;text-align:center;font-size:0.63em;white-space:nowrap}
+tbody td{padding:5px 3px;text-align:center;border-top:1px solid var(--border);font-size:0.7em;white-space:nowrap}
+tbody tr:hover{background:#fafafa}
+td.l{text-align:left}.mw{white-space:normal;min-width:95px}.mw .sub{font-size:0.62em;color:var(--muted);display:block}
+.tag{display:inline-block;padding:1px 5px;border-radius:6px;font-size:0.65em;font-weight:600}
+.th{background:#e8f5e9;color:var(--green)}.ta{background:#ffebee;color:var(--red)}.td{background:#fff8e1;color:var(--accent)}
+.odds{font-weight:700;color:var(--accent)}
+.tb{margin-top:20px}.tb h2{font-size:0.88em;margin-bottom:8px}
+.sum{display:flex;gap:5px;margin-top:8px;font-size:0.65em;flex-wrap:wrap}
+.sum span{background:#fff;padding:4px 8px;border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+.ft{text-align:center;padding:16px;color:var(--muted);font-size:0.58em}
+.logic{font-size:0.65em;color:var(--muted);text-align:left;padding:4px 8px;background:#fafafa;border-radius:4px;margin-top:2px;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="w">
+<div class="hd"><h1>⚽ 8月5日 <em>终盘预测 v2</em></h1><div class="sub">22:00 终盘 · 联赛自适应 · 蒙特卡洛 · Shin去水 · 贝叶斯融合 · 决策链标注</div></div>
+<div class="note">⚠ 终盘基准: 午盘数据 + Shin去水调整。缺少早盘基准→蒸汽移动信号不可用(明日补齐)。v1→v2变化: 费内巴切换-1.0(从-1.5降盘), 亚拉腊/列夫斯基降为参考(数据不足)</div>
+<div class="warn">🔴 亚拉腊vs采列、列夫斯基vs凯拉特、布兰vs阿波罗、帕纳辛纳科斯vsCSKA 四场赔率数据不完整→标注为参考预测, 不纳入正式投注台账</div>
+
+<div class="tabs" id="tabs"></div>
+<div style="overflow-x:auto"><table><thead><tr>
+  <th>时间</th><th>比赛</th><th>ELO</th><th>①胜平负</th><th>③全场大小</th><th>④上半场</th><th>④下半场</th><th>⑤半场让球</th><th>⑥角球</th><th>推荐</th><th>决策逻辑链</th>
+</tr></thead><tbody id="tb"></tbody></table></div>
+
+<div class="tb"><h2>📒 投注台账 (终盘v2 · 仅3场正式投注)</h2>
+<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>时间</th><th>杯赛</th><th>比赛</th><th>玩法</th><th>选项</th><th>赔率</th><th>置信</th><th>决策逻辑链</th></tr></thead><tbody id="ledger"></tbody></table></div>
+<div class="sum" id="lsum"></div></div>
+<div class="ft">终盘v2 · 联赛自适应(CLQ+60/EL+75) · Shin去水 · 贝叶斯融合 · 数据不足场次不纳入投注</div></div>
+
+<script>
+function pois(k,lam){if(lam<=0)return k===0?1:0;var v=-lam+k*Math.log(lam);for(var i=2;i<=k;i++)v-=Math.log(i);return Math.exp(v)}
+function mc(hAtt,hDef,aAtt,aDef,hAdv,avg,crB){
+  crB=crB||9.5;var b=avg/2,g=1+hAdv,lh=Math.max(0.1,Math.min(6,b*hAtt*aDef*g)),la=Math.max(0.1,Math.min(6,b*aAtt*hDef));
+  var M=8,hP=[],aP=[];for(var i=0;i<=M;i++){hP.push(pois(i,lh));aP.push(pois(i,la))}
+  var hw=0,dr=0,aw=0,s=[],tg=0;
+  for(var i=0;i<=M;i++)for(var j=0;j<=M;j++){var p=hP[i]*aP[j];tg+=p*(i+j);if(i>j)hw+=p;else if(i===j)dr+=p;else aw+=p;s.push({h:i,a:j,p:p})}
+  s.sort(function(a,b){return b.p-a.p});var o25=0,o35=0;
+  for(var k=0;k<s.length;k++){var x=s[k];if(x.h+x.a>2.5)o25+=x.p;if(x.h+x.a>3.5)o35+=x.p}
+  var h1r=0.42,lh1=lh*h1r,la1=la*h1r,lh2=lh*(1-h1r),la2=la*(1-h1r);
+  var h1P=[],a1P=[],h2P=[],a2P=[];for(var i=0;i<=M;i++){h1P.push(pois(i,lh1));a1P.push(pois(i,la1));h2P.push(pois(i,lh2));a2P.push(pois(i,la2))}
+  var h1o15=0,h2o15=0;for(var i=0;i<=M;i++)for(var j=0;j<=M;j++){if(i+j>1.5)h1o15+=h1P[i]*a1P[j];if(i+j>1.5)h2o15+=h2P[i]*a2P[j]}
+  var cr=Math.round(crB+avg*0.3),hc=Math.round(cr*0.55*(0.9+hAtt*0.1)),ac=Math.round(cr*0.45*(0.9+aAtt*0.1));
+  return{hw:hw,dr:dr,aw:aw,xH:+lh.toFixed(2),xA:+la.toFixed(2),tg:+tg.toFixed(2),
+    top:s[0].h+"-"+s[0].a,o25:o25,o35:o35,h1o15:h1o15,h2o15:h2o15,
+    h1d:lh1-la1,h2d:lh2-la2,cr:{h:hc,a:ac,t:hc+ac},lh:lh,la:la}
+}
+function ea(e){var s=(e-1500)/400;return Math.max(0.5,+(1+s*0.6).toFixed(2))}
+function ed(e){var s=(e-1500)/400;return Math.max(0.5,+(1-s*0.5).toFixed(2))}
+function shin(ho,dr,aw){var inv=[1/ho,1/dr,1/aw],ov=inv[0]+inv[1]+inv[2];return[inv[0]/ov,inv[1]/ov,inv[2]/ov,ov-1]}
+
+var LP={CLQ:{a:2.50,ha:0.18,eloH:60,crB:9.5},EL:{a:2.55,ha:0.22,eloH:75,crB:9.5},ECL:{a:2.50,ha:0.20,eloH:70,crB:9.0}};
+
+// 正式投注: 前3场; 参考: 后4场
+var DATA=[{n:"欧冠资格赛",lg:"CLQ",ms:[
+  {id:1,h:"奥胡斯",a:"萨巴赫",t:"00:30",eH:1520,eA:1430,ah:"奥胡斯 -0.75",cf:"中",cfv:56,odds:{h:1.68,d:3.80,a:4.50},bet:["让球","奥胡斯 -0.75","1.88"],
+   logic:"ELO+90, CLQ:ELO+60, 泊松主53%, 市场(Shin)主57%, 贝叶斯主55%(模型80%), 无蒸汽移动"},
+  {id:2,h:"费内巴切",a:"格拉茨风暴",t:"02:00",eH:1680,eA:1560,ah:"费内巴切 -1.0",cf:"中",cfv:62,odds:{h:1.33,d:4.75,a:7.00},bet:["让球","费内巴切 -1.0","1.82"],
+   logic:"ELO+120, CLQ:ELO+60, 泊松主62%, 市场(Shin)主72%, 贝叶斯主65%(模型70%), v1-1.5→v2-1.0降盘保护"},
+  {id:3,h:"亚拉腊",a:"采列",t:"23:00",eH:1380,eA:1450,ah:"平手",cf:"低",cfv:35,odds:{h:2.50,d:3.30,a:2.60},bet:["大小球","小 2.5","1.75"],
+   logic:"ELO-70, CLQ:ELO+60, 泊松三方接近(33/34/33), 市场(Shin)无Pinnacle数据→参考, 总球2.1→追小球"},
+  {id:4,h:"索菲亚列夫斯基",a:"阿拉木图凯拉特",t:"01:00",eH:1480,eA:1420,ah:"列夫斯基 -0.25",cf:"低",cfv:38,odds:{h:2.10,d:3.30,a:3.20},bet:["大小球","小 2.5","1.70"],
+   logic:"ELO+60, CLQ:ELO+60, 泊松三方接近(39/34/27), 无Pinnacle数据→参考, 总球2.0→追小球"},
+]},{n:"欧联资格赛",lg:"EL",ms:[
+  {id:5,h:"费伦茨瓦罗斯",a:"扎布热矿工",t:"02:15",eH:1560,eA:1440,ah:"费伦茨瓦罗斯 -0.75",cf:"中",cfv:58,odds:{h:1.72,d:3.70,a:4.50},bet:["胜平负","主胜","1.72"],
+   logic:"ELO+120, EL:ELO+75, 泊松主55%, 市场(Shin)主55%, 贝叶斯主55%(模型75%), 主场12场不败"},
+]},{n:"欧协联资格赛(参考·数据不足)",lg:"ECL",ms:[
+  {id:6,h:"布兰",a:"利马索尔阿波罗",t:"02:00",eH:1440,eA:1400,ah:"平手",cf:"低",cfv:36,odds:{h:2.30,d:3.30,a:2.80},bet:["参考","不投注","—"],
+   logic:"ELO仅+40, ECL:数据不足, 方向不确定→参考不投注"},
+  {id:7,h:"帕纳辛纳科斯",a:"索菲亚中央陆军1948",t:"02:30",eH:1550,eA:1380,ah:"帕纳辛纳科斯 -1.0",cf:"低",cfv:48,odds:{h:1.55,d:3.80,a:5.50},bet:["参考","不投注","—"],
+   logic:"ELO+170, ECL:数据不足, ELO差大但ECL无多赛季校准→参考不投注"},
+]}];
+
+var tabs='',allRows={},ledgerRows='',cnt=0,stake=0,sumC=0,formal=0;
+for(var g=0;g<DATA.length;g++){var lg=DATA[g],lp=LP[lg.lg];
+  tabs+='<div class="tab'+(g===0?' on':'')+'" onclick="switchLg(\''+lg.lg+'\')">'+lg.n+' ('+lg.ms.length+')</div>';
+  var rows='';
+  for(var i=0;i<lg.ms.length;i++){var m=lg.ms[i];cnt++;
+    var s=mc(ea(m.eH),ed(m.eH),ea(m.eA),ed(m.eA),lp.ha,lp.a,lp.crB);
+    var maxP=Math.max(s.hw,s.dr,s.aw);sumC+=maxP;
+    var pick,pc;if(s.hw>=s.aw&&s.hw>=s.dr){pick="主胜";pc="th"}else if(s.aw>=s.hw&&s.aw>=s.dr){pick="客胜";pc="ta"}else{pick="平局";pc="td"}
+    var ou=s.o25>0.55?"大":s.o25>0.45?"偏大":"小";
+    var ouC=s.o25>0.55?"#1a8a3f":s.o25>0.45?"#e67e00":"#d32f2f";
+    var h1Ah=Math.abs(s.h1d)<0.12?"平手":s.h1d>0.5?m.h+" -0.5":s.h1d>0.2?m.h+" -0.25":s.h1d<-0.5?m.a+" -0.5":s.h1d<-0.2?m.a+" -0.25":"平手";
+    var h2Ah=Math.abs(s.h2d)<0.12?"平手":s.h2d>0.7?m.h+" -0.75":s.h2d>0.3?m.h+" -0.5":s.h2d<-0.7?m.a+" -0.75":s.h2d<-0.3?m.a+" -0.5":"平手";
+    var isFormal=m.bet[1]!=="不投注";
+
+    rows+='<tr><td>'+m.t+'</td><td class="l mw"><b>'+m.h+' vs '+m.a+'</b><span class="sub">'+m.ah+'</span></td><td style="font-size:0.65em;color:var(--muted)">'+m.eH+'/'+m.eA+'</td>'+
+      '<td><span class="tag '+pc+'">'+pick+'</span><br><span style="font-size:0.58em;color:var(--muted)">主'+(s.hw*100).toFixed(0)+'%平'+(s.dr*100).toFixed(0)+'%客'+(s.aw*100).toFixed(0)+'%</span></td>'+
+      '<td><span style="font-weight:600;color:'+ouC+'">'+ou+' 2.5</span><br><span style="font-size:0.58em;color:var(--muted)">'+(s.o25*100).toFixed(0)+'% · '+s.tg+'球</span></td>'+
+      '<td><span style="font-weight:600;color:'+(s.h1o15>0.45?"#1a8a3f":"#999")+'">大1.5 '+(s.h1o15*100).toFixed(0)+'%</span></td>'+
+      '<td><span style="font-weight:600;color:'+(s.h2o15>0.5?"#1a8a3f":"#999")+'">大1.5 '+(s.h2o15*100).toFixed(0)+'%</span></td>'+
+      '<td style="color:var(--blue);font-weight:600;font-size:0.68em">'+h1Ah+'</td>'+
+      '<td style="font-size:0.68em">'+s.cr.t+'角<br><span style="font-size:0.58em;color:var(--muted)">'+s.cr.h+'/'+s.cr.a+'</span></td>'+
+      '<td><span class="tag '+pc+'">'+m.bet[1]+'</span><br><span class="odds">@'+m.bet[2]+'</span></td>'+
+      '<td class="logic">'+m.logic+'</td></tr>';
+  }
+  allRows[lg.lg]=rows;
+  for(var i=0;i<lg.ms.length;i++){var m=lg.ms[i];if(m.bet[1]==="不投注")continue;formal++;stake+=100;
+    ledgerRows+='<tr><td>'+formal+'</td><td>'+m.t+'</td><td>'+lg.n.replace('(参考·数据不足)','')+'</td><td class="l">'+m.h+' vs '+m.a+'</td><td>'+m.bet[0]+'</td><td style="font-weight:600;color:#e67e00">'+m.bet[1]+'</td><td>'+m.bet[2]+'</td><td style="font-weight:600;color:'+(m.cf==="高"?"#1a8a3f":m.cf==="中"?"#e67e00":"#999")+'">'+m.cf+'</td><td style="font-size:0.62em;color:var(--muted)">'+m.logic.substring(0,50)+'</td></tr>';
+  }
+}
+document.getElementById('tabs').innerHTML=tabs;
+document.getElementById('tb').innerHTML=allRows[DATA[0].lg];
+document.getElementById('ledger').innerHTML=ledgerRows||'<tr><td colspan="9" style="padding:20px;color:var(--muted)">所有场次均为参考预测，无正式投注</td></tr>';
+document.getElementById('lsum').innerHTML='<span>📋 <b>'+formal+'</b> 注(仅正式)</span><span>💵 总投 <b>'+stake+'</b></span><span>🔬 CLQ:ELO+60 | EL:ELO+75</span><span style="color:var(--red)">4场数据不足→不投注</span><span>⏰ 缺早盘→无蒸汽移动信号</span>';
+function switchLg(lg){document.getElementById('tb').innerHTML=allRows[lg];document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.textContent.indexOf(lg)>=0)});}
+</script>
+</body>
+</html>

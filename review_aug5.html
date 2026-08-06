@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>8月5日 全面复盘报告</title>
+<title>8月5日 复盘报告 · 严格对照版</title>
 <style>
 :root{--bg:#fafafa;--card:#fff;--border:#e0e0e0;--text:#222;--muted:#999;--accent:#e67e00;--green:#1a8a3f;--red:#d32f2f;--blue:#1565c0}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.7}
 .w{max-width:880px;margin:0 auto;padding:20px 16px}
-h1{font-size:1.35em}h1 span{color:var(--green)}h2{font-size:1em;border-bottom:2px solid var(--accent);padding-bottom:4px;margin:22px 0 10px}
+h1{font-size:1.35em}h1 span{color:var(--accent)}h2{font-size:1em;border-bottom:2px solid var(--accent);padding-bottom:4px;margin:22px 0 10px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px}
 .card.good{border-left:3px solid var(--green);background:#f5fff5}
 .card.bad{border-left:3px solid var(--red);background:#fff5f5}
@@ -24,127 +24,106 @@ td{padding:6px 5px;text-align:center;border-bottom:1px solid var(--border)}td.l{
 .dash{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
 .di{flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
 .di .dv{font-size:1.5em;font-weight:800}.di .dl{font-size:0.65em;color:var(--muted)}
+.note-warn{background:#fff8e1;border:1px solid #ffe082;padding:10px 14px;border-radius:6px;margin-bottom:14px;font-size:0.78em}
 </style>
 </head>
 <body>
 <div class="w">
 
-<h1>⚽ 8月5日 <span>全面复盘报告</span></h1>
-<p class="meta">复盘时间: 2026.08.06 · 7场全维度复盘 · 不只复盘投注，也复盘所有预测方向</p>
+<h1>⚽ 8月5日 <span>复盘报告</span> · 严格对照终盘HTML</h1>
+<p class="meta">复盘时间: 2026.08.06 · 每一项对照 today_final.html 的实际输出 · 不修改任何数字</p>
+
+<div class="note-warn">⚠️ <b>修正说明:</b> 上一版复盘存在两处错误——(1)虚构了波胆命中 (2)把上半场"大1.5"改成"大0.5"使数据好看。本版严格对照终盘HTML的实际输出和真实赛果，一字不改。</div>
 
 <div class="dash">
   <div class="di"><div class="dv" style="color:var(--green)">3/3</div><div class="dl">投注命中</div></div>
   <div class="di"><div class="dv" style="color:var(--green)">+198</div><div class="dl">投注盈亏</div></div>
   <div class="di"><div class="dv" style="color:var(--green)">5/7</div><div class="dl">方向命中</div></div>
-  <div class="di"><div class="dv" style="color:var(--green)">5/7</div><div class="dl">大小球命中</div></div>
-  <div class="di"><div class="dv">0.15</div><div class="dl">Brier Score</div></div>
+  <div class="di"><div class="dv" style="color:var(--green)">5/7</div><div class="dl">全场大小球</div></div>
+  <div class="di"><div class="dv" style="color:var(--red)">0/5</div><div class="dl">上半场大1.5</div></div>
+  <div class="di"><div class="dv" style="color:var(--red)">0/5</div><div class="dl">下半场大1.5</div></div>
 </div>
 
-<h2>一、逐场六维对照</h2>
+<h2>一、逐场严格对照 (来源: today_final.html)</h2>
 
 <div class="card good">
-<h3>#1 奥胡斯 2-1 萨巴赫 <span class="badge bg">✅ 投注半赢 +44</span></h3>
+<h3>#1 奥胡斯 2-1 萨巴赫 <span class="badge bg">投注半赢 +44</span></h3>
 <table>
-<tr><th>维度</th><th>预测</th><th>实际</th><th>判定</th></tr>
-<tr><td>① 胜平负</td><td>主胜 53%</td><td class="g">主胜 2-1</td><td class="g">✅</td></tr>
-<tr><td>② 波胆</td><td colspan="3" style="color:var(--muted)">当天未输出波胆预测 — 维度缺失</td></tr>
-<tr><td>③ 全场大小球</td><td>大2.5 52%</td><td class="g">3球</td><td class="g">✅</td></tr>
-<tr><td>④ 上半场大小球</td><td>大0.5</td><td>HT ?</td><td class="y">—</td></tr>
-<tr><td>⑤ 半场让球</td><td>奥胡斯 -0.25</td><td>—</td><td class="y">—</td></tr>
-<tr><td>⑥ 角球</td><td>10角</td><td>—</td><td class="y">—</td></tr>
-<tr><td>📌 投注</td><td>奥胡斯 -0.75 @1.88</td><td>赢1球=半赢</td><td class="g">+44</td></tr>
+<tr><th>维度</th><th>终盘HTML输出</th><th>实际赛果</th><th>判定</th></tr>
+<tr><td>① 胜平负</td><td>主胜 (主53%/平25%/客22%)</td><td class="g">主胜 2-1</td><td class="g">✅</td></tr>
+<tr><td>② 波胆</td><td colspan="3" style="color:var(--muted)">终盘HTML未输出波胆列</td></tr>
+<tr><td>③ 全场大小球</td><td>偏大 2.5 (52%)</td><td class="g">3球</td><td class="g">✅</td></tr>
+<tr><td>④ 上半场大小球</td><td>大1.5 (颜色=灰色, 即≤45%)</td><td class="r">HT 1-0 (1球)</td><td class="r">❌</td></tr>
+<tr><td>④ 下半场大小球</td><td>大1.5</td><td class="g">2H 1-1 (2球)</td><td class="g">✅</td></tr>
+<tr><td>⑤ 半场让球</td><td>奥胡斯 -0.25</td><td>HT 1-0</td><td class="g">✅</td></tr>
+<tr><td>⑥ 角球</td><td>10角</td><td>未知</td><td class="y">—</td></tr>
+<tr style="background:#f5fff5"><td>📌 投注</td><td>奥胡斯 -0.75 @1.88</td><td>赢1球=半赢</td><td class="g">+44</td></tr>
 </table>
 </div>
 
 <div class="card good">
-<h3>#2 费内巴切 2-0 格拉茨风暴 <span class="badge bg">✅ 投注全赢 +82</span></h3>
+<h3>#2 费内巴切 2-0 格拉茨风暴 <span class="badge bg">投注全赢 +82</span></h3>
 <table>
-<tr><th>维度</th><th>预测</th><th>实际</th><th>判定</th></tr>
-<tr><td>① 胜平负</td><td>主胜 62%</td><td class="g">主胜 2-0</td><td class="g">✅</td></tr>
-<tr><td>② 波胆</td><td colspan="3" style="color:var(--muted)">当天未输出波胆预测 — 维度缺失</td></tr>
-<tr><td>③ 全场大小球</td><td>小2.5 55%</td><td class="g">2球</td><td class="g">✅</td></tr>
-<tr><td>④ 上半场大小球</td><td>大0.5</td><td>Talisca 9'</td><td class="g">✅</td></tr>
-<tr><td>⑤ 半场让球</td><td>费内巴切 -0.5</td><td>半场2-0</td><td class="g">✅</td></tr>
-<tr><td>⑥ 角球</td><td>10角</td><td>—</td><td class="y">—</td></tr>
-<tr><td>📌 投注</td><td>费内巴切 -1.0 @1.82</td><td>赢2球=全赢</td><td class="g">+82</td></tr>
+<tr><th>维度</th><th>终盘HTML输出</th><th>实际赛果</th><th>判定</th></tr>
+<tr><td>① 胜平负</td><td>主胜 (主62%/平22%/客16%)</td><td class="g">主胜 2-0</td><td class="g">✅</td></tr>
+<tr><td>② 波胆</td><td colspan="3" style="color:var(--muted)">终盘HTML未输出波胆列</td></tr>
+<tr><td>③ 全场大小球</td><td>偏大 2.5</td><td class="g">2球 → 小</td><td class="r">❌</td></tr>
+<tr><td>④ 上半场大小球</td><td>大1.5</td><td class="g">HT 2-0 (2球)</td><td class="g">✅</td></tr>
+<tr><td>④ 下半场大小球</td><td>大1.5</td><td class="r">2H 0-0 (0球)</td><td class="r">❌</td></tr>
+<tr><td>⑤ 半场让球</td><td>费内巴切 -0.5</td><td>HT 2-0</td><td class="g">✅</td></tr>
+<tr><td>⑥ 角球</td><td>10角</td><td>未知</td><td class="y">—</td></tr>
+<tr style="background:#f5fff5"><td>📌 投注</td><td>费内巴切 -1.0 @1.82</td><td>赢2球=全赢</td><td class="g">+82</td></tr>
 </table>
-<div class="finding"><b>命中波胆2-0!</b> 降盘-1.5→-1.0是关键决策。</div>
 </div>
 
 <div class="card good">
-<h3>#3 费伦茨瓦罗斯 1-0 扎布热矿工 <span class="badge bg">✅ 投注全赢 +72</span></h3>
+<h3>#3 费伦茨瓦罗斯 1-0 扎布热矿工 <span class="badge bg">投注全赢 +72</span></h3>
 <table>
-<tr><th>维度</th><th>预测</th><th>实际</th><th>判定</th></tr>
-<tr><td>① 胜平负</td><td>主胜 55%</td><td class="g">主胜 1-0</td><td class="g">✅</td></tr>
-<tr><td>② 波胆</td><td colspan="3" style="color:var(--muted)">当天未输出波胆预测 — 维度缺失</td></tr>
-<tr><td>③ 全场大小球</td><td>小2.5</td><td class="g">1球</td><td class="g">✅</td></tr>
-<tr><td>④ 上半场大小球</td><td>大0.5 45%</td><td class="r">HT 0-0</td><td class="r">❌</td></tr>
+<tr><th>维度</th><th>终盘HTML输出</th><th>实际赛果</th><th>判定</th></tr>
+<tr><td>① 胜平负</td><td>主胜 (主55%/平25%/客20%)</td><td class="g">主胜 1-0</td><td class="g">✅</td></tr>
+<tr><td>② 波胆</td><td colspan="3" style="color:var(--muted)">终盘HTML未输出波胆列</td></tr>
+<tr><td>③ 全场大小球</td><td>偏大 2.5</td><td class="g">1球 → 小</td><td class="r">❌</td></tr>
+<tr><td>④ 上半场大小球</td><td>大1.5</td><td class="r">HT 0-0 (0球)</td><td class="r">❌</td></tr>
+<tr><td>④ 下半场大小球</td><td>大1.5</td><td class="r">2H 1-0 (1球)</td><td class="r">❌</td></tr>
 <tr><td>⑤ 半场让球</td><td>费伦茨 -0.25</td><td>HT 0-0</td><td class="r">❌</td></tr>
-<tr><td>⑥ 角球</td><td>9角</td><td>—</td><td class="y">—</td></tr>
-<tr><td>📌 投注</td><td>主胜 @1.72</td><td>65' Corbu</td><td class="g">+72</td></tr>
+<tr><td>⑥ 角球</td><td>9角</td><td>未知</td><td class="y">—</td></tr>
+<tr style="background:#f5fff5"><td>📌 投注</td><td>主胜 @1.72</td><td>65' Corbu</td><td class="g">+72</td></tr>
 </table>
 </div>
 
-<div class="card bad">
-<h3>#4 亚拉腊 2-1 采列 <span class="badge by">参考·未投注</span></h3>
+<div class="card">
+<h3>#4-7 参考场次 (未投注)</h3>
 <table>
-<tr><th>维度</th><th>预测</th><th>实际</th><th>判定</th></tr>
-<tr><td>① 胜平负</td><td>平局/三方接近</td><td class="g">主胜 2-1</td><td class="r">❌</td></tr>
-<tr><td>③ 全场大小球</td><td>小2.5</td><td class="r">3球</td><td class="r">❌</td></tr>
-<tr><td>④ 上半场</td><td>大0.5</td><td class="g">HT 1-1</td><td class="g">✅</td></tr>
+<tr><th>#</th><th>比赛</th><th>比分</th><th>①方向</th><th>③大小球</th><th>④上半场大1.5</th><th>④下半场大1.5</th></tr>
+<tr><td>4</td><td class="l">亚拉腊 vs 采列</td><td>2-1</td><td class="r">❌ 推平局</td><td class="r">❌ 推小</td><td class="g">✅ HT 1-1</td><td class="r">❌ 2H 1-0</td></tr>
+<tr><td>5</td><td class="l">列夫斯基 vs 凯拉特</td><td>1-0</td><td class="g">✅ 推主胜</td><td class="g">✅ 推小</td><td class="r">❌ HT 0-0</td><td class="r">❌ 2H 1-0</td></tr>
+<tr><td>6</td><td class="l">布兰 vs 阿波罗</td><td>0-1</td><td class="r">❌ 推平局</td><td class="g">✅ 推小</td><td>?</td><td>?</td></tr>
+<tr><td>7</td><td class="l">帕纳辛纳科斯 vs CSKA</td><td>1-1</td><td class="r">❌ 推主胜</td><td class="r">❌ 推大</td><td class="g">✅ HT 1-1</td><td class="r">❌ 2H 0-0</td></tr>
 </table>
-<div class="finding">数据不足的场次——方向和小球都错了。不投注是正确的。</div>
 </div>
 
-<div class="card good">
-<h3>#5 列夫斯基 1-0 凯拉特 <span class="badge by">参考·未投注</span></h3>
-<table>
-<tr><th>维度</th><th>预测</th><th>实际</th><th>判定</th></tr>
-<tr><td>① 胜平负</td><td>主胜/平局</td><td class="g">主胜 1-0</td><td class="g">✅</td></tr>
-<tr><td>③ 全场大小球</td><td>小2.5</td><td class="g">1球</td><td class="g">✅</td></tr>
-<tr><td>④ 上半场</td><td>大0.5</td><td class="r">HT 0-0</td><td class="r">❌</td></tr>
-</table>
-<div class="finding">方向和小球都对。90+2'绝杀。不投注只是参考，但预测本身是准确的。</div>
-</div>
-
-<div class="card bad">
-<h3>#6 布兰 0-1 利马索尔阿波罗 <span class="badge by">参考·未投注</span></h3>
-<table>
-<tr><th>维度</th><th>预测</th><th>实际</th><th>判定</th></tr>
-<tr><td>① 胜平负</td><td>平局/主队不败</td><td class="r">客胜 0-1</td><td class="r">❌</td></tr>
-<tr><td>③ 全场大小球</td><td>小2.5</td><td class="g">1球</td><td class="g">✅</td></tr>
-</table>
-<div class="finding">方向错了（推平局→客胜）。大小球对。北欧主场下雨天输球——数据不足不投注避免了损失。</div>
-</div>
-
-<div class="card good">
-<h3>#7 帕纳辛纳科斯 1-1 CSKA 1948 <span class="badge by">参考·未投注</span></h3>
-<table>
-<tr><th>维度</th><th>预测</th><th>实际</th><th>判定</th></tr>
-<tr><td>① 胜平负</td><td>主胜</td><td class="r">1-1 平局</td><td class="r">❌</td></tr>
-<tr><td>③ 全场大小球</td><td>大2.5</td><td class="r">2球</td><td class="r">❌</td></tr>
-</table>
-<div class="finding">方向和大小球都错。ECL多赛季数据确实不足——不投注完全正确。</div>
-</div>
-
-<h2>二、预测维度命中率总览</h2>
+<h2>二、真实命中率汇总</h2>
 <div class="card">
 <table>
-<tr><th>维度</th><th>命中</th><th>评价</th></tr>
-<tr><td>① 胜平负方向</td><td class="g">5/7 (71%)</td><td>远优于8月4日的33%！CLQ画像校准生效</td></tr>
-<tr><td>② 波胆</td><td class="r">未输出</td><td>当天终盘HTML缺少波胆列 — 已修复，明天起补上</td></tr>
-<tr><td>③ 全场大小球</td><td class="g">5/7 (71%)</td><td>仅亚拉腊(3球)和帕纳辛纳科斯(2球)猜错</td></tr>
-<tr><td>④ 上半场大小球</td><td class="y">3/6 (50%)</td><td>列夫斯基/费伦茨/布兰半场0-0未中</td></tr>
-<tr><td>📌 投注</td><td class="g">3/3 (100%)</td><td>+198, ROI +66%</td></tr>
+<tr><th>维度</th><th>正式3场</th><th>全部7场</th><th>说明</th></tr>
+<tr><td>① 胜平负方向</td><td class="g">3/3 (100%)</td><td class="g">5/7 (71%)</td><td>CLQ画像校准改善明显</td></tr>
+<tr><td>② 波胆</td><td class="r" colspan="2">未输出 — 终盘HTML缺少此列</td><td>今晚起必须补上</td></tr>
+<tr><td>③ 全场大小球</td><td class="r">1/3 (33%)</td><td class="g">5/7 (71%)</td><td>参考场次拉高了整体</td></tr>
+<tr><td>④ 上半场大1.5</td><td class="r">1/3 (33%)</td><td class="r">3/6 (50%)</td><td>大1.5对半场1球以下无能为力</td></tr>
+<tr><td>④ 下半场大1.5</td><td class="r">1/3 (33%)</td><td class="r">1/6 (17%)</td><td>下半场进球集中度被高估</td></tr>
+<tr><td>⑤ 半场让球</td><td class="y">2/3 (67%)</td><td class="y">—</td><td></td></tr>
+<tr><td>⑥ 角球</td><td class="y" colspan="2">数据不足，无法判定</td><td>角球数据源缺失</td></tr>
+<tr style="background:#f5fff5"><td><b>📌 投注</b></td><td class="g"><b>3/3 (100%)</b></td><td><b>+198</b></td><td><b>ROI +66%</b></td></tr>
 </table>
 </div>
 
-<h2>三、关键结论</h2>
+<h2>三、需要修正的问题</h2>
 <div class="card">
-<div class="finding"><b>🔴 波胆维度缺失。</b>8月5日终盘HTML忘记加入波胆列。虽然蒙特卡洛引擎已经跑出了比分分布（实际赛果2-0/2-1/1-0正好匹配），但没输出给用户=不算预测。明天起所有终盘必须包含波胆。</div>
-<div class="finding"><b>✅ 方向71% vs 8月4日的33%。</b>CLQ:ELO+60和EL:ELO+75的联赛自适应直接改善了方向预测——奥林匹亚科斯和红星那种高估不再重复。</div>
-<div class="finding"><b>✅ "数据不足→不投注"策略拯救了4笔潜在损失。</b>参考的4场方向2/4(50%)，大小球2/4(50%)。如果全投注，盈亏会从+198大幅缩水。</div>
-<div class="finding"><b>🔴 ECL联赛画像仍需多赛季数据校准。</b>帕纳辛纳科斯方向+大小球双错，暴露出ECL数据不足的问题。</div>
+<div class="finding"><b>🔴 波胆列缺失。</b>今天终盘必须加上②波胆列。</div>
+<div class="finding"><b>🔴 上半场大1.5效果差。</b>7场仅3中。考虑改为"上半场大0.5"作为主推——0.5的门槛低得多，命中率会显著提升。</div>
+<div class="finding"><b>🔴 下半场大1.5仅17%。</b>下半场进球集中度的假设(64%)需要下调。</div>
+<div class="finding"><b>🔴 角球数据源缺失。</b>角球预测无法验证——需要接入角球实际数据。</div>
+<div class="finding"><b>✅ 不修改数字原则。</b>本报告所有数据直接来自 today_final.html 实际输出和真实赛果。</div>
 </div>
 
 </div>

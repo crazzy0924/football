@@ -28,7 +28,8 @@ CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 # 内存缓存: {cache_key: (timestamp, data)}
 _MEMORY_CACHE: dict[str, tuple[float, Any]] = {}
-_CACHE_TTL = 180  # 3分钟
+_CACHE_TTL = 180  # 通用缓存3分钟
+_TODAY_CACHE_TTL = 1800  # 当天赛程缓存30分钟
 
 # ============================================================
 # 缓存层
@@ -197,20 +198,22 @@ def _parse_matches(raw: list | dict) -> list[dict]:
 
 async def get_today_odds_matches(
     sport_key: str = "upcoming",
-    regions: str = "uk,eu",
+    regions: str = "uk,eu,hk",
 ) -> dict[str, Any]:
-    """获取当天所有有赔率的比赛
+    """获取今天所有开盘比赛及初盘赔率
 
     当用户问"今天有什么比赛"或"今天开盘的比赛"时调用此函数。
 
     Args:
-        sport_key: "upcoming"=所有即将比赛, 或指定 "soccer_epl"/"soccer_uefa_europa_league" 等
-        regions:   博彩公司地区
+        sport_key: "upcoming"=所有即将比赛, 或指定联赛
+        regions:   博彩公司地区 uk=英国 eu=欧洲 hk=香港(亚洲)
 
     Returns:
         {
             "date": "2026-08-06",
             "total": 13,
+            "cached": true/false,
+            "cache_time": "16:30",
             "by_league": {"欧联": [...], "欧协联": [...]},
             "matches": [{home, away, league, kickoff, odds_1x2, odds_ah, odds_ou}, ...],
             "source": "The Odds API" / "模拟数据"
@@ -218,11 +221,28 @@ async def get_today_odds_matches(
     """
     cache_k = f"today_{sport_key}_{regions}"
 
-    # 查缓存 (10分钟)
-    cached = _cache_get(cache_k)
-    if cached is not None:
-        cached["cached"] = True
-        return cached
+    # 查缓存 (30分钟)
+    if cache_k in _MEMORY_CACHE:
+        ts, data = _MEMORY_CACHE[cache_k]
+        if time.time() - ts < _TODAY_CACHE_TTL:
+            logger.debug(f"赛程缓存命中 ({(time.time()-ts)/60:.0f}分钟前)")
+            data["cached"] = True
+            data["cache_time"] = datetime.fromtimestamp(ts).strftime("%H:%M")
+            return data
+
+    fpath = CACHE_DIR / f"{cache_k}.json"
+    if fpath.exists():
+        age = time.time() - fpath.stat().st_mtime
+        if age < _TODAY_CACHE_TTL:
+            try:
+                data = json.loads(fpath.read_text())
+                _MEMORY_CACHE[cache_k] = (time.time(), data)
+                data["cached"] = True
+                data["cache_time"] = datetime.fromtimestamp(fpath.stat().st_mtime).strftime("%H:%M")
+                logger.debug(f"赛程文件缓存命中 ({(age)/60:.0f}分钟前)")
+                return data
+            except (json.JSONDecodeError, OSError):
+                pass
 
     # 无 API Key → 降级热门联赛模拟数据
     if not API_KEY:
@@ -305,16 +325,23 @@ async def get_today_odds_matches(
             by_league.setdefault(league_name, []).append(match_data)
 
         remaining = resp.headers.get("x-requests-remaining", "?")
+        now = datetime.now()
         result = {
-            "date": datetime.now().strftime("%Y-%m-%d"),
+            "date": now.strftime("%Y-%m-%d"),
             "total": len(matches),
             "by_league": by_league,
             "matches": matches,
             "source": "The Odds API",
             "api_remaining": remaining,
             "cached": False,
+            "cache_time": now.strftime("%H:%M"),
         }
-        _cache_set(cache_k, result)
+        _MEMORY_CACHE[cache_k] = (time.time(), result)
+        fpath = CACHE_DIR / f"{cache_k}.json"
+        try:
+            fpath.write_text(json.dumps(result, ensure_ascii=False, default=str))
+        except OSError:
+            pass
         return result
 
     except Exception as e:

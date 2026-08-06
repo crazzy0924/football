@@ -39,6 +39,9 @@ from loguru import logger
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tools.odds import get_match_odds, resolve_sport_key
 from tools.simulate import simulate_match
+from tools.live_odds import get_live_odds
+from tools.historical_odds import get_historical_odds
+from tools.match_data import get_fixtures as api_get_fixtures, get_team_stats
 
 # ============================================================
 # 配置
@@ -980,6 +983,10 @@ HANDLERS = {
     "generate_radar_chart":   generate_radar_chart,
     "get_match_odds":         get_match_odds,
     "simulate_match":         simulate_match,
+    "get_live_odds":          get_live_odds,
+    "get_historical_odds":    get_historical_odds,
+    "get_fixtures":           api_get_fixtures,
+    "get_team_stats":         get_team_stats,
 }
 
 
@@ -993,7 +1000,11 @@ SYSTEM_PROMPT = """你是一名资深足球数据分析师 AI，遵循以下分�
 
 | 工具 | 用途 |
 |------|------|
+| `get_live_odds` | 获取当天实时赔率 (The Odds API, 初盘+即时盘对比, 3分钟缓存) |
 | `get_match_odds` | 获取实时赔率 (40+博彩公司, Pinnacle基准) |
+| `get_historical_odds` | 查询近5赛季历史终盘赔率 (football-data.co.uk CSV) |
+| `get_fixtures` | 获取赛程+实时比分 (API-Football v3) |
+| `get_team_stats` | 获取球队近期战绩+状态 (API-Football) |
 | `get_live_scores` | 查看正在进行的比赛实时比分 |
 | `simulate_match` | 蒙特卡洛泊松模拟 (10000次采样→比分分布) |
 | `calculate_recent_xg` | 计算球队近5场场均xG和xGA |
@@ -1007,19 +1018,18 @@ SYSTEM_PROMPT = """你是一名资深足球数据分析师 AI，遵循以下分�
 分析任何比赛时，按以下优先级使用数据:
 
 ### 第1层: 市场基准 (最优先)
-1. 从 `get_match_odds` 拉取 Pinnacle/Bet365 赔率
-2. 用 **Shin 方法** (非简单 1/odds) 剥离 margin，得到"去水概率"
-   - Shin 假设庄家对每个结果设置相同的 uncertainty margin
-   - 比 Proportional 方法更精确，尤其在高 margin 市场
-3. 将去水概率作为**市场基准预测**
+1. 从 `get_live_odds` 获取当天实时赔率，对比初盘和即时盘的差异
+2. 从 `get_historical_odds` 查询同类比赛近5赛季终盘赔率，判断盘口深度
+3. 从 `get_match_odds` 获取 Pinnacle/Bet365 多公司对比赔率
+4. 用 **Shin 方法** (非简单 1/odds) 剥离 margin，得到"去水概率"
+5. 将去水概率作为**市场基准预测**
 
 ### 第2层: 球队真实状态
-1. 用 `calculate_recent_xg` 获取近5场 xG 差值 (xG - xGA)
-2. **xG 差值 > +0.5** → 球队状态显著优于实际战绩 (运气差但实力强)
-3. **xG 差值 < -0.5** → 球队状态显著差于实际战绩 (运气好但实力弱)
-4. 核心判断规则:
-   - xG 差值方向与赔率方向一致 → **信心增强**
-   - xG 差值方向与赔率方向背离 → **重点分析背离原因** (可能是价值机会)
+1. 用 `get_team_stats` 获取球队近期战绩(W/D/L)和进失球数据
+2. 用 `get_fixtures` 获取赛程和实时比分
+3. 用 `calculate_recent_xg` 获取近5场 xG 差值 (xG - xGA)
+4. **xG 差值 > +0.5** → 球队状态显著优于实际战绩
+5. 核心判断: xG方向与赔率方向一致 → 信心增强; 背离 → 价值机会
 
 ### 第3层: 蒙特卡洛验证
 1. 调用 `simulate_match` 输入攻防力参数

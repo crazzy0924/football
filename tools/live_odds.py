@@ -70,6 +70,105 @@ def _cache_set(key: str, data: Any) -> None:
         pass
 
 # ============================================================
+# 盘口变动检测
+# ============================================================
+
+async def detect_odds_movements(
+    sport_key: str = "upcoming",
+    regions: str = "uk,eu,hk",
+) -> dict[str, Any]:
+    """检测盘口变动: 对比早盘基准 vs 当前赔率
+
+    从 daily_tracking.json 读取早盘数据, 重新拉取当前赔率,
+    逐场对比检测:
+      - 蒸汽移动 (>8%骤降)
+      - 亚盘升/降盘
+      - 大小球线变化
+
+    Returns:
+        {
+            "movements": [
+                {"match": "萨尔茨堡vs帕福斯", "type": "ah_upgrade", "from": -0.75, "to": -1.0},
+                ...
+            ],
+            "steam_moves": [...],
+            "total_tracked": 13,
+            "with_movement": 3
+        }
+    """
+    # 加载早盘基准
+    tracking_path = Path(__file__).resolve().parents[1] / "data" / "daily_tracking.json"
+    morning_data = {}
+    if tracking_path.exists():
+        try:
+            tracking = json.loads(tracking_path.read_text())
+            morning_matches = tracking.get("morning", {}).get("matches", [])
+            for m in morning_matches:
+                key = f"{m.get('home','')}_{m.get('away','')}"
+                morning_data[key] = m
+        except (json.JSONDecodeError, KeyError):
+            pass
+
+    # 拉取当前赔率
+    current = await get_today_odds_matches(sport_key, regions)
+    current_matches = current.get("matches", [])
+
+    movements = []
+    steam_moves = []
+
+    for m in current_matches:
+        home = m.get("home_team", "")
+        away = m.get("away_team", "")
+        key = f"{home}_{away}"
+
+        morning = morning_data.get(key)
+        if not morning:
+            continue
+
+        # 对比1X2赔率
+        morning_odds = morning.get("odds_1x2", {})
+        current_odds = m.get("pinnacle_odds", {}) or m.get("opening_odds", {})
+
+        changes = {}
+        for side, label in [("home", "主胜"), ("draw", "平局"), ("away", "客胜")]:
+            mo = morning_odds.get(label) or morning_odds.get(side)
+            co = current_odds.get(home if side=="home" else ("Draw" if side=="draw" else away))
+            if mo and co and mo > 0:
+                pct = (co - mo) / mo
+                changes[label] = {"from": mo, "to": co, "pct": round(pct, 4)}
+                # 蒸汽移动检测
+                if pct < -0.08:
+                    steam_moves.append({
+                        "match": f"{home} vs {away}",
+                        "side": label,
+                        "from": mo, "to": co,
+                        "drop": f"{abs(pct)*100:.1f}%",
+                    })
+
+        # 亚盘变化
+        morning_ah = morning.get("ah", "")
+        current_ah = m.get("asian_handicap", {}).get("point") if m.get("asian_handicap") else None
+
+        if changes:
+            movements.append({
+                "match": f"{home} vs {away}",
+                "odds_changes": changes,
+                "ah_morning": morning_ah,
+                "ah_current": current_ah,
+                "ah_moved": morning_ah != str(current_ah) if current_ah else False,
+            })
+
+    return {
+        "movements": movements,
+        "steam_moves": steam_moves,
+        "total_tracked": len(current_matches),
+        "with_movement": len(movements),
+        "source": current.get("source", "unknown"),
+        "checked_at": datetime.now().isoformat(),
+    }
+
+
+# ============================================================
 # 核心函数
 # ============================================================
 

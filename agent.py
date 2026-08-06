@@ -39,7 +39,7 @@ from loguru import logger
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tools.odds import get_match_odds, resolve_sport_key
 from tools.simulate import simulate_match
-from tools.live_odds import get_live_odds, get_today_odds_matches
+from tools.live_odds import get_live_odds, get_today_odds_matches, detect_odds_movements
 from tools.historical_odds import get_historical_odds
 from tools.match_data import get_fixtures as api_get_fixtures, get_team_stats
 
@@ -985,6 +985,7 @@ HANDLERS = {
     "simulate_match":         simulate_match,
     "get_live_odds":          get_live_odds,
     "get_today_odds_matches": get_today_odds_matches,
+    "detect_odds_movements": detect_odds_movements,
     "get_historical_odds":    get_historical_odds,
     "get_fixtures":           api_get_fixtures,
     "get_team_stats":         get_team_stats,

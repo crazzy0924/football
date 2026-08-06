@@ -363,10 +363,21 @@ async def get_today_odds_matches(
         time.sleep(0.3)
         resp = requests.get(url, params=params, timeout=20)
 
-        if resp.status_code in (401, 429, 422):
+        if resp.status_code in (401, 429):
             logger.warning(f"API 状态 {resp.status_code}, 降级")
             data = _mock_today_matches()
             data["source"] = f"模拟数据(API {resp.status_code})"
+            return data
+
+        # 422 = sport not available (可能已开球或无数据)
+        if resp.status_code == 422:
+            logger.warning(f"sport_key={sport_key} 无数据(已开球或不在赛季), 降级早盘基准")
+            data = _load_morning_baseline()
+            if data:
+                data["source"] = "早盘基准(API窗口已过,降级)"
+                return data
+            data = _mock_today_matches()
+            data["source"] = "模拟数据(API无数据+无早盘基准)"
             return data
 
         resp.raise_for_status()
@@ -448,6 +459,38 @@ async def get_today_odds_matches(
         data = _mock_today_matches()
         data["source"] = f"模拟数据(错误: {str(e)[:40]})"
         return data
+
+
+def _load_morning_baseline() -> dict[str, Any] | None:
+    """从 daily_tracking.json 加载早盘基准 (API 窗口已过时的降级方案)"""
+    tracking_path = Path(__file__).resolve().parents[1] / "data" / "daily_tracking.json"
+    if not tracking_path.exists():
+        return None
+    try:
+        tracking = json.loads(tracking_path.read_text())
+        morning_matches = tracking.get("morning", {}).get("matches", [])
+        if not morning_matches:
+            return None
+        today = datetime.now().strftime("%Y-%m-%d")
+        matches = []
+        by_league = {}
+        for m in morning_matches:
+            match_data = {
+                "home_team": m.get("home", ""), "away_team": m.get("away", ""),
+                "league": m.get("league", ""), "kickoff": m.get("kickoff", ""),
+                "opening_odds": m.get("odds_1x2", {}),
+                "pinnacle_odds": m.get("odds_1x2", {}),
+                "asian_handicap": {"point": m.get("ah", "").split()[-1] if m.get("ah") else None},
+                "over_under": {"point": m.get("over25", "")},
+                "bookmaker_count": 0,
+            }
+            matches.append(match_data)
+            lg = m.get("league", "其他")
+            by_league.setdefault(lg, []).append(match_data)
+        return {"date": today, "total": len(matches), "by_league": by_league,
+                "matches": matches, "source": "早盘基准(降级)", "note": "API窗口已过,使用早盘数据"}
+    except Exception:
+        return None
 
 
 def _mock_today_matches() -> dict[str, Any]:

@@ -39,7 +39,7 @@ from loguru import logger
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tools.odds import get_match_odds, resolve_sport_key
 from tools.simulate import simulate_match
-from tools.live_odds import get_live_odds
+from tools.live_odds import get_live_odds, get_today_odds_matches
 from tools.historical_odds import get_historical_odds
 from tools.match_data import get_fixtures as api_get_fixtures, get_team_stats
 
@@ -984,6 +984,7 @@ HANDLERS = {
     "get_match_odds":         get_match_odds,
     "simulate_match":         simulate_match,
     "get_live_odds":          get_live_odds,
+    "get_today_odds_matches": get_today_odds_matches,
     "get_historical_odds":    get_historical_odds,
     "get_fixtures":           api_get_fixtures,
     "get_team_stats":         get_team_stats,
@@ -1000,6 +1001,7 @@ SYSTEM_PROMPT = """你是一名资深足球数据分析师 AI，遵循以下分�
 
 | 工具 | 用途 |
 |------|------|
+| `get_today_odds_matches` | 获取今天所有开盘比赛 (联赛/球队/赔率一览, 用户问"今天有什么比赛"时调用) |
 | `get_live_odds` | 获取当天实时赔率 (The Odds API, 初盘+即时盘对比, 3分钟缓存) |
 | `get_match_odds` | 获取实时赔率 (40+博彩公司, Pinnacle基准) |
 | `get_historical_odds` | 查询近5赛季历史终盘赔率 (football-data.co.uk CSV) |

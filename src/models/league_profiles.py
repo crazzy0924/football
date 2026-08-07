@@ -298,6 +298,165 @@ LEAGUE_PROFILES: dict[str, LeagueProfile] = {
         elo_base=1500, elo_spread=250,
         style="mixed", notes="MLS主场有额外旅行优势, 墨超客场大幅削弱"
     ),
+
+    # ── 其他欧洲联赛 ──
+    "BL2": LeagueProfile(
+        name="德乙", code="BL2", region="europe",
+        avg_home_goals=1.55, avg_away_goals=1.20, avg_total_goals=2.75,
+        home_win_rate=0.43, draw_rate=0.26, away_win_rate=0.31,
+        home_advantage_elo=80, home_goal_boost=0.25,
+        over_25_rate=0.53, btts_rate=0.52, avg_corners=9.8, corner_home_share=0.54,
+        elo_base=1420, elo_spread=180,
+        style="physical", notes="德乙进球偏多, 竞争激烈"
+    ),
+    "SCO": LeagueProfile(
+        name="苏超", code="SCO", region="europe",
+        avg_home_goals=1.50, avg_away_goals=1.10, avg_total_goals=2.60,
+        home_win_rate=0.42, draw_rate=0.24, away_win_rate=0.34,
+        home_advantage_elo=85, home_goal_boost=0.28,
+        over_25_rate=0.50, btts_rate=0.50, avg_corners=10.2, corner_home_share=0.55,
+        elo_base=1380, elo_spread=350,
+        style="physical", notes="Old Firm垄断, ELO离散度大"
+    ),
+    "AUT": LeagueProfile(
+        name="奥甲", code="AUT", region="europe",
+        avg_home_goals=1.52, avg_away_goals=1.18, avg_total_goals=2.70,
+        home_win_rate=0.43, draw_rate=0.24, away_win_rate=0.33,
+        home_advantage_elo=85, home_goal_boost=0.26,
+        over_25_rate=0.52, btts_rate=0.51, avg_corners=9.5, corner_home_share=0.54,
+        elo_base=1400, elo_spread=220,
+        style="mixed", notes="萨尔茨堡红牛垄断"
+    ),
+    "BEL": LeagueProfile(
+        name="比甲", code="BEL", region="europe",
+        avg_home_goals=1.55, avg_away_goals=1.20, avg_total_goals=2.75,
+        home_win_rate=0.44, draw_rate=0.24, away_win_rate=0.32,
+        home_advantage_elo=85, home_goal_boost=0.26,
+        over_25_rate=0.53, btts_rate=0.53, avg_corners=9.6, corner_home_share=0.54,
+        elo_base=1420, elo_spread=200,
+        style="mixed", notes="季后赛赛制特殊"
+    ),
+    "DEN": LeagueProfile(
+        name="丹超", code="DEN", region="europe",
+        avg_home_goals=1.50, avg_away_goals=1.15, avg_total_goals=2.65,
+        home_win_rate=0.43, draw_rate=0.25, away_win_rate=0.32,
+        home_advantage_elo=85, home_goal_boost=0.26,
+        over_25_rate=0.51, btts_rate=0.50, avg_corners=9.3, corner_home_share=0.54,
+        elo_base=1400, elo_spread=180,
+        style="mixed", notes="北欧联赛, 赛季与主流错位"
+    ),
+    "NOR": LeagueProfile(
+        name="挪超", code="NOR", region="europe",
+        avg_home_goals=1.60, avg_away_goals=1.20, avg_total_goals=2.80,
+        home_win_rate=0.44, draw_rate=0.23, away_win_rate=0.33,
+        home_advantage_elo=90, home_goal_boost=0.28,
+        over_25_rate=0.55, btts_rate=0.54, avg_corners=9.8, corner_home_share=0.55,
+        elo_base=1380, elo_spread=160,
+        style="high_scoring", notes="北欧进球偏多, 人工草皮主场优势"
+    ),
+    "SWE": LeagueProfile(
+        name="瑞典超", code="SWE", region="europe",
+        avg_home_goals=1.48, avg_away_goals=1.12, avg_total_goals=2.60,
+        home_win_rate=0.43, draw_rate=0.24, away_win_rate=0.33,
+        home_advantage_elo=85, home_goal_boost=0.26,
+        over_25_rate=0.50, btts_rate=0.50, avg_corners=9.5, corner_home_share=0.54,
+        elo_base=1360, elo_spread=150,
+        style="mixed", notes="马尔默统治"
+    ),
+    "POL": LeagueProfile(
+        name="波甲", code="POL", region="europe",
+        avg_home_goals=1.42, avg_away_goals=1.08, avg_total_goals=2.50,
+        home_win_rate=0.45, draw_rate=0.25, away_win_rate=0.30,
+        home_advantage_elo=90, home_goal_boost=0.30,
+        over_25_rate=0.48, btts_rate=0.47, avg_corners=9.5, corner_home_share=0.55,
+        elo_base=1380, elo_spread=180,
+        style="defensive", notes="⚠ 波兰联赛小球, 大球慎推"
+    ),
+    "CZE": LeagueProfile(
+        name="捷甲", code="CZE", region="europe",
+        avg_home_goals=1.45, avg_away_goals=1.10, avg_total_goals=2.55,
+        home_win_rate=0.44, draw_rate=0.26, away_win_rate=0.30,
+        home_advantage_elo=90, home_goal_boost=0.28,
+        over_25_rate=0.49, btts_rate=0.48, avg_corners=9.8, corner_home_share=0.55,
+        elo_base=1380, elo_spread=200,
+        style="defensive", notes="⚠ 捷克联赛小球倾向, 大球慎推"
+    ),
+    "SWI": LeagueProfile(
+        name="瑞士超", code="SWI", region="europe",
+        avg_home_goals=1.55, avg_away_goals=1.20, avg_total_goals=2.75,
+        home_win_rate=0.44, draw_rate=0.24, away_win_rate=0.32,
+        home_advantage_elo=85, home_goal_boost=0.25,
+        over_25_rate=0.53, btts_rate=0.52, avg_corners=9.5, corner_home_share=0.54,
+        elo_base=1400, elo_spread=220,
+        style="mixed", notes="年轻人/巴塞尔主导"
+    ),
+    "ROM": LeagueProfile(
+        name="罗甲", code="ROM", region="europe",
+        avg_home_goals=1.35, avg_away_goals=1.05, avg_total_goals=2.40,
+        home_win_rate=0.43, draw_rate=0.27, away_win_rate=0.30,
+        home_advantage_elo=90, home_goal_boost=0.30,
+        over_25_rate=0.45, btts_rate=0.45, avg_corners=9.2, corner_home_share=0.55,
+        elo_base=1350, elo_spread=200,
+        style="defensive", notes="东欧小球联赛"
+    ),
+    "BUL": LeagueProfile(
+        name="保甲", code="BUL", region="europe",
+        avg_home_goals=1.35, avg_away_goals=1.00, avg_total_goals=2.35,
+        home_win_rate=0.44, draw_rate=0.27, away_win_rate=0.29,
+        home_advantage_elo=95, home_goal_boost=0.32,
+        over_25_rate=0.44, btts_rate=0.44, avg_corners=9.0, corner_home_share=0.55,
+        elo_base=1320, elo_spread=200,
+        style="defensive", notes="东欧小球联赛"
+    ),
+    "HUN": LeagueProfile(
+        name="匈甲", code="HUN", region="europe",
+        avg_home_goals=1.45, avg_away_goals=1.10, avg_total_goals=2.55,
+        home_win_rate=0.44, draw_rate=0.25, away_win_rate=0.31,
+        home_advantage_elo=90, home_goal_boost=0.28,
+        over_25_rate=0.50, btts_rate=0.49, avg_corners=9.3, corner_home_share=0.55,
+        elo_base=1350, elo_spread=200,
+        style="mixed", notes="费伦茨瓦罗斯主导"
+    ),
+
+    # ── 亚洲 ──
+    "J1": LeagueProfile(
+        name="J联赛", code="J1", region="asia",
+        avg_home_goals=1.40, avg_away_goals=1.10, avg_total_goals=2.50,
+        home_win_rate=0.40, draw_rate=0.25, away_win_rate=0.35,
+        home_advantage_elo=70, home_goal_boost=0.20,
+        over_25_rate=0.48, btts_rate=0.47, avg_corners=9.0, corner_home_share=0.52,
+        elo_base=1400, elo_spread=120,
+        style="technical", notes="J联赛主场优势弱(40%), 客胜率高, 平局多"
+    ),
+    "CSL": LeagueProfile(
+        name="中超", code="CSL", region="asia",
+        avg_home_goals=1.55, avg_away_goals=1.15, avg_total_goals=2.70,
+        home_win_rate=0.44, draw_rate=0.25, away_win_rate=0.31,
+        home_advantage_elo=90, home_goal_boost=0.28,
+        over_25_rate=0.52, btts_rate=0.50, avg_corners=9.2, corner_home_share=0.54,
+        elo_base=1350, elo_spread=200,
+        style="mixed", notes="外援依赖度高, 主场优势适中"
+    ),
+    "KLEAGUE": LeagueProfile(
+        name="K联赛", code="KLEAGUE", region="asia",
+        avg_home_goals=1.40, avg_away_goals=1.05, avg_total_goals=2.45,
+        home_win_rate=0.42, draw_rate=0.27, away_win_rate=0.31,
+        home_advantage_elo=85, home_goal_boost=0.26,
+        over_25_rate=0.46, btts_rate=0.46, avg_corners=8.8, corner_home_share=0.53,
+        elo_base=1380, elo_spread=150,
+        style="defensive", notes="K联赛小球倾向, 防守为先"
+    ),
+
+    # ── 友谊赛/其他 ──
+    "FRIENDLY": LeagueProfile(
+        name="友谊赛", code="FRIENDLY", region="world",
+        avg_home_goals=1.50, avg_away_goals=1.20, avg_total_goals=2.70,
+        home_win_rate=0.42, draw_rate=0.26, away_win_rate=0.32,
+        home_advantage_elo=50, home_goal_boost=0.15,
+        over_25_rate=0.52, btts_rate=0.52, avg_corners=9.0, corner_home_share=0.52,
+        elo_base=1500, elo_spread=300,
+        style="mixed", notes="⚠ 友谊赛数据仅供参考, 轮换频繁不可预测"
+    ),
 }
 
 

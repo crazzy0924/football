@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>8月6日 终盘 · Kambi数据源 · 37场</title>
+<title>8月7日 终盘预测 · CRAZY</title>
 <style>
 :root{--bg:#fafafa;--card:#fff;--border:#e0e0e0;--text:#222;--muted:#999;--accent:#e67e00;--green:#1a8a3f;--red:#d32f2f;--blue:#1565c0}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -33,19 +33,19 @@ tbody tr:hover{background:#fafafa}td.l{text-align:left}
 </head>
 <body>
 <div class="w">
-<div class="hd"><h1>⚽ 8月6日 <em>终盘预测</em> · Kambi 数据源 · 37场</h1></div>
-<div class="note">✅ 比赛列表来源: Kambi (Odds-API.io) — 37场欧联+欧协联资格赛, 覆盖所有开盘比赛</div>
-<div class="note2">⚠ 赔率: 其中10场有Kambi实时赔率, 其余27场用ELO+联赛画像估算. 待Kambi赔率API修复后补齐.</div>
+<div class="hd"><h1>⚽ 8月7日 <em>终盘预测</em> · CRAZY · Kambi实时赔率</h1></div>
+<div class="note">🇨🇳 亚洲傍晚: 国安 1.36 深盘 CSL | 🇪🇺 欧洲凌晨: 波鸿vs赫塔 德乙焦点 | 🌎 Leagues Cup: 5场 MLSvs墨超</div>
+<div class="note2">⚠️ 深盘规则(8月6日教训): 让球>1.5自动降一档. ELO+200先查联赛大球率. 本日无深盘推荐.</div>
 
 <div class="tabs" id="tabs"></div>
 <div style="overflow-x:auto"><table><thead><tr>
-  <th>时间</th><th>比赛</th><th>①方向</th><th>②波胆</th><th>③大小球</th><th>④半场</th><th>④下半场</th><th>⑤半场让球</th><th>⑥角球</th><th>推荐</th><th>来源</th>
+  <th>时间</th><th>比赛</th><th>①方向</th><th>②波胆</th><th>③大小球</th><th>④半场</th><th>⑤让球</th><th>⑥角球</th><th>推荐</th><th>逻辑</th>
 </tr></thead><tbody id="tb"></tbody></table></div>
 
-<div class="tb"><h2>📒 投注台账 (10场正式 · 基于Kambi赛程)</h2>
-<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>时间</th><th>杯赛</th><th>比赛</th><th>玩法</th><th>选项</th><th>赔率</th><th>置信</th><th>决策逻辑</th></tr></thead><tbody id="ledger"></tbody></table></div>
+<div class="tb"><h2>📒 投注台账 (CRAZY终盘)</h2>
+<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>时间</th><th>杯赛</th><th>比赛</th><th>玩法</th><th>选项</th><th>赔率</th><th>置信</th><th>决策</th></tr></thead><tbody id="ledger"></tbody></table></div>
 <div class="sum" id="lsum"></div></div>
-<div class="ft">终盘 · Kambi数据源(Odds-API.io) · 37场全量 · 联赛自适应 · 22:00终盘</div></div>
+<div class="ft">CRAZY终盘 · Kambi(Unibet)实时赔率 · 联赛自适应 · 深盘已降档 · 22:00</div></div>
 
 <script>
 function pois(k,l){if(l<=0)return k===0?1:0;var v=-l+k*Math.log(l);for(var i=2;i<=k;i++)v-=Math.log(i);return Math.exp(v)}
@@ -66,50 +66,29 @@ function mc(hAtt,hDef,aAtt,aDef,hAdv,avg,crB){
 }
 function ea(e){var s=(e-1500)/400;return Math.max(0.5,+(1+s*0.6).toFixed(2))}
 function ed(e){var s=(e-1500)/400;return Math.max(0.5,+(1-s*0.5).toFixed(2))}
-var LP={EL:{a:2.55,ha:0.22,eloH:75,crB:9.5},ECL:{a:2.50,ha:0.20,eloH:70,crB:9.0}};
-var ELO={"本菲卡":1720,"哈茨":1450,"萨尔茨堡":1620,"帕福斯":1400,"比亚韦斯托克":1480,"格拉斯哥流浪者":1600,"赫拉德茨":1420,"贝西克塔斯":1550,"库普斯":1380,"克拉约瓦":1460,"里耶卡":1500,"伊尔韦斯":1280,"阿贾克斯":1700,"谢尔伯恩":1320,"布拉加":1600,"明斯克":1350,"波西米亚人":1300,"中日德兰":1560,"拉科夫":1480,"哈马比":1520,"克卢日":1450,"特罗姆瑟":1420,"谢里夫":1400,"圣加仑":1500,"里加":1380,"吉奥利":1350,"PAOK":1580,"安德莱赫特":1600,"基辅迪纳摩":1550,"卡拉巴克":1480,"哥本哈根":1580,"德布勒森":1400,"波兹南莱赫":1520,"克拉克斯维克":1300,"特拉维夫马卡比":1500,"索菲亚中央陆军":1420,"哥德堡":1480,"根特":1550,"赫尔辛基":1420,"马瑟韦尔":1380,"图恩":1450,"维京古":1350,"特温特":1520,"多瑙斯特雷达":1400,"贝尔格莱德游击":1550,"托博尔":1350,"希伯尼安":1400,"什肯迪亚":1350};
+var LP={LC:{a:2.80,ha:0.35,eloH:120,crB:9.8},BL2:{a:2.75,ha:0.28,eloH:90,crB:10.0},DED:{a:3.15,ha:0.22,eloH:80,crB:10.7},ABL:{a:2.60,ha:0.30,eloH:95,crB:9.5},SCO:{a:2.50,ha:0.28,eloH:90,crB:9.5},ASEAN:{a:2.50,ha:0.20,eloH:70,crB:9.0}};
+var ELO={"北京国安":1580,"深圳鹏城":1400,"新加坡":1380,"印尼":1500,"波鸿":1550,"柏林赫塔":1600,"坎布尔":1480,"精英":1450,"阿尔塔赫":1420,"蒂罗尔":1400,"帕特里克":1380,"利文斯顿":1420,"夏洛特":1500,"阿特拉斯":1480,"哥伦布机员":1520,"帕丘卡":1550,"辛辛那提":1500,"美洲狮":1520,"老虎":1580,"明尼苏达联":1450,"温哥华白帽":1450,"华雷斯":1400};
 
-var DATA=[{n:"欧联资格赛",lg:"EL",ms:[
-  {id:"b1",h:"库普斯",a:"克拉约瓦",t:"23:00",cf:"低",ods:{h:2.1,d:3.3,a:3.2},bet:["参考","不投注","—"],r:"ELO-80 ECL样本少",src:"Kambi"},
-  {id:"b2",h:"特拉维夫马卡比",a:"索菲亚中央陆军",t:"00:00",cf:"中",ods:{h:1.7,d:3.6,a:4.5},bet:["胜平负","主胜","1.70"],r:"EL+75 以超强队vs保加利亚 主场",src:"Kambi"},
-  {id:"b3",h:"比亚韦斯托克",a:"格拉斯哥流浪者",t:"00:00",cf:"中",ods:{h:3.1,d:3.4,a:2.15},bet:["胜平负","客胜","2.15"],r:"ELO-120 流浪者不败@1.32",src:"Kambi+搜索"},
-  {id:"b4",h:"萨尔茨堡红牛",a:"帕福斯",t:"01:00",cf:"中",ods:{h:1.5,d:4.2,a:5.4},bet:["大小球","小2.5","2.14"],r:"ELO+220 亚盘升盘 帕福斯5连小",src:"Kambi+搜索"},
-  {id:"b5",h:"林肯红魔",a:"奥莫尼亚",t:"01:00",cf:"低",ods:{h:4.5,d:3.6,a:1.7},bet:["参考","不投注","—"],r:"直布罗陀vs塞浦路斯 ECL样本少",src:"Kambi"},
-  {id:"b6",h:"波兹南莱赫",a:"克拉克斯维克",t:"01:00",cf:"高",ods:{h:1.3,d:5.0,a:8.5},bet:["让球","波兹南莱赫 -1.5","1.75"],r:"ELO+220 波兰vs法罗群岛",src:"Kambi"},
-  {id:"b7",h:"赫拉德茨",a:"贝西克塔斯",t:"01:00",cf:"中",ods:{h:4.2,d:3.6,a:1.82},bet:["让球","贝西克塔斯 -0.5","1.82"],r:"ELO-130 捷克vs土耳其",src:"Kambi+搜索"},
-  {id:"b8",h:"PAOK",a:"安德莱赫特",t:"01:45",cf:"中",ods:{h:2.2,d:3.4,a:3.0},bet:["胜平负","主胜","2.20"],r:"EL+75 希腊主场vs比利时 实力接近 博主场",src:"Kambi"},
-  {id:"b9",h:"图恩",a:"维京古",t:"02:00",cf:"低",ods:{h:1.9,d:3.5,a:3.8},bet:["参考","不投注","—"],r:"瑞士vs冰岛 ECL样本少",src:"Kambi"},
-  {id:"b10",h:"本菲卡",a:"哈茨",t:"03:00",cf:"高",ods:{h:1.07,d:10.9,a:26.9},bet:["让球","本菲卡 -2.5","1.85"],r:"ELO+270 EL+75 葡超冠军vs苏超中游",src:"Kambi+搜索"},
-]},{n:"欧协联资格赛",lg:"ECL",ms:[
-  {id:"c1",h:"赫尔辛基",a:"马瑟韦尔",t:"00:00",cf:"低",ods:{h:2.0,d:3.3,a:3.5},bet:["参考","不投注","—"],r:"芬超vs苏超 数据稀缺",src:"Kambi"},
-  {id:"c2",h:"亚布洛内茨",a:"RFS",t:"00:00",cf:"低",ods:{h:1.9,d:3.4,a:3.8},bet:["参考","不投注","—"],r:"捷克vs拉脱维亚",src:"Kambi"},
-  {id:"c3",h:"诺亚耶烈万",a:"锡永",t:"00:00",cf:"低",ods:{h:3.5,d:3.4,a:2.0},bet:["参考","不投注","—"],r:"亚美尼亚vs瑞士",src:"Kambi"},
-  {id:"c4",h:"派德",a:"维也纳快速",t:"00:00",cf:"中",ods:{h:5.0,d:4.0,a:1.55},bet:["让球","维也纳快速 -1.0","1.70"],r:"ELO+180 爱沙尼亚vs奥地利",src:"Kambi"},
-  {id:"c5",h:"克卢日",a:"特罗姆瑟",t:"00:30",cf:"低",ods:{h:2.79,d:3.38,a:2.60},bet:["参考","不投注","—"],r:"ELO+30 五五开",src:"Kambi+搜索"},
-  {id:"c6",h:"德布勒森",a:"哥本哈根",t:"01:00",cf:"高",ods:{h:5.0,d:4.0,a:1.55},bet:["让球","哥本哈根 -1.0","1.68"],r:"ELO-180 匈牙利vs丹麦",src:"Kambi"},
-  {id:"c7",h:"谢里夫",a:"圣加仑",t:"01:00",cf:"低",ods:{h:3.9,d:3.4,a:2.05},bet:["大小球","小2.5","1.86"],r:"ELO-100 摩尔多瓦 小球倾向",src:"Kambi+搜索"},
-  {id:"c8",h:"拉科夫",a:"哈马比",t:"01:00",cf:"低",ods:{h:2.27,d:3.4,a:3.38},bet:["大小球","大2.5","1.90"],r:"ELO-40 最均衡 瑞典开放风格",src:"Kambi+搜索"},
-  {id:"c9",h:"基辅迪纳摩",a:"卡拉巴克",t:"01:00",cf:"中",ods:{h:2.0,d:3.3,a:3.5},bet:["胜平负","主胜","2.00"],r:"ELO+70 中立场地 乌超vs阿塞拜疆",src:"Kambi"},
-  {id:"c10",h:"国际俱乐部",a:"塔林弗洛拉",t:"01:00",cf:"低",ods:{h:2.5,d:3.2,a:2.6},bet:["参考","不投注","—"],r:"安道尔vs爱沙尼亚",src:"Kambi"},
-  {id:"c11",h:"里加",a:"吉奥利",t:"01:00",cf:"低",ods:{h:2.1,d:3.4,a:3.4},bet:["参考","不投注","—"],r:"ELO+30 ECL样本少",src:"Kambi+搜索"},
-  {id:"c12",h:"扎尔吉里斯",a:"哈伊杜克",t:"01:00",cf:"中",ods:{h:3.2,d:3.3,a:2.1},bet:["参考","不投注","—"],r:"立陶宛vs克罗地亚 数据不足",src:"Kambi"},
-  {id:"c13",h:"哥德堡",a:"根特",t:"01:00",cf:"中",ods:{h:2.8,d:3.3,a:2.3},bet:["胜平负","客胜","2.30"],r:"ELO-70 瑞典vs比利时 客队实力强",src:"Kambi"},
-  {id:"c14",h:"耶路撒冷贝塔",a:"奥地利维也纳",t:"01:30",cf:"低",ods:{h:2.8,d:3.3,a:2.4},bet:["参考","不投注","—"],r:"以超vs奥甲 数据不足",src:"Kambi"},
-  {id:"c15",h:"阿贾克斯",a:"谢尔伯恩",t:"02:00",cf:"高",ods:{h:1.1,d:8.5,a:21},bet:["让球","阿贾克斯 -2.0","1.75"],r:"ELO+380 荷兰vs爱尔兰",src:"Kambi+搜索"},
-  {id:"c16",h:"特温特",a:"多瑙斯特雷达",t:"02:00",cf:"中",ods:{h:1.45,d:4.2,a:6.5},bet:["让球","特温特 -1.0","1.65"],r:"ELO+120 荷甲vs斯洛伐克",src:"Kambi"},
-  {id:"c17",h:"卢加诺",a:"NSI鲁纳维克",t:"02:30",cf:"高",ods:{h:1.15,d:7.0,a:15},bet:["让球","卢加诺 -2.0","1.80"],r:"ELO+280 瑞士vs法罗群岛",src:"Kambi"},
-  {id:"c18",h:"布拉加",a:"明斯克迪纳摩",t:"02:30",cf:"高",ods:{h:1.25,d:5.5,a:11},bet:["让球","布拉加 -1.5","1.72"],r:"ELO+250 葡超vs白俄 今晚最佳单注",src:"Kambi+搜索"},
-  {id:"c19",h:"博拉克",a:"马克斯莱恩",t:"02:30",cf:"低",ods:{h:1.8,d:3.5,a:4.0},bet:["参考","不投注","—"],r:"波黑vs白俄 数据不足",src:"Kambi"},
-  {id:"c20",h:"瓦鲁尔",a:"北西兰",t:"02:30",cf:"中",ods:{h:3.5,d:3.5,a:1.95},bet:["参考","不投注","—"],r:"冰岛vs丹麦 数据不足",src:"Kambi"},
-  {id:"c21",h:"波西米亚人",a:"中日德兰",t:"02:45",cf:"高",ods:{h:8.75,d:5.5,a:1.34},bet:["让球","中日德兰 -1.0","1.65"],r:"ELO-260 爱尔兰vs丹麦",src:"Kambi+搜索"},
-  {id:"c22",h:"里耶卡",a:"伊尔韦斯",t:"02:45",cf:"高",ods:{h:1.08,d:8.29,a:24},bet:["让球","里耶卡 -2.0","1.80"],r:"ELO+220 克罗地亚vs芬兰",src:"Kambi+搜索"},
-  {id:"c23",h:"特里菲奥里",a:"德里塔",t:"03:00",cf:"低",ods:{h:3.0,d:3.2,a:2.2},bet:["参考","不投注","—"],r:"圣马力诺vs科索沃",src:"Kambi"},
-  {id:"c24",h:"希伯尼安",a:"什肯迪亚",t:"03:00",cf:"中",ods:{h:1.49,d:4.2,a:6.8},bet:["胜平负","主胜","1.49"],r:"ELO+50 苏超vs北马其顿",src:"Kambi+搜索"},
-  {id:"c25",h:"贝尔格莱德游击",a:"托博尔",t:"03:00",cf:"高",ods:{h:1.35,d:4.5,a:8.0},bet:["让球","贝尔格莱德游击 -1.5","1.78"],r:"ELO+200 塞尔维亚vs哈萨克斯坦",src:"Kambi"},
+var DATA=[{n:"亚洲傍晚",lg:"LC",ms:[
+  {id:"a1",h:"北京国安",a:"深圳鹏城",t:"19:35",cf:"高",ods:{h:1.36,d:5.20,a:6.75},bet:["大小球","大3.5","1.84"],r:"Kambi线3.5. CSL+国安主场深盘. 市场预期3-4球."},
+  {id:"a2",h:"新加坡",a:"印尼",t:"21:00",cf:"中",ods:{h:4.00,d:3.35,a:1.76},bet:["胜平负","客胜","1.76"],r:"ASEAN杯. 印尼实力强. Kambi客胜1.76."},
+]},{n:"欧洲凌晨",lg:"BL2",ms:[
+  {id:"e1",h:"波鸿",a:"柏林赫塔",t:"02:30",cf:"中",ods:{h:2.30,d:3.50,a:2.85},bet:["大小球","大2.5","1.58"],r:"德乙焦点. OU大2.5仅1.58=市场极度看好进球. 两个前德甲队开放风格."},
+  {id:"e2",h:"坎布尔",a:"精英",t:"02:00",cf:"低",ods:{h:2.55,d:3.45,a:2.55},bet:["参考","不投注","—"],r:"荷甲开幕. 五五开. ECLO仅30=最均衡. 方向不明→参考."},
+  {id:"e3",h:"阿尔塔赫",a:"蒂罗尔",t:"01:30",cf:"中",ods:{h:2.08,d:3.20,a:3.45},bet:["大小球","小2.5","1.62"],r:"奥甲. 小2.5仅1.62=市场极度看好小球. 奥甲小球联赛."},
+  {id:"e4",h:"帕特里克",a:"利文斯顿",t:"02:30",cf:"低",ods:{h:2.35,d:3.20,a:2.80},bet:["参考","不投注","—"],r:"苏冠. 数据稀缺. 苏冠画像不完整→参考."},
+]},{n:"Leagues Cup (明晨)",lg:"LC",ms:[
+  {id:"l1",h:"夏洛特",a:"阿特拉斯",t:"07:30",cf:"中",ods:{h:2.12,d:3.75,a:3.00},bet:["胜平负","主胜","2.12"],r:"LC+120. 夏洛特上场3-0. 阿特拉斯6连败. 主场博."},
+  {id:"l2",h:"哥伦布机员",a:"帕丘卡",t:"07:30",cf:"中",ods:{h:2.23,d:3.60,a:2.90},bet:["胜平负","主胜","2.23"],r:"LC+120. MLS主场+墨超客场. OU2.5大1.58=进球预期强."},
+  {id:"l3",h:"辛辛那提",a:"美洲狮",t:"08:00",cf:"中",ods:{h:2.14,d:3.70,a:3.00},bet:["胜平负","主胜","2.14"],r:"LC+120. 辛辛那提上场3-1. 延续状态. 主场博."},
+  {id:"l4",h:"老虎",a:"明尼苏达联",t:"09:00",cf:"高",ods:{h:1.55,d:4.00,a:5.50},bet:["胜平负","主胜","1.55"],r:"墨超主场vsMLS. 老虎强队. 让球不深博主胜."},
+  {id:"l5",h:"温哥华白帽",a:"华雷斯",t:"10:30",cf:"低",ods:{h:1.90,d:3.50,a:3.80},bet:["大小球","大2.5","1.85"],r:"温哥华上场0-1. 反弹?方向不确定→大球. 华雷斯客场弱."},
 ]}];
 
+var ELO={"北京国安":1580,"深圳鹏城":1400,"新加坡":1380,"印尼":1500,"波鸿":1550,"柏林赫塔":1600,"坎布尔":1480,"精英":1450,"阿尔塔赫":1420,"蒂罗尔":1400,"帕特里克":1380,"利文斯顿":1420,"夏洛特":1500,"阿特拉斯":1480,"哥伦布机员":1520,"帕丘卡":1550,"辛辛那提":1500,"美洲狮":1520,"老虎":1580,"明尼苏达联":1450,"温哥华白帽":1450,"华雷斯":1400};
+
 var tabs='',allRows={},ledgerRows='',cnt=0,stake=0,sumC=0,formal=0;
-for(var g=0;g<DATA.length;g++){var lg=DATA[g],lp=LP[lg.lg];
+for(var g=0;g<DATA.length;g++){var lg=DATA[g],lp=LP[lg.lg]||LP.LC;
   tabs+='<div class="tab'+(g===0?' on':'')+'" onclick="switchLg(\''+lg.lg+'\')">'+lg.n+' ('+lg.ms.length+'场)</div>';
   var rows='';
   for(var i=0;i<lg.ms.length;i++){var m=lg.ms[i];cnt++;var eH=ELO[m.h]||1500,eA=ELO[m.a]||1500;
@@ -121,27 +100,26 @@ for(var g=0;g<DATA.length;g++){var lg=DATA[g],lp=LP[lg.lg];
     var h1Ah=Math.abs(s.h1d)<0.12?"平手":s.h1d>0.5?m.h+" -0.5":s.h1d>0.2?m.h+" -0.25":s.h1d<-0.5?m.a+" -0.5":s.h1d<-0.2?m.a+" -0.25":"平手";
     var h1Label=s.h1o15>0.5?"大":s.h1o15>0.35?"偏大":"小";
     var h2Label=s.h2o15>0.5?"大":s.h2o15>0.35?"偏大":"小";
-    var srcTag=m.src==="Kambi"?"<span style=\"font-size:0.5em;color:var(--green)\">Kambi</span>":"<span style=\"font-size:0.5em;color:var(--muted)\">搜索</span>";
+    var kambiNote=m.ods.h?"Kambi":"估";
     rows+='<tr><td>'+m.t+'</td><td class="l mw"><b>'+m.h+' vs '+m.a+'</b></td>'+
       '<td><span class="tag '+pc+'">'+pick+'</span><br><span style="font-size:0.55em;color:var(--muted)">'+(s.hw*100).toFixed(0)+'/'+(s.dr*100).toFixed(0)+'/'+(s.aw*100).toFixed(0)+'%</span></td>'+
       '<td><b style="color:var(--accent)">'+s.top+'</b></td>'+
       '<td><span style="font-weight:600;color:'+ouC+'">'+ou+'2.5</span><br><span style="font-size:0.55em;color:var(--muted)">'+(s.o25*100).toFixed(0)+'%</span></td>'+
       '<td><span style="font-weight:600;color:'+(s.h1o15>0.5?'#1a8a3f':s.h1o15>0.35?'#e67e00':'#d32f2f')+'">'+h1Label+'1.5 '+(s.h1o15*100).toFixed(0)+'%</span></td>'+
-      '<td><span style="font-weight:600;color:'+(s.h2o15>0.5?'#1a8a3f':s.h2o15>0.35?'#e67e00':'#d32f2f')+'">'+h2Label+'1.5 '+(s.h2o15*100).toFixed(0)+'%</span></td>'+
       '<td style="color:var(--blue);font-weight:600;font-size:0.6em">'+h1Ah+'</td>'+
       '<td style="font-size:0.6em">'+s.cr.t+'角<br><span style="font-size:0.5em;color:var(--muted)">'+s.cr.h+'/'+s.cr.a+'</span></td>'+
       '<td><span class="tag '+pc+'">'+m.bet[1]+'</span><br><span class="odds">@'+m.bet[2]+'</span></td>'+
-      '<td>'+srcTag+'</td></tr>';
+      '<td class="logic">'+m.r+'</td></tr>';
   }
   allRows[lg.lg]=rows;
   for(var i=0;i<lg.ms.length;i++){var m=lg.ms[i];if(m.bet[1]==="不投注")continue;formal++;stake+=100;
-    ledgerRows+='<tr><td>'+formal+'</td><td>'+m.t+'</td><td>'+lg.n+'</td><td class="l">'+m.h+' vs '+m.a+'</td><td>'+m.bet[0]+'</td><td style="font-weight:600;color:#e67e00">'+m.bet[1]+'</td><td>'+m.bet[2]+'</td><td style="font-weight:600;color:'+(m.cf=="高"?"#1a8a3f":m.cf=="中"?"#e67e00":"#999")+'">'+m.cf+'</td><td style="font-size:0.56em;color:var(--muted)">'+m.r.substring(0,35)+'</td></tr>';
+    ledgerRows+='<tr><td>'+formal+'</td><td>'+m.t+'</td><td>'+lg.n+'</td><td class="l">'+m.h+' vs '+m.a+'</td><td>'+m.bet[0]+'</td><td style="font-weight:600;color:#e67e00">'+m.bet[1]+'</td><td>'+m.bet[2]+'</td><td style="font-weight:600;color:'+(m.cf=="高"?"#1a8a3f":m.cf=="中"?"#e67e00":"#999")+'">'+m.cf+'</td><td style="font-size:0.55em;color:var(--muted)">'+m.r.substring(0,35)+'</td></tr>';
   }
 }
 document.getElementById('tabs').innerHTML=tabs;
 document.getElementById('tb').innerHTML=allRows[DATA[0].lg];
 document.getElementById('ledger').innerHTML=ledgerRows;
-document.getElementById('lsum').innerHTML='<span>📋 <b>'+formal+'</b> 注(正式)</span><span>💵 <b>'+stake+'</b></span><span>📊 37场全量</span><span>✅ Kambi赛程</span><span>⚡ 22:00终盘</span>';
+document.getElementById('lsum').innerHTML='<span>📋 <b>'+formal+'</b>注</span><span>💵 <b>'+stake+'</b></span><span>📊 11场全量</span><span>✅ Kambi实时赔率</span><span>🔴 深盘已降档</span>';
 function switchLg(lg){document.getElementById('tb').innerHTML=allRows[lg];document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.textContent.indexOf(lg)>=0)});}
 </script>
 </body>

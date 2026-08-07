@@ -1,9 +1,8 @@
-"""拉取Kambi赔率并生成终盘预测"""
-import requests, json, math, os
+"""拉取Kambi赔率(通过Unibet)并生成终盘预测"""
+import requests, json, os, time
 from datetime import datetime
 from pathlib import Path
 
-# 手动解析 .env (避免 dotenv 依赖)
 env_path = Path(__file__).resolve().parent / '.env'
 KEY = ''
 if env_path.exists():
@@ -12,13 +11,14 @@ if env_path.exists():
             KEY = line.split('=', 1)[1].strip()
             break
 
-# 1. 拉取所有足球赛事
-print("Fetching Kambi events...")
+BOOKMAKER = 'Unibet'  # Kambi引擎的博彩公司
+
+# 1. 拉取足球赛事
+print("Fetching events...")
 r = requests.get('https://api.odds-api.io/v3/events', params={
-    'sport': 'football', 'bookmaker': 'Kambi', 'apiKey': KEY
+    'sport': 'football', 'bookmaker': BOOKMAKER, 'apiKey': KEY
 }, timeout=20)
 events = r.json()
-print(f"Total events: {len(events)}")
 
 # 2. 筛选欧联/欧协联资格赛
 target_leagues = ['Europa League', 'Conference League', 'Champions League Qual']
@@ -29,34 +29,40 @@ for e in events:
         matches.append(e)
 
 print(f"Target matches: {len(matches)}")
-for m in matches:
-    print(f"  {m['home']} vs {m['away']} | {m.get('league',{}).get('name','')} | {m.get('date','')[:16]} | id={m['id']}")
 
-# 3. 拉取赔率
-print("\nFetching odds...")
-for m in matches[:37]:
+# 3. 拉取赔率 (正确解析)
+print("Fetching odds...")
+for i, m in enumerate(matches):
     try:
+        time.sleep(0.15)
         r2 = requests.get('https://api.odds-api.io/v3/odds', params={
-            'eventId': m['id'], 'bookmakers': 'Kambi', 'apiKey': KEY
+            'eventId': m['id'], 'bookmakers': BOOKMAKER, 'apiKey': KEY
         }, timeout=15)
-        odds_data = r2.json()
-        # odds_data结构: {"bookmakers": [{"markets": [{"name":"1X2","outcomes":[...]}]}]}
-        if isinstance(odds_data, dict):
-            bms = odds_data.get('bookmakers', odds_data.get('data', {}).get('bookmakers', []))
-            if isinstance(bms, list):
-                for bm in bms:
-                    if isinstance(bm, dict):
-                        markets = bm.get('markets', [])
-                        if isinstance(markets, list):
-                            for market in markets:
-                                if isinstance(market, dict) and market.get('name') in ('1X2', 'Full Time Result'):
-                                    outcomes = {o['name']: o['odds'] for o in market.get('outcomes', [])}
-                                    m['odds_1x2'] = outcomes
-                                    print(f"  {m['home']}: {outcomes}")
+        data = r2.json()
+
+        # 新结构: bookmakers.Unibet = [{"name":"ML","odds":[{"home":"1.10","draw":"9.00","away":"19.00"}]}]
+        bms = data.get('bookmakers', {})
+        if isinstance(bms, dict):
+            for bm_name, markets in bms.items():
+                if isinstance(markets, list):
+                    for mkt in markets:
+                        if mkt.get('name') in ('ML', '1X2', 'Full Time Result'):
+                            odds_list = mkt.get('odds', [])
+                            if odds_list:
+                                o = odds_list[0]
+                                m['odds_1x2'] = {
+                                    'home': float(o.get('home', 0)),
+                                    'draw': float(o.get('draw', 0)),
+                                    'away': float(o.get('away', 0)),
+                                }
+                                m['odds_source'] = f'{BOOKMAKER} (Kambi)'
+                                print(f"  {m['home'][:20]} vs {m['away'][:20]}: {m['odds_1x2']}")
+                                break
     except Exception as e:
-        print(f"  {m['home']}: ERROR - {e}")
+        print(f"  {m['home'][:20]}: ERROR - {str(e)[:50]}")
 
 # 保存
-with open('data/kambi_odds.json', 'w', encoding='utf-8') as f:
-    json.dump(matches, f, ensure_ascii=False, indent=2, default=str)
-print(f"\nSaved {len(matches)} matches to data/kambi_odds.json")
+out_path = Path('data/kambi_odds.json')
+out_path.write_text(json.dumps(matches, ensure_ascii=False, indent=2, default=str), encoding='utf-8')
+with_odds = sum(1 for m in matches if m.get('odds_1x2'))
+print(f"\nSaved {len(matches)} matches ({with_odds} with Unibet odds) to {out_path}")

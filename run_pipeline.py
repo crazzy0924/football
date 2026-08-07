@@ -27,6 +27,13 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+# 修复 Windows GBK 编码下 emoji 打印问题
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
+
 # ── 项目根目录 ──────────────────────────────────────────
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))

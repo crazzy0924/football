@@ -3,216 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>克劳德独立审核 · 8月6日 Kambi 37场版</title>
+<title>8月6日 复盘 · 克劳德 vs 模型</title>
 <style>
 :root{--bg:#080b14;--card:#0d111c;--border:#161b2a;--text:#c8ccd8;--muted:#5a5e72;--accent:#7c6ff7;--a2:#a78bfa;--g:#3fb950;--r:#f85149;--y:#f0a838;--b:#58a6ff}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
-.top{background:linear-gradient(135deg,#0a0f1e,#11163a,#0d1230,#0a0f1e);border-bottom:1px solid var(--border);padding:18px 24px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px}
+.top{background:linear-gradient(135deg,#0a0f1e,#11163a);border-bottom:1px solid var(--border);padding:18px 24px;position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px}
 .top .icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#7c6ff7,#a78bfa);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1em}
 .top h1{font-size:1em}.top em{color:var(--a2);font-style:normal}.top .sub{font-size:0.6em;color:var(--muted)}
 .w{max-width:860px;margin:0 auto;padding:20px 16px}
-.dash{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap}
-.di{flex:1;min-width:70px;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:12px 8px;text-align:center}.di .n{font-size:1.3em;font-weight:800}.di .l{font-size:0.54em;color:var(--muted);margin-top:2px}
-h2{font-size:0.85em;margin:20px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}h2 span{color:var(--a2)}
-.match{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-bottom:7px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.match.agree{border-left:3px solid var(--g)}.match.warn{border-left:3px solid var(--y)}.match.no{border-left:3px solid var(--r)}.match.skip{border-left:3px solid var(--border)}
-.match .tag{font-size:0.55em;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap}.tag-g{background:rgba(63,185,80,0.12);color:var(--g)}.tag-y{background:rgba(240,168,56,0.12);color:var(--y)}.tag-r{background:rgba(248,81,73,0.12);color:var(--r)}.tag-p{background:rgba(124,111,247,0.12);color:var(--a2)}
-.match .teams{flex:1;min-width:180px}.match .mt{font-weight:700;font-size:0.82em}.match .mi{font-size:0.58em;color:var(--muted)}
-.match .bet{font-size:0.72em;font-weight:700;white-space:nowrap}.match .why{font-size:0.6em;color:var(--muted);width:100%;margin-top:2px}
-.foot{text-align:center;padding:20px;color:var(--muted);font-size:0.55em;opacity:0.4}
+.dash{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap}
+.di{flex:1;min-width:65px;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:12px 8px;text-align:center}.di .n{font-size:1.3em;font-weight:800}.di .l{font-size:0.54em;color:var(--muted);margin-top:2px}
+h2{font-size:0.85em;margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}h2 span{color:var(--a2)}
+.match{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:0.78em}
+.match.w{border-left:3px solid var(--g)}.match.l{border-left:3px solid var(--r)}.match.p{border-left:3px solid var(--y)}
+.match .tag{font-size:0.55em;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap}.tg{background:rgba(63,185,80,0.12);color:var(--g)}.tr{background:rgba(248,81,73,0.12);color:var(--r)}.ty{background:rgba(240,168,56,0.12);color:var(--y)}
+.match .teams{flex:1;min-width:160px}.match .mt{font-weight:700}.match .mi{font-size:0.6em;color:var(--muted)}
+.match .score{font-weight:800;font-size:0.9em;min-width:36px;text-align:center}
+.match .bet{font-size:0.7em;min-width:90px;text-align:right}.match .pnl{font-weight:700;min-width:55px;text-align:right}
+.big{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:16px 18px;margin:16px 0}
+.big h3{font-size:0.8em;margin-bottom:8px}
+.insight{margin:4px 0;font-size:0.7em;line-height:1.5}
+.insight::before{content:'▸ ';color:var(--a2)}
+.insight.bad::before{content:'🔴 ';color:var(--r);font-weight:700}
+.insight.good::before{content:'🟢 ';color:var(--g);font-weight:700}
+.ft{text-align:center;padding:20px;color:var(--muted);font-size:0.55em;opacity:0.4}
 </style>
 </head>
 <body>
 <div class="top">
 <div class="icon">C</div>
-<h1><em>克劳德</em> 独立审核 · 8月6日</h1>
-<span class="sub">模型已更新至37场 Kambi版 · 原13场→现37场 · 本审核覆盖全量</span>
+<h1><em>克劳德</em> 复盘 · 8月6日</h1>
+<span class="sub">严格对照终盘HTML实际输出 · 数字一字不改 · 如实报告</span>
 </div>
 
 <div class="w">
 
 <div class="dash">
 <div class="di"><div class="n" style="color:var(--a2)">37</div><div class="l">总场次</div></div>
-<div class="di"><div class="n" style="color:var(--g)">8</div><div class="l">同意</div></div>
-<div class="di"><div class="n" style="color:var(--y)">4</div><div class="l">保留意见</div></div>
-<div class="di"><div class="n" style="color:var(--r)">4</div><div class="l">明确反对</div></div>
-<div class="di"><div class="n" style="color:var(--b)">5</div><div class="l">建议保留</div></div>
-<div class="di"><div class="n" style="color:var(--muted)">16</div><div class="l">参考/跳过</div></div>
+<div class="di"><div class="n" style="color:var(--g)">10</div><div class="l">投注命中</div></div>
+<div class="di"><div class="n" style="color:var(--r)">8</div><div class="l">投注失利</div></div>
+<div class="di"><div class="n" style="color:var(--y)">2</div><div class="l">走水</div></div>
+<div class="di"><div class="n">50%</div><div class="l">命中率</div></div>
+<div class="di"><div class="n" style="color:var(--r)">≈-24</div><div class="l">盈亏 (21注)</div></div>
 </div>
 
-<h2>🟢 一致同意 <span>（维持投注）</span></h2>
+<h2>📊 逐场对照 <span>（投注场次）</span></h2>
 
-<div class="match agree">
-<span class="tag tag-g">同意</span>
-<div class="teams"><div class="mt">布拉加 vs 明斯克迪纳摩</div><div class="mi">02:30 · ECL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--g)">-1.5 @1.72</div>
-<div class="why">🏆 今晚最佳单注。葡超前四主场龙，白俄长途跋涉，风格确定穿盘。</div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">本菲卡 6-1 哈茨</div><div class="mi">模型: -2.5 @1.85 高 | 克劳德: 🟡 太深</div></div><div class="score" style="color:var(--g)">穿</div><div class="bet">-2.5 @1.85</div><div class="pnl" style="color:var(--g)">+85</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">萨尔茨堡 1-0 帕福斯</div><div class="mi">模型: 小2.5 @2.14 中 | 克劳德: 🟢 同意</div></div><div class="score" style="color:var(--g)">小</div><div class="bet">小2.5 @2.14</div><div class="pnl" style="color:var(--g)">+114</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">赫拉德茨 0-1 贝西克塔斯</div><div class="mi">模型: -0.5 @1.82 中 | 克劳德: 🟡 信息不足</div></div><div class="score" style="color:var(--g)">穿</div><div class="bet">-0.5 @1.82</div><div class="pnl" style="color:var(--g)">+82</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">派德 1-4 维也纳快速</div><div class="mi">模型: -1.0 @1.70 中 | 克劳德: 🟢 同意</div></div><div class="score" style="color:var(--g)">穿</div><div class="bet">-1.0 @1.70</div><div class="pnl" style="color:var(--g)">+70</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">德布勒森 0-3 哥本哈根</div><div class="mi">模型: -1.0 @1.68 高 | 克劳德: 🟢 同意</div></div><div class="score" style="color:var(--g)">穿</div><div class="bet">-1.0 @1.68</div><div class="pnl" style="color:var(--g)">+68</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">基辅迪纳摩 1-0 卡拉巴克</div><div class="mi">模型: 主胜 @2.00 中 | 克劳德: 🔴 反对(中立场地)</div></div><div class="score" style="color:var(--g)">中</div><div class="bet">主胜 @2.00</div><div class="pnl" style="color:var(--g)">+100</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">特温特 6-0 多瑙斯特雷达</div><div class="mi">模型: -1.0 @1.65 中 | 克劳德: 🟢 同意</div></div><div class="score" style="color:var(--g)">穿</div><div class="bet">-1.0 @1.65</div><div class="pnl" style="color:var(--g)">+65</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">波西米亚人 0-2 中日德兰</div><div class="mi">模型: -1.0 @1.65 高 | 克劳德: 🟢 同意</div></div><div class="score" style="color:var(--g)">穿</div><div class="bet">-1.0 @1.65</div><div class="pnl" style="color:var(--g)">+65</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">希伯尼安 2-1 什肯迪亚</div><div class="mi">模型: 主胜 @1.49 中 | 克劳德: 🔵 保留</div></div><div class="score" style="color:var(--g)">中</div><div class="bet">主胜 @1.49</div><div class="pnl" style="color:var(--g)">+49</div></div>
+<div class="match w"><span class="tag tg">✅</span><div class="teams"><div class="mt">游击队 3-0 托博尔</div><div class="mi">模型: -1.5 @1.78 高 | 克劳德: 🔵 保留</div></div><div class="score" style="color:var(--g)">穿</div><div class="bet">-1.5 @1.78</div><div class="pnl" style="color:var(--g)">+78</div></div>
+
+<div class="match l"><span class="tag tr">❌</span><div class="teams"><div class="mt">马卡比 0-2 索菲亚中央陆军</div><div class="mi">模型: 主胜 @1.70 中 | 克劳德: 🟢 同意</div></div><div class="score" style="color:var(--r)">负</div><div class="bet">主胜 @1.70</div><div class="pnl" style="color:var(--r)">-100</div></div>
+<div class="match l"><span class="tag tr">❌</span><div class="teams"><div class="mt">比亚韦斯托克 2-1 流浪者</div><div class="mi">模型: 客胜 @2.15 中 | 克劳德: 🟡 换DNB</div></div><div class="score" style="color:var(--r)">负</div><div class="bet">客胜 @2.15</div><div class="pnl" style="color:var(--r)">-100</div></div>
+<div class="match l"><span class="tag tr">❌</span><div class="teams"><div class="mt">波兹南莱赫 1-0 克拉克斯维克</div><div class="mi">模型: -1.5 @1.75 高 | 克劳德: 🔵 保留</div></div><div class="score" style="color:var(--r)">输盘</div><div class="bet">-1.5 @1.75</div><div class="pnl" style="color:var(--r)">-100</div></div>
+<div class="match l"><span class="tag tr">❌</span><div class="teams"><div class="mt">PAOK 0-1 安德莱赫特</div><div class="mi">模型: 主胜 @2.20 中 | 克劳德: 🔵 保留</div></div><div class="score" style="color:var(--r)">负</div><div class="bet">主胜 @2.20</div><div class="pnl" style="color:var(--r)">-100</div></div>
+<div class="match l"><span class="tag tr">❌</span><div class="teams"><div class="mt">谢里夫 1-3 圣加仑</div><div class="mi">模型: 小2.5 @1.86 低 | 克劳德: 🟡 价差</div></div><div class="score" style="color:var(--r)">大</div><div class="bet">小2.5 @1.86</div><div class="pnl" style="color:var(--r)">-100</div></div>
+<div class="match l"><span class="tag tr">❌</span><div class="teams"><div class="mt">拉科夫 0-0 哈马比</div><div class="mi">模型: 大2.5 @1.90 低 | 克劳德: 🟢 同意</div></div><div class="score" style="color:var(--r)">小</div><div class="bet">大2.5 @1.90</div><div class="pnl" style="color:var(--r)">-100</div></div>
+<div class="match l"><span class="tag tr">❌</span><div class="teams"><div class="mt">布拉加 1-0 明斯克迪纳摩</div><div class="mi">模型: -1.5 @1.72 高 | 克劳德: 🟢 同意(最佳单注!)</div></div><div class="score" style="color:var(--r)">输盘</div><div class="bet">-1.5 @1.72</div><div class="pnl" style="color:var(--r)">-100</div></div>
+<div class="match l"><span class="tag tr">❌</span><div class="teams"><div class="mt">里耶卡 1-0 伊尔韦斯</div><div class="mi">模型: -2.0 @1.80 高 | 克劳德: 🔴 反对!</div></div><div class="score" style="color:var(--r)">输盘</div><div class="bet">-2.0 @1.80</div><div class="pnl" style="color:var(--r)">-100</div></div>
+
+<div class="match p"><span class="tag ty">⇔</span><div class="teams"><div class="mt">阿贾克斯 3-1 谢尔伯恩</div><div class="mi">模型: -2.0 @1.75 高 | 克劳德: 🔴 反对!</div></div><div class="score" style="color:var(--y)">走水</div><div class="bet">-2.0 @1.75</div><div class="pnl" style="color:var(--y)">0</div></div>
+<div class="match p"><span class="tag ty">⇔</span><div class="teams"><div class="mt">卢加诺 2-0 NSI鲁纳维克</div><div class="mi">模型: -2.0 @1.80 高 | 克劳德: 🔴 反对!</div></div><div class="score" style="color:var(--y)">走水</div><div class="bet">-2.0 @1.80</div><div class="pnl" style="color:var(--y)">0</div></div>
+
+<h2>🔬 核心发现 <span>（深盘怀疑原则验证）</span></h2>
+
+<div class="big">
+<h3>让球深度 vs 命中率 — 分层对照</h3>
+<table style="width:100%;border-collapse:collapse;font-size:0.75em;margin-top:8px">
+<tr style="color:var(--muted);font-size:0.7em"><th style="text-align:left;padding:6px 8px">盘口深度</th><th>场次</th><th>全赢</th><th>走水</th><th>输盘</th><th>全赢率</th></tr>
+<tr><td style="padding:6px 8px;font-weight:700;color:var(--g)">-1.0</td><td>4</td><td style="color:var(--g)">4</td><td>0</td><td>0</td><td style="color:var(--g);font-weight:800">100%</td></tr>
+<tr><td style="padding:6px 8px;font-weight:700;color:var(--y)">-1.5</td><td>3</td><td style="color:var(--g)">1</td><td>0</td><td style="color:var(--r)">2</td><td style="color:var(--r)">33%</td></tr>
+<tr><td style="padding:6px 8px;font-weight:700;color:var(--r)">-2.0</td><td>3</td><td style="color:var(--g)">0</td><td>2</td><td style="color:var(--r)">1</td><td style="color:var(--r);font-weight:800">0%</td></tr>
+<tr style="background:rgba(124,111,247,0.05)"><td style="padding:6px 8px;font-weight:700;color:var(--r)">-2.5</td><td>1</td><td style="color:var(--g)">1</td><td>0</td><td>0</td><td style="color:var(--g)">100%</td></tr>
+</table>
+<div class="insight bad" style="margin-top:10px"><strong>深盘怀疑原则完全验证：</strong>-2.0盘口3场零全赢！阿贾克斯(3-1走水)、里耶卡(1-0输盘)、卢加诺(2-0走水)。而-1.0盘口4场全赢——模型在温和让球上精准，深盘映射存在系统性偏差。</div>
+<div class="insight good"><strong>-1.0是甜点区：</strong>维也纳快速、哥本哈根、特温特、中日德兰——4场-1.0全部穿盘。模型在合理让球深度上的判断力值得信任。</div>
 </div>
 
-<div class="match agree">
-<span class="tag tag-g">同意</span>
-<div class="teams"><div class="mt">波西米亚人 vs 中日德兰</div><div class="mi">02:45 · ECL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--g)">-1.0 @1.65</div>
-<div class="why">🛡️ 纸面差距最大之一，-1.0保护策略聪明。</div>
+<h2>⚔️ 克劳德 vs 模型 <span>（分歧场次谁对）</span></h2>
+
+<div class="big">
+<table style="width:100%;border-collapse:collapse;font-size:0.75em">
+<tr style="color:var(--muted);font-size:0.7em"><th style="text-align:left;padding:6px 8px">场次</th><th>模型</th><th>克劳德</th><th>赛果</th><th>谁对</th></tr>
+<tr><td style="padding:5px 8px">阿贾克斯 -2.0</td><td>投注</td><td style="color:var(--r)">反对</td><td>3-1 走水</td><td style="color:var(--a2)">克劳德 ✓</td></tr>
+<tr><td style="padding:5px 8px">里耶卡 -2.0</td><td>投注</td><td style="color:var(--r)">反对</td><td>1-0 输盘</td><td style="color:var(--a2)">克劳德 ✓✓</td></tr>
+<tr><td style="padding:5px 8px">卢加诺 -2.0</td><td>投注</td><td style="color:var(--r)">反对</td><td>2-0 走水</td><td style="color:var(--a2)">克劳德 ✓</td></tr>
+<tr><td style="padding:5px 8px">基辅迪纳摩 主胜</td><td>投注</td><td style="color:var(--r)">反对</td><td>1-0 命中</td><td style="color:var(--y)">模型 ✓</td></tr>
+<tr><td style="padding:5px 8px">本菲卡 -2.5</td><td>投注</td><td style="color:var(--y)">太深</td><td>6-1 穿盘</td><td style="color:var(--y)">模型 ✓</td></tr>
+<tr><td style="padding:5px 8px">流浪者 客胜</td><td>投注</td><td style="color:var(--y)">换DNB</td><td>1-2 输</td><td style="color:var(--a2)">克劳德 ✓</td></tr>
+<tr style="background:rgba(124,111,247,0.05)"><td style="padding:5px 8px">布拉加 -1.5</td><td>投注</td><td style="color:var(--g)">最佳单注</td><td>1-0 输盘</td><td style="color:var(--r)">都错 ❌</td></tr>
+</table>
+<div class="insight good" style="margin-top:10px"><strong>分歧场次: 克劳德 4-2 模型。</strong>深盘三连反对全部正确——阿贾克斯、里耶卡、卢加诺没有一场全赢。流浪者DNB建议也优于 outright 客胜。</div>
+<div class="insight bad"><strong>但克劳德的最大失误：</strong>布拉加"最佳单注"翻车了。1-0仅靠点球取胜，-1.5输盘。这说明即使基本面+风格分析也有盲区。</div>
 </div>
 
-<div class="match agree">
-<span class="tag tag-g">同意</span>
-<div class="teams"><div class="mt">萨尔茨堡红牛 vs 帕福斯</div><div class="mi">01:00 · EL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--g)">小2.5 @2.14</div>
-<div class="why">💎 价值盘。帕福斯客场5连小是硬数据，升盘没被误导追大球。</div>
+<h2>📋 总结</h2>
+<div class="big">
+<div class="insight good"><strong>深盘怀疑原则成立。</strong>今晚之后应当固化为规则：杯赛资格赛阶段，非五大联赛球队的-2.0及以上深盘，默认施加穿盘概率折扣(建议-20%)，或自动降档为参考。</div>
+<div class="insight good"><strong>-1.0是模型的甜点区。</strong>4场-1.0全赢。模型在这个深度上的判断力应该被充分利用。</div>
+<div class="insight bad"><strong>模型整体: 10赢8输2走水，50%命中率，≈-24盈亏。</strong>比8月4日(50%/-69)和8月5日(100%/+198)之间。样本还不够大，需要持续跟踪。</div>
+<div class="insight bad"><strong>我的最大教训:</strong> 布拉加"最佳单注"翻车提醒我——即使是基本面+风格双重确认的比赛，单场足球的不确定性也可以轻易击穿任何分析框架。保持谦卑。</div>
 </div>
 
-<div class="match agree">
-<span class="tag tag-g">同意</span>
-<div class="teams"><div class="mt">拉科夫 vs 哈马比</div><div class="mi">01:00 · ECL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--g)">大2.5 @1.90</div>
-<div class="why">🎯 方向不明→转大小球，铁律执行到位。瑞典队开放风格。</div>
-</div>
-
-<div class="match agree">
-<span class="tag tag-g">同意</span>
-<div class="teams"><div class="mt">哥本哈根 vs 德布勒森</div><div class="mi">01:00 · ECL · Kambi</div></div>
-<div class="bet" style="color:var(--g)">-1.0 @1.68</div>
-<div class="why">丹麦冠军级 vs 匈牙利中游，-1.0合理。哥本哈根欧战经验碾压。</div>
-</div>
-
-<div class="match agree">
-<span class="tag tag-g">同意</span>
-<div class="teams"><div class="mt">特温特 vs 多瑙斯特雷达</div><div class="mi">02:00 · ECL · Kambi</div></div>
-<div class="bet" style="color:var(--g)">-1.0 @1.65</div>
-<div class="why">荷甲劲旅 vs 斯洛伐克球队，实力差明确，-1.0合理。</div>
-</div>
-
-<div class="match agree">
-<span class="tag tag-g">同意</span>
-<div class="teams"><div class="mt">维也纳快速 vs 派德</div><div class="mi">00:00 · ECL · Kambi</div></div>
-<div class="bet" style="color:var(--g)">-1.0 @1.70</div>
-<div class="why">奥地利强队 vs 爱沙尼亚弱旅，基本面无问题。</div>
-</div>
-
-<div class="match agree">
-<span class="tag tag-g">同意</span>
-<div class="teams"><div class="mt">特拉维夫马卡比 vs 索菲亚中央陆军</div><div class="mi">00:00 · EL · Kambi</div></div>
-<div class="bet" style="color:var(--g)">主胜 @1.70</div>
-<div class="why">以超冠军主场，实力+主场双重优势，赔率合理。</div>
-</div>
-
-<h2>🟡 保留意见 <span>（方向对，但需要调整）</span></h2>
-
-<div class="match warn">
-<span class="tag tag-y">深盘风险</span>
-<div class="teams"><div class="mt">本菲卡 vs 哈茨</div><div class="mi">03:00 · EL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--y)">-2.5 @1.85 → 建议换 -1.5</div>
-<div class="why">本菲卡必赢，但杯赛首回合-2.5穿盘率历史上约45-50%。强队2-0领先切省电模式是常态。</div>
-</div>
-
-<div class="match warn">
-<span class="tag tag-y">换盘建议</span>
-<div class="teams"><div class="mt">比亚韦斯托克 vs 流浪者</div><div class="mi">00:00 · EL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--y)">客胜 @2.15 → 建议 DNB</div>
-<div class="why">流浪者客场欧战胜率约40%，首回合接受平局是合理策略。DNB保护更好。</div>
-</div>
-
-<div class="match warn">
-<span class="tag tag-y">信息不足</span>
-<div class="teams"><div class="mt">赫拉德茨 vs 贝西克塔斯</div><div class="mi">01:00 · EL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--y)">-0.5 @1.82 → 小注</div>
-<div class="why">土耳其球队欧战客场系统性不稳定，赫拉德茨阵容信息几乎查不到。</div>
-</div>
-
-<div class="match warn">
-<span class="tag tag-y">价格偏贵</span>
-<div class="teams"><div class="mt">谢里夫 vs 圣加仑</div><div class="mi">01:00 · ECL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--y)">小2.5 @1.86 → 小注/跳过</div>
-<div class="why">小球逻辑成立（谢里夫主场稳健），但1.86安全边际不够。</div>
-</div>
-
-<h2>🔴 明确反对 <span>（降为参考）</span></h2>
-
-<div class="match no">
-<span class="tag tag-r">反对 #1</span>
-<div class="teams"><div class="mt">阿贾克斯 vs 谢尔伯恩</div><div class="mi">02:00 · ECL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--r)">-2.0 @1.75 → 降为参考</div>
-<div class="why">🔴 ELO虚高是核心问题。阿贾克斯打欧协联资格赛本身就是红灯——他们本该在欧冠。2023-24灾难赛季+换帅+新赛季可能轮换。-2.0穿盘所需的东西阿贾克斯现在给不了。</div>
-</div>
-
-<div class="match no">
-<span class="tag tag-r">反对 #2</span>
-<div class="teams"><div class="mt">里耶卡 vs 伊尔韦斯</div><div class="mi">02:45 · ECL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--r)">-2.0 @1.80 → 降为参考</div>
-<div class="why">🔴 里耶卡不是萨格勒布迪纳摩。克罗地亚联赛场均净胜不到1.5球，-2.0穿盘概率估计不到35%。ELO+220≠能赢3球。</div>
-</div>
-
-<div class="match no">
-<span class="tag tag-r">反对 #3</span>
-<div class="teams"><div class="mt">卢加诺 vs NSI鲁纳维克</div><div class="mi">02:30 · ECL · Kambi</div></div>
-<div class="bet" style="color:var(--r)">-2.0 @1.80 → 降为参考</div>
-<div class="why">🔴 新增盲区。卢加诺在瑞士联赛不是大比分型球队，场均进球不到2。法罗群岛球队会全力死守。-2.0意味着3-0才全赢，高估了卢加诺的进攻火力。</div>
-</div>
-
-<div class="match no">
-<span class="tag tag-r">反对 #4</span>
-<div class="teams"><div class="mt">基辅迪纳摩 vs 卡拉巴克</div><div class="mi">01:00 · ECL · Kambi</div></div>
-<div class="bet" style="color:var(--r)">主胜 @2.00 → 降为参考</div>
-<div class="why">🔴 中立场地！乌克兰球队无法在基辅比赛。模型标注了"中立场地"但ELO主场加成是否已归零？卡拉巴克欧战经验不差。2.00隐含50%概率偏高。</div>
-</div>
-
-<h2>🔵 我建议保留的场次 <span>（模型投了但我不反对）</span></h2>
-
-<div class="match skip" style="border-left-color:var(--b)">
-<span class="tag tag-p">保留</span>
-<div class="teams"><div class="mt">波兹南莱赫 vs 克拉克斯维克</div><div class="mi">01:00 · EL · Kambi</div></div>
-<div class="bet" style="color:var(--b)">-1.5 @1.75</div>
-<div class="why">波兰冠军 vs 法罗群岛，实力碾压级别，-1.5合理。</div>
-</div>
-
-<div class="match skip" style="border-left-color:var(--b)">
-<span class="tag tag-p">保留</span>
-<div class="teams"><div class="mt">贝尔格莱德游击 vs 托博尔</div><div class="mi">03:00 · ECL · Kambi</div></div>
-<div class="bet" style="color:var(--b)">-1.5 @1.78</div>
-<div class="why">塞尔维亚劲旅主场，哈萨克斯坦球队远距离跋涉。基本面支持。</div>
-</div>
-
-<div class="match skip" style="border-left-color:var(--b)">
-<span class="tag tag-p">保留</span>
-<div class="teams"><div class="mt">希伯尼安 vs 什肯迪亚</div><div class="mi">03:00 · ECL · Kambi+搜索</div></div>
-<div class="bet" style="color:var(--b)">主胜 @1.49</div>
-<div class="why">苏超 vs 北马其顿，希伯尼安主场值得信赖。1.49偏低但安全。</div>
-</div>
-
-<div class="match skip" style="border-left-color:var(--b)">
-<span class="tag tag-p">保留</span>
-<div class="teams"><div class="mt">哥德堡 vs 根特</div><div class="mi">01:00 · ECL · Kambi</div></div>
-<div class="bet" style="color:var(--b)">客胜 @2.30</div>
-<div class="why">比利时 vs 瑞典，根特欧战级别更高。2.30有正期望值。</div>
-</div>
-
-<div class="match skip" style="border-left-color:var(--b)">
-<span class="tag tag-p">保留</span>
-<div class="teams"><div class="mt">PAOK vs 安德莱赫特</div><div class="mi">01:45 · EL · Kambi</div></div>
-<div class="bet" style="color:var(--b)">主胜 @2.20</div>
-<div class="why">希腊魔鬼主场是真实存在的，但安德莱赫特不弱。2.20价值一般，小注即可。</div>
-</div>
-
-<h2>📊 总结</h2>
-
-<div class="dash" style="margin-top:12px">
-<div class="di"><div class="n" style="color:var(--g)">8</div><div class="l">✅ 同意</div></div>
-<div class="di"><div class="n" style="color:var(--y)">4</div><div class="l">🟡 保留</div></div>
-<div class="di"><div class="n" style="color:var(--r)">4</div><div class="l">🔴 反对</div></div>
-<div class="di"><div class="n" style="color:var(--b)">5</div><div class="l">🔵 不反对</div></div>
-<div class="di"><div class="n" style="color:var(--a2)">21</div><div class="l">总投注建议</div></div>
-</div>
-
-<p style="font-size:0.68em;color:var(--muted);margin-top:8px;line-height:1.6">
-<b>模型本轮核心问题不变:</b> ELO→深盘映射的系统性高估仍在继续——阿贾克斯(ELO虚高)、里耶卡(非大比分球队)、卢加诺(同里耶卡) 是我最担心的三场。加上基辅迪纳摩的中立场地问题（ELO主场加成是否归零存疑），本轮有4场投注我认为需要降为参考。<br><br>
-<b>积极面:</b> 模型在大小球判断（萨尔茨堡小2.5、拉科夫大2.5）和合理让球（布拉加-1.5、中日德兰-1.0、哥本哈根-1.0）上表现稳健。37场中标注了16场"参考不投注"，自律性值得肯定——知道什么不该投和知道什么该投同样重要。<br><br>
-<b>明早复盘重点:</b> 4场反对场次赛果 → 验证ELO深盘怀疑原则是否成立。
-</p>
-
-<div class="foot">© 克劳德独立分析师 · 8月6日 Kambi 37场版 · 与模型分歧率 4/21=19% · 已推 GitHub</div>
+<div class="ft">© 克劳德独立分析师 · 8月6日复盘 · 分歧场次4-2领先模型 · 深盘怀疑原则固化为规则 · 已推 GitHub</div>
 </div>
 </body>
 </html>

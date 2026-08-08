@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足球预测报告 — 2026-08-09</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4eb;
+    --text-dim: #8b8fa3;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+    --home: #3b82f6;
+    --draw: #8b8fa3;
+    --away: #f59e0b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+  .model-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* Summary */
+  .summary {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat .value { font-size: 1.5rem; font-weight: 700; }
+  .stat .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+
+  /* Match card */
+  .match-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .match-card.recommended { border-left: 3px solid var(--green); }
+  .match-card.reference { border-left: 3px solid var(--text-dim); }
+  .match-card.skip { opacity: 0.55; }
+
+  .match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .teams { font-size: 1.1rem; font-weight: 600; }
+  .teams .vs { color: var(--text-dim); margin: 0 10px; }
+  .league-tag {
+    font-size: 0.7rem;
+    background: var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--text-dim);
+  }
+
+  /* Probability bars */
+  .probs { margin-bottom: 14px; }
+  .prob-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+  }
+  .prob-label { width: 50px; text-align: right; margin-right: 10px; flex-shrink: 0; }
+  .prob-bar-wrap { flex: 1; height: 20px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+  .prob-bar { height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .prob-bar.home { background: var(--home); }
+  .prob-bar.draw { background: var(--draw); }
+  .prob-bar.away { background: var(--away); }
+  .prob-pct { width: 55px; margin-left: 10px; text-align: right; font-weight: 600; font-size: 0.85rem; }
+
+  /* Details grid */
+  .details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+  }
+  .detail { color: var(--text-dim); }
+  .detail span { color: var(--text); font-weight: 500; }
+
+  /* Signal */
+  .signal {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+  .badge.bet { background: #166534; color: #4ade80; }
+  .badge.watch { background: #3b2f0e; color: #fbbf24; }
+  .badge.skip { background: #1a1d27; color: var(--text-dim); }
+  .badge.cold { background: #3b1136; color: #e879f9; }
+  .kelly { font-weight: 600; }
+  .kelly.pos { color: var(--green); }
+  .kelly.neg { color: var(--red); }
+
+  /* Analyst note */
+  .analyst-note {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #1e2430;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    font-style: italic;
+    border-left: 3px solid #6366f1;
+  }
+  .analyst-note strong { color: #a5b4fc; font-style: normal; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Football Predictions <span class="model-badge">v3.0</span></h1>
+    <div class="meta">
+      2026-08-09 — Dixon-Coles + Bayesian Market Fusion
+      
+      &middot; Backtest Brier: 0.6006
+      
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="summary">
+    <div class="stat">
+      <div class="value">24</div>
+      <div class="label">Matches</div>
+    </div>
+    <div class="stat">
+      <div class="value">0</div>
+      <div class="label">Recommended</div>
+    </div>
+    <div class="stat">
+      <div class="value">22</div>
+      <div class="label">Reference Only</div>
+    </div>
+    <div class="stat">
+      <div class="value">23</div>
+      <div class="label">Cold Start</div>
+    </div>
+    <div class="stat">
+      <div class="value">17/2/5</div>
+      <div class="label">H/D/A Picks</div>
+    </div>
+  </div>
+
+  <!-- Match cards -->
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Tokyo Verdy <span class="vs">vs</span> Kawasaki Frontale
+      </div>
+      <div class="league-tag">J1</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 43.5%"></div>
+        </div>
+        <span class="prob-pct">43.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 26.2%"></div>
+        </div>
+        <span class="prob-pct">26.2%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 30.2%"></div>
+        </div>
+        <span class="prob-pct">30.2%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">3.62%</strong></span>
+      
+      
+      <span>Edge: Home (+13.4%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        V-Varen Nagasaki <span class="vs">vs</span> Kyoto Sanga
+      </div>
+      <div class="league-tag">J1</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 43.4%"></div>
+        </div>
+        <span class="prob-pct">43.4%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 26.1%"></div>
+        </div>
+        <span class="prob-pct">26.1%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 30.5%"></div>
+        </div>
+        <span class="prob-pct">30.5%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">3.99%</strong></span>
+      
+      
+      <span>Edge: Home (+14.4%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Montedio Yamagata <span class="vs">vs</span> Tochigi SC
+      </div>
+      <div class="league-tag">J2</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 44.4%"></div>
+        </div>
+        <span class="prob-pct">44.4%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 26.0%"></div>
+        </div>
+        <span class="prob-pct">26.0%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 29.6%"></div>
+        </div>
+        <span class="prob-pct">29.6%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">1.04%</strong></span>
+      
+      
+      <span>Edge: Home (+7.3%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Sparta Rotterdam <span class="vs">vs</span> Feyenoord
+      </div>
+      <div class="league-tag">DED</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 41.8%"></div>
+        </div>
+        <span class="prob-pct">41.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.3%"></div>
+        </div>
+        <span class="prob-pct">25.3%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 32.9%"></div>
+        </div>
+        <span class="prob-pct">32.9%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">7.29%</strong></span>
+      
+      
+      <span>Edge: Home (+25.1%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        St Pauli <span class="vs">vs</span> Greuther Furth
+      </div>
+      <div class="league-tag">BL2</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 52.8%"></div>
+        </div>
+        <span class="prob-pct">52.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 29.4%"></div>
+        </div>
+        <span class="prob-pct">29.4%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 17.7%"></div>
+        </div>
+        <span class="prob-pct">17.7%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>33.2%</span></div>
+      <div class="detail">BTTS: <span>36.9%</span></div>
+      <div class="detail">Expected Goals: <span>1.38 - 0.64</span></div>
+      <div class="detail">Top Score: <span>1-0</span></div>
+      <div class="detail">ELO Diff: <span>+36</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge watch">WATCH</span>
+      <span>Pick: <strong>Draw</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">1.15%</strong></span>
+      
+      
+      <span>Edge: Draw (+6.5%)</span>
+      
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Nurnberg <span class="vs">vs</span> Dynamo Dresden
+      </div>
+      <div class="league-tag">BL2</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.3%"></div>
+        </div>
+        <span class="prob-pct">45.3%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.9%"></div>
+        </div>
+        <span class="prob-pct">28.9%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      
+      <span>Edge: Home (+1.2%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Hammarby <span class="vs">vs</span> Hacken
+      </div>
+      <div class="league-tag">SWE</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 47.7%"></div>
+        </div>
+        <span class="prob-pct">47.7%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.0%"></div>
+        </div>
+        <span class="prob-pct">25.0%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 27.3%"></div>
+        </div>
+        <span class="prob-pct">27.3%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Away Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">2.31%</strong></span>
+      
+      
+      <span>Edge: Away (+9.7%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        KuPS <span class="vs">vs</span> TPS
+      </div>
+      <div class="league-tag">FIN</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 48.5%"></div>
+        </div>
+        <span class="prob-pct">48.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 24.9%"></div>
+        </div>
+        <span class="prob-pct">24.9%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 26.7%"></div>
+        </div>
+        <span class="prob-pct">26.7%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Away Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">3.73%</strong></span>
+      
+      
+      <span>Edge: Away (+14.4%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Zwolle <span class="vs">vs</span> Ajax
+      </div>
+      <div class="league-tag">DED</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 41.3%"></div>
+        </div>
+        <span class="prob-pct">41.3%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.0%"></div>
+        </div>
+        <span class="prob-pct">25.0%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 33.8%"></div>
+        </div>
+        <span class="prob-pct">33.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">8.16%</strong></span>
+      
+      
+      <span>Edge: Home (+28.6%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Groningen <span class="vs">vs</span> Utrecht
+      </div>
+      <div class="league-tag">DED</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 44.6%"></div>
+        </div>
+        <span class="prob-pct">44.6%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 26.0%"></div>
+        </div>
+        <span class="prob-pct">26.0%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 29.4%"></div>
+        </div>
+        <span class="prob-pct">29.4%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">0.19%</strong></span>
+      
+      
+      <span>Edge: Home (+5.5%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Lillestrom <span class="vs">vs</span> Rosenborg
+      </div>
+      <div class="league-tag">NOR</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 52.4%"></div>
+        </div>
+        <span class="prob-pct">52.4%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 24.9%"></div>
+        </div>
+        <span class="prob-pct">24.9%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 22.7%"></div>
+        </div>
+        <span class="prob-pct">22.7%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>55.5%</span></div>
+      <div class="detail">BTTS: <span>56.0%</span></div>
+      <div class="detail">Expected Goals: <span>1.85 - 1.05</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">3.63%</strong></span>
+      
+      
+      <span>Edge: Home (+13.1%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Inter Turku <span class="vs">vs</span> Lahti
+      </div>
+      <div class="league-tag">FIN</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 73.5%"></div>
+        </div>
+        <span class="prob-pct">73.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 16.3%"></div>
+        </div>
+        <span class="prob-pct">16.3%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 10.2%"></div>
+        </div>
+        <span class="prob-pct">10.2%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>73.0%</span></div>
+      <div class="detail">BTTS: <span>56.6%</span></div>
+      <div class="detail">Expected Goals: <span>2.87 - 0.89</span></div>
+      <div class="detail">Top Score: <span>2-0</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">9.41%</strong></span>
+      
+      
+      <span>Edge: Home (+21.2%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Halmstads <span class="vs">vs</span> GAIS
+      </div>
+      <div class="league-tag">SWE</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 41.3%"></div>
+        </div>
+        <span class="prob-pct">41.3%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.3%"></div>
+        </div>
+        <span class="prob-pct">25.3%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 33.4%"></div>
+        </div>
+        <span class="prob-pct">33.4%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">8.12%</strong></span>
+      
+      
+      <span>Edge: Home (+28.4%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        IFK Goteborg <span class="vs">vs</span> Kalmar
+      </div>
+      <div class="league-tag">SWE</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 44.5%"></div>
+        </div>
+        <span class="prob-pct">44.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 29.7%"></div>
+        </div>
+        <span class="prob-pct">29.7%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">0.71%</strong></span>
+      
+      
+      <span>Edge: Home (+6.6%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Heerenveen <span class="vs">vs</span> Twente
+      </div>
+      <div class="league-tag">DED</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 43.6%"></div>
+        </div>
+        <span class="prob-pct">43.6%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.7%"></div>
+        </div>
+        <span class="prob-pct">25.7%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 30.7%"></div>
+        </div>
+        <span class="prob-pct">30.7%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">3.34%</strong></span>
+      
+      
+      <span>Edge: Home (+12.6%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        HamKam <span class="vs">vs</span> Aalesund
+      </div>
+      <div class="league-tag">NOR</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.6%"></div>
+        </div>
+        <span class="prob-pct">25.6%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.9%"></div>
+        </div>
+        <span class="prob-pct">28.9%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Draw</strong></span>
+      
+      
+      <span>Edge: Draw (+1.2%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        AC Oulu <span class="vs">vs</span> HJK Helsinki
+      </div>
+      <div class="league-tag">FIN</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 42.7%"></div>
+        </div>
+        <span class="prob-pct">42.7%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.7%"></div>
+        </div>
+        <span class="prob-pct">25.7%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 31.6%"></div>
+        </div>
+        <span class="prob-pct">31.6%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">5.44%</strong></span>
+      
+      
+      <span>Edge: Home (+18.6%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        Porto <span class="vs">vs</span> Alverca
+      </div>
+      <div class="league-tag">PPL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">SKIP</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Kristiansund <span class="vs">vs</span> Molde
+      </div>
+      <div class="league-tag">NOR</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 42.0%"></div>
+        </div>
+        <span class="prob-pct">42.0%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.2%"></div>
+        </div>
+        <span class="prob-pct">25.2%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 32.8%"></div>
+        </div>
+        <span class="prob-pct">32.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">6.82%</strong></span>
+      
+      
+      <span>Edge: Home (+23.3%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        Benfica <span class="vs">vs</span> Viseu
+      </div>
+      <div class="league-tag">PPL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">SKIP</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Gil Vicente <span class="vs">vs</span> Rio Ave
+      </div>
+      <div class="league-tag">PPL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 46.4%"></div>
+        </div>
+        <span class="prob-pct">46.4%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.9%"></div>
+        </div>
+        <span class="prob-pct">25.9%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 27.6%"></div>
+        </div>
+        <span class="prob-pct">27.6%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Away Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">1.63%</strong></span>
+      
+      
+      <span>Edge: Away (+7.7%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Moreirense <span class="vs">vs</span> Braga
+      </div>
+      <div class="league-tag">PPL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 41.5%"></div>
+        </div>
+        <span class="prob-pct">41.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.7%"></div>
+        </div>
+        <span class="prob-pct">25.7%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 32.8%"></div>
+        </div>
+        <span class="prob-pct">32.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">7.73%</strong></span>
+      
+      
+      <span>Edge: Home (+26.8%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Santos <span class="vs">vs</span> Athletico-PR
+      </div>
+      <div class="league-tag">BSA</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.1%"></div>
+        </div>
+        <span class="prob-pct">45.1%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 26.4%"></div>
+        </div>
+        <span class="prob-pct">26.4%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.4%"></div>
+        </div>
+        <span class="prob-pct">28.4%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Away Win</strong></span>
+      
+      
+      <span>Edge: Away (+2.3%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Flamengo <span class="vs">vs</span> Vitoria Guimaraes
+      </div>
+      <div class="league-tag">BSA</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 50.1%"></div>
+        </div>
+        <span class="prob-pct">50.1%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 24.2%"></div>
+        </div>
+        <span class="prob-pct">24.2%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 25.7%"></div>
+        </div>
+        <span class="prob-pct">25.7%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">Expected Goals: <span>1.72 - 1.32</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">COLD START</span>
+      <span>Pick: <strong>Away Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">5.50%</strong></span>
+      
+      
+      <span>Edge: Away (+21.1%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    Football Prediction Model v3.0 &middot; Dixon-Coles + Bayesian Market Fusion
+    &middot; Generated 2026-08-09
+    <br>
+    For reference only. Past performance does not guarantee future results.
+  </div>
+</div>
+</body>
+</html>

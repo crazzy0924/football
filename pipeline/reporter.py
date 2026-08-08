@@ -163,13 +163,20 @@ def _build_match_card(
 
     # Confidence / signal
     confidence = value.get("confidence", "none")
-    signal_class = SIGNAL_CLASSES.get(confidence, "skip")
-    signal_text = SIGNAL_TEXTS.get(confidence, "SKIP")
+
+    # Cold-start matches: model edge is noise → override signal
+    if cold_start and confidence != "none":
+        signal_class = "cold"
+        signal_text = "COLD START"
+        confidence = "low"  # downgrade edge for recommendation logic
+    else:
+        signal_class = SIGNAL_CLASSES.get(confidence, "skip")
+        signal_text = SIGNAL_TEXTS.get(confidence, "SKIP")
 
     # Recommendation level
     if confidence == "high" and not cold_start:
         recommendation = "recommended"
-    elif confidence in ("medium", "high"):
+    elif confidence in ("medium", "high") or (cold_start and confidence != "none"):
         recommendation = "reference"
     else:
         recommendation = "skip"

@@ -14,7 +14,7 @@ def load_env():
     """Load .env file if it exists."""
     env_path = Path(__file__).parent / ".env"
     if env_path.exists():
-        with open(env_path, "r") as f:
+        with open(env_path, "r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:

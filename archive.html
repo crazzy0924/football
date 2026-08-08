@@ -14,7 +14,7 @@
 body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
 .layout{display:flex;min-height:100vh;max-width:1280px;min-width:1024px;margin:0 auto;padding:24px}
 
-/* ═══ 左侧 JOYBOY ═══ */
+/* LEFT - JOYBOY */
 .left{width:130px;min-width:130px;background:linear-gradient(180deg,#050510 0%,#0c0c20 40%,#080818 60%,#050510 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-right:1px solid #1a1a2e;position:relative;flex-shrink:0}
 .left::before{content:'';position:absolute;top:15%;left:0;right:0;height:70%;background:radial-gradient(ellipse at center,rgba(0,212,255,0.04) 0%,transparent 60%);pointer-events:none}
 .left::after{content:'';position:absolute;bottom:10%;left:25%;right:25%;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.3),transparent)}
@@ -27,7 +27,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg)
 @keyframes letterPulse{0%,100%{filter:drop-shadow(0 0 14px rgba(0,212,255,0.4))}50%{filter:drop-shadow(0 0 28px rgba(240,168,56,0.6))}}
 .jb .tag{font-size:0.55em;color:var(--muted);font-family:'PingFang SC','Microsoft YaHei',sans-serif;letter-spacing:8px;font-weight:300;writing-mode:vertical-rl;margin-top:10px;opacity:0.4}
 
-/* ═══ 中部内容 ═══ */
+/* MAIN */
 .main{flex:1;padding:0 0 0 30px;overflow-y:auto}
 
 h1{font-size:1.25em;font-weight:800;margin-bottom:2px;letter-spacing:-0.3px}
@@ -61,6 +61,7 @@ h1 em{color:var(--accent);font-style:normal}
 .tr{background:rgba(248,81,73,0.1);color:var(--red)}
 .tb{background:rgba(88,166,255,0.1);color:var(--blue)}
 .ts{background:rgba(240,168,56,0.1);color:var(--accent)}
+.tg{background:rgba(139,143,163,0.1);color:var(--muted)}
 
 .sec-label{font-size:0.65em;color:var(--muted);margin:5px 0 2px}
 .ft{text-align:center;padding:22px;color:var(--muted);font-size:0.55em;opacity:0.35}
@@ -98,36 +99,43 @@ h1 em{color:var(--accent);font-style:normal}
 <p class="sub">日期为一级菜单 · 点击展开</p>
 
 <div class="summary">
-  <div class="si"><div class="n">6</div><div class="l">预测日</div></div>
-  <div class="si"><div class="n" style="color:var(--green)">10</div><div class="l">预测报告</div></div>
+  <div class="si"><div class="n">7</div><div class="l">预测日</div></div>
+  <div class="si"><div class="n" style="color:var(--green)">11</div><div class="l">预测报告</div></div>
   <div class="si"><div class="n" style="color:var(--red)">5</div><div class="l">复盘报告</div></div>
   <div class="si"><div class="n" style="color:var(--blue)">5</div><div class="l">系统文档</div></div>
 </div>
 
 <div class="day open">
   <div class="day-hdr" onclick="this.parentElement.classList.toggle('open')">
-    <span class="dt">8月9日 (周日)</span><span class="dn">体彩竞彩24场 · DeepSeek LLM Actor-Reviewer · 六维预测</span><span class="arw">▼</span>
+    <span class="dt">8月9日 (周日)</span><span class="dn">体彩竞彩24场 · v3.0 Dixon-Coles冷启动 · 早盘+终盘</span><span class="arw">▼</span>
   </div>
   <div class="day-body">
-        <div class="link"><span class="icon">🔍</span><span class="lbl"><span class="tag tp">早盘</span></span><a href="morning_20260809.html" target="_blank">早盘分析 (LLM增强) 🆕</a><span class="note">24场六维 · DeepSeek Actor-Reviewer双人共识 · 体彩SPF赔率 · J1/J2/荷甲/德乙/瑞超/芬超/挪超/葡超/巴甲</span></div>
-        <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tb">数据</span></span><span style="color:var(--muted)">lottery_predictions_2026-08-09.json · 体彩官方SPF+HHAD · LLM全量推理</span></div>
+    <div class="link"><span class="icon">🔍</span><span class="lbl"><span class="tag tp">早盘</span></span><a href="morning_20260809.html" target="_blank">早盘分析 (LLM增强)</a><span class="note">24场六维 · DeepSeek Actor-Reviewer · J1/J2/荷甲/德乙/瑞超/芬超/挪超/葡超/巴甲</span></div>
+    <div class="link"><span class="icon">🔄</span><span class="lbl"><span class="tag ts">v3.0</span></span><a href="data/output/predictions_2026-08-09.html" target="_blank">v3.0 终盘预测 🆕</a><span class="note">24场冷启动 · Dixon-Coles + Bayesian Fusion · 22参考2跳过 · 全部9联赛冷启动 · 市场赔率融合</span></div>
+    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tb">数据</span></span><span style="color:var(--muted)">lottery_official_parsed · today_matches_v3.json · 体彩SPF赔率 · 9联赛48队</span></div>
   </div>
 </div>
 
 <div class="day open">
   <div class="day-hdr" onclick="this.parentElement.classList.toggle('open')">
-    <span class="dt">8月8日 (周六)</span><span class="dn">中国体彩竞彩25场 · Kambi 24/25覆盖 · 早→午→终盘完整链路</span><span class="arw">▼</span>
+    <span class="dt">8月8日 (周六)</span><span class="dn">中国体彩竞彩25场 · Kambi 24/25覆盖 · 早→午→终盘完整链路 · v3.0完成</span><span class="arw">▼</span>
   </div>
   <div class="day-body">
-        <div class="link"><span class="icon">🔍</span><span class="lbl"><span class="tag tp">早盘</span></span><a href="morning_20260808.html" target="_blank">早盘分析 (09:00)</a><span class="note">官方API接入 · 25场SPF赔率完整 · 深盘2场预警</span></div>
-        <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tp">午盘</span></span><a href="afternoon_20260808.html" target="_blank">午盘分析 (16:00) 🆕</a><span class="note">5场信号 · 004全北客胜骤降15%蒸汽移动 · 赔率对比+资金流向</span></div>
-        <div class="link"><span class="icon">⚽</span><span class="lbl"><span class="tag tg">终盘</span></span><a href="afternoon_early_final_20260808.html" target="_blank">早场终盘预测 (17:00)</a><span class="note">9场六维预测 · 5推荐2参考2跳过 · 日职/日乙/K1/挪超/瑞超</span></div>
-        <div class="link"><span class="icon">⚽</span><span class="lbl"><span class="tag tg">终盘</span></span><a href="evening_final_20260808.html" target="_blank">晚场终盘预测 (21:00) 🆕</a><span class="note">16场六维预测 · 6推荐5参考5跳过 · 英联杯/荷甲/葡超/法乙/巴甲</span></div>
-        <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tb">数据</span></span><span style="color:var(--muted)">daily_tracking.json · lottery_official_*.json · 官方SPF+HHAD+TTG+CRS</span></div>
-            <div class="link"><span class="icon">🌙</span><span class="lbl"><span class="tag tg">终盘</span></span><a href="today_final.html" target="_blank">晚场终盘预测 (22:00) 🆕</a><span class="note">12场六维 · 2推荐2轻注2跳过 · 瑞典超/芬超/荷甲/葡超/法乙/巴甲 · 午盘004蒸汽移动✅已验证</span></div>
-	        <div class="link"><span class="icon">🧠</span><span class="lbl"><span class="tag tb">独立</span></span><a href="claude_review_aug8_early_evening.html" target="_blank">克劳德交叉分析 (早+晚)</a><span class="note">11推9同意2保留0反对 · v1→v2升级验证 · 联赛分类修复✅深盘规则✅</span></div>
+    <div class="link"><span class="icon">🔍</span><span class="lbl"><span class="tag tp">早盘</span></span><a href="morning_20260808.html" target="_blank">早盘分析 (09:00)</a><span class="note">官方API接入 · 25场SPF赔率完整 · 深盘2场预警</span></div>
+    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tp">午盘</span></span><a href="afternoon_20260808.html" target="_blank">午盘分析 (16:00)</a><span class="note">5场信号 · 004全北客胜骤降15%蒸汽移动 · 赔率对比+资金流向</span></div>
+    <div class="link"><span class="icon">⚽</span><span class="lbl"><span class="tag tg">终盘</span></span><a href="afternoon_early_final_20260808.html" target="_blank">早场终盘预测 (17:00)</a><span class="note">9场六维预测 · 5推荐2参考2跳过 · 日职/日乙/K1/挪超/瑞超</span></div>
+    <div class="link"><span class="icon">⚽</span><span class="lbl"><span class="tag tg">终盘</span></span><a href="evening_final_20260808.html" target="_blank">晚场终盘预测 (21:00)</a><span class="note">16场六维预测 · 6推荐5参考5跳过 · 英联杯/荷甲/葡超/法乙/巴甲</span></div>
+    <div class="link"><span class="icon">🌙</span><span class="lbl"><span class="tag tg">终盘</span></span><a href="today_final.html" target="_blank">晚场终盘预测 (22:00)</a><span class="note">12场六维 · 2推荐2轻注2跳过 · 瑞典超/芬超/荷甲/葡超/法乙/巴甲</span></div>
+    <div class="link"><span class="icon">🧠</span><span class="lbl"><span class="tag tb">独立</span></span><a href="claude_review_aug8_early_evening.html" target="_blank">克劳德交叉分析 (早+晚)</a><span class="note">11推9同意2保留0反对 · v2.0升级验证 · 联赛分类修复+深盘规则确认</span></div>
+    <div class="link"><span class="icon">🔄</span><span class="lbl"><span class="tag ts">v3.0</span></span><a href="data/output/predictions_2026-08-08.html" target="_blank">v3.0 模型预测</a><span class="note">Dixon-Coles + Bayesian Fusion + Kelly · 5场样本 · Brier 0.6006 · 重建完成</span></div>
+    <div class="link"><span class="icon">📋</span><span class="lbl"><span class="tag tr">v3.0</span></span><a href="data/output/review_2026-08-08.html" target="_blank">v3.0 复盘报告</a><span class="note">5场复盘 · ELO自动更新10队 · Brier 0.1816 · 方向3/5 · 追踪初始化</span></div>
+    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tb">数据</span></span><span style="color:var(--muted)">daily_tracking.json · lottery_official_*.json · 官方SPF+HHAD+TTG+CRS</span></div>
   </div>
-        <div class="link"><span class="icon">🔄</span><span class="lbl"><span class="tag ts">v3.0</span></span><a href="data/output/predictions_2026-08-08.html" target="_blank">v3.0 模型预测 🆕</a><span class="note">Dixon-Coles + Bayesian Fusion + Kelly · 5场样本 · Brier 0.6006 · 重建完成</span></div>
 </div>
-        <div class="link"><span class="icon">📋</span><span class="lbl"><span class="tag tr">v3.0</span></span><a href="data/output/review_2026-08-08.html" target="_blank">v3.0 复盘报告 🆕</a><span class="note">5场复盘 · ELO自动更新10队 · Brier 0.1816 · 方向3/5 · 追踪文件初始化</span></div>
 
+<div class="ft">JOYBOY · Football Prediction Archive · v3.0</div>
+
+</div>
+</div>
+</body>
+</html>

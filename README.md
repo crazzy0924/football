@@ -1,105 +1,139 @@
-# ⚽ 足球分析智能体
+# Football Prediction Model v3.0
 
-基于 **Anthropic API + Function Calling** 的 Python 足球比赛预测与分析系统。
+Dixon-Coles + Bayesian Market Fusion + Kelly stake sizing.
 
-## 技术栈
+**Single-entry pipeline.** One model, trained from 9,000 real matches. No mock data.
 
-| 模块 | 技术 |
-|------|------|
-| AI 引擎 | Anthropic Claude API (Function Calling) |
-| 预测模型 | 泊松分布 + ELO 评分系统 |
-| Web 框架 | FastAPI + Jinja2 |
-| 数据来源 | football-data.org API / 模拟数据降级 |
-
-## 项目结构
-
-```
-足球大模型1.0/
-├── main.py                    # 主入口 (serve/chat/predict)
-├── requirements.txt           # Python 依赖
-├── .env.example               # 环境变量模板
-├── README.md
-├── src/
-│   ├── agent/
-│   │   ├── football_agent.py  # 智能体核心 (Anthropic API 调度)
-│   │   ├── tools.py           # 工具函数实现
-│   │   └── tool_schemas.py    # Anthropic Tool Schema 定义
-│   ├── models/
-│   │   ├── prediction.py      # 泊松分布预测模型
-│   │   └── elo.py            # ELO 评分系统
-│   ├── data/
-│   │   ├── api_client.py      # 足球数据 API 客户端
-│   │   └── cache.py           # 缓存模块
-│   ├── web/
-│   │   ├── app.py             # FastAPI 应用
-│   │   ├── templates/         # HTML 模板
-│   │   └── static/            # 静态文件
-│   └── utils/
-│       └── config.py          # 配置管理
-```
-
-## 快速开始
-
-### 1. 安装依赖
+## Quick Start
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt   # numpy only; scipy + jinja2 optional
+
+# Train on 25 historical CSVs (data/historical_odds/)
+python pipeline.py train
+
+# Verify: model must beat league-mean baseline
+python pipeline.py backtest
+
+# Predict today's matches
+python pipeline.py predict --matches-json data/output/sample_matches.json
+
+# After matches finish — review results, auto-update ELO
+python pipeline.py review 2026-08-08 --results-text "Arsenal 2-1 Liverpool"
 ```
 
-### 2. 配置 API Key
+## Commands
 
-```bash
-cp .env.example .env
-# 编辑 .env 文件，填入你的 Anthropic API Key
+| Command | What it does |
+|---------|-------------|
+| `train` | Fit ELO (chronological replay) + Dixon-Coles attack/defense/ρ from CSVs |
+| `backtest` | Expanding-window CV, hard gate: must beat baseline Brier |
+| `predict` | Load models → predict each match → JSON + HTML report |
+| `review` | Load results → evaluate Brier/accuracy → update ELO → review HTML → cumulative tracking |
+| `full` | train → backtest → (predict if gate passed) |
+| `summary` | Show model state: ELO range, top teams, league parameters |
+
+## Architecture
+
+```
+25 historical CSVs (~9,000 matches, 5 leagues, 5 seasons)
+       │
+       ▼
+[data_loader] → unified match records, team name normalization
+       │
+       ▼
+[trainer] → ELO chronological replay → Dixon-Coles fit (analytical or scipy MLE)
+       │
+       ▼
+[predict] → DC probabilities → Bayesian fusion with live odds → Kelly sizing
+       │
+       ▼
+[reporter] → single Jinja2 template → professional HTML with probability bars
+       │
+       ▼
+[review] → match results → Brier/accuracy/P&L → ELO auto-update → tracking
 ```
 
-### 3. 运行
+## Model
 
-```bash
-# 启动 Web 服务
-python main.py serve
+**Dixon-Coles (1997):**
 
-# 命令行对话
-python main.py chat
+```
+λ_h = league_avg/2 × attack[h] × defense[a] × (1 + home_adv)
+λ_a = league_avg/2 × attack[a] × defense[h]
 
-# 快速预测
-python main.py predict Arsenal "Manchester City"
+P(gh,ga) = τ(gh,ga, λ_h, λ_a, ρ) × Poisson(gh|λ_h) × Poisson(ga|λ_a)
 ```
 
-## 核心功能
+τ correction fixes systematic underestimation of 0-0, 1-0, 0-1, 1-1.
 
-### 🤖 AI 智能体
-- 调用 Anthropic Claude API，使用 **Function Calling** 自动选择合适的工具
-- 支持多轮对话，可与 AI 深入讨论比赛分析
-- System Prompt 设定专业足球分析师角色
+**Bayesian fusion:** Dirichlet(model prior × market likelihood → posterior)
+**Kelly:** quarter-Kelly conservative (fraction = 0.25)
 
-### 🔮 比赛预测
-- **泊松分布模型**: 基于球队攻防实力计算期望进球和比分概率
-- **ELO 评分系统**: 综合球队实力评级，提供交叉验证
-- **融合预测**: 泊松(60%) + ELO(40%) 加权平均
-- 输出: 胜平负概率、最可能比分、大小球、双方进球概率
+## Backtest Results
 
-### 📊 数据工具 (Function Calling)
-| 工具 | 功能 |
-|------|------|
-| `search_matches` | 搜索联赛比赛 |
-| `predict_match` | 预测比赛结果 |
-| `get_standings` | 联赛积分榜 |
-| `get_team_info` | 球队实力分析 |
-| `analyze_head_to_head` | 历史交锋分析 |
+| Metric | Value |
+|--------|-------|
+| Brier | 0.6006 |
+| Baseline Brier | 0.65 |
+| ROI (5% edge) | -0.4% |
+| Gate | PASS |
 
-## API 接口
+Model is at market efficiency for top-5 leagues. Qualitative inputs (injuries, motivation, etc.) needed for edge — Phase 4 (LLM).
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/chat` | AI 对话接口 |
-| POST | `/api/predict` | 快速预测接口 |
-| GET | `/api/matches` | 比赛列表 |
-| GET | `/api/standings/{league}` | 积分榜 |
-| GET | `/api/health` | 健康检查 |
+## Project Structure
 
-## 数据来源
+```
+├── pipeline.py              # Single entry point
+├── config.py                # API keys + config
+├── requirements.txt
+├── CLAUDE.md                # Work discipline rules
+├── archive.html             # Prediction archive index
+├── data/
+│   ├── historical_odds/     # 25 CSVs (read-only)
+│   ├── state/               # elo_ratings.json, team_params.json
+│   └── output/              # predictions, reviews, tracking
+├── models/                  # Pure math, no I/O
+│   ├── dixon_coles.py       # Core prediction engine
+│   ├── elo.py               # Persistent ELO system
+│   ├── poisson.py           # Poisson PMF + score matrix
+│   ├── bayesian.py          # Dirichlet fusion
+│   ├── odds.py              # Shin de-vig + Kelly + value detection
+│   ├── evaluation.py        # Brier/LogLoss/calibration
+│   └── league_profiles.py   # League characteristics
+├── pipeline/                # Orchestration layer
+│   ├── data_loader.py       # CSV parser + team aliases
+│   ├── trainer.py           # ELO replay + DC fitting
+│   ├── backtester.py        # Time-series CV + bet simulation
+│   ├── odds_fetcher.py      # Live odds API
+│   ├── result_fetcher.py    # Post-match results
+│   └── reporter.py          # HTML generation
+├── templates/
+│   ├── report.html          # Prediction report
+│   └── review.html          # Review/report card
+└── archive/                 # Old v1/v2 code
+    ├── old-py/
+    ├── old-html/
+    ├── old-docs/
+    ├── src/
+    └── tools/
+```
 
-- **football-data.org**: 免费额度每分钟10次请求，覆盖欧洲主流联赛
-- **模拟数据**: 当未配置 API Key 时自动降级，内置英超20支球队数据
-- **缓存**: 使用 diskcache 减少重复 API 请求
+## Key Design Decisions
+
+| Decision | Why |
+|----------|-----|
+| Single model (Dixon-Coles) | Five disconnected models on empty data = five blind men |
+| ELO from data, not hardcoded | 130 teams trained from chronological replay, range 1214-1927 |
+| Expanding-window backtest | Football has time structure; no future data leakage |
+| JSON state, not SQLite | One person, text editor transparency |
+| LLM not generating probabilities | LLMs are not calibrated probability estimators |
+| Bayesian fusion with market | Model + market wisdom → posterior; market anchors cold starts |
+
+## Data
+
+- 25 CSV files from football-data.co.uk
+- 5 leagues: Premier League, La Liga, Bundesliga, Serie A, Ligue 1
+- 5 seasons: 21-22 through 25-26
+- ~9,000 matches
+- Odds from 7 bookmakers (Bet365, Pinnacle, Betfair, etc.)

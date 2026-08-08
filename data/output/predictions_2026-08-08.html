@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足球预测报告 — 2026-08-08</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4eb;
+    --text-dim: #8b8fa3;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+    --home: #3b82f6;
+    --draw: #8b8fa3;
+    --away: #f59e0b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+  .model-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* Summary */
+  .summary {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat .value { font-size: 1.5rem; font-weight: 700; }
+  .stat .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+
+  /* Match card */
+  .match-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .match-card.recommended { border-left: 3px solid var(--green); }
+  .match-card.reference { border-left: 3px solid var(--text-dim); }
+  .match-card.skip { opacity: 0.55; }
+
+  .match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .teams { font-size: 1.1rem; font-weight: 600; }
+  .teams .vs { color: var(--text-dim); margin: 0 10px; }
+  .league-tag {
+    font-size: 0.7rem;
+    background: var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--text-dim);
+  }
+
+  /* Probability bars */
+  .probs { margin-bottom: 14px; }
+  .prob-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+  }
+  .prob-label { width: 50px; text-align: right; margin-right: 10px; flex-shrink: 0; }
+  .prob-bar-wrap { flex: 1; height: 20px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+  .prob-bar { height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .prob-bar.home { background: var(--home); }
+  .prob-bar.draw { background: var(--draw); }
+  .prob-bar.away { background: var(--away); }
+  .prob-pct { width: 55px; margin-left: 10px; text-align: right; font-weight: 600; font-size: 0.85rem; }
+
+  /* Details grid */
+  .details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+  }
+  .detail { color: var(--text-dim); }
+  .detail span { color: var(--text); font-weight: 500; }
+
+  /* Signal */
+  .signal {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+  .badge.bet { background: #166534; color: #4ade80; }
+  .badge.watch { background: #3b2f0e; color: #fbbf24; }
+  .badge.skip { background: #1a1d27; color: var(--text-dim); }
+  .badge.cold { background: #3b1136; color: #e879f9; }
+  .kelly { font-weight: 600; }
+  .kelly.pos { color: var(--green); }
+  .kelly.neg { color: var(--red); }
+
+  /* Analyst note */
+  .analyst-note {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #1e2430;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    font-style: italic;
+    border-left: 3px solid #6366f1;
+  }
+  .analyst-note strong { color: #a5b4fc; font-style: normal; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Football Predictions <span class="model-badge">v3.0</span></h1>
+    <div class="meta">
+      2026-08-08 — Dixon-Coles + Bayesian Market Fusion
+      
+      &middot; Backtest Brier: 0.6006
+      
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="summary">
+    <div class="stat">
+      <div class="value">5</div>
+      <div class="label">Matches</div>
+    </div>
+    <div class="stat">
+      <div class="value">0</div>
+      <div class="label">Recommended</div>
+    </div>
+    <div class="stat">
+      <div class="value">5</div>
+      <div class="label">Reference Only</div>
+    </div>
+    <div class="stat">
+      <div class="value">2</div>
+      <div class="label">Cold Start</div>
+    </div>
+    <div class="stat">
+      <div class="value">5/0/0</div>
+      <div class="label">H/D/A Picks</div>
+    </div>
+  </div>
+
+  <!-- Match cards -->
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Bayern Munich <span class="vs">vs</span> Borussia Dortmund
+      </div>
+      <div class="league-tag">Bundesliga</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 65.3%"></div>
+        </div>
+        <span class="prob-pct">65.3%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 17.4%"></div>
+        </div>
+        <span class="prob-pct">17.4%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 17.3%"></div>
+        </div>
+        <span class="prob-pct">17.3%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>84.2%</span></div>
+      <div class="detail">BTTS: <span>75.6%</span></div>
+      <div class="detail">Expected Goals: <span>3.09 - 1.55</span></div>
+      <div class="detail">Top Score: <span>3-1</span></div>
+      <div class="detail">ELO Diff: <span>+427</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge bet">BET</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">4.46%</strong></span>
+      
+      
+      <span>Edge: Home (+9.2%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Barcelona <span class="vs">vs</span> Real Madrid
+      </div>
+      <div class="league-tag">La Liga</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 47.1%"></div>
+        </div>
+        <span class="prob-pct">47.1%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 22.8%"></div>
+        </div>
+        <span class="prob-pct">22.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 30.1%"></div>
+        </div>
+        <span class="prob-pct">30.1%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>66.7%</span></div>
+      <div class="detail">BTTS: <span>66.2%</span></div>
+      <div class="detail">Expected Goals: <span>1.94 - 1.50</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>+68</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge watch">WATCH</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">1.28%</strong></span>
+      
+      
+      <span>Edge: Home (+4.8%)</span>
+      
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Arsenal <span class="vs">vs</span> Liverpool
+      </div>
+      <div class="league-tag">Premier League</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.6%"></div>
+        </div>
+        <span class="prob-pct">45.6%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 23.9%"></div>
+        </div>
+        <span class="prob-pct">23.9%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 30.4%"></div>
+        </div>
+        <span class="prob-pct">30.4%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>61.7%</span></div>
+      <div class="detail">BTTS: <span>62.6%</span></div>
+      <div class="detail">Expected Goals: <span>1.80 - 1.39</span></div>
+      <div class="detail">Top Score: <span>1-1</span></div>
+      <div class="detail">ELO Diff: <span>+177</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge watch">WATCH</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">2.42%</strong></span>
+      
+      
+      <span>Edge: Home (+7.5%)</span>
+      
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Inter <span class="vs">vs</span> AC Milan
+      </div>
+      <div class="league-tag">Serie A</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 54.9%"></div>
+        </div>
+        <span class="prob-pct">54.9%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 23.1%"></div>
+        </div>
+        <span class="prob-pct">23.1%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 22.0%"></div>
+        </div>
+        <span class="prob-pct">22.0%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>61.4%</span></div>
+      <div class="detail">BTTS: <span>59.2%</span></div>
+      <div class="detail">Expected Goals: <span>2.03 - 1.14</span></div>
+      <div class="detail">Top Score: <span>2-1</span></div>
+      <div class="detail">ELO Diff: <span>+337</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge bet">BET</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      <span>Kelly: <strong class="kelly pos">4.79%</strong></span>
+      
+      
+      <span>Edge: Home (+12.3%)</span>
+      
+      
+      <span class="badge cold">COLD START</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Paris SG <span class="vs">vs</span> Marseille
+      </div>
+      <div class="league-tag">Ligue 1</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">Home</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 62.5%"></div>
+        </div>
+        <span class="prob-pct">62.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Draw</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 19.7%"></div>
+        </div>
+        <span class="prob-pct">19.7%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">Away</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 17.8%"></div>
+        </div>
+        <span class="prob-pct">17.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">Over 2.5: <span>70.8%</span></div>
+      <div class="detail">BTTS: <span>65.0%</span></div>
+      <div class="detail">Expected Goals: <span>2.42 - 1.23</span></div>
+      <div class="detail">Top Score: <span>2-1</span></div>
+      <div class="detail">ELO Diff: <span>+190</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge watch">WATCH</span>
+      <span>Pick: <strong>Home Win</strong></span>
+      
+      
+      <span>Edge: Home (+2.4%)</span>
+      
+      
+    </div>
+
+    
+  </div>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    Football Prediction Model v3.0 &middot; Dixon-Coles + Bayesian Market Fusion
+    &middot; Generated 2026-08-08
+    <br>
+    For reference only. Past performance does not guarantee future results.
+  </div>
+</div>
+</body>
+</html>

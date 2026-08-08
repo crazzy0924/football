@@ -85,8 +85,10 @@ LEAGUE_MAP: list[tuple[str, str]] = [
     ("Liga MX", "LIGA_MX"),
     ("Brazil", "BSA"),
     ("J1 League", "J1"),
+    ("J2 League", "J2"),
     ("China Super League", "CSL"),
     ("K League", "KLEAGUE"),
+    ("Finland - Veikkausliiga", "FIN"),
     ("Austria - Bundesliga", "AUT"),
     ("Belgium - First Division A", "BEL"),
     ("Denmark - Superligaen", "DEN"),
@@ -394,25 +396,110 @@ REVIEWER_SYSTEM_PROMPT = """你是足球博彩审核员(Reviewer)。你的任务
 # LLM调用
 # ══════════════════════════════════════════════════════════════
 
-def _get_anthropic_key() -> str:
+def _get_llm_config() -> dict:
+    """检测可用的LLM后端: Anthropic优先, DeepSeek备选"""
     env_path = ROOT / ".env"
+    config = {"backend": None, "key": "", "model": ""}
+
     if env_path.exists():
         for line in env_path.read_text(encoding="utf-8", errors="ignore").splitlines():
             if line.startswith("ANTHROPIC_API_KEY="):
-                return line.split("=", 1)[1].strip()
-    return os.environ.get("ANTHROPIC_API_KEY", "")
+                val = line.split("=", 1)[1].strip()
+                if val and "xxxx" not in val:
+                    config["backend"] = "anthropic"
+                    config["key"] = val
+                    config["model"] = "claude-fable-5"
+                    return config
+            if line.startswith("DEEPSEEK_API_KEY="):
+                val = line.split("=", 1)[1].strip()
+                if val:
+                    config["backend"] = "deepseek"
+                    config["key"] = val
+                    config["model"] = "deepseek-chat"
+    # Check env vars
+    for ek, bk, mk in [("ANTHROPIC_API_KEY", "anthropic", "claude-fable-5"),
+                        ("DEEPSEEK_API_KEY", "deepseek", "deepseek-chat")]:
+        v = os.environ.get(ek, "")
+        if v and "xxxx" not in v and "your_" not in v:
+            return {"backend": bk, "key": v, "model": mk}
+    return config
+
+
+def _clean_json(text: str) -> dict:
+    """鲁棒JSON解析: 处理LLM常见的JSON格式问题"""
+    import re
+
+    # 1. 去除markdown包裹
+    text = text.strip()
+    if text.startswith("```"):
+        lines = text.split("\n")
+        # 去掉第一行 (```json 或 ```)
+        if lines[0].startswith("```"):
+            lines = lines[1:]
+        # 去掉最后一行 (```)
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        text = "\n".join(lines)
+
+    # 2. 尝试直接解析
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # 3. 去除尾随逗号 (最常见的问题)
+    text = re.sub(r",\s*(\}|\])", r"\1", text)
+
+    # 4. 修复单引号 → 双引号 (但保留字符串内的单引号)
+    # 简单策略: 替换键和字符串值边界的单引号
+    # 这比较复杂, 先尝试更保守的修复
+
+    # 5. 移除注释 (// ... 和 /* ... */)
+    text = re.sub(r"//[^\n]*", "", text)
+    text = re.sub(r"/\*.*?\*/", "", text, flags=re.DOTALL)
+
+    # 6. 处理行末多余逗号后紧跟换行+闭合括号
+    text = re.sub(r",\s*\n\s*(\}|\])", r"\n\1", text)
+
+    # 7. 再试
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # 8. 尝试提取第一个完整JSON对象
+    # 找到第一个 { 和匹配的 }
+    depth = 0
+    start = text.find("{")
+    if start == -1:
+        raise ValueError(f"无法在响应中找到JSON对象: {text[:200]}...")
+    for i, ch in enumerate(text[start:], start):
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                extracted = text[start:i + 1]
+                # 清理提取的部分
+                extracted = re.sub(r",\s*(\}|\])", r"\1", extracted)
+                extracted = re.sub(r"//[^\n]*", "", extracted)
+                try:
+                    return json.loads(extracted)
+                except json.JSONDecodeError:
+                    break
+
+    raise ValueError(f"JSON解析失败: {text[:500]}")
 
 
 def llm_actor(context: dict) -> dict:
-    """阶段2: 让LLM做预测"""
-    import anthropic
+    """阶段2: 让LLM做预测 (Anthropic / DeepSeek)"""
+    cfg = _get_llm_config()
+    backend = cfg["backend"]
 
-    key = _get_anthropic_key()
-    if not key:
-        logger.error("未找到 ANTHROPIC_API_KEY, 回退到数据推导")
+    if not backend:
+        logger.error("未找到有效 API Key, 回退到数据推导")
         return _fallback_prediction(context)
 
-    # 精简context, 去掉冗余信息
     compact = {
         "match": context["match"],
         "league": context["league_profile"],
@@ -422,36 +509,40 @@ def llm_actor(context: dict) -> dict:
         "rules": context["rule_check"],
     }
 
-    client = anthropic.Anthropic(api_key=key)
     try:
-        resp = client.messages.create(
-            model="claude-fable-5",
-            max_tokens=1024,
-            temperature=0.0,
-            system=ACTOR_SYSTEM_PROMPT,
-            messages=[{
-                "role": "user",
-                "content": f"请根据以下数据预测这场比赛:\n\n```json\n{json.dumps(compact, ensure_ascii=False, indent=2)}\n```\n\n输出严格的JSON, 不要markdown包裹。"
-            }],
-        )
-        text = resp.content[0].text.strip()
-        # 清理可能的markdown包裹
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1]
-            if text.endswith("```"):
-                text = text[:-3]
-        return json.loads(text)
+        if backend == "anthropic":
+            import anthropic
+            client = anthropic.Anthropic(api_key=cfg["key"])
+            resp = client.messages.create(
+                model=cfg["model"], max_tokens=1024, temperature=0.0,
+                system=ACTOR_SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": f"请根据以下数据预测这场比赛:\n\n```json\n{json.dumps(compact, ensure_ascii=False, indent=2)}\n```\n\n输出严格的JSON, 不要markdown包裹。"}],
+            )
+            text = resp.content[0].text.strip()
+        else:  # deepseek
+            from openai import OpenAI
+            client = OpenAI(base_url="https://api.deepseek.com", api_key=cfg["key"])
+            resp = client.chat.completions.create(
+                model=cfg["model"], max_tokens=1024, temperature=0.0,
+                messages=[
+                    {"role": "system", "content": ACTOR_SYSTEM_PROMPT},
+                    {"role": "user", "content": f"请根据以下数据预测这场比赛:\n\n```json\n{json.dumps(compact, ensure_ascii=False, indent=2)}\n```\n\n输出严格的JSON, 不要markdown包裹。"}
+                ],
+            )
+            text = resp.choices[0].message.content.strip()
+
+        return _clean_json(text)
     except Exception as e:
-        logger.warning(f"LLM Actor失败: {e}, 回退到数据推导")
+        logger.warning(f"LLM Actor失败 ({backend}): {e}, 回退到数据推导")
         return _fallback_prediction(context)
 
 
 def llm_reviewer(context: dict, actor_output: dict) -> dict:
-    """阶段3: 让第二个LLM审核预测"""
-    import anthropic
+    """阶段3: 让第二个LLM审核预测 (Anthropic / DeepSeek)"""
+    cfg = _get_llm_config()
+    backend = cfg["backend"]
 
-    key = _get_anthropic_key()
-    if not key:
+    if not backend:
         logger.warning("无API key, 跳过审核")
         return {"verdict": "agree", "confidence_adjustment": "same",
                 "adjusted_confidence": actor_output.get("prediction", {}).get("confidence", "中"),
@@ -466,26 +557,33 @@ def llm_reviewer(context: dict, actor_output: dict) -> dict:
         "rules": context["rule_check"],
     }
 
-    client = anthropic.Anthropic(api_key=key)
     try:
-        resp = client.messages.create(
-            model="claude-fable-5",
-            max_tokens=512,
-            temperature=0.0,
-            system=REVIEWER_SYSTEM_PROMPT,
-            messages=[{
-                "role": "user",
+        if backend == "anthropic":
+            import anthropic
+            client = anthropic.Anthropic(api_key=cfg["key"])
+            resp = client.messages.create(
+                model=cfg["model"], max_tokens=512, temperature=0.0,
+                system=REVIEWER_SYSTEM_PROMPT,
+                messages=[{"role": "user",
                 "content": f"## 比赛数据\n```json\n{json.dumps(compact, ensure_ascii=False, indent=2)}\n```\n\n## Actor预测\n```json\n{json.dumps(actor_output, ensure_ascii=False, indent=2)}\n```\n\n请审核, 输出严格JSON。"
             }],
         )
-        text = resp.content[0].text.strip()
-        if text.startswith("```"):
-            text = text.split("\n", 1)[1]
-            if text.endswith("```"):
-                text = text[:-3]
-        return json.loads(text)
+            text = resp.content[0].text.strip()
+        else:  # deepseek
+            from openai import OpenAI
+            client = OpenAI(base_url="https://api.deepseek.com", api_key=cfg["key"])
+            resp = client.chat.completions.create(
+                model=cfg["model"], max_tokens=512, temperature=0.0,
+                messages=[
+                    {"role": "system", "content": REVIEWER_SYSTEM_PROMPT},
+                    {"role": "user", "content": f"## 比赛数据\n```json\n{json.dumps(compact, ensure_ascii=False, indent=2)}\n```\n\n## Actor预测\n```json\n{json.dumps(actor_output, ensure_ascii=False, indent=2)}\n```\n\n请审核, 输出严格JSON。"}
+                ],
+            )
+            text = resp.choices[0].message.content.strip()
+
+        return _clean_json(text)
     except Exception as e:
-        logger.warning(f"LLM Reviewer失败: {e}")
+        logger.warning(f"LLM Reviewer失败 ({backend}): {e}")
         return {"verdict": "agree", "confidence_adjustment": "same",
                 "adjusted_confidence": actor_output.get("prediction", {}).get("confidence", "中"),
                 "reasons": [f"审核异常: {e}"], "warnings": [],
@@ -703,6 +801,369 @@ def _load_cached_kambi() -> list[dict]:
 
 
 # ══════════════════════════════════════════════════════════════
+# 体彩专用管线
+# ══════════════════════════════════════════════════════════════
+
+# Kambi联赛名→体彩中文联赛 (用于反向映射)
+KAMBI_TO_LOTTERY_LEAGUE = {
+    "J1 League": "日职", "J2 League": "日乙",
+    "K League": "韩职", "Netherlands - Eredivisie": "荷甲",
+    "Germany - 2. Bundesliga": "德乙", "Sweden - Allsvenskan": "瑞超",
+    "Finland - Veikkausliiga": "芬超", "Norway - Eliteserien": "挪超",
+    "Portugal - Liga Portugal": "葡超", "Brazil": "巴甲",
+    "Major League Soccer": "美职联", "France - Ligue 1": "法甲",
+    "England - Premier League": "英超", "Spain - La Liga": "西甲",
+    "Italy - Serie A": "意甲", "Germany - Bundesliga": "德甲",
+    "UEFA Champions League": "欧冠", "UEFA Europa League": "欧联",
+}
+
+
+def _fetch_kambi_for_lottery(date_str: str, league_codes: list[str]) -> list[dict]:
+    """为体彩日期专门拉取Kambi赔率"""
+    import requests
+
+    env_path = ROOT / ".env"
+    KEY = ""
+    if env_path.exists():
+        for line in env_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            if line.startswith("ODDS_API_IO_KEY="):
+                KEY = line.split("=", 1)[1].strip()
+                break
+    if not KEY:
+        return []
+
+    r = requests.get("https://api.odds-api.io/v3/events", params={
+        "sport": "football", "bookmaker": "Unibet", "apiKey": KEY,
+    }, timeout=30)
+    events = r.json()
+    if isinstance(events, dict) and "error" in events:
+        logger.error(f"Kambi API错误: {events['error']}")
+        return []
+
+    pending = [e for e in events if e.get("status") in ("pending", "live")]
+    logger.info(f"Kambi: {len(pending)} 场待踢 / 共 {len(events)} 场")
+
+    # 只取体彩相关联赛
+    focus = []
+    for e in pending:
+        ke_league_name = e.get("league", {}).get("name", "")
+        ke_code, _ = map_league(ke_league_name)
+        if ke_code != "OTHER" and ke_code != "FRIENDLY":
+            # 检查日期匹配
+            ke_date = e.get("date", "")[:10] if e.get("date") else ""
+            if ke_date == date_str:
+                focus.append(e)
+
+    logger.info(f"体彩相关({date_str}): {len(focus)} 场")
+
+    # 去重(同队同联赛可能多博彩公司)
+    seen = set()
+    unique = []
+    for e in focus:
+        key = f"{e.get('home','')}|{e.get('away','')}|{e.get('league',{}).get('name','')}"
+        if key not in seen:
+            seen.add(key)
+            unique.append(e)
+
+    # 限制30场
+    unique = unique[:30]
+    logger.info(f"去重后: {len(unique)} 场, 拉取赔率...")
+
+    # 拉取赔率
+    BOOKMAKER = "Unibet"
+    for i, m in enumerate(unique):
+        try:
+            time.sleep(0.15)
+            r2 = requests.get("https://api.odds-api.io/v3/odds", params={
+                "eventId": m["id"], "bookmakers": BOOKMAKER, "apiKey": KEY,
+            }, timeout=15)
+            data = r2.json()
+            bms = data.get("bookmakers", {})
+            if isinstance(bms, dict):
+                for _, markets in bms.items():
+                    if isinstance(markets, list):
+                        for mkt in markets:
+                            if mkt.get("name") in ("ML", "1X2", "Full Time Result"):
+                                odds_list = mkt.get("odds", [])
+                                if odds_list:
+                                    o = odds_list[0]
+                                    m["odds_1x2"] = {
+                                        "home": float(o.get("home", 0)),
+                                        "draw": float(o.get("draw", 0)),
+                                        "away": float(o.get("away", 0)),
+                                    }
+                                    m["odds_source"] = f"{BOOKMAKER} (Kambi)"
+                                    break
+        except Exception as e:
+            logger.debug(f"  {m.get('home','')[:20]}: {e}")
+
+    with_odds = sum(1 for m in unique if m.get("odds_1x2"))
+    logger.info(f"Kambi赔率获取: {with_odds}/{len(unique)}")
+
+    # 缓存
+    out_path = ROOT / "data" / "kambi_odds.json"
+    out_path.write_text(json.dumps(unique, ensure_ascii=False, indent=2, default=str),
+                        encoding="utf-8")
+    return unique
+
+
+def run_lottery_pipeline(date_str: str = "2026-08-09", use_llm: bool = True):
+    """体彩专用管线: 读取体彩开盘比赛 → 匹配Kambi赔率 → LLM推理 → 规则引擎"""
+    import requests
+
+    logger.info("═══ 体彩预测管线 v2.0 ═══")
+
+    # 1. 加载体彩数据
+    lottery_path = ROOT / "data" / "lottery_official_parsed_20260808.json"
+    if not lottery_path.exists():
+        logger.error(f"体彩数据不存在: {lottery_path}")
+        return []
+
+    lottery_data = json.loads(lottery_path.read_text(encoding="utf-8"))
+    matches = lottery_data.get(date_str, [])
+    if not matches:
+        logger.error(f"{date_str} 无体彩比赛")
+        return []
+
+    logger.info(f"体彩 {date_str}: {len(matches)} 场比赛")
+
+    # 2. 加载Kambi数据 (用于获取更准的赔率和球队英文名)
+    kambi_path = ROOT / "data" / "kambi_odds.json"
+    kambi_events = []
+    if kambi_path.exists():
+        kambi_events = json.loads(kambi_path.read_text(encoding="utf-8"))
+        logger.info(f"Kambi缓存: {len(kambi_events)} 场")
+
+    # 检查Kambi缓存是否匹配目标日期
+    kambi_date_match = sum(1 for k in kambi_events
+                          if k.get("date", "")[:10] == date_str)
+    if kambi_date_match < len(matches) * 0.3:
+        logger.info(f"Kambi缓存日期不匹配({kambi_date_match}场), 重新拉取...")
+        fresh = _fetch_kambi_for_lottery(date_str, list(LOTTERY_LEAGUE_MAP.values()))
+        if fresh:
+            kambi_events = fresh
+        if fresh:
+            kambi_events = fresh
+            kambi_with_odds = [k for k in kambi_events if k.get("odds_1x2")]
+
+    # 3. 联赛名中文→代码映射
+    LOTTERY_LEAGUE_MAP = {
+        "日职": "J1", "日乙": "J2", "韩职": "KLEAGUE",
+        "荷甲": "DED", "德乙": "BL2", "瑞超": "SWE",
+        "芬超": "FIN", "挪超": "NOR", "葡超": "PPL",
+        "巴甲": "BSA", "俄超": "RUS", "美职联": "MLS",
+        "法甲": "FL1", "英超": "PL", "西甲": "PD",
+        "意甲": "SA", "德甲": "BL1", "欧冠": "CL",
+        "欧联": "EL", "友谊赛": "FRIENDLY",
+    }
+
+    # 4. 体彩→Kambi匹配 (按联赛+日期分组, 时间排序后顺序配对)
+    LOTTERY_LEAGUE_TO_KAMBI = {
+        "日职": "J1 League", "日乙": "J2 League", "韩职": "K League",
+        "荷甲": "Netherlands - Eredivisie", "德乙": "Germany - 2. Bundesliga",
+        "瑞超": "Sweden - Allsvenskan", "芬超": "Finland - Veikkausliiga",
+        "挪超": "Norway - Eliteserien", "葡超": "Portugal - Liga Portugal",
+        "巴甲": "Brazil - Brasileiro", "俄超": "Russia - Premier League",
+        "美职联": "Major League Soccer", "法甲": "France - Ligue 1",
+        "英超": "England - Premier League", "西甲": "Spain - La Liga",
+        "意甲": "Italy - Serie A", "德甲": "Germany - Bundesliga",
+        "欧冠": "UEFA Champions League", "欧联": "UEFA Europa League",
+    }
+
+    # 按联赛+日期预分组Kambi事件
+    kambi_by_league_date = {}
+    for ke in kambi_events:
+        ke_date = ke.get("date", "")[:10] if ke.get("date") else ""
+        ke_league = ke.get("league", {}).get("name", "")
+        key = (ke_league, ke_date)
+        if key not in kambi_by_league_date:
+            kambi_by_league_date[key] = []
+        kambi_by_league_date[key].append(ke)
+
+    # 每个分组按时间排序
+    for key in kambi_by_league_date:
+        kambi_by_league_date[key].sort(key=lambda x: x.get("date", ""))
+
+    # 匹配状态: 跟踪每个分组用了几个
+    _kambi_used = {}
+
+    def match_lottery_to_kambi(lottery_match):
+        """为体彩比赛匹配Kambi事件 (顺序配对)"""
+        lt_league = lottery_match.get("leagueAbbName", "")
+        lt_date = lottery_match.get("matchDate", "")
+        lt_time = lottery_match.get("matchTime", "00:00:00")
+        lt_league_en = LOTTERY_LEAGUE_TO_KAMBI.get(lt_league, "")
+
+        # 在同联赛+同日期中找候选
+        candidates = []
+        for (kl, kd), events in kambi_by_league_date.items():
+            if lt_league_en and lt_league_en.lower() in kl.lower():
+                if kd == lt_date or (kd and lt_date and abs(
+                    (datetime.strptime(kd, "%Y-%m-%d") if kd else datetime.min) -
+                    (datetime.strptime(lt_date, "%Y-%m-%d") if lt_date else datetime.min)
+                ).days <= 1):
+                    candidates = events
+                    break
+
+        if candidates:
+            # 顺序配对: 该分组第N次匹配用第N个事件
+            idx = _kambi_used.get((lt_league, lt_date), 0)
+            if idx < len(candidates):
+                _kambi_used[(lt_league, lt_date)] = idx + 1
+                return candidates[idx]
+
+        # 兜底: 找任何同联赛的未用事件
+        for (kl, kd), events in kambi_by_league_date.items():
+            if lt_league_en and lt_league_en.lower() in kl.lower():
+                idx = _kambi_used.get(("any", lt_league), 0)
+                if idx < len(events):
+                    _kambi_used[("any", lt_league)] = idx + 1
+                    return events[idx]
+        return None
+
+    # 体彩中文联赛→Kambi英文联赛 (用于build_match_context)
+    LOTTERY_CN_TO_EN = {
+        "日职": "J1 League", "日乙": "J2 League", "韩职": "K League",
+        "荷甲": "Netherlands - Eredivisie", "德乙": "Germany - 2. Bundesliga",
+        "瑞超": "Sweden - Allsvenskan", "芬超": "Finland - Veikkausliiga",
+        "挪超": "Norway - Eliteserien", "葡超": "Portugal - Liga Portugal",
+        "巴甲": "Brazil - Brasileiro A1", "俄超": "Russia - Premier League",
+        "美职联": "Major League Soccer", "法甲": "France - Ligue 1",
+        "英超": "England - Premier League", "西甲": "Spain - La Liga",
+        "意甲": "Italy - Serie A", "德甲": "Germany - Bundesliga",
+        "欧冠": "UEFA Champions League", "欧联": "UEFA Europa League",
+        "友谊赛": "International Clubs - Club Friendly",
+    }
+
+    # 5. 逐场处理 (体彩SPF赔率为主, Kambi仅作补充)
+    results = []
+    matched_count = 0
+    for i, lm in enumerate(matches):
+        home_cn = lm.get("homeTeam", "?")
+        away_cn = lm.get("awayTeam", "?")
+        league_cn = lm.get("leagueAbbName", "?")
+        logger.info(f"[{i+1}/{len(matches)}] {home_cn} vs {away_cn} ({league_cn})")
+
+        # 体彩SPF赔率 (主数据源)
+        spf = lm.get("spf_odds", {})
+        odds_source = "体彩官方"
+        odds_1x2 = {}
+        if spf:
+            odds_1x2 = {
+                "home": float(spf.get("h", 0)),
+                "draw": float(spf.get("d", 0)),
+                "away": float(spf.get("a", 0)),
+            }
+            odds_source = "体彩官方SPF"
+
+        # 尝试Kambi补充 (仅当体彩无SPF时, 如葡超某些场次只有让球)
+        if not odds_1x2 or (odds_1x2["home"] == 0 and odds_1x2["draw"] == 0 and odds_1x2["away"] == 0):
+            kambi_match = match_lottery_to_kambi(lm)
+            if kambi_match and kambi_match.get("odds_1x2"):
+                odds_1x2 = kambi_match["odds_1x2"]
+                odds_source = f"Kambi ({kambi_match.get('odds_source','Unknown')})"
+                matched_count += 1
+        else:
+            # 体彩SPF已存在, Kambi仅作为验证 (暂不覆盖)
+            matched_count += 0  # Kambi匹配成功但不覆盖
+
+        # 构建事件对象
+        league_name_for_map = LOTTERY_CN_TO_EN.get(league_cn, league_cn)
+        event = {
+            "home": f"{home_cn}",
+            "away": f"{away_cn}",
+            "league": {"name": league_name_for_map},
+            "date": f"{lm.get('matchDate','')}T{lm.get('matchTime','00:00:00')}Z",
+            "status": lm.get("matchStatus", "pending"),
+        }
+        if odds_1x2:
+            event["odds_1x2"] = odds_1x2
+            event["odds_source"] = odds_source
+
+        # 构建上下文
+        context = build_match_context(event)
+
+        # 添加体彩特有信息 (让球盘、排名)
+        hhad = lm.get("hhad_odds", {})
+        if hhad:
+            context["lottery_hhad"] = {
+                "goal_line": hhad.get("goalLine", ""),
+                "home": float(hhad.get("h", 0)) if hhad.get("h") else 0,
+                "draw": float(hhad.get("d", 0)) if hhad.get("d") else 0,
+                "away": float(hhad.get("a", 0)) if hhad.get("a") else 0,
+            }
+        context["odds_source"] = odds_source
+
+        # LLM推理
+        actor_output = llm_actor(context) if use_llm else _fallback_prediction(context)
+        reviewer_output = llm_reviewer(context, actor_output) if use_llm else {
+            "verdict": "agree", "confidence_adjustment": "same",
+            "adjusted_confidence": actor_output.get("prediction", {}).get("confidence", "中"),
+            "reasons": [], "warnings": [], "suggested_changes": {},
+        }
+
+        # 规则引擎
+        final = apply_rules(context, actor_output, reviewer_output)
+
+        result = {
+            "match": context["match"],
+            "league": context["league"],
+            "league_code": context["league_code"],
+            "kickoff": context["kickoff"],
+            "lottery": {
+                "matchNum": lm.get("matchNumStr", ""),
+                "homeRank": lm.get("homeRank", ""),
+                "awayRank": lm.get("awayRank", ""),
+            },
+            "elo": context["elo"],
+            "market": context["market"],
+            "actor": actor_output,
+            "reviewer": reviewer_output,
+            "final": final,
+        }
+        results.append(result)
+
+        # 简要输出
+        f = final
+        v_icon = {"agree": "✅", "agree_with_reservation": "⚠", "disagree": "🔴"}.get(
+            reviewer_output.get("verdict", ""), "❓")
+        print(f"  {v_icon} {f['final_prediction'].get('direction','?')} "
+              f"| 置信{f['final_confidence']} "
+              f"| {'✅投注' if f['bet_suggestion'].get('type') != 'none' else '参考'} "
+              f"| {f['decision_summary'].split('|')[-1].strip()}")
+
+    # 6. 保存结果
+    out = {
+        "pipeline": "v2.0-lottery",
+        "generated_at": datetime.now().isoformat(),
+        "date": date_str,
+        "architecture": "体彩数据 → 推理(LLM) → 审核(LLM) → 规则引擎",
+        "match_count": len(results),
+        "kambi_matched": matched_count,
+        "results": results,
+    }
+
+    json_path = ROOT / "data" / f"lottery_predictions_{date_str}_{datetime.now().strftime('%H%M')}.json"
+    json_path.write_text(json.dumps(out, ensure_ascii=False, indent=2, default=str),
+                         encoding="utf-8")
+    logger.info(f"结果保存: {json_path}")
+
+    (ROOT / "data" / "today_predictions.json").write_text(
+        json.dumps(out, ensure_ascii=False, indent=2, default=str), encoding="utf-8")
+
+    # 统计
+    agrees = sum(1 for r in results if r["reviewer"].get("verdict") == "agree")
+    bets = sum(1 for r in results if r["final"]["bet_suggestion"].get("type") != "none")
+    logger.info(
+        f"═══ 体彩完成: {len(results)}场 | "
+        f"Kambi匹配{matched_count}/{len(results)} | "
+        f"双审一致{agrees} | 推荐投注{bets} ═══"
+    )
+
+    return results
+
+
+# ══════════════════════════════════════════════════════════════
 # CLI
 # ══════════════════════════════════════════════════════════════
 
@@ -714,10 +1175,14 @@ def main():
                         help="跳过LLM (只用数据推导)")
     parser.add_argument("--review", action="store_true",
                         help="复盘昨日预测")
+    parser.add_argument("--lottery-date", type=str, default="",
+                        help="体彩日期 (如 2026-08-09), 自动使用体彩官方SPF赔率")
     args = parser.parse_args()
 
     if args.review:
         _review_yesterday()
+    elif args.lottery_date:
+        run_lottery_pipeline(date_str=args.lottery_date, use_llm=not args.no_llm)
     else:
         run(match_limit=args.matches, use_llm=not args.no_llm)
 

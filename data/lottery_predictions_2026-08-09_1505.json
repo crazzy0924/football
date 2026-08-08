@@ -1,0 +1,2699 @@
+{
+  "pipeline": "v2.0-lottery",
+  "generated_at": "2026-08-08T15:05:30.769583",
+  "date": "2026-08-09",
+  "architecture": "体彩数据 → 推理(LLM) → 审核(LLM) → 规则引擎",
+  "match_count": 24,
+  "kambi_matched": 9,
+  "results": [
+    {
+      "match": "东京绿茵 vs 川崎前锋",
+      "league": "J联赛",
+      "league_code": "J1",
+      "kickoff": "2026-08-09T17:00:00Z",
+      "lottery": {
+        "matchNum": "周日001",
+        "homeRank": "[日职16]",
+        "awayRank": "[日职8]"
+      },
+      "elo": {
+        "home": 1400,
+        "away": 1400,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3222,
+        "draw": 0.2935,
+        "away": 0.3843,
+        "margin": 0.1288,
+        "raw_odds": {
+          "home": 2.76,
+          "draw": 3.05,
+          "away": 2.28
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.35,
+          "draw": 0.28,
+          "away_win": 0.37,
+          "expected_goals": 2.75,
+          "most_likely_score": "1-1",
+          "over_25": 0.52,
+          "btts": 0.57,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率最高(38.4%), 但ELO完全持平, 说明市场可能基于近期状态或主场劣势给出倾向。J联赛主场优势弱(40%), 客胜率偏高, 支持客胜方向。泊松模型(DC)反而给出主胜概率更高(41.6%), 与市场方向相悖, 但考虑到数据不足且市场更可靠, 我略微偏向客胜, 但置信度低。联赛场均2.5球, 大球率48%, 且DC的over25为51.9%, 因此倾向大2.5。BTTS概率较高(56.7%), 且最可能比分1-1, 支持双方进球。",
+        "key_factors": [
+          "市场客胜概率最高",
+          "ELO持平无实力差",
+          "J联赛主场优势弱",
+          "DC模型主胜但市场反向",
+          "数据不足"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "none",
+          "reason": "数据不足且市场与模型方向不一致, 不建议投注"
+        },
+        "warnings": [
+          "数据不足, 参考为主",
+          "市场与DC模型方向矛盾, 谨慎对待"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor预测客胜(37%)与市场客胜概率(38.4%)基本一致, 偏离幅度<5%, 未触发市场偏离警告",
+          "Actor正确识别J联赛主场优势弱(40%)和客胜率高的联赛特征, 方向选择与联赛风格相符",
+          "ELO数据为默认值(1400对1400), 数据质量标记为'数据不足', Actor已主动将置信度设为'低', 并建议不投注, 处理谨慎",
+          "市场客胜概率38.4%未超过75%阈值, 无深盘风险, 让球深度未触发警告",
+          "方向预测(客胜)与大小球预测(大2.5)存在一定逻辑张力: 客胜通常伴随客队进球, 但最可能比分1-1(平局)与客胜方向不完全自洽, 且大2.5与1-1(总进球2)矛盾"
+        ],
+        "warnings": [
+          "最可能比分1-1与客胜方向不一致, 且1-1总进球为2, 与大2.5预测矛盾, 逻辑一致性存疑",
+          "DC模型主胜概率更高(41.6%)与市场客胜方向相悖, 数据不足下模型可靠性有限, 但Actor已降低置信度",
+          "J联赛平局率25%偏高, 客胜概率仅比主胜高2个百分点, 方向优势微弱"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.35,
+          "draw": 0.28,
+          "away_win": 0.37,
+          "expected_goals": 2.75,
+          "most_likely_score": "1-1",
+          "over_25": 0.52,
+          "btts": 0.57,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "DC模型主胜概率更高(41.6%)与市场客胜方向相悖, 数据不足下模型可靠性有限, 但Actor已降低置信度",
+          "数据不足, 参考为主",
+          "最可能比分1-1与客胜方向不一致, 且1-1总进球为2, 与大2.5预测矛盾, 逻辑一致性存疑",
+          "J联赛平局率25%偏高, 客胜概率仅比主胜高2个百分点, 方向优势微弱",
+          "市场与DC模型方向矛盾, 谨慎对待"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "none",
+          "reason": "数据不足且市场与模型方向不一致, 不建议投注"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:6个"
+      }
+    },
+    {
+      "match": "长崎航海 vs 京都不死鸟",
+      "league": "J联赛",
+      "league_code": "J1",
+      "kickoff": "2026-08-09T18:00:00Z",
+      "lottery": {
+        "matchNum": "周日002",
+        "homeRank": "[日职17]",
+        "awayRank": "[日职9]"
+      },
+      "elo": {
+        "home": 1400,
+        "away": 1400,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3128,
+        "draw": 0.2849,
+        "away": 0.4022,
+        "margin": 0.1292,
+        "raw_odds": {
+          "home": 2.85,
+          "draw": 3.15,
+          "away": 2.17
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.31,
+          "draw": 0.28,
+          "away_win": 0.41,
+          "expected_goals": 2.75,
+          "most_likely_score": "1-1",
+          "over_25": 0.52,
+          "btts": 0.57,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率最高(40.2%), 与J联赛客胜率高的联赛特征一致, 但ELO完全持平(1400 vs 1400), 实力无差距, 市场可能高估客队。DC模型更看好主胜(41.6%), 与市场方向相反, 但DC模型基于泊松分布, 未充分反映联赛客强特征。综合来看, 市场方向优先, 但信心不足, 平局概率也不低(28.5%), 属于三向接近的胶着盘。",
+        "key_factors": [
+          "J联赛客胜率高, 主场优势弱",
+          "ELO持平, 无实力差距",
+          "市场赔率倾向客胜, 但DC模型倾向主胜",
+          "平局概率接近30%, 不可忽视"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "市场与模型方向矛盾, 且数据质量标注不足, 三向概率接近, 无明确价值投注点"
+        },
+        "warnings": [
+          "数据不足, 参考为主",
+          "市场与DC模型方向相反, 谨慎对待",
+          "平局概率高, 避免单选胜负"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor预测客胜(41%)与市场(40.2%)高度一致, 偏离度<1%, 无市场偏离问题",
+          "方向选择符合J联赛客胜率高、主场优势弱的联赛特征, 逻辑自洽",
+          "ELO为默认值(1400 vs 1400), 数据质量标注不足, 模型基础薄弱, 应降低信心",
+          "三向概率接近(31/28/41), 平局概率28.5%不可忽视, Actor已正确识别并建议不下注",
+          "大小球预测大2.5(52%)与联赛场均2.5球、大球率48%基本一致, 但略偏高, 需谨慎"
+        ],
+        "warnings": [
+          "ELO数据为联赛基准默认值, 无实际实力差异信息, 预测基础薄弱",
+          "市场与DC模型方向矛盾, 虽然Actor选择市场方向, 但模型分歧本身是风险信号",
+          "平局概率接近30%, 任何单选胜负的投注风险都较高",
+          "大小球预测52%仅略高于联赛基准48%, 价值有限, 不宜重注"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.31,
+          "draw": 0.28,
+          "away_win": 0.41,
+          "expected_goals": 2.75,
+          "most_likely_score": "1-1",
+          "over_25": 0.52,
+          "btts": 0.57,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "ELO数据为联赛基准默认值, 无实际实力差异信息, 预测基础薄弱",
+          "数据不足, 参考为主",
+          "市场与DC模型方向矛盾, 虽然Actor选择市场方向, 但模型分歧本身是风险信号",
+          "市场与DC模型方向相反, 谨慎对待",
+          "平局概率接近30%, 任何单选胜负的投注风险都较高",
+          "平局概率高, 避免单选胜负",
+          "大小球预测52%仅略高于联赛基准48%, 价值有限, 不宜重注"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "市场与模型方向矛盾, 且数据质量标注不足, 三向概率接近, 无明确价值投注点"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:8个"
+      }
+    },
+    {
+      "match": "山形山神 vs 枥木城",
+      "league": "OTHER",
+      "league_code": "OTHER",
+      "kickoff": "2026-08-09T18:00:00Z",
+      "lottery": {
+        "matchNum": "周日003",
+        "homeRank": "",
+        "awayRank": ""
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3781,
+        "draw": 0.2766,
+        "away": 0.3453,
+        "margin": 0.1294,
+        "raw_odds": {
+          "home": 2.32,
+          "draw": 3.25,
+          "away": 2.56
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.42,
+          "draw": 0.27,
+          "away_win": 0.31,
+          "expected_goals": 2.65,
+          "most_likely_score": "1-1",
+          "over_25": 0.55,
+          "btts": 0.58,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示主胜概率略高（37.8% vs 客胜34.5%），但ELO完全持平（1500 vs 1500），实力无差距。Dixon-Coles模型基于泊松分布给出主胜45.5%，高于市场，但考虑到联赛风格不明确且数据质量不足，需向市场回归。联赛平均进球2.65、大球率50%、BTTS率52%，结合模型预期进球（主1.72/客1.32），总进球约3.04，支持大球方向。最可能比分1-1（11.9%），但主队进攻略强，2-1也有较高概率。综合市场与模型，主胜微弱优势，但置信度低。",
+        "key_factors": [
+          "ELO完全持平，无实力差距",
+          "市场主胜概率略高于客胜，但差距小",
+          "联赛场均进球2.65，大球率50%，风格偏开放",
+          "Dixon-Coles模型预期总进球约3.04，支持大球",
+          "数据不足，参考为主"
+        ],
+        "bet_suggestion": {
+          "type": "大小球",
+          "pick": "大2.5",
+          "reason": "联赛场均2.65球，模型预期总进球3.04，大球率50%，且两队实力接近可能对攻，大2.5概率约55%，相对1X2方向更明确。"
+        },
+        "warnings": [
+          "数据不足，置信度低，建议小额或观望",
+          "ELO为联赛基准值，非实际球队实力，参考价值有限",
+          "市场margin较高（12.9%），赔率可能偏离真实概率"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor预测主胜概率42%与市场主胜37.8%偏离约4.2个百分点，未超过10%阈值，方向选择合理",
+          "Actor明确承认ELO为联赛基准默认值（1500 vs 1500），数据质量不足，且已主动将置信度设为低，态度审慎",
+          "大小球预测（大2.5，55%）与联赛场均2.65球、大球率50%的数据基本一致，且模型预期总进球3.04，逻辑自洽",
+          "最可能比分1-1与主胜方向存在轻微矛盾（1-1为平局），但Actor已解释为模型概率分布结果，且主胜概率仅微弱领先，可接受"
+        ],
+        "warnings": [
+          "联赛名称为OTHER，风格字段为空，联赛画像不完整，所有基于联赛数据的推断可靠性有限",
+          "市场margin高达12.9%，赔率可能严重偏离真实概率，市场参考价值打折",
+          "主胜概率42%与平局27%、客胜31%差距不大，1X2方向不确定性高，建议以大小球为主投注方向",
+          "ELO完全持平且为默认值，实际球队实力差异完全未知，存在重大盲点"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.42,
+          "draw": 0.27,
+          "away_win": 0.31,
+          "expected_goals": 2.65,
+          "most_likely_score": "1-1",
+          "over_25": 0.55,
+          "btts": 0.58,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "主胜概率42%与平局27%、客胜31%差距不大，1X2方向不确定性高，建议以大小球为主投注方向",
+          "市场margin较高（12.9%），赔率可能偏离真实概率",
+          "ELO完全持平且为默认值，实际球队实力差异完全未知，存在重大盲点",
+          "联赛名称为OTHER，风格字段为空，联赛画像不完整，所有基于联赛数据的推断可靠性有限",
+          "市场margin高达12.9%，赔率可能严重偏离真实概率，市场参考价值打折",
+          "数据不足，置信度低，建议小额或观望",
+          "ELO为联赛基准值，非实际球队实力，参考价值有限"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:8个"
+      }
+    },
+    {
+      "match": "鹿特丹斯巴达 vs 费耶诺德",
+      "league": "荷甲",
+      "league_code": "DED",
+      "kickoff": "2026-08-09T18:15:00Z",
+      "lottery": {
+        "matchNum": "周日004",
+        "homeRank": "[荷甲13]",
+        "awayRank": "[荷甲5]"
+      },
+      "elo": {
+        "home": 1480,
+        "away": 1480,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.2133,
+        "draw": 0.2337,
+        "away": 0.553,
+        "margin": 0.1282,
+        "raw_odds": {
+          "home": 4.35,
+          "draw": 3.95,
+          "away": 1.55
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.25,
+          "draw": 0.24,
+          "away_win": 0.51,
+          "expected_goals": 3.49,
+          "most_likely_score": "1-2",
+          "over_25": 0.68,
+          "btts": 0.69,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率强烈倾向客胜(Shin去水后客胜概率55.3%), 远高于ELO基准(两队ELO相同, 基准主胜43%客胜32%), 市场信息权重应优先。DC模型虽给出主胜概率略高(45%), 但该模型未充分反映费耶诺德作为荷甲传统强队的实际实力和市场共识。荷甲高进球风格(场均3.15球, 大2.5率65%)支持大球方向, DC的over_25和btts概率均接近70%, 与联赛画像一致。综合市场主导方向、联赛风格修正, 预测客胜概率约51%, 最可能比分1-2。",
+        "key_factors": [
+          "市场赔率强烈指向客胜(55.3%)",
+          "荷甲高进球风格支持大2.5和BTTS",
+          "ELO数据缺失, 参考价值有限",
+          "DC模型与市场方向存在分歧, 但市场权重更高"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率(1.55)隐含客胜概率64.5%, Shin去水后55.3%, 仍显著高于ELO基准的32%, 市场信息优势明显。荷甲客队费耶诺德实力占优, 尽管DC模型给出主胜概率略高, 但市场共识更可靠。"
+        },
+        "warnings": [
+          "数据不足(ELO为联赛基准值, 非实际球队ELO), 预测参考为主",
+          "DC模型与市场方向不一致, 存在模型偏差风险",
+          "客胜赔率1.55偏低, 投注价值有限"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor正确识别了市场对客胜的强烈倾向(Shin去水后55.3%), 且未偏离市场超过10%, 方向判断合理",
+          "荷甲高进球风格(场均3.15球, 大2.5率65%)与Actor的over_25=0.68和btts=0.69预测一致, 大小球方向自洽",
+          "ELO数据为联赛基准默认值(1480 vs 1480), 数据质量警告明确, Actor也承认数据不足, 但未因此显著降低confidence, 仍给出'中'置信度, 与实际数据支撑力度不匹配"
+        ],
+        "warnings": [
+          "ELO数据完全缺失(均为联赛基准值), 无法验证费耶诺德作为传统强队的实际实力优势, 客胜概率51%缺乏独立数据支撑, 过度依赖市场赔率",
+          "DC模型与市场方向存在分歧(主胜概率45% vs 市场客胜55.3%), Actor简单以'市场权重更高'处理, 未深入分析分歧原因, 存在模型偏差风险",
+          "客胜赔率1.55隐含概率64.5%, 但Shin去水后仅55.3%, 市场margin高达12.8%, 实际投注价值有限, Actor的bet_suggestion未充分强调这一风险"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.25,
+          "draw": 0.24,
+          "away_win": 0.51,
+          "expected_goals": 3.49,
+          "most_likely_score": "1-2",
+          "over_25": 0.68,
+          "btts": 0.69,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "DC模型与市场方向不一致, 存在模型偏差风险",
+          "客胜赔率1.55隐含概率64.5%, 但Shin去水后仅55.3%, 市场margin高达12.8%, 实际投注价值有限, Actor的bet_suggestion未充分强调这一风险",
+          "客胜赔率1.55偏低, 投注价值有限",
+          "数据不足(ELO为联赛基准值, 非实际球队ELO), 预测参考为主",
+          "ELO数据完全缺失(均为联赛基准值), 无法验证费耶诺德作为传统强队的实际实力优势, 客胜概率51%缺乏独立数据支撑, 过度依赖市场赔率",
+          "DC模型与市场方向存在分歧(主胜概率45% vs 市场客胜55.3%), Actor简单以'市场权重更高'处理, 未深入分析分歧原因, 存在模型偏差风险"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "1. FC Heidenheim vs VfL 1899 Osnabruck",
+      "league": "德乙",
+      "league_code": "BL2",
+      "kickoff": "2026-08-08T11:00:00Z",
+      "lottery": {
+        "matchNum": "周日005",
+        "homeRank": "[德乙16]",
+        "awayRank": "[德乙7]"
+      },
+      "elo": {
+        "home": 1420,
+        "away": 1420,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.5931,
+        "draw": 0.2338,
+        "away": 0.1731,
+        "margin": 0.0656,
+        "raw_odds": {
+          "home": 1.53,
+          "draw": 4.2,
+          "away": 5.75
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.55,
+          "draw": 0.25,
+          "away_win": 0.2,
+          "expected_goals": 2.9,
+          "most_likely_score": "2-1",
+          "over_25": 0.6,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示主胜概率高达59.3%，远高于ELO基准（两队ELO相同，实力均衡），但市场可能反映了主队主场优势和近期状态。Dixon-Coles模型给出的主胜概率为44.4%，低于市场，但考虑到德乙联赛风格（进球偏多、主胜率43%），主队仍有一定优势。综合市场与模型，主胜概率应高于模型但低于市场，故调整为55%。预期进球数2.9高于联赛平均2.75，大球概率60%略高于联赛基准53%，BTTS概率60%也高于基准52%，因此倾向大球和双方进球。最可能比分2-1，与模型第二高概率比分一致。",
+        "key_factors": [
+          "市场强烈看好主胜（1.53）",
+          "ELO持平，实力接近",
+          "德乙进球偏多，大球概率高",
+          "Dixon-Coles模型显示1-1概率最高，但2-1紧随其后"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "主胜",
+          "reason": "市场赔率1.53隐含概率59%，虽高于模型，但德乙主场优势明显，且主队实力不弱，主胜值得一搏。"
+        },
+        "warnings": [
+          "数据不足，参考为主，谨慎投注",
+          "市场赔率与模型差异较大，需注意市场信息可能包含未公开因素"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor对主胜概率的调整（55%）介于市场（59.3%）和模型（44.4%）之间，逻辑上合理，但未充分解释为何偏离ELO基准（两队ELO相同）如此之大，市场可能包含未公开信息，但Actor的调整幅度缺乏独立依据",
+          "预期进球数2.9高于联赛平均2.75，大球概率60%高于基准53%，方向与德乙风格一致，但Actor未提供具体模型输出或历史交锋数据支撑，数据不足（ELO均为默认值）导致预测可靠性存疑",
+          "市场主胜概率59.3%与Actor的55%差距仅4.3个百分点，未超过10%偏离阈值，但Actor在推理中承认市场可能包含未公开因素，却仍选择接近市场而非模型，存在一定过度自信"
+        ],
+        "warnings": [
+          "数据质量警告：ELO均为联赛基准默认值，无实际球队实力差异信息，预测基础薄弱",
+          "市场赔率1.53隐含概率59.3%，但Dixon-Coles模型仅给出44.4%，差异达15个百分点，需警惕市场过热或模型失效",
+          "德乙主胜率43%低于市场隐含的59.3%，主场优势可能被市场过度放大"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.55,
+          "draw": 0.25,
+          "away_win": 0.2,
+          "expected_goals": 2.9,
+          "most_likely_score": "2-1",
+          "over_25": 0.6,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "数据不足，参考为主，谨慎投注",
+          "德乙主胜率43%低于市场隐含的59.3%，主场优势可能被市场过度放大",
+          "市场赔率1.53隐含概率59.3%，但Dixon-Coles模型仅给出44.4%，差异达15个百分点，需警惕市场过热或模型失效",
+          "数据质量警告：ELO均为联赛基准默认值，无实际球队实力差异信息，预测基础薄弱",
+          "市场赔率与模型差异较大，需注意市场信息可能包含未公开因素"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:6个"
+      }
+    },
+    {
+      "match": "SV Darmstadt 98 vs Holstein Kiel",
+      "league": "德乙",
+      "league_code": "BL2",
+      "kickoff": "2026-08-08T11:00:00Z",
+      "lottery": {
+        "matchNum": "周日006",
+        "homeRank": "[德乙14]",
+        "awayRank": "[德乙4]"
+      },
+      "elo": {
+        "home": 1420,
+        "away": 1420,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.4354,
+        "draw": 0.2607,
+        "away": 0.3039,
+        "margin": 0.0727,
+        "raw_odds": {
+          "home": 2.1,
+          "draw": 3.65,
+          "away": 3.1
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.44,
+          "draw": 0.26,
+          "away_win": 0.3,
+          "expected_goals": 3.1,
+          "most_likely_score": "1-1",
+          "over_25": 0.6,
+          "btts": 0.62,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率与ELO完全一致（双方ELO均为1420，市场主胜概率43.5%），表明实力接近但主队有微弱主场优势。德乙联赛风格偏进攻（场均2.75球，大球率53%），DC模型预期进球3.1球，进一步支持大球方向。DC模型显示最可能比分为1-1（11.8%），但主胜概率（44.4%）略高于平局（25.7%），与市场方向吻合。由于数据质量标注不足，且双方实力过于接近，预测置信度设为低。",
+        "key_factors": [
+          "ELO完全持平，市场微调主胜概率",
+          "德乙联赛场均2.75球，大球率53%",
+          "DC模型预期进球3.1球，大球概率59.8%",
+          "BTTS概率62.4%，双方均可能进球"
+        ],
+        "bet_suggestion": {
+          "type": "大小球",
+          "pick": "大2.5",
+          "reason": "德乙风格偏进攻，DC模型预期进球3.1球，大球概率59.8%高于市场隐含概率（约53%），存在一定价值。"
+        },
+        "warnings": [
+          "数据质量标注不足，参考为主",
+          "双方ELO持平，主胜方向不确定性高",
+          "最可能比分1-1，平局风险不可忽视"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor预测主胜概率44%与市场43.5%基本一致，未偏离市场，方向判断合理",
+          "德乙联赛风格偏进攻（场均2.75球，大球率53%），Actor预期进球3.1球并推荐大2.5，与联赛特征吻合",
+          "Actor正确识别数据不足（ELO均为联赛基准默认值）并主动将置信度设为低，体现了审慎态度",
+          "方向预测（主胜）与大小球预测（大2.5）逻辑自洽：双方实力接近但进攻风格明显，平局风险高（最可能比分1-1）与主胜方向存在一定张力"
+        ],
+        "warnings": [
+          "ELO数据均为联赛基准默认值，实际实力对比缺乏有效数据支撑，主胜方向不确定性高",
+          "最可能比分1-1与主胜方向存在矛盾，平局概率26%不可忽视，主胜投注价值有限",
+          "大2.5概率60%虽高于市场隐含概率53%，但德乙大球率仅53%，预期进球3.1球可能偏高，需警惕模型乐观偏差"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.44,
+          "draw": 0.26,
+          "away_win": 0.3,
+          "expected_goals": 3.1,
+          "most_likely_score": "1-1",
+          "over_25": 0.6,
+          "btts": 0.62,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "最可能比分1-1与主胜方向存在矛盾，平局概率26%不可忽视，主胜投注价值有限",
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "大2.5概率60%虽高于市场隐含概率53%，但德乙大球率仅53%，预期进球3.1球可能偏高，需警惕模型乐观偏差",
+          "ELO数据均为联赛基准默认值，实际实力对比缺乏有效数据支撑，主胜方向不确定性高",
+          "双方ELO持平，主胜方向不确定性高",
+          "数据质量标注不足，参考为主",
+          "最可能比分1-1，平局风险不可忽视"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "Orgryte IS vs AIK",
+      "league": "瑞典超",
+      "league_code": "SWE",
+      "kickoff": "2026-08-08T13:00:00Z",
+      "lottery": {
+        "matchNum": "周日007",
+        "homeRank": "[瑞超2]",
+        "awayRank": "[瑞超4]"
+      },
+      "elo": {
+        "home": 1360,
+        "away": 1360,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3295,
+        "draw": 0.2674,
+        "away": 0.4031,
+        "margin": 0.0873,
+        "raw_odds": {
+          "home": 2.8,
+          "draw": 3.5,
+          "away": 2.25
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.34,
+          "draw": 0.27,
+          "away_win": 0.39,
+          "expected_goals": 2.94,
+          "most_likely_score": "1-1",
+          "over_25": 0.56,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率最高(40.3%), 但ELO完全持平(1360 vs 1360), 说明市场对AIK的看好更多来自球队实力而非数据模型。DC模型反而给出主胜更高(44%), 与市场方向相反, 但DC的泊松参数(主1.64/客1.3)可能高估了主队。瑞典超整体风格混合, 场均2.6球, 大球率50%, 与DC的over 2.5(56%)基本一致。由于数据质量不足且市场与模型分歧明显, 我倾向于跟随市场方向但降低信心, 客胜概率略高于主胜。",
+        "key_factors": [
+          "市场赔率客胜概率最高(40.3%)",
+          "ELO完全持平, 无实力差距",
+          "DC模型与市场方向相反, 主胜更高",
+          "瑞典超风格混合, 大球率50%",
+          "数据不足, 参考为主"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "市场与模型分歧明显, 且数据质量不足, 不建议投注"
+        },
+        "warnings": [
+          "数据不足, 参考为主",
+          "市场与DC模型方向相反, 预测不确定性高",
+          "ELO持平, 无明确实力优势方"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor正确识别了市场与模型的分歧, 并选择跟随市场方向(客胜), 同时将信心降至'低', 逻辑自洽",
+          "ELO完全持平(1360 vs 1360), 且数据来源为联赛基准, 无实际实力差异支撑, 客胜概率仅比主胜高5个百分点, 方向选择合理但脆弱",
+          "市场客胜概率40.3% vs Actor预测39%, 偏离仅1.3个百分点, 未触发>10%的市场偏离警告, 符合审核标准",
+          "瑞典超场均2.6球, 大球率50%, Actor预测over 2.5为56%, 偏离6个百分点, 在合理范围内, 且联赛风格为mixed, 无风格冲突"
+        ],
+        "warnings": [
+          "数据质量不足(ELO为默认基准值), 任何方向预测的可靠性都有限, 即使信心已为'低', 仍建议进一步降低投注权重",
+          "DC模型与市场方向相反(主胜44% vs 客胜39%), 说明模型间存在系统性分歧, 预测不确定性高",
+          "最可能比分预测为1-1(平局), 但方向选择为客胜, 存在轻微逻辑不一致——若最可能比分是平局, 客胜方向应更谨慎"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.34,
+          "draw": 0.27,
+          "away_win": 0.39,
+          "expected_goals": 2.94,
+          "most_likely_score": "1-1",
+          "over_25": 0.56,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "最可能比分预测为1-1(平局), 但方向选择为客胜, 存在轻微逻辑不一致——若最可能比分是平局, 客胜方向应更谨慎",
+          "数据不足, 参考为主",
+          "数据质量不足(ELO为默认基准值), 任何方向预测的可靠性都有限, 即使信心已为'低', 仍建议进一步降低投注权重",
+          "DC模型与市场方向相反(主胜44% vs 客胜39%), 说明模型间存在系统性分歧, 预测不确定性高",
+          "市场与DC模型方向相反, 预测不确定性高",
+          "ELO持平, 无明确实力优势方"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "市场与模型分歧明显, 且数据质量不足, 不建议投注"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "库奥皮奥 vs TPS图尔库",
+      "league": "OTHER",
+      "league_code": "OTHER",
+      "kickoff": "2026-08-09T20:00:00Z",
+      "lottery": {
+        "matchNum": "周日008",
+        "homeRank": "[芬超1]",
+        "awayRank": "[芬超8]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.6376,
+        "draw": 0.2072,
+        "away": 0.1552,
+        "margin": 0.1287,
+        "raw_odds": {
+          "home": 1.34,
+          "draw": 4.55,
+          "away": 6.15
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.6,
+          "draw": 0.23,
+          "away_win": 0.17,
+          "expected_goals": 3.04,
+          "most_likely_score": "2-1",
+          "over_25": 0.59,
+          "btts": 0.61,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示主胜概率高达63.8%，远高于ELO基准（两队均为1500，实力均衡）和DC模型（主胜45.5%），市场强烈看好主队。尽管ELO无差异，但市场信息权重更高，应作为主要锚点。联赛场均进球2.65、大球率50%、BTTS率52%，风格偏向开放，支持大球和双方进球。DC模型预期进球3.04，最可能比分1-1和2-1，但结合市场主胜倾向，2-1更合理。综合市场主导、联赛风格修正，主胜概率上调至60%，大球和BTTS概率均高于50%。",
+        "key_factors": [
+          "市场主胜概率63.8%，显著高于模型基准",
+          "ELO无差异，但市场信息更具时效性",
+          "联赛场均2.65球，大球率50%，风格开放",
+          "DC模型预期进球3.04，支持大球"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "主胜",
+          "reason": "市场赔率1.34隐含概率63.8%，虽低于DC模型45.5%，但市场通常更准确，且主胜方向明确。赔率虽低但胜率较高，适合稳健投注。"
+        },
+        "warnings": [
+          "数据不足，标注为参考为主，投注需谨慎",
+          "主胜赔率1.34偏低，回报有限，需考虑投注价值",
+          "ELO无差异，若市场信息失真则风险较高"
+        ]
+      },
+      "reviewer": {
+        "verdict": "disagree",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "市场偏离检查: Actor将主胜概率从市场隐含的63.8%上调至60%，但市场本身已比ELO基准(50%)偏离13.8个百分点，Actor未质疑市场偏离的合理性，反而全盘接受，缺乏独立判断",
+          "数据不足: ELO双方均为默认值1500，无任何实际数据支撑，联赛画像仅有场均进球和大球率，无风格描述，Actor却基于此给出高置信度的大球和BTTS预测，数据基础薄弱",
+          "逻辑一致性: Actor承认ELO无差异，却将主胜概率定为60%，高于市场隐含概率63.8%的调整方向与市场一致，但DC模型预期进球3.04与最可能比分2-1(总进球3)自洽，然而联赛场均2.65球、大球率仅50%，预期进球3.04明显偏高，大小球预测与联赛基准存在矛盾",
+          "深盘风险: 主胜赔率1.34对应隐含概率74.6%(去除margin后约63.8%)，虽未超过75%阈值，但接近深盘区间，且Actor未对低赔率下的投注价值进行充分评估"
+        ],
+        "warnings": [
+          "市场偏离超过10%且无ELO或基本面支撑，市场可能失真",
+          "数据质量标注为'参考为主'，所有预测置信度应大幅下调",
+          "主胜赔率1.34回报极低，即使胜率60%期望值也仅为0.804，负期望投注",
+          "大球预测与联赛50%大球率基准冲突，缺乏额外支撑"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.6,
+          "draw": 0.23,
+          "away_win": 0.17,
+          "expected_goals": 3.04,
+          "most_likely_score": "2-1",
+          "over_25": 0.59,
+          "btts": 0.61,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "disagree",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "数据质量标注为'参考为主'，所有预测置信度应大幅下调",
+          "大球预测与联赛50%大球率基准冲突，缺乏额外支撑",
+          "市场偏离超过10%且无ELO或基本面支撑，市场可能失真",
+          "数据不足，标注为参考为主，投注需谨慎",
+          "主胜赔率1.34回报极低，即使胜率60%期望值也仅为0.804，负期望投注",
+          "ELO无差异，若市场信息失真则风险较高",
+          "主胜赔率1.34偏低，回报有限，需考虑投注价值"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:disagree | 警告:8个"
+      }
+    },
+    {
+      "match": "兹沃勒 vs 阿贾克斯",
+      "league": "荷甲",
+      "league_code": "DED",
+      "kickoff": "2026-08-09T20:30:00Z",
+      "lottery": {
+        "matchNum": "周日009",
+        "homeRank": "[荷甲11]",
+        "awayRank": "[荷甲4]"
+      },
+      "elo": {
+        "home": 1480,
+        "away": 1480,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.1795,
+        "draw": 0.2148,
+        "away": 0.6057,
+        "margin": 0.1296,
+        "raw_odds": {
+          "home": 5.25,
+          "draw": 4.35,
+          "away": 1.41
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.18,
+          "draw": 0.22,
+          "away_win": 0.6,
+          "expected_goals": 3.49,
+          "most_likely_score": "1-2",
+          "over_25": 0.68,
+          "btts": 0.69,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率强烈指向客胜(60.6%), 尽管ELO显示两队实力持平, 但市场信息权重更高, 反映了阿贾克斯的阵容实力与状态优势。荷甲联赛风格高进球(3.15球/场), 大2.5率65%, 支持大球方向。泊松模型给出的预期进球3.49, 与联赛风格一致, 但模型低估了客胜概率, 因此以市场为主修正。DC数据最可能比分1-2, 与客胜方向吻合。",
+        "key_factors": [
+          "市场赔率强烈倾向客胜",
+          "荷甲高进球风格",
+          "ELO持平但市场更可信",
+          "DC模型支持大球和双方进球"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率1.41对应60.6%胜率, 远高于ELO暗示的均衡局面, 市场信息更全面, 跟随市场方向。"
+        },
+        "warnings": [
+          "数据质量不足, 参考为主",
+          "ELO数据缺失, 实力判断依赖市场",
+          "深盘让球(客让1.5球)穿盘风险高, 不建议投注让球"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "市场偏离检查: Actor完全跟随市场(客胜60.6%), 未偏离市场, 方向合理",
+          "联赛风格冲突: Actor正确识别荷甲高进球风格(3.15球/场, 大2.5率65%), 大球方向与联赛特征一致",
+          "数据不足: ELO双方均为默认值1480, 数据质量警告'数据不足, 参考为主', 但Actor过度依赖市场赔率, 未考虑ELO持平可能暗示实力接近, 存在盲点",
+          "深盘风险: 客胜概率60.6%未超过75%阈值, 但客让1.5球深盘穿盘风险高, Actor已识别并警告, 处理得当",
+          "逻辑一致性: 方向(客胜)与大小球(大2.5)自洽, 客队进攻强+荷甲高进球, 逻辑一致"
+        ],
+        "warnings": [
+          "ELO数据缺失且为默认值, 实力判断完全依赖市场, 市场可能过度反应阿贾克斯名气而非当前状态",
+          "客胜概率60.6%对应赔率1.41, 但ELO持平暗示实际胜率可能低于市场预期, 存在价值陷阱风险",
+          "荷甲大2.5率65%虽高, 但客队让球深盘可能压缩比赛开放度, 大球概率可能被高估"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.18,
+          "draw": 0.22,
+          "away_win": 0.6,
+          "expected_goals": 3.49,
+          "most_likely_score": "1-2",
+          "over_25": 0.68,
+          "btts": 0.69,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "荷甲大2.5率65%虽高, 但客队让球深盘可能压缩比赛开放度, 大球概率可能被高估",
+          "ELO数据缺失, 实力判断依赖市场",
+          "深盘让球(客让1.5球)穿盘风险高, 不建议投注让球",
+          "ELO数据缺失且为默认值, 实力判断完全依赖市场, 市场可能过度反应阿贾克斯名气而非当前状态",
+          "数据质量不足, 参考为主",
+          "客胜概率60.6%对应赔率1.41, 但ELO持平暗示实际胜率可能低于市场预期, 存在价值陷阱风险"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "格罗宁根 vs 乌德勒支",
+      "league": "荷甲",
+      "league_code": "DED",
+      "kickoff": "2026-08-09T20:30:00Z",
+      "lottery": {
+        "matchNum": "周日010",
+        "homeRank": "[荷甲8]",
+        "awayRank": "[荷甲16]"
+      },
+      "elo": {
+        "home": 1480,
+        "away": 1480,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3941,
+        "draw": 0.2768,
+        "away": 0.3291,
+        "margin": 0.1285,
+        "raw_odds": {
+          "home": 2.22,
+          "draw": 3.25,
+          "away": 2.7
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.42,
+          "draw": 0.26,
+          "away_win": 0.32,
+          "expected_goals": 3.49,
+          "most_likely_score": "2-1",
+          "over_25": 0.68,
+          "btts": 0.69,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示主胜概率39.4%，客胜32.9%，平局27.7%，主队微弱优势但差距不大。ELO完全持平（1480 vs 1480），无实力差信号，因此市场方向主要反映主场因素。荷甲联赛风格为高进球（场均3.15球，大2.5率65%），DC模型预期进球3.49，大2.5概率67.9%，BTTS概率68.6%，均显著高于联赛均值，强化大球倾向。DC模型主胜概率44.98%高于市场39.4%，但考虑到数据质量警告和ELO持平，对主胜信心有限，最终概率向市场靠拢并略偏DC。最可能比分2-1（DC概率8.8%），但1-1概率10.1%更高，综合主场优势和联赛风格，选择2-1作为最可能比分。",
+        "key_factors": [
+          "ELO完全持平，无实力差距",
+          "荷甲高进球风格，大2.5率65%全欧最高",
+          "DC模型预期进球3.49，大球和BTTS概率均接近70%",
+          "市场主胜概率39.4%略高于客胜，主场优势有限"
+        ],
+        "bet_suggestion": {
+          "type": "大小球",
+          "pick": "大2.5",
+          "reason": "荷甲联赛大2.5率65%，DC模型over_25概率67.9%，预期进球3.49，市场未提供大小球赔率但基本面强烈支持大球方向。"
+        },
+        "warnings": [
+          "数据不足，参考为主，不建议重注",
+          "ELO数据为联赛基准值，非实际球队实力，可能低估差距",
+          "市场margin较高（12.85%），赔率可能不够精确"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor对主胜的预测(42%)与市场(39.4%)偏离仅2.6个百分点，未超过10%阈值，方向判断合理",
+          "ELO数据为联赛基准默认值(1480 vs 1480)，无实际球队实力信息，Actor已正确识别并降低信心，逻辑一致",
+          "大小球预测(大2.5, 68%)与荷甲联赛特征(场均3.15球, 大2.5率65%)高度吻合，且与预期进球3.49自洽",
+          "主胜概率42%未超过75%深盘风险阈值，让球深度无风险，市场margin 12.85%偏高但Actor已提示"
+        ],
+        "warnings": [
+          "ELO为默认值，无法验证两队真实实力差距，主胜方向存在不确定性",
+          "市场margin高达12.85%，赔率转换概率可能失真，主胜优势可能被高估",
+          "最可能比分选择2-1与DC模型自身数据(1-1概率10.1%>2-1的8.8%)存在矛盾，逻辑一致性有瑕疵"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.42,
+          "draw": 0.26,
+          "away_win": 0.32,
+          "expected_goals": 3.49,
+          "most_likely_score": "2-1",
+          "over_25": 0.68,
+          "btts": 0.69,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "市场margin高达12.85%，赔率转换概率可能失真，主胜优势可能被高估",
+          "ELO为默认值，无法验证两队真实实力差距，主胜方向存在不确定性",
+          "市场margin较高（12.85%），赔率可能不够精确",
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "最可能比分选择2-1与DC模型自身数据(1-1概率10.1%>2-1的8.8%)存在矛盾，逻辑一致性有瑕疵",
+          "数据不足，参考为主，不建议重注",
+          "ELO数据为联赛基准值，非实际球队实力，可能低估差距"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "Vaalerenga IF vs Bodoe/Glimt",
+      "league": "挪超",
+      "league_code": "NOR",
+      "kickoff": "2026-08-08T12:00:00Z",
+      "lottery": {
+        "matchNum": "周日011",
+        "homeRank": "[挪超4]",
+        "awayRank": "[挪超10]"
+      },
+      "elo": {
+        "home": 1380,
+        "away": 1380,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.1801,
+        "draw": 0.2073,
+        "away": 0.6126,
+        "margin": 0.0726,
+        "raw_odds": {
+          "home": 5.5,
+          "draw": 4.75,
+          "away": 1.47
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.22,
+          "away_win": 0.58,
+          "expected_goals": 3.2,
+          "most_likely_score": "1-2",
+          "over_25": 0.62,
+          "btts": 0.64,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率高达61.3%（去水后），远高于主胜和平局，而ELO两队持平，说明市场基于近期状态和实力给出了明确倾向。参考DC模型虽然主胜概率较高（45.5%），但这是基于泊松分布的独立估计，未充分反映市场信息，因此以市场为主，将客胜概率调整至58%。挪超联赛风格高进球（场均2.8球），且大球率55%，BTTS率54%，结合DC的over25和btts概率均超过60%，支持大球和双方进球。最可能比分参考DC的1-2（概率7.2%），符合客胜方向。数据质量警告提示信息有限，但市场信号清晰，故给出中等信心。",
+        "key_factors": [
+          "市场赔率强烈倾向客胜",
+          "ELO持平但市场差异大",
+          "挪超高进球风格",
+          "DC模型支持大球和BTTS"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率显示客胜概率超过60%，且ELO持平但市场差异大，客队实力被市场认可，建议跟随市场方向。"
+        },
+        "warnings": [
+          "数据质量不足，参考为主",
+          "深盘无警告，但客胜赔率较低，注意风险"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "市场赔率显示客胜概率61.3%，Actor预测58%，偏离仅3.3%，未超过10%阈值，方向跟随市场合理",
+          "ELO两队持平（1380 vs 1380），但市场差异巨大（客胜赔率1.47），存在明显信息不对称，Actor以市场为主的处理方式合理",
+          "挪超联赛风格高进球（场均2.8球，大球率55%），Actor预测大2.5球（62%）与联赛特征一致",
+          "数据质量警告明确提示'数据不足，参考为主'，且ELO均为联赛基准默认值，缺乏近期状态、伤病、主客场表现等关键信息"
+        ],
+        "warnings": [
+          "ELO为默认值，未反映两队真实实力差距，客胜概率58%可能仍低估市场信号（市场去水后约66%）",
+          "客胜赔率1.47属于低赔深盘，虽然规则未触发深盘警告，但投注价值有限，需警惕冷门风险",
+          "DC模型与市场信号存在冲突（DC主胜45.5% vs 市场客胜61.3%），Actor未充分解释为何完全忽略DC模型，逻辑一致性存疑",
+          "数据不足情况下，任何概率估计的置信度都应大幅下调"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.22,
+          "away_win": 0.58,
+          "expected_goals": 3.2,
+          "most_likely_score": "1-2",
+          "over_25": 0.62,
+          "btts": 0.64,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "深盘无警告，但客胜赔率较低，注意风险",
+          "客胜赔率1.47属于低赔深盘，虽然规则未触发深盘警告，但投注价值有限，需警惕冷门风险",
+          "数据质量不足，参考为主",
+          "DC模型与市场信号存在冲突（DC主胜45.5% vs 市场客胜61.3%），Actor未充分解释为何完全忽略DC模型，逻辑一致性存疑",
+          "ELO为默认值，未反映两队真实实力差距，客胜概率58%可能仍低估市场信号（市场去水后约66%）",
+          "数据不足情况下，任何概率估计的置信度都应大幅下调"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "国际图尔库 vs 拉赫蒂",
+      "league": "OTHER",
+      "league_code": "OTHER",
+      "kickoff": "2026-08-09T22:00:00Z",
+      "lottery": {
+        "matchNum": "周日012",
+        "homeRank": "[芬超2]",
+        "awayRank": "[芬超7]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.5366,
+        "draw": 0.2615,
+        "away": 0.2019,
+        "margin": 0.1281,
+        "raw_odds": {
+          "home": 1.6,
+          "draw": 3.5,
+          "away": 4.6
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.5,
+          "draw": 0.26,
+          "away_win": 0.24,
+          "expected_goals": 3.04,
+          "most_likely_score": "2-1",
+          "over_25": 0.59,
+          "btts": 0.61,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示主胜概率显著高于客胜（0.54 vs 0.20），尽管ELO完全持平，但市场信息权重更高，因此方向偏主胜。泊松模型给出的主胜概率（0.45）低于市场，但结合联赛主场优势（45%）和客队实力偏弱，主胜概率上调至0.50。联赛场均进球2.65，且大球率50%，BTTS率52%，而泊松模型预测大球率0.59、BTTS 0.61，因此倾向大球和双方进球。最可能比分2-1，符合主胜且大球预期。",
+        "key_factors": [
+          "市场赔率强烈支持主胜",
+          "ELO持平但市场修正",
+          "联赛场均进球较高，大球倾向",
+          "泊松模型预测大球和BTTS概率较高"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "主胜",
+          "reason": "市场赔率1.6对应概率0.54，高于模型估计的0.50，但仍有价值，且主胜方向明确。"
+        },
+        "warnings": [
+          "数据不足，参考为主",
+          "ELO数据缺失，实力判断依赖市场",
+          "联赛风格未知，可能影响进球预期"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor方向预测与市场一致（主胜），未偏离市场>10%，符合审核清单第1条",
+          "Actor已识别数据不足（ELO默认值、联赛风格未知），并主动下调信心至'中'，但审核认为应进一步下调至'低'",
+          "泊松模型主胜概率0.45低于市场0.54，Actor上调至0.50仍低于市场，逻辑上存在矛盾：既然市场信息权重更高，为何不直接采用市场概率？",
+          "联赛场均进球2.65、大球率50%，Actor预测大球率0.59、BTTS 0.61，方向合理但幅度偏乐观，需谨慎"
+        ],
+        "warnings": [
+          "ELO完全默认（1500 vs 1500），实力判断完全依赖市场，数据基础薄弱",
+          "联赛风格为空，无法验证大球/小球倾向是否与联赛特征匹配",
+          "主胜赔率1.6对应隐含概率0.54，但市场margin高达12.8%，实际公平概率可能更低，价值判断需打折",
+          "Actor的bet_suggestion声称'仍有价值'，但模型概率0.50低于市场0.54，价值逻辑不成立"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.5,
+          "draw": 0.26,
+          "away_win": 0.24,
+          "expected_goals": 3.04,
+          "most_likely_score": "2-1",
+          "over_25": 0.59,
+          "btts": 0.61,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "数据不足，参考为主",
+          "Actor的bet_suggestion声称'仍有价值'，但模型概率0.50低于市场0.54，价值逻辑不成立",
+          "主胜赔率1.6对应隐含概率0.54，但市场margin高达12.8%，实际公平概率可能更低，价值判断需打折",
+          "ELO完全默认（1500 vs 1500），实力判断完全依赖市场，数据基础薄弱",
+          "联赛风格为空，无法验证大球/小球倾向是否与联赛特征匹配",
+          "联赛风格未知，可能影响进球预期",
+          "ELO数据缺失，实力判断依赖市场"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:8个"
+      }
+    },
+    {
+      "match": "Orgryte IS vs AIK",
+      "league": "瑞典超",
+      "league_code": "SWE",
+      "kickoff": "2026-08-08T13:00:00Z",
+      "lottery": {
+        "matchNum": "周日013",
+        "homeRank": "[瑞超16]",
+        "awayRank": "[瑞超9]"
+      },
+      "elo": {
+        "home": 1360,
+        "away": 1360,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3295,
+        "draw": 0.2674,
+        "away": 0.4031,
+        "margin": 0.0873,
+        "raw_odds": {
+          "home": 2.8,
+          "draw": 3.5,
+          "away": 2.25
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.34,
+          "draw": 0.27,
+          "away_win": 0.39,
+          "expected_goals": 2.94,
+          "most_likely_score": "1-1",
+          "over_25": 0.56,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率最高(40.3%), 但ELO完全持平(1360 vs 1360), 说明市场对AIK的看好更多来自球队实力而非数据支撑。DC模型反而给出主胜概率更高(44%), 与市场方向相反, 但考虑到瑞典超整体风格均衡且主胜率仅43%, 市场信号权重应更高。联赛场均2.6球且大球率50%, 结合DC的期望进球2.94, 大球方向有一定支撑。由于数据质量标注不足, 整体信心偏低。",
+        "key_factors": [
+          "市场客胜概率最高",
+          "ELO完全持平",
+          "DC模型主胜更高",
+          "联赛风格均衡"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "市场与模型方向冲突, 且数据质量不足, 不宜投注"
+        },
+        "warnings": [
+          "数据不足, 参考为主",
+          "市场与DC模型方向不一致"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor预测客胜(39%)与市场(40.3%)方向一致, 偏离幅度仅1.3%, 未触发市场偏离警告",
+          "ELO完全持平(1360 vs 1360)且数据源为联赛基准, 数据质量标注不足, Actor已主动将信心降至低, 处理得当",
+          "联赛风格为mixed且主胜率43%, 客胜概率略高符合市场逻辑, 未出现联赛风格冲突",
+          "主胜概率34%, 客胜概率39%, 无深盘风险(让球深度未超1.5), 逻辑自洽"
+        ],
+        "warnings": [
+          "ELO数据为默认基准值, 无法反映两队真实实力差距, 预测参考价值有限",
+          "DC模型与市场方向相反(主胜vs客胜), 模型分歧未完全解决, 存在不确定性",
+          "expected_goals 2.94高于联赛均值2.6, 但大球率仅56%, 大球方向支撑偏弱"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.34,
+          "draw": 0.27,
+          "away_win": 0.39,
+          "expected_goals": 2.94,
+          "most_likely_score": "1-1",
+          "over_25": 0.56,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "ELO数据为默认基准值, 无法反映两队真实实力差距, 预测参考价值有限",
+          "数据不足, 参考为主",
+          "DC模型与市场方向相反(主胜vs客胜), 模型分歧未完全解决, 存在不确定性",
+          "expected_goals 2.94高于联赛均值2.6, 但大球率仅56%, 大球方向支撑偏弱",
+          "市场与DC模型方向不一致"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "市场与模型方向冲突, 且数据质量不足, 不宜投注"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:6个"
+      }
+    },
+    {
+      "match": "IFK哥德堡 vs 卡尔马",
+      "league": "瑞典超",
+      "league_code": "SWE",
+      "kickoff": "2026-08-09T22:30:00Z",
+      "lottery": {
+        "matchNum": "周日014",
+        "homeRank": "[瑞超13]",
+        "awayRank": "[瑞超10]"
+      },
+      "elo": {
+        "home": 1360,
+        "away": 1360,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3843,
+        "draw": 0.2652,
+        "away": 0.3505,
+        "margin": 0.1295,
+        "raw_odds": {
+          "home": 2.28,
+          "draw": 3.4,
+          "away": 2.52
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.41,
+          "draw": 0.27,
+          "away_win": 0.32,
+          "expected_goals": 2.94,
+          "most_likely_score": "1-1",
+          "over_25": 0.56,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示主胜概率略高（38.4% vs 客胜35.1%），但ELO完全持平，实力接近。DC模型基于泊松分布给出主胜概率更高（44%），且预期进球数2.94高于联赛均值2.6，瑞典超风格混合但整体进球偏多。市场与DC方向一致指向主胜，但差距不大，且数据质量不足，因此信心低。最可能比分1-1，但主胜概率略占优，故方向选主胜。",
+        "key_factors": [
+          "ELO持平，实力接近",
+          "市场微幅倾向主胜",
+          "DC模型预期进球高，大球概率56%",
+          "联赛场均2.6球，风格混合"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "数据不足，市场与模型差异小，且信心低，不建议投注。"
+        },
+        "warnings": [
+          "数据质量不足，参考为主",
+          "ELO数据为联赛基准，非实际球队强度",
+          "市场赔率margin较高，可能存在偏差"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor方向选择主胜与市场概率(38.4%)一致，且未偏离市场超过10%，符合市场偏离检查",
+          "Actor正确识别了ELO数据为联赛基准而非实际球队强度，并主动降低信心，数据不足处理得当",
+          "预期进球2.94高于联赛均值2.6，大球概率56%与联赛over_25_rate 50%方向一致，逻辑自洽",
+          "主胜概率41%远低于75%深盘阈值，无深盘风险，让球深度不适用"
+        ],
+        "warnings": [
+          "ELO完全持平(1360 vs 1360)且均为联赛基准，实际球队实力差异未知，预测基础薄弱",
+          "市场margin高达12.95%，赔率可能存在较大偏差，市场概率参考价值有限",
+          "最可能比分1-1与方向主胜存在轻微矛盾，虽然概率上可共存，但需注意逻辑一致性",
+          "联赛风格为mixed且马尔默统治，哥德堡与卡尔马均非顶级强队，比赛结果不确定性高"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.41,
+          "draw": 0.27,
+          "away_win": 0.32,
+          "expected_goals": 2.94,
+          "most_likely_score": "1-1",
+          "over_25": 0.56,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "最可能比分1-1与方向主胜存在轻微矛盾，虽然概率上可共存，但需注意逻辑一致性",
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "ELO数据为联赛基准，非实际球队强度",
+          "ELO完全持平(1360 vs 1360)且均为联赛基准，实际球队实力差异未知，预测基础薄弱",
+          "市场margin高达12.95%，赔率可能存在较大偏差，市场概率参考价值有限",
+          "市场赔率margin较高，可能存在偏差",
+          "数据质量不足，参考为主",
+          "联赛风格为mixed且马尔默统治，哥德堡与卡尔马均非顶级强队，比赛结果不确定性高"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "数据不足，市场与模型差异小，且信心低，不建议投注。"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:8个"
+      }
+    },
+    {
+      "match": "海伦芬 vs 特温特",
+      "league": "荷甲",
+      "league_code": "DED",
+      "kickoff": "2026-08-09T22:45:00Z",
+      "lottery": {
+        "matchNum": "周日015",
+        "homeRank": "[荷甲9]",
+        "awayRank": "[荷甲15]"
+      },
+      "elo": {
+        "home": 1480,
+        "away": 1480,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3296,
+        "draw": 0.2552,
+        "away": 0.4152,
+        "margin": 0.1283,
+        "raw_odds": {
+          "home": 2.7,
+          "draw": 3.55,
+          "away": 2.1
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.35,
+          "draw": 0.25,
+          "away_win": 0.4,
+          "expected_goals": 3.49,
+          "most_likely_score": "1-1",
+          "over_25": 0.68,
+          "btts": 0.69,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率最高(41.5%), 但ELO完全持平, 说明市场可能基于近期状态或主场因素微调。泊松模型(Dixon-Coles)反而给出主胜更高(45%), 与市场方向相反, 但市场作为锚, 我倾向于小幅偏向客胜。荷甲高进球风格(3.15球/场)和大2.5率65%支持大球, 泊松模型也给出over_25=0.68, 因此大2.5方向明确。BTTS概率0.69, 高于联赛平均0.6, 支持双方进球。最可能比分1-1, 但客胜概率略高, 因此方向定为客胜, 但信心低, 因为数据不足且模型分歧。",
+        "key_factors": [
+          "荷甲高进球风格",
+          "市场客胜倾向",
+          "ELO持平",
+          "泊松模型主胜偏高",
+          "大球和BTTS概率高"
+        ],
+        "bet_suggestion": {
+          "type": "大小球",
+          "pick": "大2.5",
+          "reason": "荷甲场均3.15球, 大2.5率65%全欧最高, 泊松模型over_25=0.68, 市场未明显压低, 大球方向稳健。"
+        },
+        "warnings": [
+          "数据不足, 参考为主",
+          "市场与模型方向分歧, 1X2投注风险高",
+          "深盘未触发, 但客胜赔率2.1偏低, 谨慎"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor正确识别了荷甲高进球风格(3.15球/场, 大2.5率65%)并据此推荐大2.5, 与联赛特征高度一致",
+          "Actor诚实承认ELO数据不足(均为联赛基准值1480)且模型与市场方向分歧, 将信心定为'低'是合理的",
+          "市场客胜概率41.5% vs Actor客胜概率40%, 偏离仅1.5%, 未触发>10%偏离警告, 方向选择合理",
+          "泊松模型给出主胜45%但Actor选择跟随市场客胜, 这种处理方式在数据不足时是审慎的"
+        ],
+        "warnings": [
+          "最可能比分1-1与客胜方向存在轻微逻辑张力: 1-1是平局比分, 但Actor将客胜概率(40%)设为最高, 需注意比分预测与方向预测的一致性",
+          "客胜赔率2.1对应隐含概率47.6%, 但市场实际概率41.5%含12.8%边际, 实际客胜概率被高估, 1X2投注风险较高",
+          "ELO完全持平(1480 vs 1480)且数据来源为联赛基准, 缺乏近期状态、伤病、主客场战力等关键信息, 任何方向性结论都需谨慎",
+          "荷甲大2.5率65%虽高, 但BTTS率60%意味着仍有40%场次不会双方进球, 大球+BTTS组合投注需注意相关性风险"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.35,
+          "draw": 0.25,
+          "away_win": 0.4,
+          "expected_goals": 3.49,
+          "most_likely_score": "1-1",
+          "over_25": 0.68,
+          "btts": 0.69,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "数据不足, 参考为主",
+          "市场与模型方向分歧, 1X2投注风险高",
+          "最可能比分1-1与客胜方向存在轻微逻辑张力: 1-1是平局比分, 但Actor将客胜概率(40%)设为最高, 需注意比分预测与方向预测的一致性",
+          "客胜赔率2.1对应隐含概率47.6%, 但市场实际概率41.5%含12.8%边际, 实际客胜概率被高估, 1X2投注风险较高",
+          "ELO完全持平(1480 vs 1480)且数据来源为联赛基准, 缺乏近期状态、伤病、主客场战力等关键信息, 任何方向性结论都需谨慎",
+          "深盘未触发, 但客胜赔率2.1偏低, 谨慎",
+          "荷甲大2.5率65%虽高, 但BTTS率60%意味着仍有40%场次不会双方进球, 大球+BTTS组合投注需注意相关性风险"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:8个"
+      }
+    },
+    {
+      "match": "Vaalerenga IF vs Bodoe/Glimt",
+      "league": "挪超",
+      "league_code": "NOR",
+      "kickoff": "2026-08-08T12:00:00Z",
+      "lottery": {
+        "matchNum": "周日016",
+        "homeRank": "[挪超8]",
+        "awayRank": "[挪超14]"
+      },
+      "elo": {
+        "home": 1380,
+        "away": 1380,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.1801,
+        "draw": 0.2073,
+        "away": 0.6126,
+        "margin": 0.0726,
+        "raw_odds": {
+          "home": 5.5,
+          "draw": 4.75,
+          "away": 1.47
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.22,
+          "away_win": 0.58,
+          "expected_goals": 3.2,
+          "most_likely_score": "1-2",
+          "over_25": 0.62,
+          "btts": 0.64,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率强烈倾向客胜（去水后客胜概率61.3%），而ELO显示两队实力完全持平（均为1380），但市场显然认为Bodoe/Glimt有显著优势，可能源于近期状态或阵容差异。参考DC模型给出的主胜概率45.5%远高于市场，但市场作为更可靠的锚，应优先遵循。挪超联赛风格高进球（场均2.8球，大球率55%），且DC模型预测大球率61.9%、BTTS率63.9%，因此倾向大球和双方进球。综合市场方向与联赛风格，预测客胜，但考虑到ELO持平，信心定为中等。",
+        "key_factors": [
+          "市场赔率强烈倾向客胜（61.3%）",
+          "ELO持平，但市场信息更丰富",
+          "挪超高进球风格，大球率55%",
+          "DC模型预测大球率61.9%，BTTS率63.9%"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率显示客胜概率高达61.3%，尽管ELO持平，但市场信息更全面，且挪超风格利于客队发挥。"
+        },
+        "warnings": [
+          "数据不足，参考为主，谨慎投注",
+          "ELO持平与市场方向矛盾，需关注临场阵容变化"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor正确遵循了市场方向（客胜61.3%），未偏离市场，方向判断合理",
+          "Actor识别了ELO持平与市场倾向的矛盾，并合理选择以市场为锚，逻辑自洽",
+          "大小球预测（大2.5）与联赛高进球风格（场均2.8球，大球率55%）一致，方向自洽"
+        ],
+        "warnings": [
+          "数据质量不足（ELO均为联赛基准默认值），且规则明确标注'数据不足，参考为主'，应大幅降低信心",
+          "客胜概率58%虽未触发深盘警告，但市场赔率1.47已接近深盘区间，需警惕冷门风险",
+          "ELO持平与市场61.3%客胜概率存在显著矛盾，可能源于未披露的阵容/状态信息，但缺乏数据验证，不确定性高",
+          "挪超人工草皮主场优势（联赛画像提及）可能削弱客队优势，Actor未充分考虑此因素"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.22,
+          "away_win": 0.58,
+          "expected_goals": 3.2,
+          "most_likely_score": "1-2",
+          "over_25": 0.62,
+          "btts": 0.64,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "客胜概率58%虽未触发深盘警告，但市场赔率1.47已接近深盘区间，需警惕冷门风险",
+          "数据不足，参考为主，谨慎投注",
+          "数据质量不足（ELO均为联赛基准默认值），且规则明确标注'数据不足，参考为主'，应大幅降低信心",
+          "挪超人工草皮主场优势（联赛画像提及）可能削弱客队优势，Actor未充分考虑此因素",
+          "ELO持平与市场方向矛盾，需关注临场阵容变化",
+          "ELO持平与市场61.3%客胜概率存在显著矛盾，可能源于未披露的阵容/状态信息，但缺乏数据验证，不确定性高"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "AC奥卢 vs 赫尔辛基",
+      "league": "OTHER",
+      "league_code": "OTHER",
+      "kickoff": "2026-08-10T00:00:00Z",
+      "lottery": {
+        "matchNum": "周日017",
+        "homeRank": "[芬超3]",
+        "awayRank": "[芬超5]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.2739,
+        "draw": 0.2592,
+        "away": 0.4669,
+        "margin": 0.1293,
+        "raw_odds": {
+          "home": 3.3,
+          "draw": 3.5,
+          "away": 1.85
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.3,
+          "draw": 0.26,
+          "away_win": 0.44,
+          "expected_goals": 2.65,
+          "most_likely_score": "1-2",
+          "over_25": 0.55,
+          "btts": 0.58,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率约46.7%，显著高于主胜和平局，尽管ELO相同，但市场信息更可靠。参考DC模型给出的主胜概率偏高（45.5%），与市场方向不一致，但市场作为锚点，应优先参考。联赛风格为中性，场均进球2.65，大球率50%，BTTS率52%，支持大球和双方进球。DC模型预测最可能比分为1-1，但市场客胜倾向更强，因此调整最可能比分为1-2。由于数据质量不足，置信度设为低。",
+        "key_factors": [
+          "市场赔率强烈倾向客胜",
+          "ELO无差异，实力接近",
+          "联赛场均进球2.65，大球率50%",
+          "DC模型与市场方向不一致，需谨慎"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率显示客胜概率最高，尽管ELO无差异，但市场信息更全面，且客胜赔率1.85有投注价值。"
+        },
+        "warnings": [
+          "数据不足，参考为主，投注需谨慎",
+          "DC模型与市场方向不一致，存在不确定性"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor正确识别了市场客胜倾向(46.7%)并以此为主要依据，方向选择合理",
+          "Actor将置信度设为低，符合数据不足(ELO均为默认值)的实际情况",
+          "大小球预测(大2.5)与联赛场均2.65球、大球率50%的数据一致，逻辑自洽"
+        ],
+        "warnings": [
+          "ELO均为默认值1500，无实际实力对比依据，客胜判断完全依赖市场赔率，存在盲从市场风险",
+          "市场margin高达12.93%，赔率可能存在较大水分，客胜真实概率可能低于46.7%",
+          "DC模型与市场方向不一致(主胜45.5% vs 市场27.4%)，说明模型间存在显著分歧，不确定性高",
+          "客胜赔率1.85对应隐含概率54%，但市场归一化后客胜概率仅46.7%，投注价值被高估"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.3,
+          "draw": 0.26,
+          "away_win": 0.44,
+          "expected_goals": 2.65,
+          "most_likely_score": "1-2",
+          "over_25": 0.55,
+          "btts": 0.58,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "ELO均为默认值1500，无实际实力对比依据，客胜判断完全依赖市场赔率，存在盲从市场风险",
+          "客胜赔率1.85对应隐含概率54%，但市场归一化后客胜概率仅46.7%，投注价值被高估",
+          "DC模型与市场方向不一致(主胜45.5% vs 市场27.4%)，说明模型间存在显著分歧，不确定性高",
+          "数据不足，参考为主，投注需谨慎",
+          "DC模型与市场方向不一致，存在不确定性",
+          "市场margin高达12.93%，赔率可能存在较大水分，客胜真实概率可能低于46.7%"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "GD Chaves vs Academica de Coimbra",
+      "league": "葡超",
+      "league_code": "PPL",
+      "kickoff": "2026-08-08T10:00:00Z",
+      "lottery": {
+        "matchNum": "周日018",
+        "homeRank": "[葡超13]",
+        "awayRank": "[葡超4]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.4327,
+        "draw": 0.3205,
+        "away": 0.2468,
+        "margin": 0.1225,
+        "raw_odds": {
+          "home": 2.02,
+          "draw": 2.8,
+          "away": 3.7
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.44,
+          "draw": 0.29,
+          "away_win": 0.27,
+          "expected_goals": 2.55,
+          "most_likely_score": "1-1",
+          "over_25": 0.55,
+          "btts": 0.58,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示主胜概率最高(43.3%), 与葡超主场优势强的联赛画像一致, 但ELO完全持平(1500 vs 1500), 说明实力接近。Dixon-Coles模型给出的主胜概率(47.4%)略高于市场, 但考虑到数据质量警告, 我选择向市场靠拢并小幅下调主胜概率。平局概率被市场(32.1%)明显高于模型(25.6%), 这反映了葡超中下游球队交锋的胶着性, 因此上调平局概率。总进球期望2.55与联赛均值一致, 大2.5概率约55%, 略高于联赛50%的基准, 但考虑到两队实力均衡可能互相限制, 维持谨慎的大球倾向。最可能比分1-1, 与模型和联赛风格吻合。",
+        "key_factors": [
+          "ELO完全持平, 无实力差距",
+          "市场主胜概率最高但优势有限",
+          "葡超主场优势强, 但平局概率被市场抬高",
+          "数据质量警告, 参考价值有限"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "数据不足且ELO持平, 市场与模型差异不大但缺乏可靠锚点, 不建议投注"
+        },
+        "warnings": [
+          "数据质量不足, 仅作参考",
+          "ELO为联赛基准值, 非实际球队实力评估",
+          "市场margin偏高(12.25%), 赔率可能不够精确"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor方向预测(主胜)与市场一致(43.3% vs 44%), 偏离度仅0.7%, 符合市场共识, 无过度自信",
+          "Actor正确识别了ELO数据为联赛基准值(1500 vs 1500), 并因数据不足主动降低confidence至'低', 且建议不投注, 体现了审慎态度",
+          "Actor对平局概率的调整(29% vs 市场32%)合理反映了葡超中下游球队胶着特征, 逻辑自洽",
+          "大小球预测(大2.5, 55%)与联赛over_25_rate(50%)和expected_goals(2.55)一致, 方向合理"
+        ],
+        "warnings": [
+          "ELO完全为默认值(1500 vs 1500), 无法验证两队真实实力, 预测基础薄弱",
+          "市场margin高达12.25%, 赔率转换概率可能失真, 主胜概率43.3%可能被高估",
+          "Actor的most_likely_score为1-1(平局), 但direction却选主胜, 存在轻微逻辑不一致——若最可能比分是平局, 主胜方向应更谨慎",
+          "数据质量警告明确标注'参考为主', 任何预测的可靠性都有限"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.44,
+          "draw": 0.29,
+          "away_win": 0.27,
+          "expected_goals": 2.55,
+          "most_likely_score": "1-1",
+          "over_25": 0.55,
+          "btts": 0.58,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "Actor的most_likely_score为1-1(平局), 但direction却选主胜, 存在轻微逻辑不一致——若最可能比分是平局, 主胜方向应更谨慎",
+          "市场margin偏高(12.25%), 赔率可能不够精确",
+          "数据质量不足, 仅作参考",
+          "数据质量警告明确标注'参考为主', 任何预测的可靠性都有限",
+          "市场margin高达12.25%, 赔率转换概率可能失真, 主胜概率43.3%可能被高估",
+          "ELO完全为默认值(1500 vs 1500), 无法验证两队真实实力, 预测基础薄弱",
+          "ELO为联赛基准值, 非实际球队实力评估"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "数据不足且ELO持平, 市场与模型差异不大但缺乏可靠锚点, 不建议投注"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:8个"
+      }
+    },
+    {
+      "match": "克里斯蒂安松 vs 莫尔德",
+      "league": "挪超",
+      "league_code": "NOR",
+      "kickoff": "2026-08-10T01:15:00Z",
+      "lottery": {
+        "matchNum": "周日019",
+        "homeRank": "[挪超15]",
+        "awayRank": "[挪超5]"
+      },
+      "elo": {
+        "home": 1380,
+        "away": 1380,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.2303,
+        "draw": 0.2276,
+        "away": 0.5421,
+        "margin": 0.1298,
+        "raw_odds": {
+          "home": 4.0,
+          "draw": 4.05,
+          "away": 1.58
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.23,
+          "draw": 0.23,
+          "away_win": 0.54,
+          "expected_goals": 3.2,
+          "most_likely_score": "1-2",
+          "over_25": 0.62,
+          "btts": 0.64,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率高达54.2%，远高于主胜和平局，且ELO两队持平，但市场明显倾向莫尔德，说明市场认为莫尔德实力更强。联赛风格为高进球，平均进球2.8，且大球率55%，BTTS率54%，支持大球和双方进球。参考DC模型给出的主胜概率45.5%高于市场，但市场更可信，因此以市场为主，但考虑到主场优势和人工草皮，主队有一定抵抗力，故客胜概率略低于市场值，但方向不变。最可能比分参考DC模型为1-1，但结合市场客胜倾向，调整为1-2。",
+        "key_factors": [
+          "市场强烈倾向客胜",
+          "联赛高进球风格",
+          "ELO持平但市场主导",
+          "主场人工草皮可能缩小差距"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率1.58对应客胜概率54%，虽DC模型显示主胜概率更高，但市场信息更全面，且莫尔德作为传统强队，客场取胜概率大。"
+        },
+        "warnings": [
+          "数据不足，参考为主",
+          "市场赔率与DC模型存在分歧，需谨慎"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor预测与市场概率完全一致(客胜54%), 未偏离市场, 方向合理",
+          "联赛风格支持大球和双方进球, Actor的over_25和btts预测与联赛数据一致",
+          "ELO数据为默认值(1380对1380), 数据质量标注为'数据不足', 基础模型参考价值有限",
+          "市场margin高达12.98%, 赔率可能存在较大水分, 实际客胜概率可能低于表面值",
+          "Actor在推理中承认DC模型给出主胜概率45.5%高于市场, 但未充分解释为何完全放弃模型而跟随市场"
+        ],
+        "warnings": [
+          "数据不足: ELO均为联赛基准默认值, 无实际球队实力差异信息",
+          "市场margin过高(12.98%), 客胜赔率1.58可能被高估, 实际隐含概率需修正",
+          "主队主场人工草皮优势可能被低估, 挪超主场胜率44%高于市场隐含的23%",
+          "Actor的confidence为'中', 但基于数据不足和模型分歧, 建议降至'低'"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.23,
+          "draw": 0.23,
+          "away_win": 0.54,
+          "expected_goals": 3.2,
+          "most_likely_score": "1-2",
+          "over_25": 0.62,
+          "btts": 0.64,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "数据不足，参考为主",
+          "主队主场人工草皮优势可能被低估, 挪超主场胜率44%高于市场隐含的23%",
+          "市场赔率与DC模型存在分歧，需谨慎",
+          "数据不足: ELO均为联赛基准默认值, 无实际球队实力差异信息",
+          "Actor的confidence为'中', 但基于数据不足和模型分歧, 建议降至'低'",
+          "市场margin过高(12.98%), 客胜赔率1.58可能被高估, 实际隐含概率需修正"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "FC Penafiel vs Portimonense SAD",
+      "league": "葡超",
+      "league_code": "PPL",
+      "kickoff": "2026-08-08T13:00:00Z",
+      "lottery": {
+        "matchNum": "周日020",
+        "homeRank": "[葡超6]",
+        "awayRank": "[葡超3]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.4502,
+        "draw": 0.2924,
+        "away": 0.2574,
+        "margin": 0.1197,
+        "raw_odds": {
+          "home": 1.94,
+          "draw": 3.1,
+          "away": 3.55
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.46,
+          "draw": 0.26,
+          "away_win": 0.28,
+          "expected_goals": 2.55,
+          "most_likely_score": "1-1",
+          "over_25": 0.55,
+          "btts": 0.55,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示主胜概率45%，明显高于客胜26%，与葡超主场优势强的联赛画像一致。ELO完全持平（1500 vs 1500），无法提供额外区分度，因此市场方向成为主要锚点。DC模型给出的主胜概率47.4%与市场接近，但最可能比分1-1（11.9%）暗示平局风险不可忽视。联赛场均2.55球且大球率50%，结合DC的over25概率58.5%，倾向大球方向。由于数据质量标注不足，整体置信度下调至低。",
+        "key_factors": [
+          "葡超主场优势显著（主胜率46%）",
+          "ELO完全持平，无实力差信号",
+          "市场赔率明确倾向主胜（1.94 vs 3.55）",
+          "DC模型最可能比分1-1，平局概率25.6%",
+          "联赛大球率50%，DC over25概率58.5%"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "主胜",
+          "reason": "市场赔率与葡超主场优势方向一致，主胜概率45%为最高选项，尽管ELO无差异，但主场因素在葡超权重较高。"
+        },
+        "warnings": [
+          "数据质量不足，标注为参考为主，不建议重注",
+          "ELO为联赛基准值，非实际球队实力评估，可能低估客队",
+          "平局概率25.6%不低，1-1是最可能比分，需防范冷平"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor方向选择与市场一致（主胜45% vs 客胜26%），且符合葡超主场优势强的联赛画像，逻辑自洽",
+          "Actor正确识别了数据不足（ELO为默认基准值）并主动将置信度降至低，体现了审慎态度",
+          "大小球预测（大2.5）与联赛场均2.55球、大球率50%的画像一致，且DC模型over25概率58.5%提供支撑"
+        ],
+        "warnings": [
+          "ELO完全持平（1500 vs 1500）且为联赛基准值，无法反映两队真实实力差距，主胜判断完全依赖市场赔率，存在盲点",
+          "市场赔率1.94对应主胜概率约45%，但扣除margin后实际概率约40%，与Actor给出的46%存在偏差，需注意市场定价可能已包含主场溢价",
+          "最可能比分1-1与主胜方向存在一定矛盾，平局概率25.6%不可忽视，主胜置信度应进一步下调",
+          "数据质量标注为'参考为主'，且无历史交锋、近期状态等补充信息，预测基础薄弱"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.46,
+          "draw": 0.26,
+          "away_win": 0.28,
+          "expected_goals": 2.55,
+          "most_likely_score": "1-1",
+          "over_25": 0.55,
+          "btts": 0.55,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "最可能比分1-1与主胜方向存在一定矛盾，平局概率25.6%不可忽视，主胜置信度应进一步下调",
+          "数据质量不足，标注为参考为主，不建议重注",
+          "数据质量标注为'参考为主'，且无历史交锋、近期状态等补充信息，预测基础薄弱",
+          "ELO为联赛基准值，非实际球队实力评估，可能低估客队",
+          "市场赔率1.94对应主胜概率约45%，但扣除margin后实际概率约40%，与Actor给出的46%存在偏差，需注意市场定价可能已包含主场溢价",
+          "平局概率25.6%不低，1-1是最可能比分，需防范冷平",
+          "ELO完全持平（1500 vs 1500）且为联赛基准值，无法反映两队真实实力差距，主胜判断完全依赖市场赔率，存在盲点"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:8个"
+      }
+    },
+    {
+      "match": "吉维森特 vs 里奥阿维",
+      "league": "葡超",
+      "league_code": "PPL",
+      "kickoff": "2026-08-10T03:30:00Z",
+      "lottery": {
+        "matchNum": "周日021",
+        "homeRank": "[葡超9]",
+        "awayRank": "[葡超14]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.5059,
+        "draw": 0.2751,
+        "away": 0.2191,
+        "margin": 0.1294,
+        "raw_odds": {
+          "home": 1.7,
+          "draw": 3.3,
+          "away": 4.2
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.49,
+          "draw": 0.27,
+          "away_win": 0.24,
+          "expected_goals": 3.03,
+          "most_likely_score": "2-1",
+          "over_25": 0.59,
+          "btts": 0.61,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率(去水后主胜50.6%)显著高于ELO基准(两队同分, 无实力差), 表明市场对主队有明确倾向, 且主胜概率高于联赛平均主胜率46%。泊松模型(Dixon-Coles)给出的主胜概率47.4%略低于市场, 但方向一致, 因此综合后主胜概率上调至49%。联赛风格为技术型且主场优势强, 支持主队。预期进球3.03高于联赛均值2.55, 大球概率58.5%高于联赛50%, 故倾向大2.5。BTTS概率60.8%高于联赛49%, 且最可能比分1-1和2-1均包含双方进球, 故倾向BTTS是。",
+        "key_factors": [
+          "市场主胜概率(50.6%)显著高于联赛平均主胜率(46%)",
+          "ELO无差距, 但市场已给出明确方向",
+          "联赛主场优势强, 技术型风格利于主队",
+          "预期进球3.03高于联赛均值, 大球概率偏高"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "主胜",
+          "reason": "市场主胜概率50.6%高于泊松模型47.4%, 且联赛主场优势强, 主胜方向明确, 赔率1.7有正期望。 (多警告)"
+        },
+        "warnings": [
+          "数据不足(ELO为基准值, 无实际差距), 参考为主",
+          "市场margin较高(12.9%), 赔率可能略有偏差",
+          "BTTS概率虽高, 但主胜与BTTS同时命中需谨慎"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree",
+        "confidence_adjustment": "same",
+        "adjusted_confidence": "中",
+        "reasons": [
+          "审核异常: 无法在响应中找到JSON对象: ..."
+        ],
+        "warnings": [],
+        "suggested_changes": {}
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.49,
+          "draw": 0.27,
+          "away_win": 0.24,
+          "expected_goals": 3.03,
+          "most_likely_score": "2-1",
+          "over_25": 0.59,
+          "btts": 0.61,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "中",
+        "reviewer_verdict": "agree",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "数据不足(ELO为基准值, 无实际差距), 参考为主",
+          "BTTS概率虽高, 但主胜与BTTS同时命中需谨慎",
+          "市场margin较高(12.9%), 赔率可能略有偏差"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "主胜",
+          "reason": "市场主胜概率50.6%高于泊松模型47.4%, 且联赛主场优势强, 主胜方向明确, 赔率1.7有正期望。 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信中 | Reviewer:agree | 警告:4个"
+      }
+    },
+    {
+      "match": "摩雷伦斯 vs 布拉加",
+      "league": "葡超",
+      "league_code": "PPL",
+      "kickoff": "2026-08-10T03:30:00Z",
+      "lottery": {
+        "matchNum": "周日022",
+        "homeRank": "[葡超11]",
+        "awayRank": "[葡超16]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.1958,
+        "draw": 0.2615,
+        "away": 0.5427,
+        "margin": 0.1292,
+        "raw_odds": {
+          "home": 4.75,
+          "draw": 3.5,
+          "away": 1.58
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.26,
+          "away_win": 0.54,
+          "expected_goals": 2.55,
+          "most_likely_score": "1-2",
+          "over_25": 0.55,
+          "btts": 0.55,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率高达54.3%，远高于主胜和平局，尽管ELO数据持平，但市场显然认为布拉加实力更强。葡超联赛主场优势明显，但布拉加作为传统强队，客场能力依然强劲。参考泊松模型给出的主队进球期望1.76、客队1.27，但市场概率与泊松模型存在分歧，市场更看好客队，因此以市场为主。联赛场均进球2.55，大球率50%，结合双方进攻能力，大2.5球有一定概率。BTTS概率较高，因为主队也有进球能力。",
+        "key_factors": [
+          "市场赔率强烈倾向客胜",
+          "ELO持平但市场修正",
+          "葡超主场优势但客队实力更强",
+          "联赛进球率中等偏上"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率显示客胜概率54%，且布拉加作为强队客场胜率有保障，尽管ELO持平，但市场信息更可靠。 (多警告)"
+        },
+        "warnings": [
+          "数据不足，参考为主",
+          "ELO数据缺失，仅凭市场判断",
+          "深盘未触发，但客胜赔率较低，收益有限"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree",
+        "confidence_adjustment": "same",
+        "adjusted_confidence": "中",
+        "reasons": [
+          "审核异常: 无法在响应中找到JSON对象: ..."
+        ],
+        "warnings": [],
+        "suggested_changes": {}
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.26,
+          "away_win": 0.54,
+          "expected_goals": 2.55,
+          "most_likely_score": "1-2",
+          "over_25": 0.55,
+          "btts": 0.55,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "中",
+        "reviewer_verdict": "agree",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "数据不足，参考为主",
+          "ELO数据缺失，仅凭市场判断",
+          "深盘未触发，但客胜赔率较低，收益有限"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率显示客胜概率54%，且布拉加作为强队客场胜率有保障，尽管ELO持平，但市场信息更可靠。 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信中 | Reviewer:agree | 警告:4个"
+      }
+    },
+    {
+      "match": "Botafogo Fr RJ vs Fluminense FC RJ",
+      "league": "巴甲",
+      "league_code": "BSA",
+      "kickoff": "2026-08-08T00:30:00Z",
+      "lottery": {
+        "matchNum": "周日023",
+        "homeRank": "[巴甲15]",
+        "awayRank": "[巴甲3]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.1811,
+        "draw": 0.2582,
+        "away": 0.5607,
+        "margin": 0.0996,
+        "raw_odds": {
+          "home": 5.3,
+          "draw": 3.65,
+          "away": 1.57
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.26,
+          "away_win": 0.54,
+          "expected_goals": 2.4,
+          "most_likely_score": "1-2",
+          "over_25": 0.5,
+          "btts": 0.55,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率强烈指向客胜(去水后56%), 尽管ELO显示两队实力完全持平(1500 vs 1500), 但市场信息明显更丰富, 应作为主要锚点。巴甲联赛风格偏小球(场均2.42球, 大球率44%), 但DC模型给出的预期进球2.82偏高, 且客队进攻效率(λ=1.21)与主队(λ=1.61)差距不大, 结合客胜高概率, 预计比赛节奏偏开放。参考DC的1-1概率12.8%和0-0概率7.1%, 平局概率被市场低估(市场26% vs DC 27%), 但客胜方向明确。综合市场主导、ELO中性、联赛小球修正, 最终概率向市场靠拢但略调低客胜, 提高平局。",
+        "key_factors": [
+          "市场赔率强烈倾向客胜(56%)",
+          "ELO完全持平, 无实力差信号",
+          "巴甲小球风格(场均2.42球)压低总进球预期",
+          "DC模型显示大球概率53.6%, 高于联赛基准44%"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率1.57对应56%胜率, 虽ELO无优势, 但市场信息权重更高, 客胜方向明确。"
+        },
+        "warnings": [
+          "数据质量不足, 参考为主, 建议小额投注",
+          "ELO数据为联赛基准, 非实际球队实力, 可能低估主队主场优势",
+          "巴甲主场胜率47%较高, 客胜存在被市场高估风险"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor正确识别市场信息权重, 客胜方向与市场一致(56% vs 54%), 未偏离市场>10%",
+          "Actor考虑了巴甲小球风格(场均2.42球), 将预期进球从DC的2.82修正至2.4, 逻辑自洽",
+          "ELO数据为联赛基准默认值(1500 vs 1500), 数据质量不足, Actor已明确标注并降低信心, 处理得当"
+        ],
+        "warnings": [
+          "巴甲主场胜率47%显著高于全球均值, 客胜概率54%可能仍偏高, 市场56%本身可能已包含主场劣势的过度修正",
+          "ELO完全中性(1500 vs 1500)与市场客胜56%存在严重矛盾, 市场可能基于近期状态/伤病等非ELO因素, 但数据不足无法验证, 风险较高",
+          "大2.5方向(50%)与联赛小球风格(44%大球率)存在张力, 且预期进球2.4仅略高于2.5线, 大球判断置信度不足",
+          "数据质量警告明确提示'参考为主', 建议小额投注, 但Actor仍给出'中'信心, 应进一步下调"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.26,
+          "away_win": 0.54,
+          "expected_goals": 2.4,
+          "most_likely_score": "1-2",
+          "over_25": 0.5,
+          "btts": 0.55,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "巴甲主场胜率47%较高, 客胜存在被市场高估风险",
+          "巴甲主场胜率47%显著高于全球均值, 客胜概率54%可能仍偏高, 市场56%本身可能已包含主场劣势的过度修正",
+          "ELO完全中性(1500 vs 1500)与市场客胜56%存在严重矛盾, 市场可能基于近期状态/伤病等非ELO因素, 但数据不足无法验证, 风险较高",
+          "大2.5方向(50%)与联赛小球风格(44%大球率)存在张力, 且预期进球2.4仅略高于2.5线, 大球判断置信度不足",
+          "数据质量不足, 参考为主, 建议小额投注",
+          "数据质量警告明确提示'参考为主', 建议小额投注, 但Actor仍给出'中'信心, 应进一步下调",
+          "⚠ 联赛风格冲突: 巴甲大球率仅44%, 推大球需谨慎",
+          "ELO数据为联赛基准, 非实际球队实力, 可能低估主队主场优势"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:9个"
+      }
+    },
+    {
+      "match": "弗拉门戈 vs 维多利亚",
+      "league": "巴甲",
+      "league_code": "BSA",
+      "kickoff": "2026-08-10T06:30:00Z",
+      "lottery": {
+        "matchNum": "周日024",
+        "homeRank": "[巴甲2]",
+        "awayRank": "[巴甲13]"
+      },
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.7456,
+        "draw": 0.168,
+        "away": 0.0864,
+        "margin": 0.1289,
+        "raw_odds": {
+          "home": 1.15,
+          "draw": 5.8,
+          "away": 11.5
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.62,
+          "draw": 0.24,
+          "away_win": 0.14,
+          "expected_goals": 2.4,
+          "most_likely_score": "1-0",
+          "over_25": 0.45,
+          "btts": 0.48,
+          "over_25_direction": "小2.5",
+          "btts_direction": "否"
+        },
+        "reasoning": "市场赔率(Shin去水后)给出主胜概率74.6%, 远高于ELO基准(双方1500持平)和DC模型(45.2%), 市场强烈看好主队, 尽管ELO无差异, 但市场信息权重更高, 应大幅向主胜倾斜。巴甲联赛风格偏小球(场均2.42球, 大球率44%), 且主场胜率47%高于平局和客胜, 进一步支持主胜。DC模型最可能比分1-1(12.8%), 但市场主胜概率极高, 结合主队主场优势和客队实力偏弱(客胜概率仅8.6%), 实际最可能比分调整为1-0。大小球方面, 联赛小球倾向明显, 且市场未给出大球信号, 倾向小2.5。BTTS概率DC模型57.4%偏高, 但联赛BTTS率仅45%, 且主队预期进球1.61但客队进攻乏力, 综合判断BTTS为否。",
+        "key_factors": [
+          "市场主胜概率74.6%远超模型",
+          "巴甲主场胜率47%且小球风格",
+          "客队市场胜率仅8.6%实力悬殊",
+          "DC模型1-1概率高但市场修正"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "主胜",
+          "reason": "市场赔率强烈指向主胜(74.6%), 尽管ELO无差异, 但市场信息更可靠, 且巴甲主场优势明显, 客队胜率极低, 主胜是稳健选择。 (多警告)"
+        },
+        "warnings": [
+          "数据不足, 参考为主, 建议小额投注",
+          "ELO数据缺失, 实力判断依赖市场",
+          "深盘未触发但主胜赔率极低, 回报有限"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree",
+        "confidence_adjustment": "same",
+        "adjusted_confidence": "中",
+        "reasons": [
+          "审核异常: JSON解析失败: {\n  \"verdict\": \"disagree\",\n  \"confidence_adjustment\": \"down\",\n  \"adjusted_confidence\": \"低\",\n  \"reasons\": [\n    \"市场偏离严重: Actor将主胜概率从ELO基准(50%)和DC模型(45.2%)大幅上调至62%, 而市场隐含概率为74.6%, 偏离幅度超过10%且无充分独立依据(ELO完全默认, 无球队近期状态、伤病、交锋记录等数据支撑)\",\n    \"数据不足且ELO为默认值: 双方ELO均为1500(联赛基准), 无任何实际实力差异证据, 但Actor却以'市场信息更可靠'为由完全放弃模型判断, 逻辑上自相矛盾——若市场完全可靠则无需模型, 若模型不可靠则不应给出62%的精确概率\",\n    \"深盘风险未充分警示: 主胜赔率1.15(隐含86.9%原始概率), 属于极深盘口, 虽然规则中deep_handicap_warning为null, 但此类赔率下主队不胜(平+负)概率仍有25.4%, 风险回报比极差, Actor仅以'回报有限'轻描淡写\",\n    \"逻辑不一致:"
+        ],
+        "warnings": [],
+        "suggested_changes": {}
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "中",
+          "home_win": 0.62,
+          "draw": 0.24,
+          "away_win": 0.14,
+          "expected_goals": 2.4,
+          "most_likely_score": "1-0",
+          "over_25": 0.45,
+          "btts": 0.48,
+          "over_25_direction": "小2.5",
+          "btts_direction": "否"
+        },
+        "final_confidence": "中",
+        "reviewer_verdict": "agree",
+        "warnings": [
+          "ELO数据缺失, 实力判断依赖市场",
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "深盘未触发但主胜赔率极低, 回报有限",
+          "数据不足, 参考为主, 建议小额投注"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "主胜",
+          "reason": "市场赔率强烈指向主胜(74.6%), 尽管ELO无差异, 但市场信息更可靠, 且巴甲主场优势明显, 客队胜率极低, 主胜是稳健选择。 (多警告)"
+        },
+        "decision_summary": "方向主胜 | 置信中 | Reviewer:agree | 警告:4个"
+      }
+    }
+  ]
+}

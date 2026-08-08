@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>体彩预测 · 体彩竞彩 · 2026-08-09</title>
+<style>
+:root{--bg:#09090d;--card:#111118;--border:#1c1c2a;--text:#c8c8d4;--muted:#5a5a6e;
+  --accent:#f0a838;--green:#3fb950;--red:#f85149;--blue:#58a6ff;--cyan:#00d4ff;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;padding:24px;max-width:1400px;margin:0 auto}
+h1{font-size:1.3em;font-weight:800;margin-bottom:4px}
+h1 em{color:var(--accent);font-style:normal}
+.sub{font-size:0.7em;color:var(--muted);margin-bottom:16px}
+.stats{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.st{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;text-align:center}
+.st .n{font-size:1.3em;font-weight:800}.st .l{font-size:0.56em;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:0.82em}
+th{background:var(--card);padding:8px 6px;text-align:left;font-size:0.7em;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:1}
+td{padding:7px 6px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,0.015)}
+.num{font-weight:700;color:var(--muted);min-width:55px}
+.match-name{font-weight:600}
+.league-tag{font-size:0.65em;color:var(--muted)}
+.odds{font-weight:600;min-width:80px}
+.odds small{color:var(--muted);font-weight:400}
+.dir{font-weight:700;min-width:60px}
+.conf{font-weight:800;min-width:36px}
+.probs{font-size:0.75em;color:var(--muted);min-width:50px}
+.eg{font-weight:600;color:var(--cyan);min-width:30px}
+.sub{font-size:0.75em;min-width:70px}
+.sub small{color:var(--muted)}
+.rv{font-size:0.75em;min-width:90px}
+.warnings{font-size:0.65em;max-width:280px}
+.warn{display:inline-block;background:rgba(248,81,73,0.08);color:var(--red);padding:1px 4px;border-radius:3px;margin:1px 0}
+.note{font-size:0.65em;color:var(--muted);margin-top:16px;padding:10px;background:var(--card);border-radius:6px;border:1px solid var(--border)}
+</style>
+</head>
+<body>
+<h1>⚽ <em>体彩竞彩预测</em> · 2026-08-09</h1>
+<p class="sub">LLM Actor-Reviewer双人共识 · 体彩官方SPF赔率 · 24场六维预测</p>
+
+<div class="stats">
+  <div class="st"><div class="n">24</div><div class="l">总场次</div></div>
+  <div class="st"><div class="n" style="color:var(--green)">0</div><div class="l">推荐投注</div></div>
+  <div class="st"><div class="n" style="color:var(--blue)">0</div><div class="l">双审一致</div></div>
+  <div class="st"><div class="n">15</div><div class="l">主胜方向</div></div>
+  <div class="st"><div class="n">0</div><div class="l">平局方向</div></div>
+  <div class="st"><div class="n">9</div><div class="l">客胜方向</div></div>
+  <div class="st"><div class="n">0</div><div class="l">Kambi补充</div></div>
+</div>
+
+<table>
+<thead>
+<tr>
+  <th>编号</th><th>比赛</th><th>赔率(SPF)</th><th>方向</th><th>置信</th>
+  <th>概率</th><th>进球</th><th>大小/BTTS/波胆</th><th>审核</th><th>风险提示</th>
+</tr>
+</thead>
+<tbody>
+
+        <tr>
+          <td class="num">周日001</td>
+          <td class="teams">
+            <div class="match-name">东京绿茵 vs 川崎前锋</div>
+            <div class="league-tag">J联赛 · J1</div>
+          </td>
+          <td class="odds">2.76/3.05/2.28<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主32%<br>平29%<br>客39%
+          </td>
+          <td class="eg">2.75</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">泊松模型与市场方向存在分歧(模型主胜41.6% vs 市场客胜38.4%), Actor选择市场为锚但未充分解释为何模型不可信, 存在过度依赖市场的风险</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">数据不足, 参考为主</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日002</td>
+          <td class="teams">
+            <div class="match-name">长崎航海 vs 京都不死鸟</div>
+            <div class="league-tag">J联赛 · J1</div>
+          </td>
+          <td class="odds">2.85/3.15/2.17<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主31%<br>平28%<br>客41%
+          </td>
+          <td class="eg">2.75</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">市场与DC模型方向背离(市场客胜40.2% vs DC主胜41.6%), 预测不确定性高, 任何方向判断都缺乏强支撑</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">ELO完全持平(1400 vs 1400)且为基准值, 无法反映两队真实实力差距, 客胜概率可能被市场高估</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日003</td>
+          <td class="teams">
+            <div class="match-name">山形山神 vs 枥木城</div>
+            <div class="league-tag">日乙 · J2</div>
+          </td>
+          <td class="odds">2.32/3.25/2.56<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主39%<br>平28%<br>客33%
+          </td>
+          <td class="eg">2.35</td>
+          <td class="sub">
+            小2.5<br>
+            否<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">建议投注'无'是正确决策, 但若强行投注, 平局或小2.5可能比主胜更具价值</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">主胜概率39%与平局28%差距仅11个百分点, 平局风险极高, 主胜方向脆弱</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日004</td>
+          <td class="teams">
+            <div class="match-name">鹿特丹斯巴达 vs 费耶诺德</div>
+            <div class="league-tag">荷甲 · DED</div>
+          </td>
+          <td class="odds">4.35/3.95/1.55<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主25%<br>平24%<br>客51%
+          </td>
+          <td class="eg">3.49</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-2</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">深盘未触发, 但客胜赔率较低, 需注意冷门风险</span> <span class="warn">客胜赔率1.55虽未触发深盘警告, 但隐含概率较高, 冷门风险不可忽视</span> <span class="warn">ELO数据缺失, 实力判断依赖市场</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日005</td>
+          <td class="teams">
+            <div class="match-name">圣保利 vs 菲尔特</div>
+            <div class="league-tag">德乙 · BL2</div>
+          </td>
+          <td class="odds">1.65/3.7/3.95<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主50%<br>平25%<br>客25%
+          </td>
+          <td class="eg">3.1</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:2-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">德乙虽进球偏多，但主胜率仅43%，主场优势并非绝对，需警惕平局可能</span> <span class="warn">数据不足，参考为主</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日006</td>
+          <td class="teams">
+            <div class="match-name">纽伦堡 vs 德累斯顿</div>
+            <div class="league-tag">德乙 · BL2</div>
+          </td>
+          <td class="odds">2.0/3.38/3.0<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主44%<br>平26%<br>客30%
+          </td>
+          <td class="eg">3.1</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">主胜概率仅44%，平局概率不低，避免单选主胜</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">数据不足，参考为主，建议谨慎投注</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日007</td>
+          <td class="teams">
+            <div class="match-name">哈马比 vs 赫根</div>
+            <div class="league-tag">瑞典超 · SWE</div>
+          </td>
+          <td class="odds">1.46/4.35/4.65<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主52%<br>平25%<br>客23%
+          </td>
+          <td class="eg">2.94</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:2-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">市场与ELO分歧，需谨慎投注</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">市场主胜赔率1.46隐含概率约68.5%（含margin），去水后58.5%仍显著高于Actor的52%，存在过度自信风险</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日008</td>
+          <td class="teams">
+            <div class="match-name">库奥皮奥 vs TPS图尔库</div>
+            <div class="league-tag">芬超 · FIN</div>
+          </td>
+          <td class="odds">1.34/4.55/6.15<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主64%<br>平21%<br>客15%
+          </td>
+          <td class="eg">2.6</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:2-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">ELO数据为联赛基准，非实际球队实力，可能低估客队</span> <span class="warn">低赔主胜(1.34)容错率极低，任何意外结果都导致亏损</span> <span class="warn">客胜概率被压至15%，但DC模型给出30%，差异巨大，存在市场偏差风险</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日009</td>
+          <td class="teams">
+            <div class="match-name">兹沃勒 vs 阿贾克斯</div>
+            <div class="league-tag">荷甲 · DED</div>
+          </td>
+          <td class="odds">5.25/4.35/1.41<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主18%<br>平22%<br>客60%
+          </td>
+          <td class="eg">3.49</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-2</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">ELO与市场方向背离, 存在冷门风险</span> <span class="warn">客胜赔率1.41隐含概率70.9%, 接近深盘阈值, 冷门风险不可忽视</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日010</td>
+          <td class="teams">
+            <div class="match-name">格罗宁根 vs 乌德勒支</div>
+            <div class="league-tag">荷甲 · DED</div>
+          </td>
+          <td class="odds">2.22/3.25/2.7<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主42%<br>平26%<br>客32%
+          </td>
+          <td class="eg">3.49</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">ELO数据为默认值, 缺乏真实实力对比, 主胜方向的可信度有限</span> <span class="warn">主胜方向市场与DC模型存在分歧, 谨慎对待</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日011</td>
+          <td class="teams">
+            <div class="match-name">利勒斯特罗姆 vs 罗森博格</div>
+            <div class="league-tag">挪超 · NOR</div>
+          </td>
+          <td class="odds">2.15/3.55/2.61<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主42%<br>平25%<br>客33%
+          </td>
+          <td class="eg">3.19</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">挪超人工草皮主场优势虽存在，但ELO持平情况下主场优势不足以单独支撑主胜</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">数据不足，参考为主，不建议重注</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日012</td>
+          <td class="teams">
+            <div class="match-name">国际图尔库 vs 拉赫蒂</div>
+            <div class="league-tag">芬超 · FIN</div>
+          </td>
+          <td class="odds">1.6/3.5/4.6<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主50%<br>平27%<br>客23%
+          </td>
+          <td class="eg">2.6</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:2-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">ELO数据为联赛基准，非实际球队实力，可能低估客队</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">市场赔率margin较高（12.8%），实际概率可能略有偏差</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日013</td>
+          <td class="teams">
+            <div class="match-name">哈尔姆斯塔德 vs 哥德堡盖斯</div>
+            <div class="league-tag">瑞典超 · SWE</div>
+          </td>
+          <td class="odds">5.2/3.9/1.47<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主22%<br>平25%<br>客53%
+          </td>
+          <td class="eg">2.9</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-2</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">客胜赔率1.47对应隐含概率约68%，但Actor给出的客胜概率仅53%，两者存在15个百分点的差距，说明Actor并未完全跟随市场，存在内部不一致</span> <span class="warn">瑞典超整体风格为mixed，但Actor将预期进球数（2.9球）显著高于联赛均值（2.6球），缺乏具体球队进攻/防守数据支撑，有主观臆断成分</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日014</td>
+          <td class="teams">
+            <div class="match-name">IFK哥德堡 vs 卡尔马</div>
+            <div class="league-tag">瑞典超 · SWE</div>
+          </td>
+          <td class="odds">2.28/3.4/2.52<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主41%<br>平27%<br>客32%
+          </td>
+          <td class="eg">2.94</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">市场margin高达12.95%，赔率可能失真，实际概率可能偏离市场显示值</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">ELO数据为联赛基准，非精确值</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日015</td>
+          <td class="teams">
+            <div class="match-name">海伦芬 vs 特温特</div>
+            <div class="league-tag">荷甲 · DED</div>
+          </td>
+          <td class="odds">2.7/3.55/2.1<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主35%<br>平25%<br>客40%
+          </td>
+          <td class="eg">3.49</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">DC模型与市场方向分歧(主胜45% vs 客胜40%), 虽然差距不大, 但增加了不确定性</span> <span class="warn">客胜概率40%但市场为41.5%, 方向选择客胜与市场一致, 但若市场存在偏差, 风险较高</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日016</td>
+          <td class="teams">
+            <div class="match-name">汉坎 vs 奥勒松</div>
+            <div class="league-tag">挪超 · NOR</div>
+          </td>
+          <td class="odds">1.93/3.6/3.0<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主45%<br>平25%<br>客30%
+          </td>
+          <td class="eg">3.2</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:2-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">数据质量不足，参考为主，不建议重注</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">市场赔率与模型差异不大，无显著价值</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日017</td>
+          <td class="teams">
+            <div class="match-name">AC奥卢 vs 赫尔辛基</div>
+            <div class="league-tag">芬超 · FIN</div>
+          </td>
+          <td class="odds">3.3/3.5/1.85<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主28%<br>平26%<br>客46%
+          </td>
+          <td class="eg">2.6</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-2</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">芬超主场胜率41%虽不极端, 但客胜概率0.46已接近市场极限, 进一步上调空间有限, 需警惕市场过度反应</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">ELO无差异, 客胜优势完全依赖市场判断, 存在不确定性</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日018</td>
+          <td class="teams">
+            <div class="match-name">波尔图 vs 阿尔维卡</div>
+            <div class="league-tag">葡超 · PPL</div>
+          </td>
+          <td class="odds">-<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主47%<br>平26%<br>客27%
+          </td>
+          <td class="eg">3.03</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">预期总进球3.03显著高于联赛均值2.55，但未提供模型校准依据，存在高估风险</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">ELO数据为联赛基准值，未反映两队真实实力差异</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日019</td>
+          <td class="teams">
+            <div class="match-name">克里斯蒂安松 vs 莫尔德</div>
+            <div class="league-tag">挪超 · NOR</div>
+          </td>
+          <td class="odds">4.0/4.05/1.58<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主23%<br>平23%<br>客54%
+          </td>
+          <td class="eg">3.19</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-2</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">市场赔率与DC模型方向不一致，需注意风险</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">ELO数据为默认值，缺乏真实实力对比支撑，客胜判断主要依赖市场赔率，存在盲从市场风险</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日020</td>
+          <td class="teams">
+            <div class="match-name">本菲卡 vs 维塞乌</div>
+            <div class="league-tag">葡超 · PPL</div>
+          </td>
+          <td class="odds">-<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主47%<br>平26%<br>客27%
+          </td>
+          <td class="eg">3.03</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">数据质量警告，预测仅供参考，不建议投注</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">市场赔率缺失，无法进行市场校准</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日021</td>
+          <td class="teams">
+            <div class="match-name">吉维森特 vs 里奥阿维</div>
+            <div class="league-tag">葡超 · PPL</div>
+          </td>
+          <td class="odds">1.7/3.3/4.2<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主49%<br>平27%<br>客24%
+          </td>
+          <td class="eg">3.03</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:2-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">市场margin高达12.9%, 去水后的概率可能失真, 实际主胜概率可能低于50.6%</span> <span class="warn">主胜概率49%接近50%临界点, 且市场赔率1.7对应隐含概率58.8%, 存在赔率偏差风险</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日022</td>
+          <td class="teams">
+            <div class="match-name">摩雷伦斯 vs 布拉加</div>
+            <div class="league-tag">葡超 · PPL</div>
+          </td>
+          <td class="odds">4.75/3.5/1.58<br><small></small></td>
+          <td class="dir">✈️ 客胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主20%<br>平26%<br>客54%
+          </td>
+          <td class="eg">2.55</td>
+          <td class="sub">
+            大2.5<br>
+            是<br>
+            <small>波胆:1-2</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">泊松模型与最终预测方向矛盾，若模型输入正确，则客胜概率应显著低于市场值，存在过度跟随市场的风险</span> <span class="warn">数据严重不足：ELO为默认值，无法验证布拉加的真实实力优势，市场赔率可能已包含非实力因素（如人气、历史印象）</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日023</td>
+          <td class="teams">
+            <div class="match-name">桑托斯 vs 巴拉纳竞技</div>
+            <div class="league-tag">巴甲 · BSA</div>
+          </td>
+          <td class="odds">2.05/2.92/3.35<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主44%<br>平29%<br>客27%
+          </td>
+          <td class="eg">2.4</td>
+          <td class="sub">
+            小2.5<br>
+            是<br>
+            <small>波胆:1-1</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">数据不足（ELO为默认值）导致模型可靠性有限，建议降低对任何方向性结论的依赖</span> <span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">最可能比分1-1与主胜方向存在轻微张力（平局比分但方向选主胜），需注意逻辑一致性</span> </td>
+        </tr>
+        <tr>
+          <td class="num">周日024</td>
+          <td class="teams">
+            <div class="match-name">弗拉门戈 vs 维多利亚</div>
+            <div class="league-tag">巴甲 · BSA</div>
+          </td>
+          <td class="odds">1.15/5.8/11.5<br><small></small></td>
+          <td class="dir">🏠 主胜</td>
+          <td class="conf" style="color:#f85149">低</td>
+          <td class="probs">
+            主62%<br>平24%<br>客14%
+          </td>
+          <td class="eg">2.4</td>
+          <td class="sub">
+            小2.5<br>
+            否<br>
+            <small>波胆:1-0</small>
+          </td>
+          <td class="rv">⚠️ agree_with_reservation</td>
+          <td class="warnings"><span class="warn">数据不足: 球队ELO为联赛默认值, 预测置信度低</span> <span class="warn">DC模型显示客队有进球能力(λ=1.21), 但Actor预测BTTS为否(50%概率), 存在一定矛盾, 需警惕客队进球导致冷门</span> <span class="warn">市场赔率过于极端(主胜1.15), 需警惕冷门风险</span> </td>
+        </tr>
+</tbody>
+</table>
+
+<div class="note">
+  <strong>⚙️ 管线:</strong> 体彩官方SPF赔率 → DeepSeek LLM Actor推理 → LLM Reviewer审核 → 规则引擎 |
+  <strong>数据:</strong> 2026-08-09 体彩竞彩24场 |
+  <strong>生成时间:</strong> 2026-08-08T15:19:58.414583 |
+  <strong>⚠ 注意:</strong> 所有预测置信度为"低"因ELO数据为联赛默认值，市场赔率为主要信号。仅供参考，不构成投注建议。
+</div>
+</body>
+</html>

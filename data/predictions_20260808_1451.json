@@ -1,0 +1,333 @@
+{
+  "pipeline": "v2.0",
+  "generated_at": "2026-08-08T14:51:14.926566",
+  "architecture": "数据(Python) → 推理(LLM) → 审核(LLM) → 规则引擎",
+  "match_count": 3,
+  "results": [
+    {
+      "match": "Botafogo Fr RJ vs Fluminense FC RJ",
+      "league": "巴甲",
+      "league_code": "BSA",
+      "kickoff": "2026-08-08T00:30:00Z",
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.1811,
+        "draw": 0.2582,
+        "away": 0.5607,
+        "margin": 0.0996,
+        "raw_odds": {
+          "home": 5.3,
+          "draw": 3.65,
+          "away": 1.57
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.26,
+          "away_win": 0.54,
+          "expected_goals": 2.4,
+          "most_likely_score": "1-1",
+          "over_25": 0.5,
+          "btts": 0.55,
+          "over_25_direction": "小2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率强烈指向客胜(去水后56%), 与ELO持平形成明显偏离, 市场信息权重最高。巴甲主场胜率虽高(47%), 但本场客队实力被市场显著高估, 可能反映近期状态或阵容优势。泊松模型(DC)给出主胜45%, 与市场方向相反, 但模型未纳入市场隐含的额外信息, 故以市场为主。联赛低进球风格(2.42)压低大球概率, 但DC的over 2.5为53.6%, 综合后取50%附近。最可能比分1-1, 反映双方实力接近但市场偏向客队。",
+        "key_factors": [
+          "市场赔率强烈倾向客胜(56%)",
+          "ELO持平但市场偏离",
+          "巴甲低进球风格",
+          "DC模型与市场方向不一致"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场去水后客胜概率56%, 远高于ELO暗示的33%, 市场信息权重高, 跟随市场方向。"
+        },
+        "warnings": [
+          "数据质量不足, 参考为主",
+          "DC模型与市场方向冲突, 存在不确定性",
+          "巴甲主场优势可能被市场低估"
+        ]
+      },
+      "reviewer": {
+        "verdict": "disagree",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "市场偏离检查: Actor预测客胜概率54%, 与市场去水后56%基本一致, 但ELO持平(1500 vs 1500)且无任何额外数据支撑, 市场偏离幅度达23个百分点(56% vs 33%), 远超10%阈值, 且Actor未提供充分理由(如伤病、状态等)解释为何市场如此极端",
+          "数据不足: ELO均为联赛基准默认值(1500), 无实际球队实力数据; 联赛画像仅提供平均数据, 未匹配具体球队特征; 规则明确标注'数据不足, 参考为主', Actor却将市场作为最高权重, 逻辑上存在过度依赖单一信息源的风险",
+          "逻辑一致性: 预测方向为客胜(54%), 但最可能比分却为1-1(平局), 且btts方向为'是'(55%), 这与客胜方向存在明显矛盾——若客队胜率过半, 最可能比分应为0-1或0-2等客胜比分, 而非平局比分",
+          "联赛风格冲突: 巴甲主场胜率47%且风格为physical, 主场优势显著; Actor虽提及但未在概率中体现, 客胜概率54%几乎完全复制市场, 未对主场因素做任何调整, 与联赛特征不符"
+        ],
+        "warnings": [
+          "市场赔率可能反映非实力因素(如近期状态、阵容轮换), 但无数据验证, 跟随风险极高",
+          "DC模型与市场方向完全相反(主胜45% vs 客胜54%), 模型冲突未得到合理解释",
+          "深盘风险: 客胜赔率1.57对应隐含概率约64%(含margin), 实际去水后56%, 属于较深盘口, 但Actor未标记此风险"
+        ],
+        "suggested_changes": {
+          "direction": "平局",
+          "over_25_direction": "小2.5"
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.26,
+          "away_win": 0.54,
+          "expected_goals": 2.4,
+          "most_likely_score": "1-1",
+          "over_25": 0.5,
+          "btts": 0.55,
+          "over_25_direction": "小2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "disagree",
+        "warnings": [
+          "深盘风险: 客胜赔率1.57对应隐含概率约64%(含margin), 实际去水后56%, 属于较深盘口, 但Actor未标记此风险",
+          "市场赔率可能反映非实力因素(如近期状态、阵容轮换), 但无数据验证, 跟随风险极高",
+          "DC模型与市场方向冲突, 存在不确定性",
+          "DC模型与市场方向完全相反(主胜45% vs 客胜54%), 模型冲突未得到合理解释",
+          "数据质量不足, 参考为主",
+          "巴甲主场优势可能被市场低估",
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": null,
+          "reason": "置信度低, 不投注 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:disagree | 警告:7个"
+      }
+    },
+    {
+      "match": "AD Alcorcon vs CDA Navalcarnero",
+      "league": "友谊赛",
+      "league_code": "FRIENDLY",
+      "kickoff": "2026-08-08T08:00:00Z",
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.6049,
+        "draw": 0.2245,
+        "away": 0.1706,
+        "margin": 0.116,
+        "raw_odds": {
+          "home": 1.43,
+          "draw": 4.2,
+          "away": 5.6
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.55,
+          "draw": 0.25,
+          "away_win": 0.2,
+          "expected_goals": 2.9,
+          "most_likely_score": "2-1",
+          "over_25": 0.55,
+          "btts": 0.58,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率强烈指向主胜（去水后主胜概率约60%），但ELO完全持平（1500 vs 1500），且友谊赛轮换频繁，实力信号弱。泊松模型（主1.55 vs 客1.35）和DC模型（主胜41%）均低于市场，显示市场可能高估主队。联赛风格混合，场均2.7球，大球率52%，BTTS率52%，支持进球预期略高于市场隐含。综合来看，主胜方向可信但幅度存疑，深盘未触发，但数据质量低，整体信心不足。",
+        "key_factors": [
+          "市场主胜概率60% vs ELO持平，存在偏离",
+          "友谊赛轮换频繁，数据参考价值有限",
+          "泊松/DC模型均低于市场主胜概率",
+          "联赛场均2.7球，大球和BTTS概率均超50%"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "友谊赛数据不足，市场与模型分歧明显，且ELO无差异，不建议投注。"
+        },
+        "warnings": [
+          "友谊赛结果不可预测性高，轮换影响大",
+          "市场赔率与ELO/模型方向不一致，存在虚高风险",
+          "数据质量标注为'参考为主'，不宜重注"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor正确识别了友谊赛数据质量低、轮换频繁的核心风险，并主动将信心定为'低'，且建议不投注，逻辑自洽。",
+          "Actor对市场偏离（市场60% vs ELO持平）和模型分歧（泊松/DC低于市场）的识别准确，没有盲目跟随市场。",
+          "大小球预测（大2.5，55%）与联赛场均2.7球、大球率52%的数据基本一致，方向合理。",
+          "Actor的预测概率（主胜55%）低于市场（60%），但未偏离超过10个百分点，且给出了充分理由（ELO持平、友谊赛不确定性），属于合理修正。"
+        ],
+        "warnings": [
+          "友谊赛数据参考价值极低，任何模型输出（包括泊松、DC）的可靠性都有限，55%的主胜概率仍可能高估。",
+          "市场主胜赔率1.43（隐含约70%）与去水后60%存在差异，市场本身可能定价不充分，但Actor未深入分析赔率异常原因。",
+          "ELO均为默认值1500，说明没有有效的实力数据支撑，主胜方向更多依赖市场信号，基础薄弱。"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "主胜",
+          "confidence": "低",
+          "home_win": 0.55,
+          "draw": 0.25,
+          "away_win": 0.2,
+          "expected_goals": 2.9,
+          "most_likely_score": "2-1",
+          "over_25": 0.55,
+          "btts": 0.58,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "ELO均为默认值1500，说明没有有效的实力数据支撑，主胜方向更多依赖市场信号，基础薄弱。",
+          "市场赔率与ELO/模型方向不一致，存在虚高风险",
+          "数据质量标注为'参考为主'，不宜重注",
+          "市场主胜赔率1.43（隐含约70%）与去水后60%存在差异，市场本身可能定价不充分，但Actor未深入分析赔率异常原因。",
+          "友谊赛结果不可预测性高，轮换影响大",
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "友谊赛数据参考价值极低，任何模型输出（包括泊松、DC）的可靠性都有限，55%的主胜概率仍可能高估。"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "友谊赛数据不足，市场与模型分歧明显，且ELO无差异，不建议投注。"
+        },
+        "decision_summary": "方向主胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    },
+    {
+      "match": "Elche CF vs Toulouse FC",
+      "league": "友谊赛",
+      "league_code": "FRIENDLY",
+      "kickoff": "2026-08-08T08:00:00Z",
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.3494,
+        "draw": 0.271,
+        "away": 0.3797,
+        "margin": 0.1198,
+        "raw_odds": {
+          "home": 2.55,
+          "draw": 3.35,
+          "away": 2.33
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.35,
+          "draw": 0.27,
+          "away_win": 0.38,
+          "expected_goals": 2.9,
+          "most_likely_score": "1-1",
+          "over_25": 0.55,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率显示客胜概率最高(38%), 与ELO持平(双方均为1500)形成轻微偏离, 但市场作为锚点优先。泊松模型(DC)给出主胜概率更高(40.9%), 与市场方向相反, 但考虑到友谊赛轮换频繁、数据质量低, 市场定价更可靠。联赛风格混合, 平均进球2.7, 大球率52%, 支持大2.5倾向。最可能比分1-1, 但客胜概率略高, 整体不确定性大。",
+        "key_factors": [
+          "市场客胜概率最高",
+          "ELO完全持平",
+          "友谊赛轮换风险高",
+          "大球率略高于50%"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "友谊赛数据不足, 市场与模型方向不一致, 且轮换频繁不可预测, 不建议投注"
+        },
+        "warnings": [
+          "友谊赛数据仅供参考, 轮换频繁不可预测",
+          "数据不足, 参考为主",
+          "市场与泊松模型方向不一致, 需谨慎"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree_with_reservation",
+        "confidence_adjustment": "down",
+        "adjusted_confidence": "低",
+        "reasons": [
+          "Actor正确识别了友谊赛数据质量低、轮换频繁的风险, 并给出低置信度和不投注建议, 逻辑自洽",
+          "市场客胜概率(38%)与Actor预测(38%)完全一致, 未偏离市场, 符合审核清单第1条",
+          "ELO双方均为默认值1500, 数据不足, Actor已降低置信度, 符合审核清单第3条",
+          "方向预测(客胜)与大小球预测(大2.5)自洽: 客胜概率略高且预期进球2.9, 支持大球倾向",
+          "但泊松模型与市场方向不一致, Actor选择市场锚点, 在数据不足时存在过度依赖市场的风险"
+        ],
+        "warnings": [
+          "友谊赛轮换频繁, 任何预测可靠性都极低, 不投注是正确选择",
+          "ELO默认值无法反映真实实力, 客胜方向缺乏基本面支撑",
+          "市场margin高达11.98%, 赔率可能被高估, 客胜概率38%可能虚高"
+        ],
+        "suggested_changes": {
+          "direction": null,
+          "over_25_direction": null
+        }
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "低",
+          "home_win": 0.35,
+          "draw": 0.27,
+          "away_win": 0.38,
+          "expected_goals": 2.9,
+          "most_likely_score": "1-1",
+          "over_25": 0.55,
+          "btts": 0.6,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "低",
+        "reviewer_verdict": "agree_with_reservation",
+        "warnings": [
+          "市场与泊松模型方向不一致, 需谨慎",
+          "市场margin高达11.98%, 赔率可能被高估, 客胜概率38%可能虚高",
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "数据不足, 参考为主",
+          "ELO默认值无法反映真实实力, 客胜方向缺乏基本面支撑",
+          "友谊赛轮换频繁, 任何预测可靠性都极低, 不投注是正确选择",
+          "友谊赛数据仅供参考, 轮换频繁不可预测"
+        ],
+        "bet_suggestion": {
+          "type": "none",
+          "pick": "无",
+          "reason": "友谊赛数据不足, 市场与模型方向不一致, 且轮换频繁不可预测, 不建议投注"
+        },
+        "decision_summary": "方向客胜 | 置信低 | Reviewer:agree_with_reservation | 警告:7个"
+      }
+    }
+  ]
+}

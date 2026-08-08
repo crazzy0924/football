@@ -446,6 +446,24 @@ LEAGUE_PROFILES: dict[str, LeagueProfile] = {
         elo_base=1380, elo_spread=150,
         style="defensive", notes="K联赛小球倾向, 防守为先"
     ),
+    "J2": LeagueProfile(
+        name="日乙", code="J2", region="asia",
+        avg_home_goals=1.30, avg_away_goals=1.05, avg_total_goals=2.35,
+        home_win_rate=0.39, draw_rate=0.28, away_win_rate=0.33,
+        home_advantage_elo=65, home_goal_boost=0.18,
+        over_25_rate=0.45, btts_rate=0.45, avg_corners=9.0, corner_home_share=0.52,
+        elo_base=1350, elo_spread=120,
+        style="technical", notes="日乙主场更弱, 小球倾向"
+    ),
+    "FIN": LeagueProfile(
+        name="芬超", code="FIN", region="europe",
+        avg_home_goals=1.45, avg_away_goals=1.15, avg_total_goals=2.60,
+        home_win_rate=0.41, draw_rate=0.25, away_win_rate=0.34,
+        home_advantage_elo=75, home_goal_boost=0.22,
+        over_25_rate=0.50, btts_rate=0.50, avg_corners=9.5, corner_home_share=0.53,
+        elo_base=1350, elo_spread=150,
+        style="physical", notes="芬兰联赛主场适中, 进球略少"
+    ),
 
     # ── 友谊赛/其他 ──
     "FRIENDLY": LeagueProfile(

@@ -1,0 +1,104 @@
+{
+  "pipeline": "v2.0",
+  "generated_at": "2026-08-08T14:49:01.841666",
+  "architecture": "数据(Python) → 推理(LLM) → 审核(LLM) → 规则引擎",
+  "match_count": 1,
+  "results": [
+    {
+      "match": "Botafogo Fr RJ vs Fluminense FC RJ",
+      "league": "巴甲",
+      "league_code": "BSA",
+      "kickoff": "2026-08-08T00:30:00Z",
+      "elo": {
+        "home": 1500,
+        "away": 1500,
+        "diff": 0,
+        "home_source": "联赛基准",
+        "away_source": "联赛基准"
+      },
+      "market": {
+        "home": 0.1811,
+        "draw": 0.2582,
+        "away": 0.5607,
+        "margin": 0.0996,
+        "raw_odds": {
+          "home": 5.3,
+          "draw": 3.65,
+          "away": 1.57
+        }
+      },
+      "actor": {
+        "prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.26,
+          "away_win": 0.54,
+          "expected_goals": 2.4,
+          "most_likely_score": "1-2",
+          "over_25": 0.5,
+          "btts": 0.55,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "reasoning": "市场赔率强烈指向客胜(去水后概率56%), 与ELO持平形成明显背离, 市场信息权重优先。巴甲虽为低比分联赛, 但DC模型预期进球2.82, 且客队实力被市场高估, 主队主场优势(47%胜率)不足以扭转。参考DC概率(主胜45%)远低于市场, 故大幅下调主胜, 上调客胜。大小球方向在DC(53.6%)与联赛风格(44%)间折中, 略偏大球。",
+        "key_factors": [
+          "市场赔率强烈倾向客胜(56%)",
+          "ELO持平但市场背离, 以市场为准",
+          "巴甲低比分但DC模型预期2.82球",
+          "主队主场胜率47%但被市场低估"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率1.57对应56%概率, 远高于DC模型28%, 市场信息更可靠, 客胜价值明确 (多警告)"
+        },
+        "warnings": [
+          "数据质量不足, 参考为主",
+          "市场与模型分歧大, 需谨慎",
+          "巴甲主场因素可能被低估"
+        ]
+      },
+      "reviewer": {
+        "verdict": "agree",
+        "confidence_adjustment": "same",
+        "adjusted_confidence": "中",
+        "reasons": [
+          "审核异常: Expecting value: line 19 column 17 (char 930)"
+        ],
+        "warnings": [],
+        "suggested_changes": {}
+      },
+      "final": {
+        "final_prediction": {
+          "direction": "客胜",
+          "confidence": "中",
+          "home_win": 0.2,
+          "draw": 0.26,
+          "away_win": 0.54,
+          "expected_goals": 2.4,
+          "most_likely_score": "1-2",
+          "over_25": 0.5,
+          "btts": 0.55,
+          "over_25_direction": "大2.5",
+          "btts_direction": "是"
+        },
+        "final_confidence": "中",
+        "reviewer_verdict": "agree",
+        "warnings": [
+          "巴甲主场因素可能被低估",
+          "数据质量不足, 参考为主",
+          "数据不足: 球队ELO为联赛默认值, 预测置信度低",
+          "市场与模型分歧大, 需谨慎",
+          "⚠ 联赛风格冲突: 巴甲大球率仅44%, 推大球需谨慎"
+        ],
+        "bet_suggestion": {
+          "type": "1X2",
+          "pick": "客胜",
+          "reason": "市场赔率1.57对应56%概率, 远高于DC模型28%, 市场信息更可靠, 客胜价值明确 (多警告)"
+        },
+        "decision_summary": "方向客胜 | 置信中 | Reviewer:agree | 警告:5个"
+      }
+    }
+  ]
+}

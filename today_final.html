@@ -3,1159 +3,226 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>终盘预测 · 2026-08-08</title>
+<title>终盘预测 · 2026-08-08 · 22:00</title>
 <style>
-:root{--bg:#09090d;--card:#111118;--border:#1c1c2a;--text:#c8c8d4;--muted:#5a5a6e;
-  --accent:#f0a838;--green:#3fb950;--red:#f85149;--blue:#58a6ff;--cyan:#00d4ff;}
+:root{--bg:#080b14;--card:#0d111c;--border:#161b2a;--text:#c8ccd8;--muted:#5a5e72;--a2:#a78bfa;--g:#3fb950;--r:#f85149;--y:#f0a838;--b:#58a6ff;--cy:#00d4ff}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.6}
-.w{max-width:100%;margin:0 auto;padding:16px;min-width:1024px}
-h1{font-size:1.1em;margin-bottom:4px}h1 em{color:var(--accent);font-style:normal}
-.sub{font-size:0.62em;color:var(--muted);margin-bottom:12px}
-.summary{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.si{flex:1;min-width:70px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center}
-.si .n{font-size:1.2em;font-weight:800}.si .l{font-size:0.55em;color:var(--muted)}
-table{width:100%;border-collapse:collapse;font-size:0.78em}
-th{background:#14141e;padding:7px 5px;text-align:center;font-weight:600;color:var(--muted);font-size:0.75em;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:1}
-td{padding:6px 5px;text-align:center;border-bottom:1px solid var(--border);vertical-align:top}
-td.l{text-align:left}.g{color:var(--green);font-weight:700}.r{color:var(--red)}.y{color:var(--accent)}
-.tag{display:inline-block;padding:1px 5px;border-radius:3px;font-size:0.6em;font-weight:600}
-.tp{background:rgba(63,185,80,0.1);color:var(--green)}
-.tr{background:rgba(248,81,73,0.1);color:var(--red)}
-.tb{background:rgba(88,166,255,0.1);color:var(--blue)}
-.ts{background:rgba(240,168,56,0.1);color:var(--accent)}
-small{color:var(--muted);font-size:0.85em}
-tr:hover{background:rgba(255,255,255,0.01)}
-.ft{text-align:center;padding:18px;color:var(--muted);font-size:0.55em;opacity:0.35}
-.note{background:rgba(240,168,56,0.05);border:1px solid rgba(240,168,56,0.15);padding:8px 14px;border-radius:6px;margin-bottom:10px;font-size:0.72em}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;padding:24px;max-width:1500px;margin:0 auto}
+.top{background:linear-gradient(135deg,#0a0f1e,#11163a);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top .icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c6ff7,#a78bfa);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1em;flex-shrink:0}
+.top h1{font-size:1.05em} .top em{color:var(--a2);font-style:normal} .top .sub{font-size:0.6em;color:var(--muted)}
+.dash{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.di{flex:1;min-width:70px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center} .di .n{font-size:1.3em;font-weight:800} .di .l{font-size:0.52em;color:var(--muted)}
+h2{font-size:0.82em;margin:20px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border)} h2 span{color:var(--a2)}
+table{width:100%;border-collapse:collapse;font-size:0.72em}
+th{background:var(--card);padding:8px 6px;text-align:left;font-size:0.68em;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:1}
+td{padding:7px 6px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:top}
+tr:hover td{background:rgba(124,111,247,0.02)}
+tr.warn td{background:rgba(248,81,73,0.03)}
+.num{font-weight:700;color:var(--muted);min-width:42px} .ko{font-size:0.7em;color:var(--y);min-width:48px}
+.match-name{font-weight:600} .league-tag{font-size:0.6em;color:var(--muted)}
+.odds{font-weight:600;min-width:80px} .dir{min-width:55px} .conf{min-width:55px}
+.probs{font-size:0.7em;color:var(--muted);min-width:50px}
+.eg{font-weight:600;color:var(--cy);min-width:35px}
+.sub{font-size:0.7em;min-width:80px} .sub small{color:var(--muted)}
+.bet{min-width:80px} .logic{font-size:0.6em;color:var(--muted);max-width:400px;line-height:1.5}
+.ledger{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:14px 18px;margin:16px 0;font-size:0.75em}
+.ledger h3{font-size:0.85em;margin-bottom:8px} .ledger td{font-size:0.75em}
+.note{background:rgba(124,111,247,0.04);border:1px solid rgba(124,111,247,0.1);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:0.65em;line-height:1.7}
+.tag{font-size:0.55em;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.tg{background:rgba(63,185,80,0.1);color:var(--g)} .ty{background:rgba(240,168,56,0.1);color:var(--y)} .tr{background:rgba(248,81,73,0.1);color:var(--r)}
+.ft{text-align:center;padding:20px;color:var(--muted);font-size:0.55em;opacity:0.4}
 </style>
 </head>
 <body>
-<div class="w">
-<h1>⚽ 终盘预测 <em>2026-08-08</em></h1>
-<p class="sub">管线: Kambi→Shin→ELO→五基→DC→基线→best_bets→深盘→六维 · 生成于 02:14</p>
+<div class="top">
+<div class="icon">C</div>
+<h1><em>克劳德</em> · 终盘预测 · 2026-08-08</h1>
+<span class="sub">晚场12场 · 六维预测 · 体彩官方SPF赔率 · 22:00 终盘</span>
+</div>
 
-<div class="summary">
-  <div class="si"><div class="n">100</div><div class="l">比赛</div></div>
-  <div class="si"><div class="n" style="color:var(--green)">21</div><div class="l">推荐投注</div></div>
-  <div class="si"><div class="n" style="color:var(--blue)">99</div><div class="l">冷启动</div></div>
-  <div class="si"><div class="n" style="color:var(--red)">1</div><div class="l">深盘警告</div></div>
+<div class="dash">
+<div class="di"><div class="n" style="color:var(--a2)">12</div><div class="l">总场次</div></div>
+<div class="di"><div class="n" style="color:var(--g)">2</div><div class="l">✅ 投注</div></div>
+<div class="di"><div class="n" style="color:var(--y)">2</div><div class="l">🟡 轻注</div></div>
+<div class="di"><div class="n" style="color:var(--r)">2</div><div class="l">跳过</div></div>
+<div class="di"><div class="n" style="color:var(--b)">10</div><div class="l">有SPF</div></div>
+<div class="di"><div class="n" style="color:var(--y)">300</div><div class="l">总投注额</div></div>
 </div>
 
 <div class="note">
-  🔬 <b>本次预测启用的模块:</b>
-  ✅ Kambi实时赔率(Unibet) ✅ Shin去水 ✅ ELO评分 ✅ 五基并行(B0/B1+/B2-RC/P_CANDIDATE/Xalpha)
-  ✅ Dixon-Coles ρ修正 ✅ 联赛基线对比 ✅ best_bets阈值筛选 ✅ 深盘规则检查 ✅ 冷启动引擎
+<strong>📊 数据源:</strong> lottery.gov.cn 官方SPF赔率 (22:00拉取) · Shin调整去margin · 联赛画像约束<br>
+<strong>⚠️ 风险提示:</strong> 荷甲/葡超/法乙均为揭幕战(冷启动), 巴甲为常规轮次 · 低置信标注→建议观望<br>
+<strong>📐 六维:</strong> ①胜平负 ②波胆 ③全场大小 ④半场大小 ⑤半场让球 ⑥角球<br>
+<strong>🟡 午盘信号回顾:</strong> 004全北客胜骤降15%已验证(1-3济州SK) · 006博德客胜1.33→主胜略有资金流入(待验证) · 016威廉二世客胜走低5%(本场关注)
 </div>
 
+<h2>📋 <span>终盘预测 · 晚场12场</span></h2>
 <table>
+<thead><tr>
+<th>编号</th><th>开球</th><th>对阵</th><th>SPF</th><th>方向</th><th>置信</th>
+<th>概率</th><th>xG</th><th>大小/HT/波胆</th><th>下注</th><th>决策链</th>
+</tr></thead>
+<tbody>
 <tr>
-  <th>① 比赛</th><th>② 胜平负</th><th>③ 波胆</th><th>④ 全场大小</th><th>⑤ 半场大小</th><th>⑥ 半场让球</th><th>⑦ 角球</th><th>推荐</th><th>决策逻辑链</th>
-</tr>
-
-        <tr>
-          <td class="l"><b>SV Waldhof Mannheim 07 vs Fortuna Dusseldorf</b><br><small>德甲 · 2026-08-07T17:00</small></td>
-          <td class="y">主胜<br><small>H:48.9% D:20.4% A:30.8%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-2</span> <small>7.2%</small> <span style="color:var(--accent)">1-0</span> <small>6.8%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.4% · E[总]=3.42</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.5%</small></td>
-          <td>均<br><small>H:34.5% A:25.5%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.4%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: SV Waldhof Mannheim 07 1560 (冷启动 (剩余3场)) | Fortuna Dusseldorf 1560 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=75.6% D=16.5% A=7.9% | margin=9.6%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.4% 0-0=4.2% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.9% D=20.4% A=30.8%<br>⑧ 投注: 大2.5球 | edge=+16.4% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>07 Vestur Sorvagur vs Eb/Streymur</b><br><small>英超 · 2026-08-07T17:30</small></td>
-          <td class="r">主胜<br><small>H:43.6% D:22.1% A:34.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.2%</small> <span style="color:var(--accent)">1-2</span> <small>8.1%</small> <span style="color:var(--accent)">1-1</span> <small>7.8%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.0% · E[总]=3.2</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.3%</small></td>
-          <td>均<br><small>H:31.9% A:26.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: 07 Vestur Sorvagur 1560 (球队注册表 (CLQ_STU)) | Eb/Streymur 1600 (冷启动 (剩余3场)) | 差=-40<br>③ 市场(Shin去水): H=35.5% D=32.0% A=32.5% | margin=12.1%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.4% 0-0=5.1% | 集中度=0.056<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=43.6% D=22.1% A=34.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>SCR Altach vs WSG Tirol</b><br><small>德甲 · 2026-08-07T17:30</small></td>
-          <td class="r">客胜<br><small>H:36.6% D:21.4% A:41.9%</small></td>
-          <td><span style="color:var(--accent)">1-2</span> <small>8.6%</small> <span style="color:var(--accent)">2-1</span> <small>8.5%</small> <span style="color:var(--accent)">1-1</span> <small>7.2%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.2% · E[总]=3.41</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.4%</small></td>
-          <td>均<br><small>H:27.8% A:32.0%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.2%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: SCR Altach 1560 (冷启动 (剩余3场)) | WSG Tirol 1680 (球队注册表 (CLQ_LYO)) | 差=-120<br>③ 市场(Shin去水): H=46.9% D=32.7% A=20.5% | margin=10.4%<br>④ 五基共识: 4/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.5% 0-0=4.3% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 客胜 H=36.6% D=21.4% A=41.9%<br>⑧ 投注: 大2.5球 | edge=+16.2% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>SC Cambuur vs Excelsior Rotterdam</b><br><small>荷甲 · 2026-08-07T18:00</small></td>
-          <td class="y">主胜<br><small>H:46.4% D:20.9% A:32.7%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.0%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-1</span> <small>6.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=67.9% · E[总]=3.5</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=18.3%</small></td>
-          <td>均<br><small>H:34.3% A:26.2%</small></td>
-          <td>角球大10.2<br><small>E[10.7] · 主占55%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+17.9%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 荷甲 | 场均3.15球 | 主胜43%/平25%/客胜32% | 大2.5率65%<br>② ELO: SC Cambuur 1480 (冷启动 (剩余3场)) | Excelsior Rotterdam 1480 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=35.4% D=29.2% A=35.4% | margin=8.2%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.1% 0-0=4.0% | 集中度=0.051<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.4% D=20.9% A=32.7%<br>⑧ 投注: 大2.5球 | edge=+17.9% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>VfL Bochum vs Hertha BSC</b><br><small>德甲 · 2026-08-07T18:30</small></td>
-          <td class="y">主胜<br><small>H:47.2% D:20.9% A:31.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.3%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.4% · E[总]=3.42</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.5%</small></td>
-          <td>均<br><small>H:34.5% A:25.5%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.4%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: VfL Bochum 1560 (冷启动 (剩余3场)) | Hertha BSC 1560 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=40.1% D=27.1% A=32.9% | margin=7.1%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.4% 0-0=4.2% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.2% D=20.9% A=31.9%<br>⑧ 投注: 大2.5球 | edge=+16.4% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Partick Thistle FC vs Livingston FC</b><br><small>英冠 · 2026-08-07T18:30</small></td>
-          <td class="y">主胜<br><small>H:45.8% D:23.3% A:30.9%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.7%</small> <span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-1</span> <small>8.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=54.0% · E[总]=2.84</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.9%</small></td>
-          <td>均<br><small>H:32.2% A:23.7%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英冠 | 场均2.5球 | 主胜45%/平23%/客胜32% | 大2.5率49%<br>② ELO: Partick Thistle FC 1420 (冷启动 (剩余3场)) | Livingston FC 1420 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=39.1% D=28.7% A=32.2% | margin=8.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.0% | 集中度=0.064<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=45.8% D=23.3% A=30.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>SM Caen vs Valenciennes FC</b><br><small>法甲 · 2026-08-07T18:45</small></td>
-          <td class="y">主胜<br><small>H:47.5% D:22.2% A:30.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>8.2%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=60.0% · E[总]=3.1</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.4%</small></td>
-          <td>均<br><small>H:33.9% A:24.0%</small></td>
-          <td>角球小9.5<br><small>E[9.0] · 主占53%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 法甲 | 场均2.7球 | 主胜43%/平27%/客胜30% | 大2.5率51%<br>② ELO: SM Caen 1520 (冷启动 (剩余3场)) | Valenciennes FC 1520 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=41.3% D=28.7% A=30.0% | margin=12.2%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.7% 0-0=5.5% | 集中度=0.058<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.5% D=22.2% A=30.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Football Bourg-En-Bresse Peronnas 01 vs FC Villefranche Beaujolais</b><br><small>法甲 · 2026-08-07T18:45</small></td>
-          <td class="r">客胜<br><small>H:33.8% D:22.6% A:43.6%</small></td>
-          <td><span style="color:var(--accent)">1-2</span> <small>9.1%</small> <span style="color:var(--accent)">2-1</span> <small>8.3%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=59.4% · E[总]=3.08</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.1%</small></td>
-          <td>均<br><small>H:25.5% A:32.1%</small></td>
-          <td>角球小9.5<br><small>E[9.0] · 主占53%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 法甲 | 场均2.7球 | 主胜43%/平27%/客胜30% | 大2.5率51%<br>② ELO: Football Bourg-En-Bresse Peronnas 01 1520 (冷启动 (剩余3场)) | FC Villefranche Beaujolais 1680 (球队注册表 (CLQ_LYO)) | 差=-160<br>③ 市场(Shin去水): H=40.2% D=30.4% A=29.4% | margin=12.6%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.7% | 集中度=0.058<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 客胜 H=33.8% D=22.6% A=43.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Paris 13 Atletico vs Quevilly-Rouen Metropole</b><br><small>法甲 · 2026-08-07T18:45</small></td>
-          <td class="r">客胜<br><small>H:33.3% D:22.7% A:44.0%</small></td>
-          <td><span style="color:var(--accent)">1-2</span> <small>9.2%</small> <span style="color:var(--accent)">1-1</span> <small>8.2%</small> <span style="color:var(--accent)">2-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=59.4% · E[总]=3.08</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.1%</small></td>
-          <td>均<br><small>H:25.5% A:32.1%</small></td>
-          <td>角球小9.5<br><small>E[9.0] · 主占53%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 法甲 | 场均2.7球 | 主胜43%/平27%/客胜30% | 大2.5率51%<br>② ELO: Paris 13 Atletico 1520 (冷启动 (剩余3场)) | Quevilly-Rouen Metropole 1680 (球队注册表 (CLQ_LYO)) | 差=-160<br>③ 市场(Shin去水): H=30.0% D=31.4% A=38.6% | margin=12.3%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.7% | 集中度=0.058<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 客胜 H=33.3% D=22.7% A=44.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>US Concarneau vs US Orleans</b><br><small>法甲 · 2026-08-07T18:45</small></td>
-          <td class="y">主胜<br><small>H:47.4% D:22.2% A:30.4%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>8.1%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=60.0% · E[总]=3.1</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.4%</small></td>
-          <td>均<br><small>H:33.9% A:24.0%</small></td>
-          <td>角球小9.5<br><small>E[9.0] · 主占53%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 法甲 | 场均2.7球 | 主胜43%/平27%/客胜30% | 大2.5率51%<br>② ELO: US Concarneau 1520 (冷启动 (剩余3场)) | US Orleans 1520 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=37.7% D=29.1% A=33.2% | margin=11.8%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.7% 0-0=5.5% | 集中度=0.058<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.4% D=22.2% A=30.4%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>SC Aubagne Air Bel vs Thionville US Lusitanos</b><br><small>法甲 · 2026-08-07T18:45</small></td>
-          <td class="y">主胜<br><small>H:47.6% D:22.2% A:30.1%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>8.2%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=60.0% · E[总]=3.1</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.4%</small></td>
-          <td>均<br><small>H:33.9% A:24.0%</small></td>
-          <td>角球小9.5<br><small>E[9.0] · 主占53%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 法甲 | 场均2.7球 | 主胜43%/平27%/客胜30% | 大2.5率51%<br>② ELO: SC Aubagne Air Bel 1520 (冷启动 (剩余3场)) | Thionville US Lusitanos 1520 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=43.5% D=28.6% A=27.8% | margin=12.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.7% 0-0=5.5% | 集中度=0.058<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.6% D=22.2% A=30.1%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Rouen vs AS Cannes</b><br><small>法甲 · 2026-08-07T18:45</small></td>
-          <td class="y">主胜<br><small>H:47.9% D:22.1% A:30.0%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>8.2%</small> <span style="color:var(--accent)">1-1</span> <small>7.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=60.0% · E[总]=3.1</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.4%</small></td>
-          <td>均<br><small>H:33.9% A:24.0%</small></td>
-          <td>角球小9.5<br><small>E[9.0] · 主占53%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 法甲 | 场均2.7球 | 主胜43%/平27%/客胜30% | 大2.5率51%<br>② ELO: FC Rouen 1520 (冷启动 (剩余3场)) | AS Cannes 1520 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=48.3% D=26.2% A=25.5% | margin=11.9%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.7% 0-0=5.5% | 集中度=0.058<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.9% D=22.1% A=30.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Fleury 91 vs Amiens SC</b><br><small>法甲 · 2026-08-07T18:45</small></td>
-          <td class="y">主胜<br><small>H:47.4% D:22.2% A:30.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>8.1%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=60.0% · E[总]=3.1</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.4%</small></td>
-          <td>均<br><small>H:33.9% A:24.0%</small></td>
-          <td>角球小9.5<br><small>E[9.0] · 主占53%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 法甲 | 场均2.7球 | 主胜43%/平27%/客胜30% | 大2.5率51%<br>② ELO: FC Fleury 91 1520 (冷启动 (剩余3场)) | Amiens SC 1520 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=38.6% D=29.5% A=31.9% | margin=12.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.7% 0-0=5.5% | 集中度=0.058<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.4% D=22.2% A=30.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>La Roche Vendee Football vs FC Versailles 78</b><br><small>法甲 · 2026-08-07T18:45</small></td>
-          <td class="y">主胜<br><small>H:47.3% D:22.2% A:30.4%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>8.1%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=60.0% · E[总]=3.1</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.4%</small></td>
-          <td>均<br><small>H:33.9% A:24.0%</small></td>
-          <td>角球小9.5<br><small>E[9.0] · 主占53%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 法甲 | 场均2.7球 | 主胜43%/平27%/客胜30% | 大2.5率51%<br>② ELO: La Roche Vendee Football 1520 (冷启动 (剩余3场)) | FC Versailles 78 1520 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=36.5% D=29.1% A=34.3% | margin=11.9%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.7% 0-0=5.5% | 集中度=0.058<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.3% D=22.2% A=30.4%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Wolverhampton Wanderers vs Port Vale</b><br><small>英超 · 2026-08-07T18:45</small></td>
-          <td class="r">主胜<br><small>H:42.6% D:21.6% A:35.8%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-2</span> <small>8.1%</small> <span style="color:var(--accent)">1-0</span> <small>7.6%</small></td>
-          <td class="g">大2.5<br><small>O2.5=61.7% · E[总]=3.18</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.2%</small></td>
-          <td>均<br><small>H:30.2% A:28.1%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Wolverhampton Wanderers 1530 (ELO数据库) | Port Vale 1600 (冷启动 (剩余3场)) | 差=-70<br>③ 市场(Shin去水): H=72.9% D=16.9% A=10.3% | margin=8.0%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.5% 0-0=5.2% | 集中度=0.056<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=42.6% D=21.6% A=35.8%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Wycombe Wanderers vs Stevenage FC</b><br><small>英超 · 2026-08-07T18:45</small></td>
-          <td class="y">主胜<br><small>H:47.5% D:21.6% A:30.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.5%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Wycombe Wanderers 1600 (冷启动 (剩余3场)) | Stevenage FC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=40.9% D=28.4% A=30.6% | margin=7.9%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.5% D=21.6% A=30.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Middlesbrough FC vs Wrexham AFC</b><br><small>英超 · 2026-08-07T19:00</small></td>
-          <td class="y">主胜<br><small>H:48.1% D:21.4% A:30.5%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>7.5%</small> <span style="color:var(--accent)">1-2</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Middlesbrough FC 1600 (冷启动 (剩余3场)) | Wrexham AFC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=53.3% D=24.8% A=21.9% | margin=8.2%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.1% D=21.4% A=30.5%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Estoril Praia vs FC Famalicao</b><br><small>葡超 · 2026-08-07T19:15</small></td>
-          <td class="y">主胜<br><small>H:48.8% D:22.3% A:28.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>8.6%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.5% · E[总]=3.03</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.7%</small></td>
-          <td>均<br><small>H:34.7% A:22.8%</small></td>
-          <td>角球小10.0<br><small>E[9.5] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 葡超 | 场均2.55球 | 主胜46%/平25%/客胜29% | 大2.5率50%<br>② ELO: Estoril Praia 1500 (冷启动 (剩余3场)) | FC Famalicao 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=31.3% D=29.5% A=39.2% | margin=7.1%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.9% | 集中度=0.060<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.8% D=22.3% A=28.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Costa Rica U20 vs USA U20</b><br><small>英冠 · 2026-08-07T21:00</small></td>
-          <td class="r">主胜<br><small>H:44.6% D:22.9% A:32.5%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.3%</small> <span style="color:var(--accent)">2-1</span> <small>9.2%</small> <span style="color:var(--accent)">0-1</span> <small>8.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=54.0% · E[总]=2.84</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.9%</small></td>
-          <td>均<br><small>H:32.2% A:23.7%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英冠 | 场均2.5球 | 主胜45%/平23%/客胜32% | 大2.5率49%<br>② ELO: Costa Rica U20 1420 (冷启动 (剩余3场)) | USA U20 1420 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=13.8% D=19.5% A=66.6% | margin=12.2%<br>④ 五基共识: 4/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.0% | 集中度=0.064<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=44.6% D=22.9% A=32.5%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Operario Ferroviario EC PR vs Sao Bernardo FC</b><br><small>巴甲 · 2026-08-07T22:30</small></td>
-          <td class="y">主胜<br><small>H:47.6% D:23.4% A:29.0%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>10.1%</small> <span style="color:var(--accent)">2-1</span> <small>9.9%</small> <span style="color:var(--accent)">1-1</span> <small>8.6%</small></td>
-          <td class="g">大2.5<br><small>O2.5=53.5% · E[总]=2.82</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.7%</small></td>
-          <td>均<br><small>H:32.9% A:22.9%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 巴甲 | 场均2.42球 | 主胜47%/平26%/客胜27% | 大2.5率44%<br>② ELO: Operario Ferroviario EC PR 1500 (冷启动 (剩余3场)) | Sao Bernardo FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=47.5% D=28.3% A=24.2% | margin=7.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.1% | 集中度=0.065<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.6% D=23.4% A=29.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Inter Miami CF II vs Crown Legacy FC</b><br><small>美职联 · 2026-08-07T23:00</small></td>
-          <td class="y">主胜<br><small>H:50.0% D:20.0% A:30.0%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.0%</small> <span style="color:var(--accent)">1-2</span> <small>7.5%</small> <span style="color:var(--accent)">1-1</span> <small>6.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=68.6% · E[总]=3.53</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=18.7%</small></td>
-          <td>均<br><small>H:37.0% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占57%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+18.6%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 美职联 | 场均2.97球 | 主胜48%/平23%/客胜29% | 大2.5率58%<br>② ELO: Inter Miami CF II 1480 (冷启动 (剩余3场)) | Crown Legacy FC 1480 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=19.3% D=21.9% A=58.8% | margin=11.7%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=9.8% 0-0=3.8% | 集中度=0.051<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=50.0% D=20.0% A=30.0%<br>⑧ 投注: 大2.5球 | edge=+18.6% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Ceara SC CE vs AA Ponte Preta SP</b><br><small>巴甲 · 2026-08-07T23:30</small></td>
-          <td class="y">主胜<br><small>H:48.4% D:23.1% A:28.5%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>10.4%</small> <span style="color:var(--accent)">2-1</span> <small>10.1%</small> <span style="color:var(--accent)">2-0</span> <small>8.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=53.5% · E[总]=2.82</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.7%</small></td>
-          <td>均<br><small>H:32.9% A:22.9%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 巴甲 | 场均2.42球 | 主胜47%/平26%/客胜27% | 大2.5率44%<br>② ELO: Ceara SC CE 1500 (冷启动 (剩余3场)) | AA Ponte Preta SP 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=64.7% D=22.6% A=12.7% | margin=6.7%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.1% | 集中度=0.065<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.4% D=23.1% A=28.5%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Columbus Crew vs CF Pachuca</b><br><small>北美联杯 · 2026-08-07T23:30</small></td>
-          <td class="g">主胜<br><small>H:65.1% D:17.6% A:17.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.4%</small> <span style="color:var(--accent)">2-0</span> <small>8.6%</small> <span style="color:var(--accent)">3-1</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=68.1% · E[总]=3.49</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=18.4%</small></td>
-          <td>主<br><small>H:46.4% A:16.1%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占56%</small></td>
-          <td><span class="tag tp">投注: 主胜 (edge=+23.7%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 北美联杯 | 场均2.8球 | 主胜48%/平24%/客胜28% | 大2.5率55%<br>② ELO: Columbus Crew 1680 (球队注册表 (CLQ_LYO)) | CF Pachuca 1500 (冷启动 (剩余3场)) | 差=+180<br>③ 市场(Shin去水): H=41.4% D=26.6% A=32.0% | margin=6.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=8.8% 0-0=3.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=65.1% D=17.6% A=17.3%<br>⑧ 投注: 主胜 | edge=+23.7% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Charlotte FC vs Atlas FC</b><br><small>北美联杯 · 2026-08-07T23:30</small></td>
-          <td class="y">主胜<br><small>H:49.8% D:21.1% A:29.1%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>7.3%</small> <span style="color:var(--accent)">1-1</span> <small>7.3%</small></td>
-          <td class="g">大2.5<br><small>O2.5=63.9% · E[总]=3.29</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=16.2%</small></td>
-          <td>均<br><small>H:35.5% A:23.8%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占56%</small></td>
-          <td><span class="tag tp">投注: BTTS是 (edge=+12.0%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 北美联杯 | 场均2.8球 | 主胜48%/平24%/客胜28% | 大2.5率55%<br>② ELO: Charlotte FC 1500 (冷启动 (剩余3场)) | Atlas FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=45.2% D=26.5% A=28.3% | margin=7.1%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.8% 0-0=4.7% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=49.8% D=21.1% A=29.1%<br>⑧ 投注: BTTS是 | edge=+12.0% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Cincinnati vs Pumas UNAM</b><br><small>北美联杯 · 2026-08-08T00:00</small></td>
-          <td class="y">主胜<br><small>H:49.8% D:21.1% A:29.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>7.3%</small> <span style="color:var(--accent)">1-1</span> <small>7.3%</small></td>
-          <td class="g">大2.5<br><small>O2.5=63.9% · E[总]=3.29</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=16.2%</small></td>
-          <td>均<br><small>H:35.5% A:23.8%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占56%</small></td>
-          <td><span class="tag tp">投注: BTTS是 (edge=+12.0%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 北美联杯 | 场均2.8球 | 主胜48%/平24%/客胜28% | 大2.5率55%<br>② ELO: FC Cincinnati 1500 (冷启动 (剩余3场)) | Pumas UNAM 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=45.0% D=24.9% A=30.1% | margin=6.7%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.8% 0-0=4.7% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=49.8% D=21.1% A=29.2%<br>⑧ 投注: BTTS是 | edge=+12.0% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>LDU Quito vs CSD Independiente del Valle</b><br><small>意甲 · 2026-08-08T00:00</small></td>
-          <td class="y">主胜<br><small>H:46.1% D:23.6% A:30.3%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.9%</small> <span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-1</span> <small>8.7%</small></td>
-          <td class="g">大2.5<br><small>O2.5=53.2% · E[总]=2.81</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.6%</small></td>
-          <td>均<br><small>H:32.5% A:23.2%</small></td>
-          <td>角球小10.0<br><small>E[9.5] · 主占54%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 意甲 | 场均2.44球 | 主胜42%/平28%/客胜30% | 大2.5率46%<br>② ELO: LDU Quito 1550 (冷启动 (剩余3场)) | CSD Independiente del Valle 1550 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=35.1% D=29.1% A=35.8% | margin=7.0%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.9% 0-0=7.2% | 集中度=0.065<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.1% D=23.6% A=30.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Botafogo Fr RJ vs Fluminense FC RJ</b><br><small>巴甲 · 2026-08-08T00:30</small></td>
-          <td class="y">主胜<br><small>H:46.5% D:23.3% A:30.3%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.7%</small> <span style="color:var(--accent)">2-1</span> <small>9.5%</small> <span style="color:var(--accent)">1-1</span> <small>8.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=53.5% · E[总]=2.82</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.7%</small></td>
-          <td>均<br><small>H:32.9% A:22.9%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 巴甲 | 场均2.42球 | 主胜47%/平26%/客胜27% | 大2.5率44%<br>② ELO: Botafogo Fr RJ 1500 (冷启动 (剩余3场)) | Fluminense FC RJ 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=23.0% D=26.3% A=50.7% | margin=10.0%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.1% | 集中度=0.065<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.5% D=23.3% A=30.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Tigres UANL vs Minnesota United FC</b><br><small>北美联杯 · 2026-08-08T01:00</small></td>
-          <td class="y">主胜<br><small>H:49.7% D:21.2% A:29.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-1</span> <small>7.3%</small> <span style="color:var(--accent)">1-0</span> <small>7.3%</small></td>
-          <td class="g">大2.5<br><small>O2.5=63.9% · E[总]=3.29</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=16.2%</small></td>
-          <td>均<br><small>H:35.5% A:23.8%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占56%</small></td>
-          <td><span class="tag tp">投注: BTTS是 (edge=+12.0%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 北美联杯 | 场均2.8球 | 主胜48%/平24%/客胜28% | 大2.5率55%<br>② ELO: Tigres UANL 1500 (冷启动 (剩余3场)) | Minnesota United FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=43.0% D=26.9% A=30.1% | margin=6.6%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.8% 0-0=4.7% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=49.7% D=21.2% A=29.2%<br>⑧ 投注: BTTS是 | edge=+12.0% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Atlas FC vs CF Pachuca</b><br><small>墨超 · 2026-08-08T01:06</small></td>
-          <td class="y">主胜<br><small>H:47.6% D:21.2% A:31.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.2%</small> <span style="color:var(--accent)">1-2</span> <small>8.1%</small> <span style="color:var(--accent)">1-1</span> <small>7.3%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.4% · E[总]=3.22</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.5%</small></td>
-          <td>均<br><small>H:35.0% A:23.8%</small></td>
-          <td>角球小10.0<br><small>E[9.5] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 墨超 | 场均2.75球 | 主胜45%/平27%/客胜28% | 大2.5率53%<br>② ELO: Atlas FC 1500 (冷启动 (剩余3场)) | CF Pachuca 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=12.3% D=18.7% A=69.0% | margin=11.1%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=5.0% | 集中度=0.056<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.6% D=21.2% A=31.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Canada U20 vs Mexico U20</b><br><small>英冠 · 2026-08-08T02:00</small></td>
-          <td class="r">主胜<br><small>H:44.8% D:22.9% A:32.2%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.4%</small> <span style="color:var(--accent)">2-1</span> <small>9.3%</small> <span style="color:var(--accent)">0-1</span> <small>8.3%</small></td>
-          <td class="g">大2.5<br><small>O2.5=54.0% · E[总]=2.84</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.9%</small></td>
-          <td>均<br><small>H:32.2% A:23.7%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英冠 | 场均2.5球 | 主胜45%/平23%/客胜32% | 大2.5率49%<br>② ELO: Canada U20 1420 (冷启动 (剩余3场)) | Mexico U20 1420 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=17.9% D=20.9% A=61.2% | margin=12.5%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.0% | 集中度=0.064<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=44.8% D=22.9% A=32.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Vancouver Whitecaps FC vs FC Juarez</b><br><small>北美联杯 · 2026-08-08T02:30</small></td>
-          <td class="y">主胜<br><small>H:50.7% D:20.8% A:28.5%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>10.0%</small> <span style="color:var(--accent)">1-0</span> <small>7.6%</small> <span style="color:var(--accent)">2-0</span> <small>7.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=63.9% · E[总]=3.29</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=16.2%</small></td>
-          <td>均<br><small>H:35.5% A:23.8%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占56%</small></td>
-          <td><span class="tag tp">投注: BTTS是 (edge=+12.0%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 北美联杯 | 场均2.8球 | 主胜48%/平24%/客胜28% | 大2.5率55%<br>② ELO: Vancouver Whitecaps FC 1500 (冷启动 (剩余3场)) | FC Juarez 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=66.0% D=19.6% A=14.4% | margin=6.9%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.8% 0-0=4.7% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=50.7% D=20.8% A=28.5%<br>⑧ 投注: BTTS是 | edge=+12.0% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Hokkaido Consadole Sapporo vs Tokushima Vortis</b><br><small>J1 · 2026-08-08T05:45</small></td>
-          <td class="g">主胜<br><small>H:62.3% D:19.2% A:18.5%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">2-0</span> <small>9.4%</small> <span style="color:var(--accent)">1-0</span> <small>8.6%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.22</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.6%</small></td>
-          <td>主<br><small>H:44.0% A:16.4%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag tp">投注: 主胜 (edge=+26.3%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Hokkaido Consadole Sapporo 1680 (球队注册表 (CLQ_LYO)) | Tokushima Vortis 1500 (冷启动 (剩余3场)) | 差=+180<br>③ 市场(Shin去水): H=36.0% D=30.4% A=33.6% | margin=10.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.0% 0-0=4.9% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=62.3% D=19.2% A=18.5%<br>⑧ 投注: 主胜 | edge=+26.3% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Virginia United vs The Gap FC</b><br><small>英超 · 2026-08-08T07:00</small></td>
-          <td class="y">主胜<br><small>H:46.9% D:21.4% A:31.7%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.3%</small> <span style="color:var(--accent)">1-2</span> <small>7.9%</small> <span style="color:var(--accent)">1-1</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Virginia United 1600 (冷启动 (剩余3场)) | The Gap FC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=29.0% D=23.7% A=47.3% | margin=13.2%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.9% D=21.4% A=31.7%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Grange Thistle vs Palm Beach SC</b><br><small>英超 · 2026-08-08T07:00</small></td>
-          <td class="y">主胜<br><small>H:47.8% D:21.3% A:30.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-0</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Grange Thistle 1600 (冷启动 (剩余3场)) | Palm Beach SC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=47.6% D=23.4% A=29.0% | margin=13.2%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.8% D=21.3% A=30.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Caboolture FC vs Moreton City Excelsior</b><br><small>英超 · 2026-08-08T07:00</small></td>
-          <td class="g">主胜<br><small>H:56.6% D:19.5% A:23.8%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>10.3%</small> <span style="color:var(--accent)">2-0</span> <small>8.1%</small> <span style="color:var(--accent)">1-0</span> <small>7.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=64.5% · E[总]=3.31</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=16.5%</small></td>
-          <td>均<br><small>H:39.0% A:21.0%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> <span class="tag ts">⚠ 深盘(>1.5)自动降一档置信</span></td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Caboolture FC 1680 (球队注册表 (CLQ_LYO)) | Moreton City Excelsior 1600 (冷启动 (剩余3场)) | 差=+80<br>③ 市场(Shin去水): H=80.8% D=11.3% A=7.9% | margin=11.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.4% 0-0=4.6% | 集中度=0.055<br>⑥ 深盘检查: 🟡 深盘(>1.5)自动降一档置信<br>⑦ 最终: 主胜 H=56.6% D=19.5% A=23.8%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Mitchelton FC vs North Lakes United</b><br><small>英超 · 2026-08-08T07:00</small></td>
-          <td class="y">主胜<br><small>H:46.4% D:21.2% A:32.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.2%</small> <span style="color:var(--accent)">1-2</span> <small>8.2%</small> <span style="color:var(--accent)">1-1</span> <small>7.3%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Mitchelton FC 1600 (冷启动 (剩余3场)) | North Lakes United 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=18.2% D=21.3% A=60.5% | margin=12.4%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.4% D=21.2% A=32.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Peninsula Power FC vs Logan Lightning</b><br><small>英超 · 2026-08-08T07:00</small></td>
-          <td class="y">主胜<br><small>H:48.1% D:21.2% A:30.6%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>7.5%</small> <span style="color:var(--accent)">1-2</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Peninsula Power FC 1600 (冷启动 (剩余3场)) | Logan Lightning 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=54.4% D=21.1% A=24.6% | margin=12.7%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.1% D=21.2% A=30.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Fujieda MYFC vs Vegalta Sendai</b><br><small>J1 · 2026-08-08T09:30</small></td>
-          <td class="y">主胜<br><small>H:46.7% D:22.4% A:30.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.5%</small> <span style="color:var(--accent)">1-0</span> <small>8.3%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Fujieda MYFC 1500 (冷启动 (剩余3场)) | Vegalta Sendai 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=26.4% D=29.5% A=44.1% | margin=8.9%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.7% D=22.4% A=30.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Vanraure Hachinohe FC vs Kataller Toyama</b><br><small>J1 · 2026-08-08T09:30</small></td>
-          <td class="y">主胜<br><small>H:47.1% D:22.4% A:30.5%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>8.4%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Vanraure Hachinohe FC 1500 (冷启动 (剩余3场)) | Kataller Toyama 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=34.5% D=29.0% A=36.5% | margin=9.0%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.1% D=22.4% A=30.5%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Tegevajaro Miyazaki vs Yokohama FC</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:47.2% D:22.4% A:30.4%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>8.5%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Tegevajaro Miyazaki 1500 (冷启动 (剩余3场)) | Yokohama FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=37.1% D=29.2% A=33.7% | margin=9.9%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.2% D=22.4% A=30.4%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Nagoya Grampus vs Shimizu S-Pulse</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:47.6% D:22.3% A:30.1%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>8.6%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Nagoya Grampus 1500 (冷启动 (剩余3场)) | Shimizu S-Pulse 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=45.1% D=27.6% A=27.3% | margin=8.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.6% D=22.3% A=30.1%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Oita Trinita vs Shonan Bellmare</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:47.0% D:22.5% A:30.6%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>8.4%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Oita Trinita 1500 (冷启动 (剩余3场)) | Shonan Bellmare 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=31.8% D=30.6% A=37.6% | margin=9.7%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.0% D=22.5% A=30.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Kashiwa Reysol vs Mito Hollyhock</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:47.9% D:22.3% A:29.8%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.9%</small> <span style="color:var(--accent)">1-0</span> <small>8.9%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.1% · E[总]=3.02</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.6%</small></td>
-          <td>均<br><small>H:33.5% A:23.8%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag tb">参考</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Kashiwa Reysol 1680 (球队注册表 (CLQ_LYO)) | Mito Hollyhock 1680 (球队注册表 (CLQ_LYO)) | 差=+0<br>③ 市场(Shin去水): H=54.5% D=25.3% A=20.2% | margin=7.8%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.0% 0-0=6.0% | 集中度=0.060<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.9% D=22.3% A=29.8%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Cerezo Osaka vs Fagiano Okayama</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:47.6% D:22.3% A:30.1%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>8.6%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Cerezo Osaka 1500 (冷启动 (剩余3场)) | Fagiano Okayama 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=46.2% D=27.1% A=26.7% | margin=7.8%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.6% D=22.3% A=30.1%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Jubilo Iwata vs Blaublitz Akita</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:47.2% D:22.4% A:30.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>8.5%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Jubilo Iwata 1500 (冷启动 (剩余3场)) | Blaublitz Akita 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=37.6% D=29.7% A=32.6% | margin=9.6%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.2% D=22.4% A=30.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>RB Omiya Ardija vs Albirex Niigata</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:47.5% D:22.3% A:30.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>8.5%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: RB Omiya Ardija 1500 (冷启动 (剩余3场)) | Albirex Niigata 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=42.8% D=27.8% A=29.4% | margin=9.2%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.5% D=22.3% A=30.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Avispa Fukuoka vs Vissel Kobe</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:51.7% D:21.6% A:26.7%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>8.3%</small> <span style="color:var(--accent)">1-1</span> <small>7.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=60.2% · E[总]=3.11</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.5%</small></td>
-          <td>均<br><small>H:37.1% A:21.3%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Avispa Fukuoka 1560 (球队注册表 (CLQ_SPA)) | Vissel Kobe 1500 (冷启动 (剩余3场)) | 差=+60<br>③ 市场(Shin去水): H=23.7% D=30.6% A=45.6% | margin=8.3%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.4% 0-0=5.5% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=51.7% D=21.6% A=26.7%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Tokyo vs Machida Zelvia</b><br><small>J1 · 2026-08-08T10:00</small></td>
-          <td class="y">主胜<br><small>H:47.3% D:22.4% A:30.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>8.5%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: FC Tokyo 1500 (冷启动 (剩余3场)) | Machida Zelvia 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=39.1% D=30.0% A=30.9% | margin=8.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.3% D=22.4% A=30.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Sanfrecce Hiroshima vs JEF United Chiba</b><br><small>J1 · 2026-08-08T10:15</small></td>
-          <td class="y">主胜<br><small>H:48.2% D:22.1% A:29.6%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>10.0%</small> <span style="color:var(--accent)">1-0</span> <small>8.7%</small> <span style="color:var(--accent)">1-1</span> <small>7.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Sanfrecce Hiroshima 1500 (冷启动 (剩余3场)) | JEF United Chiba 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=58.5% D=24.0% A=17.4% | margin=8.6%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.2% D=22.1% A=29.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Sagan Tosu vs Ventforet Kofu</b><br><small>J1 · 2026-08-08T10:30</small></td>
-          <td class="y">主胜<br><small>H:47.5% D:22.4% A:30.0%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>8.5%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: J1 | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Sagan Tosu 1500 (冷启动 (剩余3场)) | Ventforet Kofu 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=43.9% D=29.8% A=26.3% | margin=9.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.5% D=22.4% A=30.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Anyang vs Daejeon Citizen FC</b><br><small>KLEAGUE · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:46.9% D:22.4% A:30.7%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>8.4%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: KLEAGUE | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: FC Anyang 1500 (冷启动 (剩余3场)) | Daejeon Citizen FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=31.2% D=28.9% A=39.8% | margin=11.1%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.9% D=22.4% A=30.7%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Gimcheon Sangmu FC vs FC Seoul</b><br><small>KLEAGUE · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:46.6% D:22.3% A:31.1%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.4%</small> <span style="color:var(--accent)">1-0</span> <small>8.3%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: KLEAGUE | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Gimcheon Sangmu FC 1500 (冷启动 (剩余3场)) | FC Seoul 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=24.7% D=26.7% A=48.6% | margin=11.2%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.6% D=22.3% A=31.1%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Jeonbuk FC vs Jeju SK FC</b><br><small>KLEAGUE · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:48.0% D:22.2% A:29.7%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.9%</small> <span style="color:var(--accent)">1-0</span> <small>8.7%</small> <span style="color:var(--accent)">1-1</span> <small>8.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: KLEAGUE | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Jeonbuk FC 1500 (冷启动 (剩余3场)) | Jeju SK FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=55.0% D=25.8% A=19.2% | margin=11.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.0% D=22.2% A=29.7%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Pohang Steelers vs Ulsan HD FC</b><br><small>KLEAGUE · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:47.2% D:22.4% A:30.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>8.5%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: KLEAGUE | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: FC Pohang Steelers 1500 (冷启动 (剩余3场)) | Ulsan HD FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=37.9% D=29.3% A=32.8% | margin=11.2%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.2% D=22.4% A=30.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Bucheon FC 1995 vs Gwangju FC</b><br><small>KLEAGUE · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:47.8% D:22.4% A:29.8%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>8.6%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: KLEAGUE | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Bucheon FC 1995 1500 (冷启动 (剩余3场)) | Gwangju FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=49.4% D=29.1% A=21.5% | margin=11.2%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.8% D=22.4% A=29.8%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Suzhou Dongwu vs Changchun Yatai</b><br><small>CSL · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:46.9% D:22.4% A:30.6%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>8.4%</small> <span style="color:var(--accent)">1-1</span> <small>8.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: CSL | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Suzhou Dongwu 1500 (冷启动 (剩余3场)) | Changchun Yatai 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=31.5% D=29.2% A=39.3% | margin=10.1%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.9% D=22.4% A=30.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Karlsruher SC vs Arminia Bielefeld</b><br><small>德甲 · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:47.0% D:20.8% A:32.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.2%</small> <span style="color:var(--accent)">1-2</span> <small>7.7%</small> <span style="color:var(--accent)">1-1</span> <small>7.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.4% · E[总]=3.42</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.5%</small></td>
-          <td>均<br><small>H:34.5% A:25.5%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.4%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: Karlsruher SC 1560 (冷启动 (剩余3场)) | Arminia Bielefeld 1560 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=34.6% D=26.1% A=39.3% | margin=7.0%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.4% 0-0=4.2% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.0% D=20.8% A=32.2%<br>⑧ 投注: 大2.5球 | edge=+16.4% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>SV Darmstadt 98 vs Holstein Kiel</b><br><small>德甲 · 2026-08-08T11:00</small></td>
-          <td class="r">客胜<br><small>H:36.5% D:21.1% A:42.4%</small></td>
-          <td><span style="color:var(--accent)">1-2</span> <small>8.7%</small> <span style="color:var(--accent)">2-1</span> <small>8.4%</small> <span style="color:var(--accent)">1-1</span> <small>7.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.2% · E[总]=3.41</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.4%</small></td>
-          <td>均<br><small>H:27.8% A:32.0%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.2%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: SV Darmstadt 98 1560 (冷启动 (剩余3场)) | Holstein Kiel 1680 (球队注册表 (CLQ_LYO)) | 差=-120<br>③ 市场(Shin去水): H=43.5% D=26.1% A=30.4% | margin=7.3%<br>④ 五基共识: 4/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.5% 0-0=4.3% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 客胜 H=36.5% D=21.1% A=42.4%<br>⑧ 投注: 大2.5球 | edge=+16.2% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>1. FC Heidenheim vs VfL 1899 Osnabruck</b><br><small>德甲 · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:48.1% D:20.7% A:31.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.3%</small> <span style="color:var(--accent)">1-1</span> <small>6.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.4% · E[总]=3.42</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.5%</small></td>
-          <td>均<br><small>H:34.5% A:25.5%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.4%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: 1. FC Heidenheim 1560 (冷启动 (剩余3场)) | VfL 1899 Osnabruck 1560 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=59.1% D=23.3% A=17.7% | margin=7.0%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.4% 0-0=4.2% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.1% D=20.7% A=31.2%<br>⑧ 投注: 大2.5球 | edge=+16.4% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>1. FC Magdeburg vs Eintracht Braunschweig</b><br><small>德甲 · 2026-08-08T11:00</small></td>
-          <td class="y">主胜<br><small>H:47.8% D:20.8% A:31.4%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.5%</small> <span style="color:var(--accent)">1-2</span> <small>7.4%</small> <span style="color:var(--accent)">1-1</span> <small>6.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.4% · E[总]=3.42</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.5%</small></td>
-          <td>均<br><small>H:34.5% A:25.5%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.4%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: 1. FC Magdeburg 1560 (冷启动 (剩余3场)) | Eintracht Braunschweig 1560 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=52.5% D=25.4% A=22.1% | margin=6.9%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.4% 0-0=4.2% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.8% D=20.8% A=31.4%<br>⑧ 投注: 大2.5球 | edge=+16.4% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Qingdao Hainiu FC vs Shanghai Shenhua FC</b><br><small>CSL · 2026-08-08T11:00</small></td>
-          <td class="g">主胜<br><small>H:58.6% D:20.0% A:21.4%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">2-0</span> <small>9.3%</small> <span style="color:var(--accent)">1-0</span> <small>9.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=59.7% · E[总]=3.08</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.2%</small></td>
-          <td>主<br><small>H:41.5% A:17.5%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: CSL | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Qingdao Hainiu FC 1500 (冷启动 (剩余3场)) | Shanghai Shenhua FC 1360 (球队注册表 (CLQ_SHA)) | 差=+140<br>③ 市场(Shin去水): H=23.9% D=23.4% A=52.7% | margin=8.2%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.8% 0-0=5.6% | 集中度=0.061<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=58.6% D=20.0% A=21.4%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Shijiazhuang Gongfu FC vs Shaanxi Union FC</b><br><small>CSL · 2026-08-08T11:30</small></td>
-          <td class="g">主胜<br><small>H:58.9% D:20.3% A:20.8%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">2-0</span> <small>9.3%</small> <span style="color:var(--accent)">1-0</span> <small>9.2%</small></td>
-          <td class="g">大2.5<br><small>O2.5=59.7% · E[总]=3.08</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.2%</small></td>
-          <td>主<br><small>H:41.5% A:17.5%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: CSL | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Shijiazhuang Gongfu FC 1500 (冷启动 (剩余3场)) | Shaanxi Union FC 1360 (球队注册表 (CLQ_SHA)) | 差=+140<br>③ 市场(Shin去水): H=29.2% D=30.1% A=40.7% | margin=10.0%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.8% 0-0=5.6% | 集中度=0.061<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=58.9% D=20.3% A=20.8%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Meizhou Hakka vs Foshan Nanshi FC</b><br><small>CSL · 2026-08-08T11:30</small></td>
-          <td class="g">主胜<br><small>H:59.9% D:20.2% A:19.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>10.1%</small> <span style="color:var(--accent)">2-0</span> <small>9.6%</small> <span style="color:var(--accent)">1-0</span> <small>9.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=59.7% · E[总]=3.08</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.2%</small></td>
-          <td>主<br><small>H:41.5% A:17.5%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: CSL | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Meizhou Hakka 1500 (冷启动 (剩余3场)) | Foshan Nanshi FC 1360 (球队注册表 (CLQ_SHA)) | 差=+140<br>③ 市场(Shin去水): H=49.9% D=26.6% A=23.5% | margin=10.1%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.8% 0-0=5.6% | 集中度=0.061<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=59.9% D=20.2% A=19.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Zhejiang FC vs Wuhan Three Towns FC</b><br><small>CSL · 2026-08-08T11:35</small></td>
-          <td class="y">主胜<br><small>H:48.0% D:22.1% A:29.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.9%</small> <span style="color:var(--accent)">1-0</span> <small>8.7%</small> <span style="color:var(--accent)">1-1</span> <small>7.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: CSL | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Zhejiang FC 1500 (冷启动 (剩余3场)) | Wuhan Three Towns FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=53.5% D=23.9% A=22.6% | margin=8.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.0% D=22.1% A=29.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Dalian Yingbo FC vs Liaoning Tieren FC</b><br><small>CSL · 2026-08-08T11:35</small></td>
-          <td class="y">主胜<br><small>H:48.1% D:22.1% A:29.8%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.9%</small> <span style="color:var(--accent)">1-0</span> <small>8.7%</small> <span style="color:var(--accent)">1-1</span> <small>7.8%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: CSL | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Dalian Yingbo FC 1500 (冷启动 (剩余3场)) | Liaoning Tieren FC 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=56.5% D=22.9% A=20.6% | margin=8.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.1% D=22.1% A=29.8%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>TSV Havelse vs VfB Stuttgart II</b><br><small>德甲 · 2026-08-08T12:00</small></td>
-          <td class="r">客胜<br><small>H:35.9% D:21.0% A:43.1%</small></td>
-          <td><span style="color:var(--accent)">1-2</span> <small>9.0%</small> <span style="color:var(--accent)">2-1</span> <small>8.2%</small> <span style="color:var(--accent)">1-1</span> <small>7.0%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.2% · E[总]=3.41</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.4%</small></td>
-          <td>均<br><small>H:27.8% A:32.0%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.2%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: TSV Havelse 1560 (冷启动 (剩余3场)) | VfB Stuttgart II 1680 (球队注册表 (CLQ_FEN)) | 差=-120<br>③ 市场(Shin去水): H=29.4% D=24.4% A=46.2% | margin=9.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.5% 0-0=4.3% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 客胜 H=35.9% D=21.0% A=43.1%<br>⑧ 投注: 大2.5球 | edge=+16.2% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Viktoria Cologne vs Jahn Regensburg</b><br><small>德甲 · 2026-08-08T12:00</small></td>
-          <td class="g">主胜<br><small>H:58.2% D:18.9% A:22.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.4%</small> <span style="color:var(--accent)">2-0</span> <small>7.3%</small> <span style="color:var(--accent)">3-1</span> <small>7.1%</small></td>
-          <td class="g">大2.5<br><small>O2.5=68.7% · E[总]=3.53</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=18.8%</small></td>
-          <td>主<br><small>H:41.9% A:19.9%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+18.7%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: FC Viktoria Cologne 1680 (球队注册表 (CLQ_LYO)) | Jahn Regensburg 1560 (冷启动 (剩余3场)) | 差=+120<br>③ 市场(Shin去水): H=38.5% D=25.9% A=35.7% | margin=9.6%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=9.3% 0-0=3.8% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=58.2% D=18.9% A=22.9%<br>⑧ 投注: 大2.5球 | edge=+18.7% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>MSV Duisburg vs SV Meppen 1912</b><br><small>德甲 · 2026-08-08T12:00</small></td>
-          <td class="y">主胜<br><small>H:48.2% D:20.6% A:31.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.3%</small> <span style="color:var(--accent)">1-1</span> <small>6.8%</small></td>
-          <td class="g">大2.5<br><small>O2.5=66.4% · E[总]=3.42</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=17.5%</small></td>
-          <td>均<br><small>H:34.5% A:25.5%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+16.4%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: MSV Duisburg 1560 (冷启动 (剩余3场)) | SV Meppen 1912 1560 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=60.5% D=21.3% A=18.2% | margin=10.1%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.4% 0-0=4.2% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.2% D=20.6% A=31.2%<br>⑧ 投注: 大2.5球 | edge=+16.4% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Ingolstadt 04 vs FC Wurzburger Kickers</b><br><small>德甲 · 2026-08-08T12:00</small></td>
-          <td class="g">主胜<br><small>H:59.0% D:18.7% A:22.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">2-0</span> <small>7.5%</small> <span style="color:var(--accent)">3-1</span> <small>7.2%</small></td>
-          <td class="g">大2.5<br><small>O2.5=68.7% · E[总]=3.53</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=18.8%</small></td>
-          <td>主<br><small>H:41.9% A:19.9%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占54%</small></td>
-          <td><span class="tag tp">投注: 大2.5球 (edge=+18.7%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 德甲 | 场均3.04球 | 主胜44%/平22%/客胜34% | 大2.5率58%<br>② ELO: FC Ingolstadt 04 1680 (球队注册表 (CLQ_LYO)) | FC Wurzburger Kickers 1560 (冷启动 (剩余3场)) | 差=+120<br>③ 市场(Shin去水): H=56.0% D=21.3% A=22.7% | margin=9.3%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=9.3% 0-0=3.8% | 集中度=0.052<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=59.0% D=18.7% A=22.3%<br>⑧ 投注: 大2.5球 | edge=+18.7% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Yunnan Yukun vs Chengdu Rongcheng</b><br><small>CSL · 2026-08-08T12:00</small></td>
-          <td class="y">主胜<br><small>H:46.8% D:22.2% A:31.0%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.5%</small> <span style="color:var(--accent)">1-0</span> <small>8.3%</small> <span style="color:var(--accent)">1-1</span> <small>7.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=58.8% · E[总]=3.05</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=13.8%</small></td>
-          <td>均<br><small>H:33.7% A:23.9%</small></td>
-          <td>角球大9.3<br><small>E[9.8] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: CSL | 场均2.65球 | 主胜45%/平25%/客胜30% | 大2.5率50%<br>② ELO: Yunnan Yukun 1500 (冷启动 (剩余3场)) | Chengdu Rongcheng 1500 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=28.4% D=24.9% A=46.7% | margin=8.4%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.9% 0-0=5.8% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.8% D=22.2% A=31.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Cambridge United vs Barnet FC</b><br><small>英超 · 2026-08-08T12:00</small></td>
-          <td class="y">主胜<br><small>H:47.9% D:21.5% A:30.6%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>7.5%</small> <span style="color:var(--accent)">1-2</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Cambridge United 1600 (冷启动 (剩余3场)) | Barnet FC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=49.6% D=26.6% A=23.8% | margin=8.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.9% D=21.5% A=30.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Altai Oskemen vs FC Kyzylzhar SK</b><br><small>英超 · 2026-08-08T12:00</small></td>
-          <td class="y">主胜<br><small>H:47.5% D:21.6% A:30.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.5%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: FC Altai Oskemen 1600 (冷启动 (剩余3场)) | FC Kyzylzhar SK 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=41.2% D=29.2% A=29.6% | margin=13.7%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.5% D=21.6% A=30.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Zhetysu Taldykorgan vs FC Ordabasy</b><br><small>英超 · 2026-08-08T13:00</small></td>
-          <td class="y">主胜<br><small>H:46.5% D:21.4% A:32.1%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.2%</small> <span style="color:var(--accent)">1-2</span> <small>8.1%</small> <span style="color:var(--accent)">1-1</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Zhetysu Taldykorgan 1600 (冷启动 (剩余3场)) | FC Ordabasy 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=19.7% D=25.7% A=54.6% | margin=13.6%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.5% D=21.4% A=32.1%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Queens Park Rangers vs Millwall FC</b><br><small>英超 · 2026-08-08T13:00</small></td>
-          <td class="y">主胜<br><small>H:47.1% D:21.5% A:31.4%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.4%</small> <span style="color:var(--accent)">1-2</span> <small>7.8%</small> <span style="color:var(--accent)">1-1</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Queens Park Rangers 1600 (冷启动 (剩余3场)) | Millwall FC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=31.7% D=27.3% A=41.0% | margin=7.7%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.1% D=21.5% A=31.4%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>FC Kairat Almaty vs FC Zhenis</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">客胜<br><small>H:32.2% D:21.8% A:46.0%</small></td>
-          <td><span style="color:var(--accent)">1-2</span> <small>9.1%</small> <span style="color:var(--accent)">2-1</span> <small>8.4%</small> <span style="color:var(--accent)">0-1</span> <small>7.9%</small></td>
-          <td class="g">大2.5<br><small>O2.5=59.4% · E[总]=3.07</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.1%</small></td>
-          <td>均<br><small>H:23.7% A:34.0%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: FC Kairat Almaty 1420 (球队注册表 (CLQ_KAI)) | FC Zhenis 1600 (冷启动 (剩余3场)) | 差=-180<br>③ 市场(Shin去水): H=66.7% D=21.3% A=12.0% | margin=14.0%<br>④ 五基共识: 4/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.8% 0-0=5.7% | 集中度=0.059<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 客胜 H=32.2% D=21.8% A=46.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Arbroath FC vs Inverness Caledonian Thistle FC</b><br><small>英冠 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:45.5% D:23.3% A:31.2%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.6%</small> <span style="color:var(--accent)">2-1</span> <small>9.5%</small> <span style="color:var(--accent)">1-1</span> <small>8.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=54.0% · E[总]=2.84</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.9%</small></td>
-          <td>均<br><small>H:32.2% A:23.7%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英冠 | 场均2.5球 | 主胜45%/平23%/客胜32% | 大2.5率49%<br>② ELO: Arbroath FC 1420 (冷启动 (剩余3场)) | Inverness Caledonian Thistle FC 1420 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=32.5% D=28.3% A=39.1% | margin=8.3%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.0% | 集中度=0.064<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=45.5% D=23.3% A=31.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Dunfermline Athletic FC vs Ayr United FC</b><br><small>英冠 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:46.2% D:23.3% A:30.6%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.8%</small> <span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-1</span> <small>8.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=54.0% · E[总]=2.84</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.9%</small></td>
-          <td>均<br><small>H:32.2% A:23.7%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英冠 | 场均2.5球 | 主胜45%/平23%/客胜32% | 大2.5率49%<br>② ELO: Dunfermline Athletic FC 1420 (冷启动 (剩余3场)) | Ayr United FC 1420 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=46.2% D=28.3% A=25.4% | margin=8.9%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.0% | 集中度=0.064<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.2% D=23.3% A=30.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Queens Park FC vs Raith Rovers FC</b><br><small>英冠 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:45.1% D:23.3% A:31.6%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.5%</small> <span style="color:var(--accent)">2-1</span> <small>9.4%</small> <span style="color:var(--accent)">1-1</span> <small>8.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=54.0% · E[总]=2.84</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.9%</small></td>
-          <td>均<br><small>H:32.2% A:23.7%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英冠 | 场均2.5球 | 主胜45%/平23%/客胜32% | 大2.5率49%<br>② ELO: Queens Park FC 1420 (冷启动 (剩余3场)) | Raith Rovers FC 1420 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=24.0% D=28.0% A=48.0% | margin=8.6%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.0% | 集中度=0.064<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=45.1% D=23.3% A=31.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Stenhousemuir FC vs Greenock Morton FC</b><br><small>英冠 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:46.2% D:23.3% A:30.6%</small></td>
-          <td><span style="color:var(--accent)">1-0</span> <small>9.8%</small> <span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-1</span> <small>8.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=54.0% · E[总]=2.84</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=11.9%</small></td>
-          <td>均<br><small>H:32.2% A:23.7%</small></td>
-          <td>角球大9.5<br><small>E[10.0] · 主占55%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英冠 | 场均2.5球 | 主胜45%/平23%/客胜32% | 大2.5率49%<br>② ELO: Stenhousemuir FC 1420 (冷启动 (剩余3场)) | Greenock Morton FC 1420 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=46.5% D=27.7% A=25.9% | margin=8.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=12.8% 0-0=7.0% | 集中度=0.064<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.2% D=23.3% A=30.6%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Sheffield Wednesday vs Bolton Wanderers</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="r">主胜<br><small>H:39.9% D:21.9% A:38.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>8.8%</small> <span style="color:var(--accent)">1-2</span> <small>8.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.6%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.5% · E[总]=3.23</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.6%</small></td>
-          <td>均<br><small>H:29.8% A:28.7%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag tp">投注: BTTS是 (edge=+11.1%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Sheffield Wednesday 1600 (冷启动 (剩余3场)) | Bolton Wanderers 1680 (球队注册表 (CLQ_LYO)) | 差=-80<br>③ 市场(Shin去水): H=30.4% D=27.5% A=42.2% | margin=8.9%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.4% 0-0=5.0% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=39.9% D=21.9% A=38.2%<br>⑧ 投注: BTTS是 | edge=+11.1% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Watford FC vs Crawley Town</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:49.0% D:21.0% A:30.0%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>10.0%</small> <span style="color:var(--accent)">1-0</span> <small>7.8%</small> <span style="color:var(--accent)">1-2</span> <small>7.2%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Watford FC 1600 (冷启动 (剩余3场)) | Crawley Town 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=73.2% D=16.9% A=9.8% | margin=7.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=49.0% D=21.0% A=30.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Bradford City FC vs Rochdale AFC</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:48.2% D:21.4% A:30.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>7.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Bradford City FC 1600 (冷启动 (剩余3场)) | Rochdale AFC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=57.1% D=25.0% A=17.8% | margin=7.8%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.2% D=21.4% A=30.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Leicester City vs Northampton Town</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="r">客胜<br><small>H:38.0% D:21.7% A:40.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.2%</small> <span style="color:var(--accent)">1-2</span> <small>8.6%</small> <span style="color:var(--accent)">1-0</span> <small>7.6%</small></td>
-          <td class="g">大2.5<br><small>O2.5=60.4% · E[总]=3.12</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=14.6%</small></td>
-          <td>均<br><small>H:27.2% A:30.7%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Leicester City 1480 (ELO数据库) | Northampton Town 1600 (冷启动 (剩余3场)) | 差=-120<br>③ 市场(Shin去水): H=74.6% D=15.1% A=10.3% | margin=8.2%<br>④ 五基共识: 4/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.8% 0-0=5.5% | 集中度=0.057<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 客胜 H=38.0% D=21.7% A=40.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>AFC Wimbledon vs Newport County</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:48.1% D:21.4% A:30.5%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">1-0</span> <small>7.5%</small> <span style="color:var(--accent)">1-2</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: AFC Wimbledon 1600 (冷启动 (剩余3场)) | Newport County 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=53.7% D=24.9% A=21.4% | margin=8.1%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.1% D=21.4% A=30.5%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>West Ham United vs Portsmouth FC</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:48.4% D:21.3% A:30.4%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>7.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: West Ham United 1600 (ELO数据库) | Portsmouth FC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=59.8% D=22.0% A=18.1% | margin=8.4%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.4% D=21.3% A=30.4%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Swansea City vs Birmingham City</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:47.1% D:21.6% A:31.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.4%</small> <span style="color:var(--accent)">1-2</span> <small>7.8%</small> <span style="color:var(--accent)">1-1</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Swansea City 1600 (冷启动 (剩余3场)) | Birmingham City 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=32.5% D=28.3% A=39.1% | margin=8.3%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.1% D=21.6% A=31.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Bromley FC vs Reading FC</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:47.6% D:21.5% A:30.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Bromley FC 1600 (冷启动 (剩余3场)) | Reading FC 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=43.5% D=27.6% A=28.8% | margin=8.3%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.6% D=21.5% A=30.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Leyton Orient London vs Oxford United</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:47.1% D:21.6% A:31.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.4%</small> <span style="color:var(--accent)">1-2</span> <small>7.7%</small> <span style="color:var(--accent)">1-1</span> <small>7.6%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Leyton Orient London 1600 (冷启动 (剩余3场)) | Oxford United 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=33.5% D=29.5% A=36.9% | margin=8.4%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.1% D=21.6% A=31.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Norwich City vs Milton Keynes Dons</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:48.4% D:21.3% A:30.3%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>7.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Norwich City 1600 (冷启动 (剩余3场)) | Milton Keynes Dons 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=59.5% D=23.6% A=16.9% | margin=8.3%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.4% D=21.3% A=30.3%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Bristol Rovers vs Peterborough United</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:54.7% D:20.3% A:25.0%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.7%</small> <span style="color:var(--accent)">2-0</span> <small>7.6%</small> <span style="color:var(--accent)">1-0</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=64.5% · E[总]=3.31</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=16.5%</small></td>
-          <td>均<br><small>H:39.0% A:21.0%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Bristol Rovers 1680 (球队注册表 (CLQ_LYO)) | Peterborough United 1600 (冷启动 (剩余3场)) | 差=+80<br>③ 市场(Shin去水): H=39.5% D=27.1% A=33.5% | margin=8.8%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=10.4% 0-0=4.6% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=54.7% D=20.3% A=25.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Cardiff City vs Swindon Town</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:48.7% D:21.1% A:30.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.9%</small> <span style="color:var(--accent)">1-0</span> <small>7.7%</small> <span style="color:var(--accent)">1-2</span> <small>7.3%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Cardiff City 1600 (冷启动 (剩余3场)) | Swindon Town 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=66.4% D=18.8% A=14.9% | margin=7.8%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.7% D=21.1% A=30.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Gillingham FC vs Luton Town</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:46.6% D:21.4% A:32.0%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.2%</small> <span style="color:var(--accent)">1-2</span> <small>8.0%</small> <span style="color:var(--accent)">1-1</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Gillingham FC 1600 (冷启动 (剩余3场)) | Luton Town 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=20.9% D=25.8% A=53.3% | margin=8.3%<br>④ 五基共识: 6/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=46.6% D=21.4% A=32.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Preston North End vs Huddersfield Town</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:47.5% D:21.5% A:31.0%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Preston North End 1600 (冷启动 (剩余3场)) | Huddersfield Town 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=41.6% D=26.5% A=32.0% | margin=8.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.5% D=21.5% A=31.0%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Grimsby Town vs Blackpool FC</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="r">主胜<br><small>H:40.2% D:22.0% A:37.8%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>8.9%</small> <span style="color:var(--accent)">1-2</span> <small>8.5%</small> <span style="color:var(--accent)">1-1</span> <small>7.6%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.5% · E[总]=3.23</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.6%</small></td>
-          <td>均<br><small>H:29.8% A:28.7%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag tp">投注: BTTS是 (edge=+11.1%)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Grimsby Town 1600 (冷启动 (剩余3场)) | Blackpool FC 1680 (球队注册表 (CLQ_LYO)) | 差=-80<br>③ 市场(Shin去水): H=37.6% D=28.3% A=34.1% | margin=8.5%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.4% 0-0=5.0% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=40.2% D=22.0% A=37.8%<br>⑧ 投注: BTTS是 | edge=+11.1% | 置信=HIGH</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Salford City vs Shrewsbury Town</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:48.4% D:21.4% A:30.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.8%</small> <span style="color:var(--accent)">1-0</span> <small>7.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Salford City 1600 (冷启动 (剩余3场)) | Shrewsbury Town 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=60.2% D=24.3% A=15.5% | margin=7.7%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=48.4% D=21.4% A=30.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Barnsley FC vs Wigan Athletic</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:47.3% D:21.5% A:31.2%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.5%</small> <span style="color:var(--accent)">1-2</span> <small>7.7%</small> <span style="color:var(--accent)">1-1</span> <small>7.5%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Barnsley FC 1600 (冷启动 (剩余3场)) | Wigan Athletic 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场(Shin去水): H=37.5% D=26.9% A=35.5% | margin=7.8%<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.3% D=21.5% A=31.2%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Burton Albion vs Blackburn Rovers</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:47.7% D:21.3% A:30.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-0</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Burton Albion 1600 (冷启动 (剩余3场)) | Blackburn Rovers 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场: 无Kambi赔率<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.7% D=21.3% A=30.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Derby County vs Lincoln City</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="r">主胜<br><small>H:40.4% D:21.8% A:37.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.0%</small> <span style="color:var(--accent)">1-2</span> <small>8.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.5% · E[总]=3.23</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.6%</small></td>
-          <td>均<br><small>H:29.8% A:28.7%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Derby County 1600 (冷启动 (剩余3场)) | Lincoln City 1680 (球队注册表 (CLQ_LYO)) | 差=-80<br>③ 市场: 无Kambi赔率<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.4% 0-0=5.0% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=40.4% D=21.8% A=37.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Burnley FC vs Notts County</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="y">主胜<br><small>H:47.7% D:21.3% A:30.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.6%</small> <span style="color:var(--accent)">1-2</span> <small>7.6%</small> <span style="color:var(--accent)">1-0</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.8% · E[总]=3.24</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.7%</small></td>
-          <td>均<br><small>H:34.2% A:24.6%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Burnley FC 1600 (冷启动 (剩余3场)) | Notts County 1600 (冷启动 (剩余3场)) | 差=+0<br>③ 市场: 无Kambi赔率<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.2% 0-0=4.9% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=47.7% D=21.3% A=30.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
-        <tr>
-          <td class="l"><b>Stoke City vs Oldham Athletic</b><br><small>英超 · 2026-08-08T14:00</small></td>
-          <td class="r">主胜<br><small>H:40.4% D:21.8% A:37.9%</small></td>
-          <td><span style="color:var(--accent)">2-1</span> <small>9.0%</small> <span style="color:var(--accent)">1-2</span> <small>8.6%</small> <span style="color:var(--accent)">1-1</span> <small>7.4%</small></td>
-          <td class="g">大2.5<br><small>O2.5=62.5% · E[总]=3.23</small></td>
-          <td class="r">半场小1.5<br><small>O1.5=15.6%</small></td>
-          <td>均<br><small>H:29.8% A:28.7%</small></td>
-          <td>角球大9.8<br><small>E[10.3] · 主占56%</small></td>
-          <td><span class="tag ts">参考(冷启动)</span> </td>
-          <td class="l" style="font-size:0.65em;max-width:300px">① 联赛画像: 英超 | 场均2.84球 | 主胜44%/平23%/客胜33% | 大2.5率55%<br>② ELO: Stoke City 1600 (冷启动 (剩余3场)) | Oldham Athletic 1680 (球队注册表 (CLQ_LYO)) | 差=-80<br>③ 市场: 无Kambi赔率<br>④ 五基共识: 10/10对一致 | 塌陷警告=✅ 无<br>⑤ DC修正(ρ=-0.1): 1-1=11.4% 0-0=5.0% | 集中度=0.055<br>⑥ 深盘检查: ✅ 非深盘<br>⑦ 最终: 主胜 H=40.4% D=21.8% A=37.9%<br>⑧ 投注: 无符合阈值 (edge<5%或概率不达标)</td>
-        </tr>
+      <td class="num">014</td>
+      <td class="ko">23:30</td>
+      <td><div class="match-name">米亚尔比 vs 埃尔夫斯堡</div><div class="league-tag">瑞典超</div></td>
+      <td class="odds">2.53/3.12/2.42</td>
+      <td class="dir"><span style="color:#f0a838;font-weight:700">平局</span></td>
+      <td class="conf"><span style="color:#f85149;font-weight:700">低</span></td>
+      <td class="probs">主35%<br>平28%<br>客37%</td>
+      <td class="eg">2.46</td>
+      <td class="sub">小2.5<br><small>HT:半场小1.0</small><br><small>波胆:1-1 / 1-0 / 0-1</small></td>
+      <td class="bet"><span style="color:#f85149">🔴 观望</span></td>
+      <td class="logic">SPF 2.53/3.12/2.42 · 隐含概率 主35%/平28%/客37% · 预期进球 2.46 (主1.3/客1.16) ·  场均2.55球 · physical_defensive</td>
+    </tr><tr>
+      <td class="num">015</td>
+      <td class="ko">00:00</td>
+      <td><div class="match-name">雅罗 vs 瓦萨</div><div class="league-tag">芬超</div></td>
+      <td class="odds">4.00/3.55/1.68</td>
+      <td class="dir"><span style="color:#58a6ff;font-weight:700">客胜</span></td>
+      <td class="conf"><span style="color:#f0a838;font-weight:700">低-中</span></td>
+      <td class="probs">主22%<br>平25%<br>客53%</td>
+      <td class="eg">2.47</td>
+      <td class="sub">小2.5<br><small>HT:半场小1.0</small><br><small>波胆:1-1 / 0-1 / 1-0</small></td>
+      <td class="bet"><span style="color:#f0a838">🟡 轻注 50</span></td>
+      <td class="logic">SPF 4.0/3.55/1.68 · 隐含概率 主22%/平25%/客53% · 预期进球 2.47 (主1.08/客1.39) ·  场均2.6球 · physical</td>
+    </tr><tr>
+      <td class="num">016</td>
+      <td class="ko">00:45</td>
+      <td><div class="match-name">前进之鹰 vs 威廉二世</div><div class="league-tag">荷甲</div></td>
+      <td class="odds">1.39/4.35/5.55</td>
+      <td class="dir"><span style="color:#3fb950;font-weight:700">主胜</span></td>
+      <td class="conf"><span style="color:#f0a838;font-weight:700">低-中</span></td>
+      <td class="probs">主64%<br>平20%<br>客16%</td>
+      <td class="eg">2.54</td>
+      <td class="sub">小2.5<br><small>HT:半场大1.0</small><br><small>波胆:1-0 / 2-0 / 1-1</small></td>
+      <td class="bet"><span style="color:#f0a838">🟡 轻注 50</span></td>
+      <td class="logic">SPF 1.39/4.35/5.55 · 隐含概率 主64%/平20%/客16% · 预期进球 2.54 (主1.72/客0.82) ·  场均3.1球 · attacking</td>
+    </tr><tr>
+      <td class="num">017</td>
+      <td class="ko">01:00</td>
+      <td><div class="match-name">吉马良斯 vs 阿罗卡</div><div class="league-tag">葡超</div></td>
+      <td class="odds">1.79/3.25/3.80</td>
+      <td class="dir"><span style="color:#3fb950;font-weight:700">主胜</span></td>
+      <td class="conf"><span style="color:#f85149;font-weight:700">低</span></td>
+      <td class="probs">主50%<br>平27%<br>客23%</td>
+      <td class="eg">2.49</td>
+      <td class="sub">小2.5<br><small>HT:半场小1.0</small><br><small>波胆:1-0 / 1-1 / 2-0</small></td>
+      <td class="bet"><span style="color:#f85149">🔴 观望</span></td>
+      <td class="logic">SPF 1.79/3.25/3.8 · 隐含概率 主50%/平27%/客23% · 预期进球 2.49 (主1.53/客0.96) ·  场均2.5球 · balanced</td>
+    </tr><tr>
+      <td class="num">018</td>
+      <td class="ko">?</td>
+      <td><div class="match-name">PSV埃因霍温 vs 福图纳锡塔德</div><div class="league-tag">荷甲</div></td>
+      <td class="odds">-</td>
+      <td class="dir"><span style="color:#f85149">数据不足</span></td>
+      <td class="conf">-</td>
+      <td class="probs">-</td>
+      <td class="eg">-</td>
+      <td class="sub">-</td>
+      <td class="bet"><span style="color:#f85149">跳过</span></td>
+      <td class="logic">无SPF赔率数据</td>
+    </tr><tr>
+      <td class="num">019</td>
+      <td class="ko">02:45</td>
+      <td><div class="match-name">波城FC vs 阿纳西</div><div class="league-tag">法乙</div></td>
+      <td class="odds">2.64/3.05/2.37</td>
+      <td class="dir"><span style="color:#f0a838;font-weight:700">平局</span></td>
+      <td class="conf"><span style="color:#f85149;font-weight:700">低</span></td>
+      <td class="probs">主34%<br>平29%<br>客37%</td>
+      <td class="eg">2.46</td>
+      <td class="sub">小2.5<br><small>HT:半场小1.0</small><br><small>波胆:1-1 / 1-0 / 0-1</small></td>
+      <td class="bet"><span style="color:#f85149">🔴 观望</span></td>
+      <td class="logic">SPF 2.64/3.05/2.37 · 隐含概率 主34%/平29%/客37% · 预期进球 2.46 (主1.28/客1.18) ·  场均2.3球 · defensive</td>
+    </tr><tr>
+      <td class="num">020</td>
+      <td class="ko">02:45</td>
+      <td><div class="match-name">蒙彼利埃 vs 第戎</div><div class="league-tag">法乙</div></td>
+      <td class="odds">1.69/3.26/4.35</td>
+      <td class="dir"><span style="color:#3fb950;font-weight:700">主胜</span></td>
+      <td class="conf"><span style="color:#f85149;font-weight:700">低</span></td>
+      <td class="probs">主52%<br>平27%<br>客20%</td>
+      <td class="eg">2.49</td>
+      <td class="sub">小2.5<br><small>HT:半场小1.0</small><br><small>波胆:1-0 / 1-1 / 2-0</small></td>
+      <td class="bet"><span style="color:#f85149">🔴 观望</span></td>
+      <td class="logic">SPF 1.69/3.26/4.35 · 隐含概率 主52%/平27%/客20% · 预期进球 2.49 (主1.57/客0.91) ·  场均2.3球 · defensive</td>
+    </tr><tr>
+      <td class="num">021</td>
+      <td class="ko">02:45</td>
+      <td><div class="match-name">南特 vs 圣旺红星</div><div class="league-tag">法乙</div></td>
+      <td class="odds">1.61/3.45/4.60</td>
+      <td class="dir"><span style="color:#3fb950;font-weight:700">主胜</span></td>
+      <td class="conf"><span style="color:#f0a838;font-weight:700">低-中</span></td>
+      <td class="probs">主55%<br>平26%<br>客19%</td>
+      <td class="eg">2.5</td>
+      <td class="sub">小2.5<br><small>HT:半场大1.0</small><br><small>波胆:1-0 / 1-1 / 2-0</small></td>
+      <td class="bet"><span style="color:#f0a838">🟡 轻注 50</span></td>
+      <td class="logic">SPF 1.61/3.45/4.6 · 隐含概率 主55%/平26%/客19% · 预期进球 2.5 (主1.61/客0.89) ·  场均2.3球 · defensive</td>
+    </tr><tr>
+      <td class="num">022</td>
+      <td class="ko">03:00</td>
+      <td><div class="match-name">阿尔克马尔 vs 海牙</div><div class="league-tag">荷甲</div></td>
+      <td class="odds">1.28/4.90/6.95</td>
+      <td class="dir"><span style="color:#3fb950;font-weight:700">主胜</span></td>
+      <td class="conf"><span style="color:#f0a838;font-weight:700">低-中</span></td>
+      <td class="probs">主69%<br>平18%<br>客13%</td>
+      <td class="eg">2.56</td>
+      <td class="sub">小2.5<br><small>HT:半场大1.0</small><br><small>波胆:1-0 / 2-0 / 1-1</small></td>
+      <td class="bet"><span style="color:#f0a838">🟡 轻注 50</span></td>
+      <td class="logic">SPF 1.28/4.9/6.95 · 隐含概率 主69%/平18%/客13% · 预期进球 2.56 (主1.8/客0.76) ·  场均3.1球 · attacking</td>
+    </tr><tr>
+      <td class="num">023</td>
+      <td class="ko">03:00</td>
+      <td><div class="match-name">格雷米奥 vs 圣保罗</div><div class="league-tag">巴甲</div></td>
+      <td class="odds">2.30/2.75/3.02</td>
+      <td class="dir"><span style="color:#f0a838;font-weight:700">平局</span></td>
+      <td class="conf"><span style="color:#f85149;font-weight:700">低</span></td>
+      <td class="probs">主38%<br>平32%<br>客29%</td>
+      <td class="eg">2.45</td>
+      <td class="sub">小2.5<br><small>HT:半场小1.0</small><br><small>波胆:1-1 / 1-0 / 0-1</small></td>
+      <td class="bet"><span style="color:#f85149">🔴 观望</span></td>
+      <td class="logic">SPF 2.3/2.75/3.02 · 隐含概率 主38%/平32%/客29% · 预期进球 2.45 (主1.38/客1.07) ·  场均2.3球 · physical_home</td>
+    </tr><tr>
+      <td class="num">024</td>
+      <td class="ko">?</td>
+      <td><div class="match-name">阿马多拉 vs 里斯本竞技</div><div class="league-tag">葡超</div></td>
+      <td class="odds">-</td>
+      <td class="dir"><span style="color:#f85149">数据不足</span></td>
+      <td class="conf">-</td>
+      <td class="probs">-</td>
+      <td class="eg">-</td>
+      <td class="sub">-</td>
+      <td class="bet"><span style="color:#f85149">跳过</span></td>
+      <td class="logic">无SPF赔率数据</td>
+    </tr><tr>
+      <td class="num">025</td>
+      <td class="ko">08:00</td>
+      <td><div class="match-name">博塔弗戈 vs 弗鲁米嫩塞</div><div class="league-tag">巴甲</div></td>
+      <td class="odds">2.20/3.00/2.93</td>
+      <td class="dir"><span style="color:#f0a838;font-weight:700">平局</span></td>
+      <td class="conf"><span style="color:#f85149;font-weight:700">低</span></td>
+      <td class="probs">主40%<br>平30%<br>客30%</td>
+      <td class="eg">2.46</td>
+      <td class="sub">小2.5<br><small>HT:半场小1.0</small><br><small>波胆:1-1 / 1-0 / 0-1</small></td>
+      <td class="bet"><span style="color:#f85149">🔴 观望</span></td>
+      <td class="logic">SPF 2.2/3.0/2.93 · 隐含概率 主40%/平30%/客30% · 预期进球 2.46 (主1.39/客1.07) ·  场均2.3球 · physical_home</td>
+    </tr>
+</tbody>
 </table>
 
-<div class="ft">© JOYBOY · 管线自动生成 · 禁止盲目跟单</div>
+<!-- 投注台账 -->
+<div class="ledger">
+<h3>💰 投注台账 · 2026-08-08 晚场</h3>
+<table>
+<tr><th>编号</th><th>对阵</th><th>方向</th><th>赔率</th><th>金额</th><th>置信</th><th>预期回报</th></tr>
+<tr><td>015</td><td>雅罗 vs 瓦萨</td><td style="color:var(--g)">客胜</td><td>1.68</td><td>50</td><td>低-中</td><td>84</td></tr>
+<tr><td>016</td><td>前进之鹰 vs 威廉二世</td><td style="color:var(--g)">主胜</td><td>1.39</td><td>100</td><td>低-中</td><td>139</td></tr>
+<tr><td>021</td><td>南特 vs 圣旺红星</td><td style="color:var(--g)">主胜</td><td>1.61</td><td>50</td><td>低-中</td><td>80</td></tr>
+<tr><td>022</td><td>阿尔克马尔 vs 海牙</td><td style="color:var(--g)">主胜</td><td>1.28</td><td>100</td><td>低-中</td><td>128</td></tr>
+</table>
+<div style="margin-top:8px;font-size:0.7em;color:var(--muted)">
+<strong>总投入:</strong> 300 · <strong>全中回报:</strong> 298 · <strong>理论保本率:</strong> 需4场中133场可保本
 </div>
-</body>
-</html>
+</div>

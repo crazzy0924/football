@@ -173,7 +173,20 @@ def cmd_predict(args):
     # Generate HTML report
     try:
         from pipeline.reporter import generate_report
-        html_path = generate_report(predictions, output_dir)
+
+        # Optional LLM qualitative analysis
+        analyst_notes = None
+        if args.llm:
+            print(f"\n[LLM] Running Claude qualitative analysis on {len(predictions)} matches...")
+            try:
+                from pipeline.analyst import batch_analyze
+                analyst_notes = batch_analyze(predictions)
+                n_notes = sum(1 for v in analyst_notes.values() if v and not v.startswith("["))
+                print(f"[LLM] {n_notes}/{len(predictions)} matches annotated")
+            except Exception as e:
+                print(f"[LLM] Analysis failed: {e}")
+
+        html_path = generate_report(predictions, output_dir, analyst_notes=analyst_notes)
         print(f"HTML report: {html_path}")
     except Exception as e:
         print(f"HTML report generation failed: {e}")

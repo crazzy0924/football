@@ -260,18 +260,316 @@ def _get_template():
     return Jinja2Template(_read_template_content())
 
 
-def _read_template_content() -> str:
+def _read_template_content(template_name: str = "report.html") -> str:
     """Read template file content."""
-    # Find template relative to project root
     template_paths = [
-        "templates/report.html",
-        os.path.join(os.path.dirname(__file__), "..", "templates", "report.html"),
+        f"templates/{template_name}",
+        os.path.join(os.path.dirname(__file__), "..", "templates", template_name),
     ]
     for tp in template_paths:
         if os.path.exists(tp):
             with open(tp, "r", encoding="utf-8") as f:
                 return f.read()
-    raise FileNotFoundError("Could not find templates/report.html")
+    raise FileNotFoundError(f"Could not find templates/{template_name}")
+
+
+def generate_review_report(
+    matched: list[dict],
+    output_dir: str = "data/output",
+    date_str: str | None = None,
+    elo_changes: list[dict] | None = None,
+) -> str:
+    """Generate review HTML report from matched predictions and results.
+
+    Args:
+        matched: list from result_fetcher.match_predictions_to_results()
+        output_dir: output directory
+        date_str: date string (defaults to today)
+        elo_changes: optional list of {team, old, new, delta, reason}
+
+    Returns:
+        Path to generated HTML file
+    """
+    from datetime import date
+    today = date_str or date.today().isoformat()
+    out_path = os.path.join(output_dir, f"review_{today}.html")
+
+    if not matched:
+        os.makedirs(output_dir, exist_ok=True)
+        html = f"<html><body><h1>No matched results for {today}</h1></body></html>"
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(html)
+        return out_path
+
+    n_total = len(matched)
+    n_matched = sum(1 for m in matched if m.get("matched"))
+
+    # ---- Evaluation metrics ----
+    import math
+    brier_sum = 0.0
+    logloss_sum = 0.0
+    correct = 0
+    total_pl = 0.0
+    n_bets = 0
+
+    # Directional tracking
+    h_total = h_correct = 0
+    d_total = d_correct = 0
+    a_total = a_correct = 0
+
+    match_rows = []
+    for m in matched:
+        pred = m["predicted"]
+        actual = m["actual"]
+        value = m.get("value") or {}
+        home_goals = m.get("home_goals")
+        away_goals = m.get("away_goals")
+
+        # Brier: mean squared error across 3 outcomes
+        outcomes = {"H": [1, 0, 0], "D": [0, 1, 0], "A": [0, 0, 1]}
+        actual_vec = outcomes.get(actual, [0, 0, 0])
+        pred_vec = [pred["home_win"], pred["draw"], pred["away_win"]]
+        brier_sum += sum((p - a) ** 2 for p, a in zip(pred_vec, actual_vec)) / 3
+
+        # Log loss: -ln(prob of actual outcome)
+        idx = {"H": 0, "D": 1, "A": 2}.get(actual, 0)
+        p_actual = max(pred_vec[idx], 0.001)
+        logloss_sum += -math.log(p_actual)
+
+        # Accuracy
+        best_pred = max(
+            ("H", pred["home_win"]),
+            ("D", pred["draw"]),
+            ("A", pred["away_win"]),
+            key=lambda x: x[1],
+        )[0]
+        if best_pred == actual:
+            correct += 1
+
+        # Directional
+        if actual == "H":
+            h_total += 1
+            if best_pred == "H":
+                h_correct += 1
+        elif actual == "D":
+            d_total += 1
+            if best_pred == "D":
+                d_correct += 1
+        elif actual == "A":
+            a_total += 1
+            if best_pred == "A":
+                a_correct += 1
+
+        # P&L: simulate 1-unit bet on best direction
+        bet_dir = value.get("best_direction", "none")
+        kelly = value.get("kelly", 0) or 0
+        pl = 0.0
+        # Map bet_dir ("home"/"draw"/"away") to actual code ("H"/"D"/"A")
+        bet_to_actual = {"home": "H", "draw": "D", "away": "A"}
+        if bet_dir != "none" and kelly > 0:
+            n_bets += 1
+            edge = value.get(f"{bet_dir}_edge", 0) or 0
+            market_prob = pred_vec[{"home": 0, "draw": 1, "away": 2}[bet_dir]] - edge
+            if market_prob > 0.01:
+                odds = 1.0 / market_prob
+                stake = kelly
+                if bet_to_actual.get(bet_dir) == actual:
+                    pl = stake * (odds - 1)
+                else:
+                    pl = -stake
+            total_pl += pl
+
+        # Match row
+        pick_dir = value.get("best_direction", "none")
+        if pick_dir == "home":
+            pick = "H"
+        elif pick_dir == "draw":
+            pick = "D"
+        elif pick_dir == "away":
+            pick = "A"
+        else:
+            pick = best_pred
+
+        if pick == actual:
+            outcome = "hit"
+            verdict = "HIT"
+        elif pick != best_pred and best_pred == actual:
+            outcome = "push"
+            verdict = "PUSH"
+        else:
+            outcome = "miss"
+            verdict = "MISS"
+
+        prob_pick = pred_vec[{"H": 0, "D": 1, "A": 2}.get(pick, 0)]
+
+        match_rows.append({
+            "home_team": m["home_team"],
+            "away_team": m["away_team"],
+            "home_goals": home_goals,
+            "away_goals": away_goals,
+            "actual": actual,
+            "pred_h": f"{pred['home_win']:.1%}",
+            "pred_d": f"{pred['draw']:.1%}",
+            "pred_a": f"{pred['away_win']:.1%}",
+            "pred_pick_prob": f"{prob_pick:.1%}",
+            "pick": pick,
+            "outcome": outcome,
+            "verdict": verdict,
+            "pl": f"{pl:+.3f}u" if pl != 0 else None,
+            "pl_class": "won" if pl > 0 else "lost" if pl < 0 else "",
+            "cold_start": m.get("cold_start", False),
+        })
+
+    # Aggregate
+    n = n_matched
+    brier_val = round(brier_sum / n, 4) if n > 0 else 0
+    logloss_val = round(logloss_sum / n, 4) if n > 0 else 0
+    accuracy_val = correct / n if n > 0 else 0
+
+    total_pl_val = round(total_pl, 2)
+    roi_val = f"{total_pl / n_bets:+.1%}" if n_bets > 0 else "N/A"
+
+    def _cls(v, low_good=True):
+        if low_good:
+            return "good" if v < 0.65 else "warn" if v < 0.70 else "bad"
+        return "good" if v > 0.55 else "warn" if v > 0.45 else "bad"
+
+    context = {
+        "date": today,
+        "n_total": n_total,
+        "n_matched": n_matched,
+        "brier": f"{brier_val:.4f}",
+        "brier_class": _cls(brier_val),
+        "logloss": f"{logloss_val:.4f}",
+        "logloss_class": _cls(logloss_val * 0.9),
+        "accuracy": f"{accuracy_val:.1%}",
+        "accuracy_class": _cls(1 - accuracy_val, low_good=False),
+        "total_pl": f"{total_pl_val:+.2f}u",
+        "pl_class": "good" if total_pl_val > 0 else "bad" if total_pl_val < 0 else "",
+        "roi": roi_val,
+        "roi_class": "good" if total_pl_val > 0 else "bad",
+        "h_correct": h_correct, "h_total": h_total,
+        "h_rate": f"{h_correct/h_total:.1%}" if h_total > 0 else "N/A",
+        "d_correct": d_correct, "d_total": d_total,
+        "d_rate": f"{d_correct/d_total:.1%}" if d_total > 0 else "N/A",
+        "a_correct": a_correct, "a_total": a_total,
+        "a_rate": f"{a_correct/a_total:.1%}" if a_total > 0 else "N/A",
+        "h_pct": round(h_total / n * 100) if n > 0 else 33,
+        "d_pct": round(d_total / n * 100) if n > 0 else 34,
+        "a_pct": round(a_total / n * 100) if n > 0 else 33,
+        "matches": match_rows,
+        "elo_changes": elo_changes or [],
+    }
+
+    # Render
+    template = _get_review_template()
+    html = template.render(**context)
+
+    os.makedirs(output_dir, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    print(f"[OK] Review report saved to {out_path}")
+    return out_path
+
+
+def _get_review_template():
+    """Lazy-load review Jinja2 template."""
+    try:
+        from jinja2 import Template as Jinja2Template
+    except ImportError:
+        return _SimpleTemplate(_read_template_content("review.html"))
+    return Jinja2Template(_read_template_content("review.html"))
+
+
+def update_tracking_file(
+    matched: list[dict],
+    date_str: str,
+    output_dir: str = "data/output",
+    elo_summary: dict | None = None,
+) -> dict:
+    """Append daily review results to cumulative tracking file.
+
+    Args:
+        matched: matched predictions and results
+        date_str: date of predictions
+        output_dir: output directory
+        elo_summary: optional ELO change summary
+
+    Returns:
+        Updated tracking data dict
+    """
+    tracking_path = os.path.join(output_dir, "daily_tracking.json")
+
+    # Load existing
+    if os.path.exists(tracking_path):
+        with open(tracking_path, "r", encoding="utf-8") as f:
+            tracking = json.load(f)
+    else:
+        tracking = {"days": [], "cumulative": {}}
+
+    # Calculate day metrics
+    n = len(matched)
+    if n == 0:
+        return tracking
+
+    correct = 0
+    brier_sum = 0.0
+    for m in matched:
+        pred = m["predicted"]
+        actual = m["actual"]
+        outcomes = {"H": [1, 0, 0], "D": [0, 1, 0], "A": [0, 0, 1]}
+        actual_vec = outcomes.get(actual, [0, 0, 0])
+        pred_vec = [pred["home_win"], pred["draw"], pred["away_win"]]
+        brier_sum += sum((p - a) ** 2 for p, a in zip(pred_vec, actual_vec)) / 3
+
+        best_pred = max(
+            ("H", pred["home_win"]),
+            ("D", pred["draw"]),
+            ("A", pred["away_win"]),
+            key=lambda x: x[1],
+        )[0]
+        if best_pred == actual:
+            correct += 1
+
+    day_entry = {
+        "date": date_str,
+        "matches": n,
+        "brier": round(brier_sum / n, 4),
+        "accuracy": round(correct / n, 4),
+        "cold_start_count": sum(1 for m in matched if m.get("cold_start")),
+    }
+
+    if elo_summary:
+        day_entry["elo_updates"] = elo_summary.get("teams_updated", 0)
+
+    # Replace existing entry for same date, or append new
+    existing_idx = None
+    for i, d in enumerate(tracking["days"]):
+        if d.get("date") == date_str:
+            existing_idx = i
+            break
+    if existing_idx is not None:
+        tracking["days"][existing_idx] = day_entry
+    else:
+        tracking["days"].append(day_entry)
+
+    # Update cumulative
+    all_n = sum(d["matches"] for d in tracking["days"])
+    all_brier = sum(d["brier"] * d["matches"] for d in tracking["days"]) / all_n if all_n > 0 else 0
+    all_acc = sum(d["accuracy"] * d["matches"] for d in tracking["days"]) / all_n if all_n > 0 else 0
+    tracking["cumulative"] = {
+        "total_days": len(tracking["days"]),
+        "total_matches": all_n,
+        "avg_brier": round(all_brier, 4),
+        "avg_accuracy": round(all_acc, 4),
+    }
+
+    with open(tracking_path, "w", encoding="utf-8") as f:
+        json.dump(tracking, f, ensure_ascii=False, indent=2)
+
+    print(f"[OK] Tracking updated: {tracking['cumulative']}")
+    return tracking
 
 
 class _SimpleTemplate:

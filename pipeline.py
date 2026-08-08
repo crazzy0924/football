@@ -192,11 +192,23 @@ def cmd_predict(args):
 
 
 def cmd_review(args):
-    """Evaluate predictions against actual results."""
+    """Evaluate predictions against actual results.
+
+    Results can be provided via:
+      --results-json path/to/results.json
+      --results-text "TeamA 2-1 TeamB\\nTeamC 0-0 TeamD"
+      Auto-fetch from odds-api.io (if API key configured)
+
+    Generates:
+      - Review HTML report (data/output/review_YYYY-MM-DD.html)
+      - Updated daily_tracking.json
+      - Updated ELO ratings
+    """
     date_str = args.date
     state_dir = args.state_dir or "data/state"
     output_dir = args.output_dir or "data/output"
 
+    # Load predictions
     pred_path = os.path.join(output_dir, f"predictions_{date_str}.json")
     if not os.path.exists(pred_path):
         print(f"No predictions found for {date_str} at {pred_path}")
@@ -204,79 +216,162 @@ def cmd_review(args):
 
     with open(pred_path, "r", encoding="utf-8") as f:
         predictions = json.load(f)
+    print(f"Loaded {len(predictions)} predictions from {pred_path}")
 
-    # Expect results JSON: [{"home_team": "...", "away_team": "...", "result": "H"}]
-    results_path = args.results_json or os.path.join(output_dir, f"results_{date_str}.json")
-    if not os.path.exists(results_path):
-        print(f"No results file at {results_path}")
-        print("Create a JSON file with: [{\"home_team\": \"...\", \"away_team\": \"...\", "
-              "\"home_goals\": 2, \"away_goals\": 1, \"result\": \"H\"}]")
+    # ---- Load results ----
+    from pipeline.result_fetcher import (
+        load_results_from_json,
+        load_results_from_text,
+        try_fetch_results,
+        match_predictions_to_results,
+    )
+
+    results = None
+
+    # 1) Try --results-text
+    if args.results_text:
+        results = load_results_from_text(args.results_text)
+        print(f"Parsed {len(results)} results from --results-text")
+
+    # 2) Try --results-json
+    if not results and args.results_json:
+        if os.path.exists(args.results_json):
+            results = load_results_from_json(args.results_json)
+            print(f"Loaded {len(results)} results from {args.results_json}")
+
+    # 3) Try auto-fetch
+    if not results:
+        results = try_fetch_results(date_str)
+        if results:
+            print(f"Fetched {len(results)} results from API")
+
+    # 4) Fallback: look for default results file
+    if not results:
+        default_results = os.path.join(output_dir, f"results_{date_str}.json")
+        if os.path.exists(default_results):
+            results = load_results_from_json(default_results)
+            print(f"Loaded {len(results)} results from {default_results}")
+
+    if not results:
+        print(f"\nNo results found for {date_str}.")
+        print("Provide results via one of:")
+        print(f"  1. --results-json PATH   (JSON file)")
+        print(f"  2. --results-text TEXT    (e.g. 'Arsenal 2-1 Liverpool')")
+        print(f"  3. Create {output_dir}/results_{date_str}.json")
+        print(f"\nFormat: [{{\"home_team\":\"A\",\"away_team\":\"B\",\"home_goals\":2,\"away_goals\":1}}]")
         sys.exit(1)
 
-    with open(results_path, "r", encoding="utf-8") as f:
-        results = json.load(f)
+    # ---- Match predictions to results ----
+    matched = match_predictions_to_results(predictions, results)
+    print(f"Matched {len(matched)}/{len(predictions)} predictions to results")
 
-    # Match predictions to results
-    from models.evaluation import lockbox_evaluate
+    if not matched:
+        print("No matches found. Check team names.")
+        sys.exit(1)
 
-    eval_data = []
-    for pred in predictions:
-        home = pred["home_team"]
-        away = pred["away_team"]
-        # Find matching result
-        actual = None
-        for r in results:
-            if (r.get("home_team") == home and r.get("away_team") == away) or \
-               (r.get("home") == home and r.get("away") == away):
-                actual = r.get("result")
-                break
-
-        if actual:
-            eval_data.append({
-                "home_win": pred["model"]["home_win"],
-                "draw": pred["model"]["draw"],
-                "away_win": pred["model"]["away_win"],
-                "actual": actual,
-            })
-
-    if not eval_data:
-        print("No matching predictions and results found.")
-        return
-
-    result = lockbox_evaluate(eval_data)
-    print(f"\nReview for {date_str}:")
-    print(f"  Matches: {result.n_matches}")
-    print(f"  Brier:   {result.brier_score}")
-    print(f"  Accuracy: {result.accuracy:.1%}")
-    print(f"  Baseline Brier: {result.baseline_brier}")
-    print(f"  Beats baseline: {result.beats_baseline}")
-    print(f"  Verdict: {result.verdict}")
-
-    # Update ELO from results
+    # ---- Update ELO ----
     elo = None
+    elo_changes = []
     try:
         from models.elo import EloSystem
         elo = EloSystem(state_path=os.path.join(state_dir, "elo_ratings.json"))
         elo.load()
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"ELO load failed: {e}")
 
     if elo:
-        for r in results:
-            home = r.get("home_team") or r.get("home")
-            away = r.get("away_team") or r.get("away")
-            gh = r.get("home_goals", 0)
-            ga = r.get("away_goals", 0)
-            league = r.get("league_code", "")
-            if home and away:
-                ha = elo._league_home_advantage.get(league, 100)
-                elo_h = elo.get_elo(home, league)
-                elo_a = elo.get_elo(away, league)
-                new_h, new_a = elo._update_match(elo_h, elo_a, gh, ga, ha)
-                elo._ratings[home] = new_h
-                elo._ratings[away] = new_a
+        for m in matched:
+            home = m["home_team"]
+            away = m["away_team"]
+            gh = m.get("home_goals")
+            ga = m.get("away_goals")
+            league = m.get("league_code", "")
+            if not home or not away or gh is None or ga is None:
+                continue
+
+            ha = elo._league_home_advantage.get(league, 100)
+            old_h = elo.get_elo(home, league)
+            old_a = elo.get_elo(away, league)
+
+            # Skip if team not in ELO system (cold start)
+            if old_h == 1500 and old_a == 1500:
+                continue
+
+            new_h, new_a = elo._update_match(old_h, old_a, gh, ga, ha)
+            elo._ratings[home] = new_h
+            elo._ratings[away] = new_a
+
+            goal_diff = gh - ga
+            elo_changes.append({
+                "team": home,
+                "old": round(old_h, 1),
+                "new": round(new_h, 1),
+                "delta": round(new_h - old_h, 1),
+                "delta_signed": f"{new_h - old_h:+.1f}",
+                "reason": f"{gh}-{ga} {'WIN' if goal_diff > 0 else 'DRAW' if goal_diff == 0 else 'LOSS'}",
+            })
+            elo_changes.append({
+                "team": away,
+                "old": round(old_a, 1),
+                "new": round(new_a, 1),
+                "delta": round(new_a - old_a, 1),
+                "delta_signed": f"{new_a - old_a:+.1f}",
+                "reason": f"{ga}-{gh} {'WIN' if goal_diff < 0 else 'DRAW' if goal_diff == 0 else 'LOSS'}",
+            })
+
         elo.save()
-        print(f"  → ELO updated for {len(results)} matches")
+        n_updated = len(set(c["team"] for c in elo_changes))
+        print(f"[OK] ELO updated for {n_updated} teams ({len(elo_changes)} entries)")
+
+    # ---- Generate review report ----
+    from pipeline.reporter import generate_review_report, update_tracking_file
+
+    review_path = generate_review_report(
+        matched,
+        output_dir=output_dir,
+        date_str=date_str,
+        elo_changes=elo_changes,
+    )
+
+    # ---- Update tracking ----
+    elo_summary = {"teams_updated": len(set(c["team"] for c in elo_changes))} if elo_changes else None
+    tracking = update_tracking_file(matched, date_str, output_dir, elo_summary)
+
+    # ---- Print summary ----
+    n = len(matched)
+    correct = sum(1 for m in matched if
+        max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
+            ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == m["actual"])
+    brier = sum(
+        sum((p - a) ** 2 for p, a in zip(
+            [m["predicted"]["home_win"], m["predicted"]["draw"], m["predicted"]["away_win"]],
+            {"H": [1, 0, 0], "D": [0, 1, 0], "A": [0, 0, 1]}[m["actual"]]
+        )) / 3
+        for m in matched
+    ) / n if n > 0 else 1.0
+
+    hh = sum(1 for m in matched if m["actual"] == "H" and
+             max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
+                 ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == "H")
+    dd = sum(1 for m in matched if m["actual"] == "D" and
+             max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
+                 ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == "D")
+    aa = sum(1 for m in matched if m["actual"] == "A" and
+             max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
+                 ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == "A")
+
+    print(f"\n{'='*60}")
+    print(f"REVIEW SUMMARY — {date_str}")
+    print(f"{'='*60}")
+    print(f"  Matches:   {n}")
+    print(f"  Brier:     {brier:.4f}")
+    print(f"  Accuracy:  {correct}/{n} ({correct/n:.1%})")
+    print(f"  Direction: H={hh} D={dd} A={aa}")
+    if tracking.get("cumulative"):
+        c = tracking["cumulative"]
+        print(f"  All-time:  {c['total_matches']} matches, Brier {c['avg_brier']:.4f}, Acc {c['avg_accuracy']:.1%}")
+    print(f"  Review:    {review_path}")
+    print(f"  Tracking:  {os.path.join(output_dir, 'daily_tracking.json')}")
 
 
 def cmd_summary(args):
@@ -399,6 +494,7 @@ Examples:
     add_common(p_review)
     p_review.add_argument("date", help="Date of predictions (YYYY-MM-DD)")
     p_review.add_argument("--results-json", help="Path to results JSON")
+    p_review.add_argument("--results-text", help="Results as text (e.g. 'Arsenal 2-1 Liverpool')")
 
     # full
     p_full = subparsers.add_parser("full", help="Run complete pipeline")

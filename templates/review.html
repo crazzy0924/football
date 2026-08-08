@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复盘报告 — {{ date }}</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4eb;
+    --text-dim: #8b8fa3;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+
+  /* Scorecard */
+  .scorecard {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .sc {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .sc .value { font-size: 1.5rem; font-weight: 700; }
+  .sc .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+  .sc.good .value { color: var(--green); }
+  .sc.bad .value { color: var(--red); }
+  .sc.warn .value { color: var(--yellow); }
+
+  /* Direction breakdown */
+  .direction-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0 16px;
+    background: var(--bg);
+  }
+  .direction-bar .seg-home { background: #3b82f6; }
+  .direction-bar .seg-draw { background: #8b8fa3; }
+  .direction-bar .seg-away { background: #f59e0b; }
+
+  /* Match row */
+  .match-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    gap: 12px;
+    font-size: 0.85rem;
+  }
+  .match-row.hit { border-left: 3px solid var(--green); }
+  .match-row.miss { border-left: 3px solid var(--red); }
+  .match-row.push { border-left: 3px solid var(--yellow); }
+
+  .mr-teams { flex: 2; min-width: 0; }
+  .mr-teams .vs { color: var(--text-dim); margin: 0 6px; }
+  .mr-result { flex: 0 0 60px; text-align: center; font-weight: 700; font-size: 1rem; }
+  .mr-pred { flex: 1; text-align: center; font-size: 0.78rem; color: var(--text-dim); }
+  .mr-prob { flex: 0 0 70px; text-align: right; font-weight: 600; }
+  .mr-bet { flex: 0 0 80px; text-align: right; }
+  .mr-bet.won { color: var(--green); }
+  .mr-bet.lost { color: var(--red); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.7rem;
+  }
+  .badge.hit { background: #166534; color: #4ade80; }
+  .badge.miss { background: #451a1a; color: #f87171; }
+  .badge.push { background: #3b2f0e; color: #fbbf24; }
+
+  /* Section */
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 24px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Calibration table */
+  .cal-table {
+    width: 100%;
+    font-size: 0.8rem;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  .cal-table th, .cal-table td {
+    padding: 6px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .cal-table th { color: var(--text-dim); font-weight: 600; }
+
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Match Review</h1>
+    <div class="meta">{{ date }} — {{ n_matched }}/{{ n_total }} matches matched</div>
+  </div>
+
+  <!-- Scorecard -->
+  <div class="scorecard">
+    <div class="sc {{ brier_class }}">
+      <div class="value">{{ brier }}</div>
+      <div class="label">Brier Score</div>
+    </div>
+    <div class="sc {{ accuracy_class }}">
+      <div class="value">{{ accuracy }}</div>
+      <div class="label">Accuracy</div>
+    </div>
+    <div class="sc {{ logloss_class }}">
+      <div class="value">{{ logloss }}</div>
+      <div class="label">Log Loss</div>
+    </div>
+    <div class="sc {{ pl_class }}">
+      <div class="value">{{ total_pl }}</div>
+      <div class="label">P&L (units)</div>
+    </div>
+    <div class="sc {{ roi_class }}">
+      <div class="value">{{ roi }}</div>
+      <div class="label">ROI</div>
+    </div>
+  </div>
+
+  <!-- Direction accuracy -->
+  <div class="section-title">Direction Breakdown</div>
+  <div style="display:flex;gap:20px;font-size:0.82rem;margin-bottom:8px">
+    <span>Home: {{ h_correct }}/{{ h_total }} ({{ h_rate }})</span>
+    <span>Draw: {{ d_correct }}/{{ d_total }} ({{ d_rate }})</span>
+    <span>Away: {{ a_correct }}/{{ a_total }} ({{ a_rate }})</span>
+  </div>
+  <div class="direction-bar">
+    <div class="seg-home" style="width:{{ h_pct }}%"></div>
+    <div class="seg-draw" style="width:{{ d_pct }}%"></div>
+    <div class="seg-away" style="width:{{ a_pct }}%"></div>
+  </div>
+
+  <!-- Match results -->
+  <div class="section-title">Match Results</div>
+  {% for m in matches %}
+  <div class="match-row {{ m.outcome }}">
+    <div class="mr-teams">
+      {{ m.home_team }} <span class="vs">vs</span> {{ m.away_team }}
+      {% if m.cold_start %}
+      <span class="badge miss" style="font-size:0.6rem">COLD</span>
+      {% endif %}
+    </div>
+    <div class="mr-result">
+      {% if m.home_goals is not none and m.away_goals is not none %}
+      {{ m.home_goals }}-{{ m.away_goals }}
+      {% else %}
+      {{ m.actual }}
+      {% endif %}
+    </div>
+    <div class="mr-pred">
+      Pred: {{ m.pred_h }} / {{ m.pred_d }} / {{ m.pred_a }}
+    </div>
+    <div class="mr-prob">
+      {{ m.pred_pick_prob }}
+    </div>
+    <div class="mr-bet {{ m.pl_class }}">
+      {% if m.pl is not none and m.pl != 0 %}
+      {{ m.pl }}
+      {% endif %}
+    </div>
+    <span class="badge {{ m.outcome }}">{{ m.verdict }}</span>
+  </div>
+  {% endfor %}
+
+  <!-- ELO changes -->
+  {% if elo_changes %}
+  <div class="section-title">ELO Updates</div>
+  {% for e in elo_changes %}
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    {{ e.team }}: {{ e.old }} → {{ e.new }}
+    <span style="color:{% if e.delta > 0 %}var(--green){% elif e.delta < 0 %}var(--red){% else %}var(--text-dim){% endif %}">
+      ({{ e.delta_signed }})
+    </span>
+    <span style="font-size:0.65rem"> — {{ e.reason }}</span>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="footer">
+    Football Prediction Model v3.0 &middot; Review {{ date }}
+    &middot; ELO auto-updated from results
+  </div>
+</div>
+</body>
+</html>

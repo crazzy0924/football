@@ -75,6 +75,13 @@ def run_backtest(
             print(f"  MLE failed ({e}), falling back to fit_simple")
             dc.fit_simple(train_matches)
 
+        # ── Draw calibration: per-league post-hoc correction ──
+        from models.draw_calibration import fit_draw_calibration, apply_draw_calibration
+        draw_cal = fit_draw_calibration(train_matches, dc)
+        n_cal_leagues = len(draw_cal)
+        boosted = sum(1 for v in draw_cal.values() if v["draw_factor"] > 1.01)
+        print(f"  Draw cal: {n_cal_leagues} leagues, {boosted} draw-boosted")
+
         league_stats = compute_league_stats(train_matches)
 
         # ── Recent form: chronological processing within test season ──
@@ -92,6 +99,7 @@ def run_backtest(
         # Predict all test matches
         predictions = []
         bet_candidates = []
+        ah_predictions = []
 
         # Track how many times we recompute form (every 50 matches for efficiency)
         form_cache = None
@@ -116,19 +124,27 @@ def run_backtest(
                 form_factors=form_cache,
             )
             actual = m["result"]
+
+            # Apply draw calibration to raw DC probabilities
+            cal_h, cal_d, cal_a = apply_draw_calibration(
+                {"home_win": pred["home_win"], "draw": pred["draw"], "away_win": pred["away_win"]},
+                m["league_code"], draw_cal,
+            )
+            cal_pred = {"home_win": cal_h, "draw": cal_d, "away_win": cal_a}
+
             market_odds = m.get("odds", {})
             best_odds = _get_best_odds(market_odds)
 
-            # Bayesian fusion with market odds
+            # Bayesian fusion with CALIBRATED model probabilities
             if best_odds:
-                bayes_result = _bayesian_fuse(pred, best_odds)
+                bayes_result = _bayesian_fuse(cal_pred, best_odds, cold_start=pred.get("cold_start", False))
             else:
                 bayes_result = None
 
             predictions.append({
-                "home_win": pred["home_win"],
-                "draw": pred["draw"],
-                "away_win": pred["away_win"],
+                "home_win": cal_h,
+                "draw": cal_d,
+                "away_win": cal_a,
                 "actual": actual,
                 "home_team": m["home_team"],
                 "away_team": m["away_team"],
@@ -141,9 +157,28 @@ def run_backtest(
                     "away_team": m["away_team"],
                     "actual": actual,
                     "best_odds": best_odds,
-                    "model_probs": [pred["home_win"], pred["draw"], pred["away_win"]],
+                    "model_probs": [cal_h, cal_d, cal_a],
                     "posterior": bayes_result["posterior"],
                     "raw_edge": bayes_result["raw_edges"],
+                })
+
+            # ── Asian Handicap prediction ──
+            ah_line = m.get("ah_line")
+            ah_odds = m.get("ah_odds")
+            if ah_line is not None and ah_odds:
+                from pipeline.five_dim_predictor import compute_handicap_probs
+                ah_probs = compute_handicap_probs(pred["score_distribution"], ah_line)
+                ah_predictions.append({
+                    "home_team": m["home_team"],
+                    "away_team": m["away_team"],
+                    "goal_line": ah_line,
+                    "model_cover": ah_probs["home_cover"],
+                    "model_push": ah_probs["push"],
+                    "model_lose": ah_probs["away_cover"],
+                    "ah_odds": ah_odds,
+                    "home_goals": m["home_goals"],
+                    "away_goals": m["away_goals"],
+                    "league_code": m["league_code"],
                 })
 
             # Feed actual result back into form pool (chronological — only past matches used)
@@ -191,6 +226,35 @@ def run_backtest(
                 "roi": round(roi, 4), "hit_rate": round(hit_rate, 4),
             }
 
+        # ── Asian Handicap evaluation ──
+        if ah_predictions:
+            ah_eval = _evaluate_ah(ah_predictions)
+            print(f"  AH Brier: {ah_eval['brier']:.4f} (baseline: 0.2500)")
+            print(f"  AH Accuracy: {ah_eval['accuracy']:.1%}")
+            print(f"  AH Push rate: {ah_eval['push_rate']:.1%}")
+            print(f"  {'AH Edge':<10} {'Bets':>6} {'Hit%':>7} {'P&L':>8} {'ROI':>8}")
+            print(f"  {'-'*42}")
+            ah_thresholds = {}
+            for threshold in [0.03, 0.05, 0.08, 0.10, 0.12]:
+                ah_bets = _simulate_ah_bets(ah_predictions, threshold)
+                n = len(ah_bets)
+                if n == 0:
+                    print(f"  {threshold:<10.0%} {0:>6} {'-':>7} {'-':>8} {'-':>8}")
+                    ah_thresholds[threshold] = {"bets": 0, "pl": 0, "roi": 0, "hit_rate": 0}
+                else:
+                    total_pl = sum(b["pl"] for b in ah_bets)
+                    roi = total_pl / n
+                    hits = sum(1 for b in ah_bets if b["pl"] > 0)
+                    hit_rate = hits / n
+                    print(f"  {threshold:<10.0%} {n:>6} {hit_rate:>7.1%} {total_pl:>+7.2f} {roi:>+7.1%}")
+                    ah_thresholds[threshold] = {
+                        "bets": n, "pl": round(total_pl, 2),
+                        "roi": round(roi, 4), "hit_rate": round(hit_rate, 4),
+                    }
+        else:
+            ah_eval = {"brier": 0, "accuracy": 0, "push_rate": 0}
+            ah_thresholds = {}
+
         all_fold_data.append({
             "test_season": test_season,
             "n_matches": len(test_matches),
@@ -198,6 +262,10 @@ def run_backtest(
             "brier": eval_result.brier_score,
             "accuracy": eval_result.accuracy,
             "thresholds": {f"{k:.0%}": v for k, v in threshold_results.items()},
+            "ah_brier": ah_eval["brier"],
+            "ah_accuracy": ah_eval["accuracy"],
+            "ah_push_rate": ah_eval["push_rate"],
+            "ah_thresholds": {f"{k:.0%}": v for k, v in ah_thresholds.items()},
         })
 
     # ================================================================
@@ -248,7 +316,7 @@ def run_backtest(
     return report
 
 
-def _bayesian_fuse(pred: dict, odds: dict) -> dict:
+def _bayesian_fuse(pred: dict, odds: dict, cold_start: bool = False) -> dict:
     """Fuse model prediction with market odds via Bayesian update.
 
     Returns posterior probabilities and raw model-market edges.
@@ -269,7 +337,7 @@ def _bayesian_fuse(pred: dict, odds: dict) -> dict:
 
     # Bayesian fusion — fixed model_confidence (v3.1: was based on max_prob,
     # which amplified overconfidence. Now uses cold-start as the only discount.)
-    model_conf = 0.35 if pred.get("cold_start", False) else 0.50
+    model_conf = 0.35 if cold_start else 0.50
 
     update = bayesian_update(
         model_probs, market_probs,
@@ -371,6 +439,111 @@ def _get_best_odds(market_odds: dict) -> dict | None:
                 best[k] = odds[k]
 
     return best if best["home"] > 1.0 else None
+
+
+def _evaluate_ah(ah_predictions: list[dict]) -> dict:
+    """Evaluate Asian Handicap predictions — binary outcome with push handling."""
+    n_push = sum(1 for p in ah_predictions if p["model_push"] > 0.99 or
+                 (p["home_goals"] - p["away_goals"] + p["goal_line"] == 0))
+    non_push = [p for p in ah_predictions
+                if p["home_goals"] - p["away_goals"] + p["goal_line"] != 0]
+
+    if not non_push:
+        return {"brier": 0, "accuracy": 0, "push_rate": 0}
+
+    brier_sum = 0.0
+    correct = 0
+    for p in non_push:
+        adj = p["home_goals"] - p["away_goals"] + p["goal_line"]
+        actual = 1.0 if adj > 0 else 0.0
+        brier_sum += (p["model_cover"] - actual) ** 2
+        model_pick = 1 if p["model_cover"] > 0.5 else 0
+        if model_pick == actual:
+            correct += 1
+
+    n = len(non_push)
+    return {
+        "brier": round(brier_sum / n, 4),
+        "accuracy": round(correct / n, 4),
+        "push_rate": round(n_push / len(ah_predictions), 4) if ah_predictions else 0,
+    }
+
+
+def _simulate_ah_bets(ah_predictions: list[dict], edge_threshold: float) -> list[dict]:
+    """Simulate Asian Handicap bets using model-vs-market edge + Kelly sizing."""
+    import math
+    from models.odds import kelly_criterion
+
+    bets = []
+    for p in ah_predictions:
+        # Push = no bet resolution (stake returned)
+        adj = p["home_goals"] - p["away_goals"] + p["goal_line"]
+        if adj == 0:
+            continue
+
+        actual_covered = adj > 0
+        ah_odds = p["ah_odds"]
+
+        # Shin de-vig market odds → fair probability
+        odds_h, odds_a = ah_odds["home"], ah_odds["away"]
+        o = [1.0 / odds_h, 1.0 / odds_a]
+        z0 = sum(o)
+        margin = z0 - 1.0
+        if margin <= 0:
+            market_h_prob = o[0] / z0
+        else:
+            c = min(0.5, margin * 0.8)
+            for _ in range(100):
+                denom = sum(math.sqrt(c + (1 - c) * oi ** 2) for oi in o)
+                probs = [math.sqrt(c + (1 - c) * oi ** 2) / denom for oi in o]
+                c_new = c * sum((1 - pi) ** 2 for pi in probs) / (2 - sum(pi ** 2 for pi in probs))
+                if abs(c_new - c) < 1e-7:
+                    break
+                c = c_new
+            market_h_prob = probs[0]
+
+        # Model edge on home cover
+        model_h_prob = p["model_cover"]
+        edge = model_h_prob - market_h_prob
+
+        if abs(edge) < edge_threshold:
+            continue
+
+        # Determine bet direction
+        if edge > 0:
+            bet_on = "home"
+            fair_prob = model_h_prob
+            odds_used = odds_h
+        else:
+            bet_on = "away"
+            fair_prob = 1.0 - model_h_prob
+            odds_used = odds_a
+
+        # Kelly sizing: f* = (p*b - q) / b, where b = odds - 1
+        b = odds_used - 1.0  # decimal odds → fractional
+        if b <= 0:
+            continue
+        q = 1.0 - fair_prob
+        kelly = (fair_prob * b - q) / b
+        stake = max(0.0, min(0.05, kelly * 0.25))  # 1/4 Kelly, 5% max
+
+        if stake < 0.01:
+            continue
+
+        won = (bet_on == "home" and actual_covered) or (bet_on == "away" and not actual_covered)
+        pl = stake * b if won else -stake
+
+        bets.append({
+            "direction": bet_on + "_cover",
+            "odds": round(odds_used, 2),
+            "edge": round(edge, 4),
+            "kelly": round(kelly, 4),
+            "stake": round(stake, 4),
+            "pl": round(pl, 4),
+            "won": won,
+        })
+
+    return bets
 
 
 def _today_str() -> str:

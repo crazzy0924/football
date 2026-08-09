@@ -76,6 +76,17 @@ def train_all(
     print(f"  → Method: {method}")
 
     # ================================================================
+    # Pass 3: Draw Calibration
+    # ================================================================
+    print("Pass 3: Fitting per-league draw calibration...")
+    from models.draw_calibration import fit_draw_calibration, save_calibration
+    draw_cal = fit_draw_calibration(matches, dc)
+    cal_path = os.path.join(state_dir, "draw_calibration.json")
+    save_calibration(draw_cal, cal_path)
+    boosted = sum(1 for v in draw_cal.values() if v.get("draw_factor", 1.0) > 1.01)
+    print(f"  → {len(draw_cal)} leagues, {boosted} draw-boosted")
+
+    # ================================================================
     # Summary
     # ================================================================
     summary = {

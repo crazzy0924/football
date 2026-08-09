@@ -221,6 +221,22 @@ def _parse_row(row: dict, league_code: str, season: str) -> dict | None:
             except (ValueError, TypeError):
                 pass
 
+    # Extract Asian Handicap — opening line (AHh) + Pinnacle odds (PAHH/PAHA)
+    ah_line = None
+    ah_odds = None
+    try:
+        ah_line_str = row.get("AHh", "")
+        pah_h = row.get("PAHH", "")
+        pah_a = row.get("PAHA", "")
+        if ah_line_str and pah_h and pah_a:
+            ah_line = float(ah_line_str)
+            ah_h = float(pah_h)
+            ah_a = float(pah_a)
+            if ah_h > 1.0 and ah_a > 1.0:
+                ah_odds = {"home": ah_h, "away": ah_a}
+    except (ValueError, TypeError):
+        pass
+
     return {
         "league_code": league_code,
         "season": season,
@@ -231,6 +247,8 @@ def _parse_row(row: dict, league_code: str, season: str) -> dict | None:
         "away_goals": away_goals,
         "result": result,
         "odds": odds,
+        "ah_line": ah_line,
+        "ah_odds": ah_odds,
     }
 
 

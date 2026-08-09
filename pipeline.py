@@ -87,6 +87,16 @@ def cmd_predict(args):
 
     print(f"Loaded: {elo.team_count} ELO ratings, {dc.team_count} DC parameters")
 
+    # Load draw calibration
+    from models.draw_calibration import load_calibration, apply_draw_calibration
+    draw_cal = load_calibration(os.path.join(state_dir, "draw_calibration.json"))
+    if draw_cal:
+        n_cal = len(draw_cal)
+        boosted = sum(1 for v in draw_cal.values() if v.get("draw_factor", 1.0) > 1.01)
+        print(f"Draw cal: {n_cal} leagues, {boosted} draw-boosted")
+    else:
+        print("Draw cal: not available (run backtest to generate)")
+
     # Try to fetch live odds
     try:
         from pipeline.odds_fetcher import fetch_today_matches
@@ -125,6 +135,16 @@ def cmd_predict(args):
         away = normalize_team_name(away)
 
         pred = dc.predict(home, away, league)
+
+        # Apply draw calibration
+        cal_h, cal_d, cal_a = apply_draw_calibration(
+            {"home_win": pred["home_win"], "draw": pred["draw"], "away_win": pred["away_win"]},
+            league, draw_cal,
+        )
+        pred["home_win"] = cal_h
+        pred["draw"] = cal_d
+        pred["away_win"] = cal_a
+
         elo_h = elo.get_elo(home, league)
         elo_a = elo.get_elo(away, league)
 
@@ -147,6 +167,22 @@ def cmd_predict(args):
             value = None
             bayes = None
 
+        # Asian Handicap prediction (if AH odds available)
+        ah_pred = None
+        ah_line = m.get("ah_line") or m.get("goal_line")
+        ah_odds = m.get("ah_odds")
+        if ah_line is not None and ah_odds:
+            from pipeline.five_dim_predictor import compute_handicap_probs, analyze_hhad_edge
+            ah_probs = compute_handicap_probs(pred["score_distribution"], ah_line)
+            ah_edge = analyze_hhad_edge(ah_probs, ah_odds)
+            ah_pred = {
+                "goal_line": ah_line,
+                "home_cover": ah_probs["home_cover"],
+                "push": ah_probs["push"],
+                "away_cover": ah_probs["away_cover"],
+                "edge": ah_edge,
+            }
+
         predictions.append({
             "home_team": home,
             "away_team": away,
@@ -165,6 +201,7 @@ def cmd_predict(args):
             } if value else None,
             "bayesian": bayes,
             "cold_start": pred.get("cold_start", False),
+            "ah_handicap": ah_pred,
         })
 
     # Save JSON
@@ -491,8 +528,10 @@ Examples:
     # train
     p_train = subparsers.add_parser("train", help="Train models from historical data")
     add_common(p_train)
-    p_train.add_argument("--mle", action="store_true",
+    p_train.add_argument("--mle", action="store_true", default=True,
                         help="Use scipy MLE (requires scipy)")
+    p_train.add_argument("--no-mle", action="store_false", dest="mle",
+                        help="Use analytical (moment-based) fitting instead")
 
     # backtest
     p_backtest = subparsers.add_parser("backtest", help="Run time-series backtest")
@@ -519,7 +558,7 @@ Examples:
     add_common(p_full)
     p_full.add_argument("--predict", dest="predict_live", action="store_true",
                        help="Also run live predictions after backtest")
-    p_full.add_argument("--mle", action="store_true", help="Use scipy MLE")
+    p_full.add_argument("--mle", action="store_true", default=True, help="Use scipy MLE")
 
     # summary
     p_summary = subparsers.add_parser("summary", help="Show training summary")

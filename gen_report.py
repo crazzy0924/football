@@ -1,78 +1,115 @@
-"""Generate standalone prediction HTML for Aug 9."""
+"""生成七维预测报告 + 模拟下注 (当前可用四维: 胜平负/让球/大小球/波胆)"""
 import json, sys
+from pathlib import Path
+
 sys.stdout.reconfigure(encoding='utf-8')
 
-with open('data/output/predictions_2026-08-09.json', 'r', encoding='utf-8') as f:
-    preds = json.load(f)
+# ── 加载五维数据 ──────────────────────────────────
+five_dim_path = Path('data/output/five_dim_2026-08-09.json')
+if not five_dim_path.exists():
+    print("请先运行: python pipeline/five_dim_predictor.py")
+    sys.exit(1)
 
-LEAGUE_NAMES = {
+with open(five_dim_path, 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+# ── 联赛中文 ──────────────────────────────────────
+LEAGUE_CN = {
     'J1': '日职联', 'J2': '日乙', 'DED': '荷甲', 'BL2': '德乙',
     'SWE': '瑞典超', 'FIN': '芬超', 'NOR': '挪超', 'PPL': '葡超',
     'BSA': '巴甲',
 }
 
-def get_pick(hp, dp, ap):
-    if hp > max(dp, ap): return '主胜', 'home'
-    elif ap > max(hp, dp): return '客胜', 'away'
-    return '平局', 'draw'
+BANKROLL = 10000
+KELLY_FRACTION = 0.25
 
-rows = []
-for i, p in enumerate(preds):
-    h = p['home_team']
-    a = p['away_team']
-    h_cn = p.get('home_cn', h)
-    a_cn = p.get('away_cn', a)
-    lg = p['league_code']
-    lg_cn = LEAGUE_NAMES.get(lg, lg)
-    cs = p.get('cold_start', False)
-    m = p.get('model', {})
-    hp = m.get('home_win', 0)
-    dp = m.get('draw', 0)
-    ap = m.get('away_win', 0)
-    pick, pick_class = get_pick(hp, dp, ap)
-    elo_h = p.get('elo_home', 1500)
-    elo_a = p.get('elo_away', 1500)
+# ── 下注决策 ──────────────────────────────────────
+def decide_bets(data):
+    """综合四维决定下注"""
+    bets = []
+    for d in data:
+        cs = d['cold_start']
+        bet_lines = []
 
-    bh = bd = ba = 0
-    bayes = p.get('bayesian')
-    if bayes and isinstance(bayes, dict):
-        bp = bayes.get('posterior', {})
-        if bp and isinstance(bp, dict):
-            bh = bp.get('home', 0)
-            bd = bp.get('draw', 0)
-            ba = bp.get('away', 0)
+        # 维度1: 胜平负
+        v = d.get('value')
+        if v and v.get('kelly', 0) > 0:
+            kelly = v['kelly']
+            kf = kelly * KELLY_FRACTION
+            if cs:
+                kf = min(kf, 0.02)
+            if kf >= 0.0025:
+                direction = v.get('best_direction', '')
+                dir_cn = {'home': '主胜', 'away': '客胜', 'draw': '平局'}.get(direction, direction)
+                stake = int(BANKROLL * kf)
+                odds_data = d['dim_1x2'].get('market_odds', {})
+                odds_val = float(odds_data.get(direction[0], 0)) if odds_data else 0
+                bet_lines.append({
+                    'dim': '胜平负', 'direction': dir_cn, 'kelly': kelly,
+                    'stake': stake, 'odds': odds_val, 'edge': v.get(f'{direction}_edge', 0),
+                })
 
-    edge_h = edge_a = 0
-    odds = p.get('value', {})
-    if odds and isinstance(odds, dict):
-        edge_h = odds.get('edge_home', 0) or 0
-        edge_a = odds.get('edge_away', 0) or 0
-    has_odds = bool(odds and odds.get('has_odds', True) and (bh + bd + ba) > 0)
+        # 维度2: 让球
+        ha = d['dim_handicap']['analysis']
+        if ha.get('kelly', 0) > 0.008:
+            kf = ha['kelly'] * KELLY_FRACTION
+            if cs:
+                kf = min(kf, 0.02)
+            if kf >= 0.005:
+                bp = ha['best_pick']
+                bp_cn = {'home': '主队', 'push': '平局', 'away': '客队'}.get(bp, bp)
+                stake = int(BANKROLL * kf)
+                odds_data = d['dim_handicap'].get('market_odds', {})
+                odds_val = float(odds_data.get(bp[0], 0)) if odds_data else 0
+                gl = d['dim_handicap']['goal_line']
+                bet_lines.append({
+                    'dim': f'让球({gl:+.0f})', 'direction': bp_cn, 'kelly': ha['kelly'],
+                    'stake': stake, 'odds': odds_val, 'edge': ha['edge'],
+                })
 
-    rows.append({
-        'num': i + 1, 'h': h, 'a': a, 'h_cn': h_cn, 'a_cn': a_cn,
-        'lg': lg_cn, 'cs': cs, 'hp': hp, 'dp': dp, 'ap': ap,
-        'pick': pick, 'pick_class': pick_class,
-        'elo_h': elo_h, 'elo_a': elo_a,
-        'bh': bh, 'bd': bd, 'ba': ba,
-        'edge_h': edge_h, 'edge_a': edge_a,
-        'has_odds': has_odds,
-        'match_num': p.get('match_num', ''),
-    })
+        # 维度3: 大小球
+        ta = d['dim_totals']['analysis']
+        if ta.get('kelly', 0) > 0.008:
+            kf = ta['kelly'] * KELLY_FRACTION
+            if cs:
+                kf = min(kf, 0.02)
+            if kf >= 0.005:
+                bp = ta['best_pick']
+                bp_cn = {'over_2_5': '大2.5', 'over_3_5': '大3.5'}.get(bp, bp)
+                stake = int(BANKROLL * kf)
+                bet_lines.append({
+                    'dim': '大小球', 'direction': bp_cn, 'kelly': ta['kelly'],
+                    'stake': stake, 'odds': 1.85, 'edge': ta['edge'],
+                })
 
-# ---- HTML ----
+        bets.append({
+            'match': f"{d['home_cn']} vs {d['away_cn']}",
+            'match_num': d.get('match_num', ''),
+            'league': LEAGUE_CN.get(d['league_code'], d['league_code']),
+            'cold_start': cs,
+            'lines': bet_lines,
+        })
+    return bets
+
+
+bets = decide_bets(data)
+total_stakes = sum(sum(line['stake'] for line in b['lines']) for b in bets)
+total_lines = sum(len(b['lines']) for b in bets)
+bet_matches = sum(1 for b in bets if b['lines'])
+
+# ── HTML ──────────────────────────────────────────
 html = r'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JOYBOY · 8月9日终盘预测 · v3.0</title>
+<title>JOYBOY · 8月9日 多维预测 · v3.0</title>
 <style>
 :root {
   --bg: #09090d; --card: #111118; --border: #1c1c2a;
   --text: #d0d0dc; --muted: #6b6b80;
   --accent: #f0a838; --green: #3fb950; --red: #f85149;
-  --blue: #58a6ff; --cyan: #00d4ff; --pink: #ff6b9d; --purple: #a78bfa;
+  --blue: #58a6ff; --cyan: #00d4ff; --purple: #a78bfa;
 }
 * { margin:0; padding:0; box-sizing:border-box }
 body {
@@ -80,93 +117,82 @@ body {
   background: var(--bg); color: var(--text); font-size: 14px; line-height:1.6;
   min-height: 100vh;
 }
-.layout { display:flex; min-height:100vh; max-width:1380px; margin:0 auto; }
-/* LEFT BRAND */
+.layout { display:flex; min-height:100vh; max-width:1520px; margin:0 auto; }
 .left {
-  width: 120px; min-width: 120px;
+  width: 100px; min-width: 100px;
   background: linear-gradient(180deg, #050510 0%, #0c0c20 40%, #080818 60%, #050510 100%);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   border-right: 1px solid #1a1a2e; position: relative; flex-shrink: 0;
 }
-.left::before {
-  content: ''; position: absolute; top: 15%; left: 0; right: 0; height: 70%;
-  background: radial-gradient(ellipse at center, rgba(0,212,255,0.04) 0%, transparent 60%);
-  pointer-events: none;
-}
-.jb { display: flex; flex-direction: column; align-items: center; gap: 3px; z-index: 1; }
+.jb { display: flex; flex-direction: column; align-items: center; gap: 2px; z-index: 1; }
 .jb span {
-  font-family: 'Georgia','Palatino',serif; font-size: 2.6em; font-weight: 900; line-height: 0.95;
-  background: linear-gradient(180deg, #00d4ff 0%, #a78bfa 30%, #ff6b9d 55%, #f0a838 80%, #00d4ff 100%);
+  font-family: 'Georgia',serif; font-size: 2.2em; font-weight: 900; line-height: 0.95;
+  background: linear-gradient(180deg, #00d4ff, #a78bfa, #ff6b9d, #f0a838, #00d4ff);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.jb .tag {
-  font-size: 0.45em; color: var(--muted); font-family: 'PingFang SC','Microsoft YaHei',sans-serif;
-  letter-spacing: 6px; font-weight: 300; writing-mode: vertical-rl; margin-top: 8px; opacity: 0.4;
-}
-/* MAIN */
-.main { flex: 1; padding: 22px 26px; overflow-y: auto; }
-h1 { font-size: 1.1em; font-weight: 800; margin-bottom: 2px; letter-spacing: -0.2px; }
+.jb .tag { font-size: 0.4em; color: var(--muted); letter-spacing: 4px; writing-mode: vertical-rl; margin-top: 6px; opacity: 0.4; }
+.main { flex: 1; padding: 20px 24px; overflow-y: auto; }
+h1 { font-size: 1.05em; font-weight: 800; }
 h1 em { color: var(--accent); font-style: normal; }
-.sub { font-size: 0.6em; color: var(--muted); margin-bottom: 14px; }
+.sub { font-size: 0.58em; color: var(--muted); margin-bottom: 12px; }
 /* STATS */
-.stats { display: flex; gap: 7px; margin-bottom: 16px; flex-wrap: wrap; }
-.st { flex: 1; min-width: 60px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 10px 7px; text-align: center; }
-.st:hover { border-color: #2a2a3e; }
-.st .n { font-size: 1.35em; font-weight: 800; }
-.st .l { font-size: 0.55em; color: var(--muted); margin-top: 3px; }
-/* TABLE */
-.table-wrap { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
-table { width: 100%; border-collapse: collapse; }
-thead th {
-  background: #0d0d1a; color: var(--muted); font-size: 0.63em; font-weight: 600;
-  text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border);
-  letter-spacing: 0.5px; text-transform: uppercase;
+.stats { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.st { flex: 1; min-width: 55px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 7px; padding: 8px 6px; text-align: center; }
+.st .n { font-size: 1.2em; font-weight: 800; }
+.st .l { font-size: 0.52em; color: var(--muted); margin-top: 2px; }
+/* MATCH CARD */
+.match-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px 18px; margin-bottom: 12px;
 }
-thead th.r { text-align: right; }
-thead th.c { text-align: center; }
-tbody td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.83em; vertical-align: middle; }
-tbody tr:hover { background: rgba(255,255,255,0.015); }
-tbody tr.cold-row { background: rgba(167,139,250,0.03); }
-.num { color: var(--muted); font-size: 0.68em; min-width: 28px; }
-.teams { font-weight: 600; }
-.teams .cn { font-size: 0.68em; color: var(--muted); font-weight: 400; margin-top: 1px; }
-.league { font-size: 0.63em; color: var(--muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
-.bar-wrap { display: flex; height: 5px; border-radius: 3px; overflow: hidden; background: rgba(255,255,255,0.04); min-width: 130px; gap: 1px; }
-.bar-h { background: var(--blue); border-radius: 3px 0 0 3px; }
-.bar-d { background: #555; }
-.bar-a { background: var(--accent); border-radius: 0 3px 3px 0; }
-.prob-pct { font-weight: 600; font-size: 0.8em; }
-.prob-pct.h { color: var(--blue); } .prob-pct.d { color: #888; } .prob-pct.a { color: var(--accent); }
-.pick { display: inline-block; padding: 2px 9px; border-radius: 5px; font-size: 0.7em; font-weight: 700; }
-.pick.home { background: rgba(58,130,246,0.15); color: var(--blue); }
-.pick.away { background: rgba(240,168,56,0.15); color: var(--accent); }
-.pick.draw { background: rgba(139,143,163,0.12); color: var(--muted); }
-.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.58em; font-weight: 600; white-space: nowrap; }
+.match-card.bet-card { border-left: 3px solid var(--green); }
+.match-card.cold-card { background: rgba(167,139,250,0.02); }
+.match-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.match-teams { font-size: 1.05em; font-weight: 700; }
+.match-league { font-size: 0.6em; color: var(--muted); background: rgba(255,255,255,0.03); padding: 3px 8px; border-radius: 4px; }
+/* DIM GRID */
+.dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dim-box {
+  background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 7px; padding: 10px 12px;
+}
+.dim-box.full { grid-column: 1 / -1; }
+.dim-label { font-size: 0.6em; color: var(--muted); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.dim-probs { display: flex; gap: 6px; font-size: 0.85em; font-weight: 600; margin-bottom: 2px; }
+.dim-probs .hp { color: var(--blue); } .dim-probs .dp { color: var(--muted); } .dim-probs .ap { color: var(--accent); }
+.dim-probs .ov { color: var(--green); } .dim-probs .un { color: var(--red); }
+.dim-pick { font-size: 0.7em; font-weight: 700; }
+.dim-edge { font-size: 0.65em; }
+.dim-edge.pos { color: var(--green); } .dim-edge.neg { color: var(--red); }
+.scores-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.score-chip {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 4px; padding: 2px 8px; font-size: 0.7em; font-family: monospace;
+}
+.score-chip.top { border-color: rgba(240,168,56,0.3); color: var(--accent); font-weight: 600; }
+.bet-tag { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 0.55em; font-weight: 700; margin-left: 4px; }
+.bet-tag.bet { background: rgba(63,185,80,0.2); color: var(--green); }
+.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.55em; font-weight: 600; }
 .badge.trained { background: rgba(63,185,80,0.1); color: var(--green); }
 .badge.cold { background: rgba(167,139,250,0.12); color: var(--purple); }
-.badge.no-odds { background: rgba(248,81,73,0.1); color: var(--red); }
-.elo { font-size: 0.72em; color: var(--muted); }
-/* LEGEND */
-.legend { display: flex; gap: 14px; margin: 12px 0 6px; font-size: 0.58em; color: var(--muted); flex-wrap: wrap; }
-.legend span { display: flex; align-items: center; gap: 4px; }
-.legend .dot { width: 8px; height: 8px; border-radius: 2px; }
-.ft { text-align: center; padding: 20px; color: var(--muted); font-size: 0.48em; opacity: 0.3; }
-
-@media (max-width: 768px) {
-  .layout { flex-direction: column; max-width: 100%; }
-  .left { width: 100%; min-width: 0; flex-direction: row; padding: 8px 14px; border-right: none; border-bottom: 1px solid #1a1a2e; }
-  .jb { flex-direction: row; gap: 5px; }
-  .jb span { font-size: 1.1em; }
-  .jb .tag { writing-mode: horizontal-tb; letter-spacing: 2px; margin-top: 0; font-size: 0.5em; }
-  .main { padding: 10px 6px; }
-  .bar-wrap { min-width: 60px; }
-  table { font-size: 0.72em; }
-  thead th, tbody td { padding: 6px 5px; }
+.badge.na { background: rgba(248,81,73,0.1); color: var(--red); }
+.bet-summary {
+  background: linear-gradient(135deg, rgba(63,185,80,0.06), rgba(58,130,246,0.04));
+  border: 1px solid rgba(63,185,80,0.2); border-radius: 10px; padding: 12px 16px;
+  margin: 14px 0; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
 }
-@media print {
-  .left { display: none; }
-  body { background: white; color: #111; }
+.ft { text-align: center; padding: 18px; color: var(--muted); font-size: 0.45em; opacity: 0.3; }
+@media (max-width: 768px) {
+  .layout { flex-direction: column; }
+  .left { width: 100%; min-width: 0; flex-direction: row; padding: 6px 12px; border-right: none; border-bottom: 1px solid #1a1a2e; }
+  .jb { flex-direction: row; gap: 4px; }
+  .jb span { font-size: 1em; }
+  .jb .tag { writing-mode: horizontal-tb; letter-spacing: 2px; margin-top: 0; }
+  .dim-grid { grid-template-columns: 1fr; }
+  .main { padding: 8px 6px; }
 }
 </style>
 </head>
@@ -176,99 +202,171 @@ tbody tr.cold-row { background: rgba(167,139,250,0.03); }
 <div class="left">
   <div class="jb">
     <span>J</span><span>O</span><span>Y</span><span>B</span><span>O</span><span>Y</span>
-    <div class="tag">足球预测</div>
+    <div class="tag">多维预测</div>
   </div>
 </div>
 
 <div class="main">
-<h1>⚽ <em>终盘预测报告</em> · 2026年8月9日 周日</h1>
-<p class="sub">v3.0 Dixon-Coles · 贝叶斯融合 · 训练集 26,663 场 / 662 队 · 24 联赛覆盖 · 队名匹配已修复</p>
+<h1>⚽ <em>多维预测报告</em> · 2026年8月9日 周日</h1>
+<p class="sub">v3.0 Dixon-Coles · 四维覆盖: 胜平负/让球(HHAD)/大小球/波胆 · 半场+角球待数据补充 · 训练26663场662队</p>
 
 <div class="stats">
   <div class="st"><div class="n" style="color:var(--green)">20/24</div><div class="l">训练覆盖</div></div>
   <div class="st"><div class="n" style="color:var(--purple)">4</div><div class="l">冷启动</div></div>
-  <div class="st"><div class="n" style="color:var(--blue)">14</div><div class="l">主胜推荐</div></div>
-  <div class="st"><div class="n" style="color:var(--accent)">10</div><div class="l">客胜推荐</div></div>
-  <div class="st"><div class="n" style="color:var(--muted)">26663</div><div class="l">训练场次</div></div>
-  <div class="st"><div class="n" style="color:var(--cyan)">662</div><div class="l">训练球队</div></div>
-  <div class="st"><div class="n" style="color:var(--green)">83%</div><div class="l">覆盖率</div></div>
+  <div class="st"><div class="n" style="color:var(--blue)">4</div><div class="l">预测维度</div></div>
+  <div class="st"><div class="n" style="color:var(--green)">''' + str(bet_matches) + '''</div><div class="l">下注场次</div></div>
+  <div class="st"><div class="n" style="color:var(--accent)">''' + str(total_lines) + '''</div><div class="l">下注条数</div></div>
+  <div class="st"><div class="n" style="color:var(--cyan)">''' + str(total_stakes) + '''</div><div class="l">投注总额</div></div>
+  <div class="st"><div class="n" style="color:var(--red)">3</div><div class="l">待补充维度</div></div>
 </div>
 
-<div class="table-wrap">
-<table>
-<thead>
-<tr>
-  <th>#</th>
-  <th>比赛</th>
-  <th>联赛</th>
-  <th class="c" style="width:22%">概率分布</th>
-  <th class="c">推荐</th>
-  <th class="c">贝叶斯后验</th>
-  <th class="c">训练</th>
-  <th class="r">ELO差</th>
-</tr>
-</thead>
-<tbody>
+<div class="bet-summary">
+  <div>
+    <div style="font-weight:700;color:var(--green);font-size:0.85em">📋 模拟下注规则</div>
+    <div style="font-size:0.65em;color:var(--muted);margin-top:3px">
+      本金 ¥10,000 · 四分之一凯利 · 冷启动上限2%<br>
+      触发: 胜平负Kelly>1% / 让球>0.8% / 大小球>0.8%
+    </div>
+  </div>
+  <div style="margin-left:auto;text-align:right">
+    <div style="font-size:0.8em;color:var(--green);font-weight:700">''' + str(bet_matches) + f''' 场 / {total_lines} 注</div>
+    <div style="font-size:0.65em;color:var(--muted)">总额 ¥{total_stakes} ({total_stakes/BANKROLL*100:.1f}%仓位)</div>
+  </div>
+</div>
 '''
 
-for r in rows:
-    h_bar = int(r['hp'] * 100)
-    d_bar = int(r['dp'] * 100)
-    a_bar = int(r['ap'] * 100)
-    elo_diff = round(r['elo_h'] - r['elo_a'])
-    elo_sign = '+' if elo_diff > 0 else ''
+for d in data:
+    cs = d['cold_start']
+    card_class = 'bet-card' if any(b['match'].startswith(d['home_cn']) for b in bets if b['lines']) else ''
+    if cs:
+        card_class += ' cold-card'
 
-    has_bayes = r['bh'] + r['bd'] + r['ba'] > 0.001
-    bayes_str = f"{r['bh']:.1%}/{r['bd']:.1%}/{r['ba']:.1%}" if has_bayes else '—'
+    cs_badge = '<span class="badge cold">❄️冷启动</span>' if cs else '<span class="badge trained">✅已训练</span>'
 
-    cold_cls = ' cold-row' if r['cs'] else ''
-    cs_label = '❄️ 冷启动' if r['cs'] else '✅ 训练'
-    cs_class = 'cold' if r['cs'] else 'trained'
+    # 维度1: 胜平负
+    x = d['dim_1x2']
+    v = d.get('value') or {}
+    best_dir = v.get('best_direction', '')
+    kelly_1x2 = v.get('kelly', 0) or 0
 
-    no_odds_badge = ' <span class="badge no-odds">无赔率</span>' if not r['has_odds'] else ''
+    # 维度2: 让球
+    ha = d['dim_handicap']
+    gl = ha['goal_line']
+    gl_label = f'让{gl:+.0f}球' if gl != 0 else '平手盘'
 
-    html += f'''<tr{cold_cls}>
-  <td class="num">{r['num']:02d}</td>
-  <td>
-    <div class="teams">{r['h']} <span style="color:var(--muted);font-weight:400">vs</span> {r['a']}
-    <span class="cn">{r['h_cn']} vs {r['a_cn']}</span></div>
-  </td>
-  <td><span class="league">{r['lg']}</span></td>
-  <td>
-    <div class="bar-wrap">
-      <div class="bar-h" style="width:{h_bar}%"></div>
-      <div class="bar-d" style="width:{d_bar}%"></div>
-      <div class="bar-a" style="width:{a_bar}%"></div>
+    # 维度3: 大小球
+    ta = d['dim_totals']
+
+    # 维度4: 波胆
+    cs_top = d['dim_correct_score'][:6]
+
+    # 找这场是否有下注
+    match_bets = [b for b in bets if b['match'] == f"{d['home_cn']} vs {d['away_cn']}"]
+    bet_tags = ''
+    if match_bets:
+        for bline in match_bets[0]['lines']:
+            bet_tags += f' <span class="bet-tag bet">💰{bline["dim"]} {bline["direction"]} ¥{bline["stake"]}</span>'
+
+    html += f'''<div class="match-card {card_class}">
+  <div class="match-header">
+    <div>
+      <span class="match-teams">{d['home_cn']} vs {d['away_cn']}</span>
+      {cs_badge}
+      {bet_tags}
     </div>
-    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
-      <span class="prob-pct h">主 {r['hp']:.1%}</span>
-      <span class="prob-pct d">平 {r['dp']:.1%}</span>
-      <span class="prob-pct a">客 {r['ap']:.1%}</span>
-    </div>
-  </td>
-  <td style="text-align:center"><span class="pick {r['pick_class']}">{r['pick']}</span></td>
-  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">{bayes_str}</td>
-  <td style="text-align:center">
-    <span class="badge {cs_class}">{cs_label}</span>{no_odds_badge}
-  </td>
-  <td class="elo" style="text-align:right">{elo_sign}{elo_diff}</td>
-</tr>
+    <span class="match-league">{LEAGUE_CN.get(d['league_code'], d['league_code'])} · {d.get('match_num', '')}</span>
+  </div>
+  <div class="dim-grid">
+    <!-- 胜平负 -->
+    <div class="dim-box">
+      <div class="dim-label">① 胜平负 (SPF)</div>
+      <div class="dim-probs">
+        <span class="hp">主 {x['home']:.1%}</span>
+        <span class="dp">平 {x['draw']:.1%}</span>
+        <span class="ap">客 {x['away']:.1%}</span>
+      </div>
 '''
 
-html += '''</tbody>
-</table>
+    # 市场对比
+    if kelly_1x2 > 0.01:
+        dir_cn = {'home': '主胜', 'away': '客胜', 'draw': '平局'}.get(best_dir, best_dir)
+        edge = v.get(f'{best_dir}_edge', 0)
+        ec = 'pos' if edge > 0 else 'neg'
+        html += f'      <div class="dim-pick" style="color:var(--green)">→ 投{dir_cn} | 凯利 {kelly_1x2:.1%} | <span class="dim-edge {ec}">优势{edge:+.1%}</span></div>\n'
+    elif kelly_1x2 > 0:
+        html += f'      <div class="dim-pick" style="color:var(--muted)">凯利 {kelly_1x2:.1%} (不足)</div>\n'
+    else:
+        html += f'      <div class="dim-pick" style="color:var(--muted)">无模型优势</div>\n'
+
+    html += '''    </div>
+    <!-- 让球 -->
+    <div class="dim-box">
+      <div class="dim-label">② 让球 (HHAD) ''' + gl_label + '''</div>
+      <div class="dim-probs">
+        <span class="hp">主 {:.1%}</span>
+        <span class="dp">走 {:.1%}</span>
+        <span class="ap">客 {:.1%}</span>
+      </div>
+'''.format(ha['home_cover'], ha['push'], ha['away_cover'])
+
+    ha_edge = ha['analysis'].get('edge', 0)
+    ha_kelly = ha['analysis'].get('kelly', 0)
+    ha_best = ha['analysis'].get('best_pick', '')
+    if ha_kelly > 0.008:
+        bp_cn = {'home': '主队', 'push': '走水', 'away': '客队'}.get(ha_best, ha_best)
+        ec = 'pos' if ha_edge > 0 else 'neg'
+        html += f'      <div class="dim-pick" style="color:var(--green)">→ 投{bp_cn} | 凯利 {ha_kelly:.1%} | <span class="dim-edge {ec}">优势{ha_edge:+.1%}</span></div>\n'
+    else:
+        html += f'      <div class="dim-pick" style="color:var(--muted)">无显著优势</div>\n'
+
+    html += '''    </div>
+    <!-- 大小球 -->
+    <div class="dim-box">
+      <div class="dim-label">③ 大小球 (TTG)</div>
+      <div class="dim-probs">
+        <span class="ov">大2.5 {:.1%}</span>
+        <span class="ov">大3.5 {:.1%}</span>
+        <span style="color:var(--muted);font-size:0.7em">预期{:.2f}球</span>
+      </div>
+'''.format(ta['over_2_5'], ta['over_3_5'], ta['expected_goals'])
+
+    ta_edge = ta['analysis'].get('edge', 0)
+    ta_kelly = ta['analysis'].get('kelly', 0)
+    ta_best = ta['analysis'].get('best_pick', '')
+    if ta_kelly > 0.008:
+        bp_cn = {'over_2_5': '大2.5球', 'over_3_5': '大3.5球'}.get(ta_best, ta_best)
+        ec = 'pos' if ta_edge > 0 else 'neg'
+        html += f'      <div class="dim-pick" style="color:var(--green)">→ 投{bp_cn} | 凯利 {ta_kelly:.1%} | <span class="dim-edge {ec}">优势{ta_edge:+.1%}</span></div>\n'
+    else:
+        html += f'      <div class="dim-pick" style="color:var(--muted)">无显著优势</div>\n'
+
+    html += '''    </div>
+    <!-- 波胆 -->
+    <div class="dim-box">
+      <div class="dim-label">④ 波胆 (最可能比分)</div>
+      <div class="scores-grid">
+'''
+    for i, s in enumerate(cs_top):
+        chip_class = 'top' if i < 3 else ''
+        html += f'        <span class="score-chip {chip_class}">{s["score"]} {s["prob"]:.1%}</span>\n'
+
+    html += '''      </div>
+    </div>
+  </div>
+</div>
+'''
+
+html += '''
+<div style="margin:14px 0;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+  <div style="font-size:0.75em;color:var(--muted);font-weight:600;margin-bottom:4px">⏳ 待补充维度 (需新数据源)</div>
+  <div style="font-size:0.65em;color:var(--muted)">
+    ⑤ 半场让球 · ⑥ 半场大小球 → 需半场比分数据训练半场DC模型<br>
+    ⑦ 角球 → 需角球数据 + 独立角球模型<br>
+    <span style="color:var(--accent)">计划: 搜集历史半场/角球数据后可快速接入现有框架</span>
+  </div>
 </div>
 
-<div class="legend">
-  <span><span class="dot" style="background:var(--blue)"></span> 主胜</span>
-  <span><span class="dot" style="background:#555"></span> 平局</span>
-  <span><span class="dot" style="background:var(--accent)"></span> 客胜</span>
-  <span style="margin-left:8px">✅ 训练 = 有历史攻防参数</span>
-  <span>❄️ 冷启动 = 新队/无数据，使用联赛均值</span>
-  <span style="margin-left:8px;color:var(--red)">⚠ 体彩无SPF赔率，贝叶斯融合跳过</span>
-</div>
-
-<div class="ft">JOYBOY · Football Prediction Engine · v3.0 Dixon-Coles · 2026-08-09 · github.com/crazzy0924/football</div>
+<div class="ft">JOYBOY · v3.0 Multi-Dim Predictor · Dixon-Coles Engine · 2026-08-09 · 赛后自动复盘</div>
 
 </div>
 </div>
@@ -278,4 +376,16 @@ html += '''</tbody>
 with open('predictions_20260809.html', 'w', encoding='utf-8') as f:
     f.write(html)
 
-print(f'OK: predictions_20260809.html ({len(html):,} bytes, {len(rows)} matches)')
+# ── 控制台 ────────────────────────────────────────
+print(f'✅ 多维报告: predictions_20260809.html ({len(html):,} bytes)')
+print()
+print(f'📋 模拟下注 ({bet_matches}场/{total_lines}注, ¥{total_stakes})')
+print(f'{"─" * 80}')
+for b in bets:
+    if b['lines']:
+        print(f'  {b["match_num"]} {b["match"]} [{b["league"]}]')
+        for line in b['lines']:
+            odds_str = f'@{line["odds"]:.2f}' if line['odds'] else ''
+            print(f'    {line["dim"]} → {line["direction"]} {odds_str} 凯利{line["kelly"]:.1%} ¥{line["stake"]}')
+print(f'{"─" * 80}')
+print(f'待补充: 半场让球/半场大小球/角球 (需新数据)')

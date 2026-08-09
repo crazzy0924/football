@@ -77,12 +77,44 @@ def run_backtest(
 
         league_stats = compute_league_stats(train_matches)
 
+        # ── Recent form: chronological processing within test season ──
+        # We maintain a pool of completed matches (training + already-seen test)
+        # and recompute form factors before each test match.
+        # This ensures form only uses data available BEFORE the match.
+        from models.form_factor import compute_form_factors
+        completed_matches = list(train_matches)  # start with all training data (prev seasons)
+
+        # Sort test matches chronologically (they should already be sorted, but ensure)
+        test_matches_sorted = sorted(test_matches, key=lambda m: (
+            m.get("date", ""), m.get("kickoff", ""), m.get("commence_time", "")
+        ))
+
         # Predict all test matches
         predictions = []
         bet_candidates = []
 
-        for m in test_matches:
-            pred = dc.predict(m["home_team"], m["away_team"], m["league_code"])
+        # Track how many times we recompute form (every 50 matches for efficiency)
+        form_cache = None
+        form_cache_matches = -1
+        form_recompute_interval = 50  # recompute after every N new matches
+
+        for idx, m in enumerate(test_matches_sorted):
+            # Recompute form factors periodically or if cache is stale
+            if idx == 0 or len(completed_matches) - form_cache_matches >= form_recompute_interval:
+                form_factors = compute_form_factors(
+                    completed_matches,
+                    dc.team_attack,
+                    dc.team_defense,
+                    dc.league_avg_goals,
+                    dc.league_home_adv,
+                )
+                form_cache = form_factors
+                form_cache_matches = len(completed_matches)
+
+            pred = dc.predict(
+                m["home_team"], m["away_team"], m["league_code"],
+                form_factors=form_cache,
+            )
             actual = m["result"]
             market_odds = m.get("odds", {})
             best_odds = _get_best_odds(market_odds)
@@ -113,6 +145,15 @@ def run_backtest(
                     "posterior": bayes_result["posterior"],
                     "raw_edge": bayes_result["raw_edges"],
                 })
+
+            # Feed actual result back into form pool (chronological — only past matches used)
+            completed_matches.append({
+                "home_team": m["home_team"],
+                "away_team": m["away_team"],
+                "league_code": m["league_code"],
+                "home_goals": m["home_goals"],
+                "away_goals": m["away_goals"],
+            })
 
         # Evaluate Brier
         combined_ls = {
@@ -226,8 +267,9 @@ def _bayesian_fuse(pred: dict, odds: dict) -> dict:
         "away": round(model_probs[2] - market_probs[2], 4),
     }
 
-    # Bayesian fusion — model_confidence based on prediction certainty
-    model_conf = 0.35 + 0.30 * max(model_probs)  # range 0.35-0.65
+    # Bayesian fusion — fixed model_confidence (v3.1: was based on max_prob,
+    # which amplified overconfidence. Now uses cold-start as the only discount.)
+    model_conf = 0.35 if pred.get("cold_start", False) else 0.50
 
     update = bayesian_update(
         model_probs, market_probs,

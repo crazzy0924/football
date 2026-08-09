@@ -40,20 +40,25 @@ def bayesian_update(
     posterior[i] = (model_probs[i] × N + market_probs[i] × M) / (N + M)
 
     N = 10 + model_confidence × 50  (range 10–60)
-    M = f(margin, dispersion)       (range 4–22)
+    M = dynamic, driven by Pinnacle margin quality
 
-    Low margin → high trust in market → larger M
-    High dispersion → low trust in market → smaller M
+    Key insight: tight Pinnacle margins (<2%) = high-quality signal → trust market more.
+    Wide margins (>6%) = uncertain market → trust model more.
+
+    v3.1: Market weight range widened from [4,22] to [5,45].
+    At 1% margin: M≈45 → market gets ~55% weight when model is uncertain.
+    At 6% margin: M≈8 → model dominates with ~83% weight.
     """
-    # Prior strength N
+    # Prior strength N (model)
     N_raw = 10 + int(model_confidence * 50)
     N = max(8, min(65, N_raw))
 
-    # Evidence strength M
-    margin_factor = min(1.0, 0.025 / max(market_margin, 0.01))
-    M_base = 5 + int(margin_factor * 18)
+    # Evidence strength M (market) — v3.1: more responsive to margin
+    # margin_factor: 1.0 at 2% margin, 0.33 at 6% margin
+    margin_factor = min(1.0, 0.02 / max(market_margin, 0.005))
+    M_base = 5 + int(margin_factor * 40)  # range: 5–45
     consensus_factor = max(0.4, 1.0 - market_dispersion * 6)
-    M = max(4, min(22, int(M_base * consensus_factor)))
+    M = max(5, min(45, int(M_base * consensus_factor)))
 
     # Posterior
     total = N + M

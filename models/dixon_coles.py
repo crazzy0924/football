@@ -254,10 +254,12 @@ class DixonColesModel:
     def __init__(self):
         self.team_attack: dict[str, float] = {}
         self.team_defense: dict[str, float] = {}
+        self.team_league: dict[str, str] = {}       # team → league_code
         self.league_rho: dict[str, float] = {}
         self.league_home_adv: dict[str, float] = {}
         self.league_avg_goals: dict[str, float] = {}
         self._fitted = False
+        self._league_medians_cache: dict | None = None
 
     # ================================================================
     # Simple fitting (analytical approach — no scipy needed initially)
@@ -311,6 +313,8 @@ class DixonColesModel:
             away = m["away_team"]
             team_league[home] = code
             team_league[away] = code
+            self.team_league[home] = code
+            self.team_league[away] = code
 
             if home not in team_goals_for:
                 team_goals_for[home] = []
@@ -568,6 +572,10 @@ class DixonColesModel:
         for i, t in enumerate(team_list):
             self.team_attack[t] = round(float(att[i]), 4)
             self.team_defense[t] = round(float(def_[i]), 4)
+        # Store team→league mapping from match data
+        for m in matches:
+            self.team_league[m["home_team"]] = m["league_code"]
+            self.team_league[m["away_team"]] = m["league_code"]
         for i, l in enumerate(league_list):
             self.league_rho[l] = round(float(rho_arr[i]), 4)
             self.league_home_adv[l] = round(float(ha_arr[i]), 4)
@@ -576,6 +584,43 @@ class DixonColesModel:
 
         print(f"  MLE converged: {result.message} | nit={result.nit} | final NLL={result.fun:.2f}")
         self._fitted = True
+
+    # ================================================================
+    # League-median fallback for cold start teams
+    # ================================================================
+
+    def _get_league_medians(self) -> dict[str, dict[str, float]]:
+        """Compute per-league median attack/defense from known teams.
+
+        Used as fallback for cold-start teams instead of blind 1.0.
+        Cached on first call.
+        """
+        if self._league_medians_cache is not None:
+            return self._league_medians_cache
+
+        from collections import defaultdict
+        league_att: dict[str, list[float]] = defaultdict(list)
+        league_def: dict[str, list[float]] = defaultdict(list)
+
+        for team, att in self.team_attack.items():
+            lg = self.team_league.get(team, "")
+            if lg:
+                league_att[lg].append(att)
+                league_def[lg].append(self.team_defense.get(team, 1.0))
+
+        self._league_medians_cache = {}
+        for code in self.league_avg_goals:
+            atts = sorted(league_att.get(code, [1.0]))
+            defs = sorted(league_def.get(code, [1.0]))
+            if atts:
+                self._league_medians_cache[code] = {
+                    "att": round(atts[len(atts)//2], 4),
+                    "def": round(defs[len(defs)//2], 4),
+                }
+            else:
+                self._league_medians_cache[code] = {"att": 1.0, "def": 1.0}
+
+        return self._league_medians_cache
 
     # ================================================================
     # Prediction
@@ -587,6 +632,7 @@ class DixonColesModel:
         away_team: str,
         league_code: str,
         max_g: int = 8,
+        form_factors: dict[str, dict[str, float]] | None = None,
     ) -> dict[str, Any]:
         """Predict match outcome probabilities.
 
@@ -594,6 +640,9 @@ class DixonColesModel:
             home_team: home team name
             away_team: away team name
             league_code: league identifier (e.g., "PL", "BL1")
+            form_factors: optional {team: {attack_form, defense_form}}
+                from compute_form_factors(). When provided, recent form adjusts
+                the long-term attack/defense parameters multiplicatively.
 
         Returns:
             Full prediction dict with H/D/A, over/under, BTTS, top scores
@@ -602,11 +651,27 @@ class DixonColesModel:
         home_resolved = _resolve_team_name(home_team, self.team_attack)
         away_resolved = _resolve_team_name(away_team, self.team_attack)
 
-        # Get team parameters (default to neutral 1.0)
+        # Get team parameters (default to league-median, not blind 1.0)
         att_h = self.team_attack.get(home_resolved, 1.0)
         def_h = self.team_defense.get(home_resolved, 1.0)
         att_a = self.team_attack.get(away_resolved, 1.0)
         def_a = self.team_defense.get(away_resolved, 1.0)
+
+        # Cold start detection
+        home_cold = home_resolved not in self.team_attack
+        away_cold = away_resolved not in self.team_attack
+
+        # Use league-median fallback for unknown teams
+        if home_cold or away_cold:
+            league_medians = self._get_league_medians()
+            # Find which league(s) these teams belong to (use current match's league as proxy)
+            med = league_medians.get(league_code, {"att": 1.0, "def": 1.0})
+            if home_cold:
+                att_h = med["att"]
+                def_h = med["def"]
+            if away_cold:
+                att_a = med["att"]
+                def_a = med["def"]
 
         # Get league parameters
         avg_goals = self.league_avg_goals.get(league_code, 2.65)
@@ -616,6 +681,29 @@ class DixonColesModel:
         # Compute expected goals
         lam_h = (avg_goals / 2) * att_h * def_a * (1 + home_adv)
         lam_a = (avg_goals / 2) * att_a * def_h
+
+        # ── Apply recent form factors if available ──
+        form_h = None
+        form_a = None
+        if form_factors:
+            hf = form_factors.get(home_resolved) or form_factors.get(home_team, {})
+            af = form_factors.get(away_resolved) or form_factors.get(away_team, {})
+            if hf or af:
+                f_att_h = hf.get("attack_form", 1.0)
+                f_def_h = hf.get("defense_form", 1.0)
+                f_att_a = af.get("attack_form", 1.0)
+                f_def_a = af.get("defense_form", 1.0)
+
+                # Blend: λ = (1-w)*λ_base + w*λ_form
+                # 25% form signal — enough to matter, not enough to dominate
+                FORM_BLEND = 0.25
+                lam_h_form = lam_h * f_att_h * f_def_a
+                lam_a_form = lam_a * f_att_a * f_def_h
+                lam_h = (1 - FORM_BLEND) * lam_h + FORM_BLEND * lam_h_form
+                lam_a = (1 - FORM_BLEND) * lam_a + FORM_BLEND * lam_a_form
+
+                form_h = hf
+                form_a = af
 
         # Get Dixon-Coles marginals
         result = dc_marginals(lam_h, lam_a, max_g, rho)
@@ -627,9 +715,17 @@ class DixonColesModel:
         result["home_defense"] = def_h
         result["away_attack"] = att_a
         result["away_defense"] = def_a
-        result["cold_start"] = (
-            home_resolved not in self.team_attack or away_resolved not in self.team_attack
-        )
+        result["cold_start"] = home_cold or away_cold
+        result["cold_start_detail"] = {
+            "home_cold": home_cold,
+            "away_cold": away_cold,
+            "home_fallback_att": att_h if home_cold else None,
+            "away_fallback_att": att_a if away_cold else None,
+        }
+        if form_h:
+            result["home_form"] = form_h
+        if form_a:
+            result["away_form"] = form_a
 
         return result
 
@@ -659,6 +755,10 @@ class DixonColesModel:
                 "avg_goals": self.league_avg_goals.get(code, 2.65),
             }
 
+        # Save team→league mapping
+        with open(os.path.join(dir_path, "team_league.json"), "w", encoding="utf-8") as f:
+            json.dump(self.team_league, f, ensure_ascii=False, indent=2)
+
         with open(os.path.join(dir_path, "league_params.json"), "w", encoding="utf-8") as f:
             json.dump(league_params, f, ensure_ascii=False, indent=2)
 
@@ -666,6 +766,7 @@ class DixonColesModel:
         """Load model parameters from JSON files."""
         team_path = os.path.join(dir_path, "team_params.json")
         league_path = os.path.join(dir_path, "league_params.json")
+        team_league_path = os.path.join(dir_path, "team_league.json")
 
         if not os.path.exists(team_path):
             return False
@@ -684,6 +785,11 @@ class DixonColesModel:
                 self.league_home_adv[code] = params.get("home_adv", 0.30)
                 self.league_avg_goals[code] = params.get("avg_goals", 2.65)
 
+        if os.path.exists(team_league_path):
+            with open(team_league_path, "r", encoding="utf-8") as f:
+                self.team_league = json.load(f)
+
+        self._league_medians_cache = None  # reset cache on load
         self._fitted = True
         return True
 

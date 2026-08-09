@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JOYBOY · 8月9日终盘预测 · v3.0</title>
+<style>
+:root {
+  --bg: #09090d; --card: #111118; --border: #1c1c2a;
+  --text: #d0d0dc; --muted: #6b6b80;
+  --accent: #f0a838; --green: #3fb950; --red: #f85149;
+  --blue: #58a6ff; --cyan: #00d4ff; --pink: #ff6b9d; --purple: #a78bfa;
+}
+* { margin:0; padding:0; box-sizing:border-box }
+body {
+  font-family: 'PingFang SC','Microsoft YaHei','Segoe UI',sans-serif;
+  background: var(--bg); color: var(--text); font-size: 14px; line-height:1.6;
+  min-height: 100vh;
+}
+.layout { display:flex; min-height:100vh; max-width:1380px; margin:0 auto; }
+/* LEFT BRAND */
+.left {
+  width: 120px; min-width: 120px;
+  background: linear-gradient(180deg, #050510 0%, #0c0c20 40%, #080818 60%, #050510 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-right: 1px solid #1a1a2e; position: relative; flex-shrink: 0;
+}
+.left::before {
+  content: ''; position: absolute; top: 15%; left: 0; right: 0; height: 70%;
+  background: radial-gradient(ellipse at center, rgba(0,212,255,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.jb { display: flex; flex-direction: column; align-items: center; gap: 3px; z-index: 1; }
+.jb span {
+  font-family: 'Georgia','Palatino',serif; font-size: 2.6em; font-weight: 900; line-height: 0.95;
+  background: linear-gradient(180deg, #00d4ff 0%, #a78bfa 30%, #ff6b9d 55%, #f0a838 80%, #00d4ff 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.jb .tag {
+  font-size: 0.45em; color: var(--muted); font-family: 'PingFang SC','Microsoft YaHei',sans-serif;
+  letter-spacing: 6px; font-weight: 300; writing-mode: vertical-rl; margin-top: 8px; opacity: 0.4;
+}
+/* MAIN */
+.main { flex: 1; padding: 22px 26px; overflow-y: auto; }
+h1 { font-size: 1.1em; font-weight: 800; margin-bottom: 2px; letter-spacing: -0.2px; }
+h1 em { color: var(--accent); font-style: normal; }
+.sub { font-size: 0.6em; color: var(--muted); margin-bottom: 14px; }
+/* STATS */
+.stats { display: flex; gap: 7px; margin-bottom: 16px; flex-wrap: wrap; }
+.st { flex: 1; min-width: 60px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 7px; text-align: center; }
+.st:hover { border-color: #2a2a3e; }
+.st .n { font-size: 1.35em; font-weight: 800; }
+.st .l { font-size: 0.55em; color: var(--muted); margin-top: 3px; }
+/* TABLE */
+.table-wrap { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  background: #0d0d1a; color: var(--muted); font-size: 0.63em; font-weight: 600;
+  text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border);
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+thead th.r { text-align: right; }
+thead th.c { text-align: center; }
+tbody td { padding: 9px 10px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.83em; vertical-align: middle; }
+tbody tr:hover { background: rgba(255,255,255,0.015); }
+tbody tr.cold-row { background: rgba(167,139,250,0.03); }
+.num { color: var(--muted); font-size: 0.68em; min-width: 28px; }
+.teams { font-weight: 600; }
+.teams .cn { font-size: 0.68em; color: var(--muted); font-weight: 400; margin-top: 1px; }
+.league { font-size: 0.63em; color: var(--muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+.bar-wrap { display: flex; height: 5px; border-radius: 3px; overflow: hidden; background: rgba(255,255,255,0.04); min-width: 130px; gap: 1px; }
+.bar-h { background: var(--blue); border-radius: 3px 0 0 3px; }
+.bar-d { background: #555; }
+.bar-a { background: var(--accent); border-radius: 0 3px 3px 0; }
+.prob-pct { font-weight: 600; font-size: 0.8em; }
+.prob-pct.h { color: var(--blue); } .prob-pct.d { color: #888; } .prob-pct.a { color: var(--accent); }
+.pick { display: inline-block; padding: 2px 9px; border-radius: 5px; font-size: 0.7em; font-weight: 700; }
+.pick.home { background: rgba(58,130,246,0.15); color: var(--blue); }
+.pick.away { background: rgba(240,168,56,0.15); color: var(--accent); }
+.pick.draw { background: rgba(139,143,163,0.12); color: var(--muted); }
+.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.58em; font-weight: 600; white-space: nowrap; }
+.badge.trained { background: rgba(63,185,80,0.1); color: var(--green); }
+.badge.cold { background: rgba(167,139,250,0.12); color: var(--purple); }
+.badge.no-odds { background: rgba(248,81,73,0.1); color: var(--red); }
+.elo { font-size: 0.72em; color: var(--muted); }
+/* LEGEND */
+.legend { display: flex; gap: 14px; margin: 12px 0 6px; font-size: 0.58em; color: var(--muted); flex-wrap: wrap; }
+.legend span { display: flex; align-items: center; gap: 4px; }
+.legend .dot { width: 8px; height: 8px; border-radius: 2px; }
+.ft { text-align: center; padding: 20px; color: var(--muted); font-size: 0.48em; opacity: 0.3; }
+
+@media (max-width: 768px) {
+  .layout { flex-direction: column; max-width: 100%; }
+  .left { width: 100%; min-width: 0; flex-direction: row; padding: 8px 14px; border-right: none; border-bottom: 1px solid #1a1a2e; }
+  .jb { flex-direction: row; gap: 5px; }
+  .jb span { font-size: 1.1em; }
+  .jb .tag { writing-mode: horizontal-tb; letter-spacing: 2px; margin-top: 0; font-size: 0.5em; }
+  .main { padding: 10px 6px; }
+  .bar-wrap { min-width: 60px; }
+  table { font-size: 0.72em; }
+  thead th, tbody td { padding: 6px 5px; }
+}
+@media print {
+  .left { display: none; }
+  body { background: white; color: #111; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<div class="left">
+  <div class="jb">
+    <span>J</span><span>O</span><span>Y</span><span>B</span><span>O</span><span>Y</span>
+    <div class="tag">足球预测</div>
+  </div>
+</div>
+
+<div class="main">
+<h1>⚽ <em>终盘预测报告</em> · 2026年8月9日 周日</h1>
+<p class="sub">v3.0 Dixon-Coles · 贝叶斯融合 · 训练集 26,663 场 / 662 队 · 24 联赛覆盖 · 队名匹配已修复</p>
+
+<div class="stats">
+  <div class="st"><div class="n" style="color:var(--green)">20/24</div><div class="l">训练覆盖</div></div>
+  <div class="st"><div class="n" style="color:var(--purple)">4</div><div class="l">冷启动</div></div>
+  <div class="st"><div class="n" style="color:var(--blue)">14</div><div class="l">主胜推荐</div></div>
+  <div class="st"><div class="n" style="color:var(--accent)">10</div><div class="l">客胜推荐</div></div>
+  <div class="st"><div class="n" style="color:var(--muted)">26663</div><div class="l">训练场次</div></div>
+  <div class="st"><div class="n" style="color:var(--cyan)">662</div><div class="l">训练球队</div></div>
+  <div class="st"><div class="n" style="color:var(--green)">83%</div><div class="l">覆盖率</div></div>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>比赛</th>
+  <th>联赛</th>
+  <th class="c" style="width:22%">概率分布</th>
+  <th class="c">推荐</th>
+  <th class="c">贝叶斯后验</th>
+  <th class="c">训练</th>
+  <th class="r">ELO差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td class="num">01</td>
+  <td>
+    <div class="teams">Tokyo Verdy <span style="color:var(--muted);font-weight:400">vs</span> Kawasaki Frontale
+    <span class="cn">Tokyo Verdy vs Kawasaki Frontale</span></div>
+  </td>
+  <td><span class="league">日职联</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:23%"></div>
+      <div class="bar-d" style="width:22%"></div>
+      <div class="bar-a" style="width:54%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 23.2%</span>
+      <span class="prob-pct d">平 22.7%</span>
+      <span class="prob-pct a">客 54.1%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">24.5%/23.6%/51.9%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-72</td>
+</tr>
+<tr cold-row>
+  <td class="num">02</td>
+  <td>
+    <div class="teams">V-Varen Nagasaki <span style="color:var(--muted);font-weight:400">vs</span> Kyoto Sanga
+    <span class="cn">V-Varen Nagasaki vs Kyoto Sanga</span></div>
+  </td>
+  <td><span class="league">日职联</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:45%"></div>
+      <div class="bar-d" style="width:25%"></div>
+      <div class="bar-a" style="width:28%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 45.9%</span>
+      <span class="prob-pct d">平 25.9%</span>
+      <span class="prob-pct a">客 28.2%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">43.8%/26.2%/30.1%</td>
+  <td style="text-align:center">
+    <span class="badge cold">❄️ 冷启动</span>
+  </td>
+  <td class="elo" style="text-align:right">-47</td>
+</tr>
+<tr cold-row>
+  <td class="num">03</td>
+  <td>
+    <div class="teams">Montedio Yamagata <span style="color:var(--muted);font-weight:400">vs</span> Tochigi SC
+    <span class="cn">Montedio Yamagata vs Tochigi SC</span></div>
+  </td>
+  <td><span class="league">日乙</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:45%"></div>
+      <div class="bar-d" style="width:25%"></div>
+      <div class="bar-a" style="width:28%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 45.5%</span>
+      <span class="prob-pct d">平 25.8%</span>
+      <span class="prob-pct a">客 28.8%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">44.4%/26.0%/29.6%</td>
+  <td style="text-align:center">
+    <span class="badge cold">❄️ 冷启动</span>
+  </td>
+  <td class="elo" style="text-align:right">0</td>
+</tr>
+<tr>
+  <td class="num">04</td>
+  <td>
+    <div class="teams">Sparta Rotterdam <span style="color:var(--muted);font-weight:400">vs</span> Feyenoord
+    <span class="cn">Sparta Rotterdam vs Feyenoord</span></div>
+  </td>
+  <td><span class="league">荷甲</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:20%"></div>
+      <div class="bar-d" style="width:21%"></div>
+      <div class="bar-a" style="width:58%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 20.9%</span>
+      <span class="prob-pct d">平 21.0%</span>
+      <span class="prob-pct a">客 58.1%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">20.8%/21.2%/57.9%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-282</td>
+</tr>
+<tr>
+  <td class="num">05</td>
+  <td>
+    <div class="teams">St Pauli <span style="color:var(--muted);font-weight:400">vs</span> Greuther Furth
+    <span class="cn">St Pauli vs Greuther Furth</span></div>
+  </td>
+  <td><span class="league">德乙</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:40%"></div>
+      <div class="bar-d" style="width:28%"></div>
+      <div class="bar-a" style="width:31%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 40.4%</span>
+      <span class="prob-pct d">平 28.5%</span>
+      <span class="prob-pct a">客 31.1%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">42.3%/27.9%/29.8%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-30</td>
+</tr>
+<tr>
+  <td class="num">06</td>
+  <td>
+    <div class="teams">Nurnberg <span style="color:var(--muted);font-weight:400">vs</span> Dresden
+    <span class="cn">Nurnberg vs Dresden</span></div>
+  </td>
+  <td><span class="league">德乙</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:46%"></div>
+      <div class="bar-d" style="width:22%"></div>
+      <div class="bar-a" style="width:30%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 46.8%</span>
+      <span class="prob-pct d">平 22.4%</span>
+      <span class="prob-pct a">客 30.8%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">46.5%/22.9%/30.6%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">+22</td>
+</tr>
+<tr>
+  <td class="num">07</td>
+  <td>
+    <div class="teams">Hammarby <span style="color:var(--muted);font-weight:400">vs</span> Hacken
+    <span class="cn">Hammarby vs Hacken</span></div>
+  </td>
+  <td><span class="league">瑞典超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:48%"></div>
+      <div class="bar-d" style="width:20%"></div>
+      <div class="bar-a" style="width:31%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 48.0%</span>
+      <span class="prob-pct d">平 21.0%</span>
+      <span class="prob-pct a">客 31.0%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">49.9%/20.9%/29.2%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">+111</td>
+</tr>
+<tr cold-row>
+  <td class="num">08</td>
+  <td>
+    <div class="teams">KuPS <span style="color:var(--muted);font-weight:400">vs</span> TPS
+    <span class="cn">KuPS vs TPS</span></div>
+  </td>
+  <td><span class="league">芬超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:64%"></div>
+      <div class="bar-d" style="width:20%"></div>
+      <div class="bar-a" style="width:14%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 64.9%</span>
+      <span class="prob-pct d">平 20.7%</span>
+      <span class="prob-pct a">客 14.5%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">65.1%/20.5%/14.4%</td>
+  <td style="text-align:center">
+    <span class="badge cold">❄️ 冷启动</span>
+  </td>
+  <td class="elo" style="text-align:right">+220</td>
+</tr>
+<tr>
+  <td class="num">09</td>
+  <td>
+    <div class="teams">Zwolle <span style="color:var(--muted);font-weight:400">vs</span> Ajax
+    <span class="cn">Zwolle vs Ajax</span></div>
+  </td>
+  <td><span class="league">荷甲</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:19%"></div>
+      <div class="bar-d" style="width:19%"></div>
+      <div class="bar-a" style="width:61%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 19.5%</span>
+      <span class="prob-pct d">平 19.0%</span>
+      <span class="prob-pct a">客 61.5%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">19.1%/19.2%/61.7%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-240</td>
+</tr>
+<tr>
+  <td class="num">10</td>
+  <td>
+    <div class="teams">Groningen <span style="color:var(--muted);font-weight:400">vs</span> Utrecht
+    <span class="cn">Groningen vs Utrecht</span></div>
+  </td>
+  <td><span class="league">荷甲</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:31%"></div>
+      <div class="bar-d" style="width:24%"></div>
+      <div class="bar-a" style="width:44%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 31.1%</span>
+      <span class="prob-pct d">平 24.0%</span>
+      <span class="prob-pct a">客 44.9%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">32.4%/24.5%/43.1%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-92</td>
+</tr>
+<tr>
+  <td class="num">11</td>
+  <td>
+    <div class="teams">Lillestrom <span style="color:var(--muted);font-weight:400">vs</span> Rosenborg
+    <span class="cn">Lillestrom vs Rosenborg</span></div>
+  </td>
+  <td><span class="league">挪超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:22%"></div>
+      <div class="bar-d" style="width:20%"></div>
+      <div class="bar-a" style="width:57%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 22.0%</span>
+      <span class="prob-pct d">平 20.6%</span>
+      <span class="prob-pct a">客 57.4%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">24.8%/21.2%/53.9%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-248</td>
+</tr>
+<tr>
+  <td class="num">12</td>
+  <td>
+    <div class="teams">Inter Turku <span style="color:var(--muted);font-weight:400">vs</span> Lahti
+    <span class="cn">Inter Turku vs Lahti</span></div>
+  </td>
+  <td><span class="league">芬超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:63%"></div>
+      <div class="bar-d" style="width:19%"></div>
+      <div class="bar-a" style="width:16%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 63.7%</span>
+      <span class="prob-pct d">平 19.4%</span>
+      <span class="prob-pct a">客 16.9%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">62.5%/20.3%/17.3%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">+216</td>
+</tr>
+<tr>
+  <td class="num">13</td>
+  <td>
+    <div class="teams">Halmstads <span style="color:var(--muted);font-weight:400">vs</span> GAIS
+    <span class="cn">Halmstads vs GAIS</span></div>
+  </td>
+  <td><span class="league">瑞典超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:29%"></div>
+      <div class="bar-d" style="width:26%"></div>
+      <div class="bar-a" style="width:44%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 29.4%</span>
+      <span class="prob-pct d">平 26.4%</span>
+      <span class="prob-pct a">客 44.3%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">27.6%/25.8%/46.6%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-111</td>
+</tr>
+<tr>
+  <td class="num">14</td>
+  <td>
+    <div class="teams">IFK Goteborg <span style="color:var(--muted);font-weight:400">vs</span> Kalmar
+    <span class="cn">IFK Goteborg vs Kalmar</span></div>
+  </td>
+  <td><span class="league">瑞典超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:48%"></div>
+      <div class="bar-d" style="width:23%"></div>
+      <div class="bar-a" style="width:27%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 48.1%</span>
+      <span class="prob-pct d">平 23.9%</span>
+      <span class="prob-pct a">客 28.0%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">46.8%/24.2%/29.0%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">+28</td>
+</tr>
+<tr>
+  <td class="num">15</td>
+  <td>
+    <div class="teams">Heerenveen <span style="color:var(--muted);font-weight:400">vs</span> Twente
+    <span class="cn">Heerenveen vs Twente</span></div>
+  </td>
+  <td><span class="league">荷甲</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:27%"></div>
+      <div class="bar-d" style="width:22%"></div>
+      <div class="bar-a" style="width:49%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 28.0%</span>
+      <span class="prob-pct d">平 22.1%</span>
+      <span class="prob-pct a">客 49.9%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">28.7%/22.6%/48.8%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-119</td>
+</tr>
+<tr>
+  <td class="num">16</td>
+  <td>
+    <div class="teams">HamKam <span style="color:var(--muted);font-weight:400">vs</span> Aalesund
+    <span class="cn">HamKam vs Aalesund</span></div>
+  </td>
+  <td><span class="league">挪超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:55%"></div>
+      <div class="bar-d" style="width:23%"></div>
+      <div class="bar-a" style="width:20%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 55.3%</span>
+      <span class="prob-pct d">平 23.9%</span>
+      <span class="prob-pct a">客 20.8%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">53.9%/24.0%/22.1%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">+134</td>
+</tr>
+<tr>
+  <td class="num">17</td>
+  <td>
+    <div class="teams">AC Oulu <span style="color:var(--muted);font-weight:400">vs</span> HJK
+    <span class="cn">AC Oulu vs HJK</span></div>
+  </td>
+  <td><span class="league">芬超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:21%"></div>
+      <div class="bar-d" style="width:20%"></div>
+      <div class="bar-a" style="width:58%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 21.3%</span>
+      <span class="prob-pct d">平 20.2%</span>
+      <span class="prob-pct a">客 58.4%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">22.1%/21.0%/56.9%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-186</td>
+</tr>
+<tr>
+  <td class="num">18</td>
+  <td>
+    <div class="teams">Porto <span style="color:var(--muted);font-weight:400">vs</span> Alverca
+    <span class="cn">Porto vs Alverca</span></div>
+  </td>
+  <td><span class="league">葡超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:83%"></div>
+      <div class="bar-d" style="width:11%"></div>
+      <div class="bar-a" style="width:5%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 83.9%</span>
+      <span class="prob-pct d">平 11.0%</span>
+      <span class="prob-pct a">客 5.1%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">—</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span> <span class="badge no-odds">无赔率</span>
+  </td>
+  <td class="elo" style="text-align:right">+316</td>
+</tr>
+<tr>
+  <td class="num">19</td>
+  <td>
+    <div class="teams">Kristiansund <span style="color:var(--muted);font-weight:400">vs</span> Molde
+    <span class="cn">Kristiansund vs Molde</span></div>
+  </td>
+  <td><span class="league">挪超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:16%"></div>
+      <div class="bar-d" style="width:18%"></div>
+      <div class="bar-a" style="width:64%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 16.6%</span>
+      <span class="prob-pct d">平 18.9%</span>
+      <span class="prob-pct a">客 64.5%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">17.4%/19.4%/63.2%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-146</td>
+</tr>
+<tr cold-row>
+  <td class="num">20</td>
+  <td>
+    <div class="teams">Benfica <span style="color:var(--muted);font-weight:400">vs</span> Viseu
+    <span class="cn">Benfica vs Viseu</span></div>
+  </td>
+  <td><span class="league">葡超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:80%"></div>
+      <div class="bar-d" style="width:12%"></div>
+      <div class="bar-a" style="width:7%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 80.6%</span>
+      <span class="prob-pct d">平 12.0%</span>
+      <span class="prob-pct a">客 7.4%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">—</td>
+  <td style="text-align:center">
+    <span class="badge cold">❄️ 冷启动</span> <span class="badge no-odds">无赔率</span>
+  </td>
+  <td class="elo" style="text-align:right">+320</td>
+</tr>
+<tr>
+  <td class="num">21</td>
+  <td>
+    <div class="teams">Gil Vicente <span style="color:var(--muted);font-weight:400">vs</span> Rio Ave
+    <span class="cn">Gil Vicente vs Rio Ave</span></div>
+  </td>
+  <td><span class="league">葡超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:57%"></div>
+      <div class="bar-d" style="width:21%"></div>
+      <div class="bar-a" style="width:21%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 57.1%</span>
+      <span class="prob-pct d">平 21.6%</span>
+      <span class="prob-pct a">客 21.3%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">56.4%/22.4%/21.3%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">+69</td>
+</tr>
+<tr>
+  <td class="num">22</td>
+  <td>
+    <div class="teams">Moreirense <span style="color:var(--muted);font-weight:400">vs</span> Sp Braga
+    <span class="cn">Moreirense vs Sp Braga</span></div>
+  </td>
+  <td><span class="league">葡超</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:20%"></div>
+      <div class="bar-d" style="width:20%"></div>
+      <div class="bar-a" style="width:58%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 20.5%</span>
+      <span class="prob-pct d">平 20.8%</span>
+      <span class="prob-pct a">客 58.8%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick away">客胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">20.2%/21.4%/58.4%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-206</td>
+</tr>
+<tr>
+  <td class="num">23</td>
+  <td>
+    <div class="teams">Santos <span style="color:var(--muted);font-weight:400">vs</span> Athletico-PR
+    <span class="cn">Santos vs Athletico-PR</span></div>
+  </td>
+  <td><span class="league">巴甲</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:41%"></div>
+      <div class="bar-d" style="width:24%"></div>
+      <div class="bar-a" style="width:33%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 41.2%</span>
+      <span class="prob-pct d">平 24.9%</span>
+      <span class="prob-pct a">客 33.8%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">41.5%/25.7%/32.7%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">-47</td>
+</tr>
+<tr>
+  <td class="num">24</td>
+  <td>
+    <div class="teams">Flamengo <span style="color:var(--muted);font-weight:400">vs</span> Guimaraes
+    <span class="cn">Flamengo vs Guimaraes</span></div>
+  </td>
+  <td><span class="league">巴甲</span></td>
+  <td>
+    <div class="bar-wrap">
+      <div class="bar-h" style="width:74%"></div>
+      <div class="bar-d" style="width:15%"></div>
+      <div class="bar-a" style="width:10%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:0.7em">
+      <span class="prob-pct h">主 74.3%</span>
+      <span class="prob-pct d">平 15.1%</span>
+      <span class="prob-pct a">客 10.6%</span>
+    </div>
+  </td>
+  <td style="text-align:center"><span class="pick home">主胜</span></td>
+  <td style="text-align:center;font-size:0.76em;color:var(--text-dim)">74.7%/15.1%/10.2%</td>
+  <td style="text-align:center">
+    <span class="badge trained">✅ 训练</span>
+  </td>
+  <td class="elo" style="text-align:right">+177</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="legend">
+  <span><span class="dot" style="background:var(--blue)"></span> 主胜</span>
+  <span><span class="dot" style="background:#555"></span> 平局</span>
+  <span><span class="dot" style="background:var(--accent)"></span> 客胜</span>
+  <span style="margin-left:8px">✅ 训练 = 有历史攻防参数</span>
+  <span>❄️ 冷启动 = 新队/无数据，使用联赛均值</span>
+  <span style="margin-left:8px;color:var(--red)">⚠ 体彩无SPF赔率，贝叶斯融合跳过</span>
+</div>
+
+<div class="ft">JOYBOY · Football Prediction Engine · v3.0 Dixon-Coles · 2026-08-09 · github.com/crazzy0924/football</div>
+
+</div>
+</div>
+</body>
+</html>

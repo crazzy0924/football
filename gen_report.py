@@ -57,13 +57,23 @@ def decide_bets(data):
                 kf = min(kf, 0.02)
             if kf >= 0.005:
                 bp = ha['best_pick']
-                bp_cn = {'home': '主队', 'push': '平局', 'away': '客队'}.get(bp, bp)
+                gl = d['dim_handicap']['goal_line']
+                # 体彩HHAD: goalLine>0→主队受让, goalLine<0→主队让球
+                if bp == 'home':
+                    if gl > 0: bp_cn = f'主队(受让+{gl:.0f})'
+                    elif gl < 0: bp_cn = f'主队(让{abs(gl):.0f})'
+                    else: bp_cn = '主队(平手)'
+                elif bp == 'away':
+                    if gl > 0: bp_cn = f'客队(让{gl:.0f})'
+                    elif gl < 0: bp_cn = f'客队(受让+{abs(gl):.0f})'
+                    else: bp_cn = '客队(平手)'
+                else:
+                    bp_cn = '走水'
                 stake = int(BANKROLL * kf)
                 odds_data = d['dim_handicap'].get('market_odds', {})
                 odds_val = float(odds_data.get(bp[0], 0)) if odds_data else 0
-                gl = d['dim_handicap']['goal_line']
                 bet_lines.append({
-                    'dim': f'让球({gl:+.0f})', 'direction': bp_cn, 'kelly': ha['kelly'],
+                    'dim': '让球', 'direction': bp_cn, 'kelly': ha['kelly'],
                     'stake': stake, 'odds': odds_val, 'edge': ha['edge'],
                 })
 

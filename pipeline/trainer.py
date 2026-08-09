@@ -22,7 +22,7 @@ from models.league_profiles import LEAGUE_PROFILES, compute_league_profiles_from
 def train_all(
     matches: list[dict],
     state_dir: str = "data/state",
-    use_mle: bool = False,
+    use_mle: bool = True,
 ) -> dict[str, Any]:
     """Run the full training pipeline.
 

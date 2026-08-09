@@ -369,26 +369,28 @@ class DixonColesModel:
         self._fitted = True
 
     def fit_mle(self, matches: list[dict]) -> None:
-        """Maximum likelihood estimation using scipy BFGS.
+        """Maximum likelihood estimation using scipy L-BFGS-B.
 
         Jointly estimates:
-        - attack[t] for each team (constrained > 0, mean = 1)
+        - attack[t] for each team (constrained > 0, mean ≈ 1)
         - defense[t] for each team
         - ρ[L] for each league
         - home_adv[L] for each league
 
-        Requires: scipy
+        Vectorized: all 26,663 matches evaluated in one numpy call.
+        Requires: scipy, numpy
         Falls back to fit_simple() if scipy is unavailable.
         """
         try:
             import numpy as np
             from scipy.optimize import minimize
+            from scipy.special import gammaln
         except ImportError:
             print("scipy not available, falling back to fit_simple()")
             self.fit_simple(matches)
             return
 
-        # Build team and league indices
+        # ── Build team & league indices ──
         teams = set()
         leagues = set()
         for m in matches:
@@ -404,11 +406,38 @@ class DixonColesModel:
         n_teams = len(team_list)
         n_leagues = len(league_list)
 
-        # Initialize from simple fit
+        # ── Warm-start from analytical fit ──
         if not self._fitted:
             self.fit_simple(matches)
 
-        # Initial parameters: attack (n_teams), defense (n_teams), rho (n_leagues), home_adv (n_leagues)
+        # ── Pre-compute per-match numpy arrays (all vectorized) ──
+        n_matches = len(matches)
+        m_gh = np.array([m["home_goals"] for m in matches], dtype=np.int32)
+        m_ga = np.array([m["away_goals"] for m in matches], dtype=np.int32)
+        m_home_idx = np.array([team_idx[m["home_team"]] for m in matches], dtype=np.int32)
+        m_away_idx = np.array([team_idx[m["away_team"]] for m in matches], dtype=np.int32)
+        m_league_idx = np.array([league_idx[m["league_code"]] for m in matches], dtype=np.int32)
+
+        # Per-match league average goals
+        league_goals = {}
+        for l in league_list:
+            lm = [m for m in matches if m["league_code"] == l]
+            tg = sum(m["home_goals"] + m["away_goals"] for m in lm)
+            league_goals[l] = tg / len(lm) if lm else 2.5
+        league_avg_arr = np.array([league_goals[lg] for lg in league_list])
+        m_avg_g = league_avg_arr[m_league_idx]  # shape (n_matches,)
+
+        # Pre-compute log(k!) via gammaln(k+1) — numerically stable
+        m_log_fact_gh = gammaln(m_gh + 1)
+        m_log_fact_ga = gammaln(m_ga + 1)
+
+        # Boolean masks for τ-correction scores (only 4 scorelines affected)
+        mask_00 = (m_gh == 0) & (m_ga == 0)
+        mask_10 = (m_gh == 1) & (m_ga == 0)
+        mask_01 = (m_gh == 0) & (m_ga == 1)
+        mask_11 = (m_gh == 1) & (m_ga == 1)
+
+        # ── Initial parameter vector ──
         x0 = []
         for t in team_list:
             x0.append(self.team_attack.get(t, 1.0))
@@ -418,67 +447,124 @@ class DixonColesModel:
             x0.append(self.league_rho.get(l, -0.10))
         for l in league_list:
             x0.append(self.league_home_adv.get(l, 0.30))
+        x0 = np.array(x0, dtype=np.float64)
 
-        x0 = np.array(x0)
-
-        # Pre-compute league stats
-        league_goals = {}
-        for l in league_list:
-            league_matches = [m for m in matches if m["league_code"] == l]
-            total_g = sum(m["home_goals"] + m["away_goals"] for m in league_matches)
-            league_goals[l] = total_g / len(league_matches) if league_matches else 2.5
-
-        # Build match index arrays
-        m_home_idx = np.array([team_idx[m["home_team"]] for m in matches])
-        m_away_idx = np.array([team_idx[m["away_team"]] for m in matches])
-        m_league_idx = np.array([league_idx[m["league_code"]] for m in matches])
-        m_gh = np.array([m["home_goals"] for m in matches])
-        m_ga = np.array([m["away_goals"] for m in matches])
-
-        def unpack(x):
+        # ── Vectorized NLL + analytical gradient (returns (f, g) tuple) ──
+        def nll_and_grad(x):
             att = x[:n_teams]
             def_ = x[n_teams : 2 * n_teams]
             rho = x[2 * n_teams : 2 * n_teams + n_leagues]
             ha = x[2 * n_teams + n_leagues :]
-            return att, def_, rho, ha
 
-        def neg_log_likelihood(x):
-            att, def_, rho, ha = unpack(x)
-            ll = 0.0
-            for i in range(len(matches)):
-                l_idx = m_league_idx[i]
-                lg = league_list[l_idx]
-                avg_g = league_goals[lg]
+            # --- Expected goals (fully vectorized) ---
+            lam_h = (m_avg_g / 2.0) * att[m_home_idx] * def_[m_away_idx] * (1.0 + ha[m_league_idx])
+            lam_a = (m_avg_g / 2.0) * att[m_away_idx] * def_[m_home_idx]
+            lam_h = np.maximum(lam_h, 1e-8)
+            lam_a = np.maximum(lam_a, 1e-8)
 
-                lam_h = (avg_g / 2) * att[m_home_idx[i]] * def_[m_away_idx[i]] * (1 + ha[l_idx])
-                lam_a = (avg_g / 2) * att[m_away_idx[i]] * def_[m_home_idx[i]]
+            # --- Log-Poisson ---
+            log_p_h = m_gh * np.log(lam_h) - lam_h - m_log_fact_gh
+            log_p_a = m_ga * np.log(lam_a) - lam_a - m_log_fact_ga
 
-                p = dc_score_probability(
-                    int(m_gh[i]), int(m_ga[i]), lam_h, lam_a, rho[l_idx]
-                )
-                ll += math.log(max(p, 1e-10))
+            # --- τ correction ---
+            rho_m = rho[m_league_idx]
+            tau_val = np.ones(n_matches, dtype=np.float64)
+            tau_val[mask_00] = np.maximum(0.0, 1.0 - lam_h[mask_00] * lam_a[mask_00] * rho_m[mask_00])
+            tau_val[mask_10] = np.maximum(0.0, 1.0 + lam_h[mask_10] * rho_m[mask_10])
+            tau_val[mask_01] = np.maximum(0.0, 1.0 + lam_a[mask_01] * rho_m[mask_01])
+            tau_val[mask_11] = np.maximum(0.0, 1.0 - rho_m[mask_11])
+            log_tau = np.log(np.maximum(tau_val, 1e-12))
 
-            # L2 regularization: attack/defense pulled toward 1.0
-            reg = 0.0
-            for i in range(n_teams):
-                reg += 0.01 * ((att[i] - 1.0) ** 2 + (def_[i] - 1.0) ** 2)
-            return -(ll - reg)
+            # --- NLL value ---
+            ll = np.sum(log_tau + log_p_h + log_p_a)
+            reg = 0.01 * (np.sum((att - 1.0) ** 2) + np.sum((def_ - 1.0) ** 2))
+            nll = float(-(ll - reg))
 
-        # Optimize
+            # ============================================================
+            # Analytical gradient (fully vectorized)
+            # ============================================================
+
+            # τ log-derivatives: d(log τ)/dλh, d(log τ)/dλa, d(log τ)/dρ
+            # Use safe_tau to avoid divide-by-zero (τ clamped to ≥0 for max, may be 0)
+            safe_tau = np.maximum(tau_val, 1e-12)
+            dlogtau_dlamh = np.zeros(n_matches)
+            dlogtau_dlama = np.zeros(n_matches)
+            dlogtau_drho   = np.zeros(n_matches)
+
+            # 0-0: τ = 1 - λh·λa·ρ
+            dlogtau_dlamh[mask_00] = (-lam_a[mask_00] * rho_m[mask_00]) / safe_tau[mask_00]
+            dlogtau_dlama[mask_00] = (-lam_h[mask_00] * rho_m[mask_00]) / safe_tau[mask_00]
+            dlogtau_drho[mask_00]   = (-lam_h[mask_00] * lam_a[mask_00]) / safe_tau[mask_00]
+            # 1-0: τ = 1 + λh·ρ
+            dlogtau_dlamh[mask_10] = rho_m[mask_10] / safe_tau[mask_10]
+            dlogtau_drho[mask_10]   = lam_h[mask_10] / safe_tau[mask_10]
+            # 0-1: τ = 1 + λa·ρ
+            dlogtau_dlama[mask_01] = rho_m[mask_01] / safe_tau[mask_01]
+            dlogtau_drho[mask_01]   = lam_a[mask_01] / safe_tau[mask_01]
+            # 1-1: τ = 1 - ρ
+            dlogtau_drho[mask_11]   = -1.0 / safe_tau[mask_11]
+
+            # Per-match contribution: τ'_λh * λh + gh - λh  (goes to home-team attack / away-team defense)
+            contrib_h = dlogtau_dlamh * lam_h + m_gh - lam_h
+            # Per-match contribution: τ'_λa * λa + ga - λa  (goes to away-team attack / home-team defense)
+            contrib_a = dlogtau_dlama * lam_a + m_ga - lam_a
+
+            # --- Grad: attack[t] ---
+            # LL contribution from matches where t is home + where t is away
+            grad_att_raw = np.bincount(m_home_idx, weights=contrib_h, minlength=n_teams)
+            grad_att_raw += np.bincount(m_away_idx, weights=contrib_a, minlength=n_teams)
+            # ∂NLL/∂att = -(∂LL/∂att) + 0.02*(att - 1)
+            grad_att = -np.divide(grad_att_raw, att, where=att > 1e-10, out=np.zeros_like(grad_att_raw)) + 0.02 * (att - 1.0)
+
+            # --- Grad: defense[t] ---
+            # contrib_h (when team is home): opponent defense (= away team) gets gradient
+            # contrib_a (when team is away): opponent defense (= home team) gets gradient
+            grad_def_raw = np.bincount(m_away_idx, weights=contrib_h, minlength=n_teams)
+            grad_def_raw += np.bincount(m_home_idx, weights=contrib_a, minlength=n_teams)
+            grad_def = -np.divide(grad_def_raw, def_, where=def_ > 1e-10, out=np.zeros_like(grad_def_raw)) + 0.02 * (def_ - 1.0)
+
+            # --- Grad: rho[L] ---
+            grad_rho = -np.bincount(m_league_idx, weights=dlogtau_drho, minlength=n_leagues)
+
+            # --- Grad: home_adv[L] ---
+            # ∂λh/∂ha = λh/(1+ha), so ∂ll/∂ha = contrib_h / (1+ha)
+            one_plus_ha = 1.0 + ha[m_league_idx]
+            grad_ha_raw = np.bincount(m_league_idx,
+                                       weights=contrib_h / np.maximum(one_plus_ha, 1e-8),
+                                       minlength=n_leagues)
+            grad_ha = -grad_ha_raw  # no L2 reg on home_adv
+
+            # --- Assemble full gradient vector ---
+            grad = np.concatenate([grad_att, grad_def, grad_rho, grad_ha])
+
+            return nll, grad
+
+        # ── Optimize (with analytical gradient) ──
+        print(f"  MLE: {n_teams} teams, {n_leagues} leagues, {n_matches} matches")
+        print(f"  Parameters: {len(x0)} ({n_teams}att + {n_teams}def + {n_leagues}rho + {n_leagues}ha)")
+
         result = minimize(
-            neg_log_likelihood, x0,
+            nll_and_grad, x0,
             method="L-BFGS-B",
+            jac=True,  # objective returns (f, g) tuple
             bounds=(
-                [(0.3, 3.0)] * n_teams +           # attack
-                [(0.3, 3.0)] * n_teams +           # defense
-                [(-0.20, 0.10)] * n_leagues +      # rho
-                [(0.0, 0.60)] * n_leagues           # home_adv
+                [(0.3, 3.0)] * n_teams +            # attack
+                [(0.3, 3.0)] * n_teams +            # defense
+                [(-0.20, 0.10)] * n_leagues +       # rho
+                [(0.0, 0.60)] * n_leagues            # home_adv
             ),
-            options={"maxiter": 500},
+            options={"maxiter": 500},  # ftol default ≈1e-7 is fine; we use analytical grad
         )
 
-        # Unpack result
-        att, def_, rho_arr, ha_arr = unpack(result.x)
+        if not result.success:
+            print(f"  [WARN] Optimizer: {result.message}")
+
+        # ── Unpack result ──
+        att = result.x[:n_teams]
+        def_ = result.x[n_teams : 2 * n_teams]
+        rho_arr = result.x[2 * n_teams : 2 * n_teams + n_leagues]
+        ha_arr = result.x[2 * n_teams + n_leagues :]
+
         for i, t in enumerate(team_list):
             self.team_attack[t] = round(float(att[i]), 4)
             self.team_defense[t] = round(float(def_[i]), 4)
@@ -488,6 +574,7 @@ class DixonColesModel:
         for l in league_list:
             self.league_avg_goals[l] = round(league_goals[l], 2)
 
+        print(f"  MLE converged: {result.message} | nit={result.nit} | final NLL={result.fun:.2f}")
         self._fitted = True
 
     # ================================================================

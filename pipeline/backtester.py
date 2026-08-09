@@ -69,7 +69,11 @@ def run_backtest(
         elo.initialize_from_matches(train_matches)
 
         dc = DixonColesModel()
-        dc.fit_simple(train_matches)
+        try:
+            dc.fit_mle(train_matches)
+        except Exception as e:
+            print(f"  MLE failed ({e}), falling back to fit_simple")
+            dc.fit_simple(train_matches)
 
         league_stats = compute_league_stats(train_matches)
 

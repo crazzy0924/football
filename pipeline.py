@@ -26,15 +26,15 @@ from pathlib import Path
 
 
 def cmd_train(args):
-    """Train ELO and Dixon-Coles from historical CSV data."""
-    from pipeline.data_loader import load_all_csvs
+    """Train ELO and Dixon-Coles from historical CSV + openfootball data."""
+    from pipeline.data_loader import load_all_matches
     from pipeline.trainer import train_all
 
     csv_dir = args.csv_dir or "data/historical_odds"
     state_dir = args.state_dir or "data/state"
 
-    print(f"Loading CSVs from {csv_dir}...")
-    matches = load_all_csvs(csv_dir)
+    print(f"Loading all match data...")
+    matches = load_all_matches(csv_dir)
     print(f"Loaded {len(matches)} matches from {len(set(m['season'] for m in matches))} seasons")
     print(f"Leagues: {set(m['league_code'] for m in matches)}")
 
@@ -50,15 +50,15 @@ def cmd_train(args):
 
 def cmd_backtest(args):
     """Run time-series cross-validation backtest."""
-    from pipeline.data_loader import load_all_csvs
+    from pipeline.data_loader import load_all_matches
     from pipeline.backtester import run_backtest
 
     csv_dir = args.csv_dir or "data/historical_odds"
     state_dir = args.state_dir or "data/state"
     output_dir = args.output_dir or "data/output"
 
-    print("Loading CSVs...")
-    matches = load_all_csvs(csv_dir)
+    print("Loading all match data...")
+    matches = load_all_matches(csv_dir)
 
     report = run_backtest(matches, state_dir, output_dir)
 

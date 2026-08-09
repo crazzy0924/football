@@ -107,6 +107,65 @@ def load_all_csvs(csv_dir: str = "data/historical_odds") -> list[dict]:
     return all_matches
 
 
+def load_openfootball_matches(json_path: str = "data/openfootball_matches.json") -> list[dict]:
+    """Load parsed openfootball match data (J1, SWE, NOR, FIN, BSA).
+
+    These leagues are not covered by football-data.co.uk CSVs.
+    Data parsed from openfootball/{world,europe,south-america} repos.
+    No odds available — only match results for ELO + Dixon-Coles training.
+
+    Returns:
+        list of match dicts with same schema as load_all_csvs (minus odds)
+    """
+    import json as _json
+    from pathlib import Path as _Path
+
+    json_path = _Path(json_path)
+    if not json_path.exists():
+        return []
+
+    with open(json_path, "r", encoding="utf-8") as f:
+        raw = _json.load(f)
+
+    matches = []
+    for m in raw:
+        hg = m.get("home_goals", 0)
+        ag = m.get("away_goals", 0)
+        if hg > ag:
+            result = "H"
+        elif ag > hg:
+            result = "A"
+        else:
+            result = "D"
+
+        matches.append({
+            "league_code": m["league_code"],
+            "season": m.get("season", "unknown"),
+            "date": m["date"],
+            "home_team": normalize_team_name(m["home_team"]),
+            "away_team": normalize_team_name(m["away_team"]),
+            "home_goals": hg,
+            "away_goals": ag,
+            "result": result,
+            "odds": {},  # no odds data in openfootball
+        })
+
+    return matches
+
+
+def load_all_matches(csv_dir: str = "data/historical_odds",
+                     openfootball_json: str = "data/openfootball_matches.json") -> list[dict]:
+    """Load ALL match data: CSV files + openfootball leagues.
+
+    Combined dataset for full model training.
+    """
+    matches = load_all_csvs(csv_dir)
+    of_matches = load_openfootball_matches(openfootball_json)
+    matches.extend(of_matches)
+    matches.sort(key=lambda m: m["date"])
+    return matches
+
+
 def _parse_csv(csv_path: Path, league_code: str, season: str) -> list[dict]:
     """Parse a single CSV file."""
     matches = []
@@ -294,21 +353,32 @@ TEAM_NAME_ALIASES = {
     "SL Benfica": "Benfica",
     "Sporting Lisbon": "Sp Lisbon",
     "Sporting CP": "Sp Lisbon",
-    # Norway
+    # Norway (CSV + openfootball)
     "Rosenborg BK": "Rosenborg",
     "Lillestrom SK": "Lillestrom",
+    "Lillestrøm SK": "Lillestrom",
     "Molde FK": "Molde",
-    # Sweden
+    "Hamarkameratene": "HamKam",
+    "Aalesunds FK": "Aalesund",
+    "Kristiansund BK": "Kristiansund",
+    # Sweden (openfootball)
     "Hammarby IF": "Hammarby",
     "BK Hacken": "Hacken",
+    "BK Häcken": "Hacken",
     "IFK Goteborg": "IFK Goteborg",
+    "IFK Göteborg": "IFK Goteborg",
     "GAIS Goteborg": "GAIS",
-    # Finland
+    "GAIS Göteborg": "GAIS",
+    "Kalmar FF": "Kalmar",
+    "Halmstads BK": "Halmstads",
+    # Finland (openfootball)
     "HJK Helsinki": "HJK",
     "FC Lahti": "Lahti",
     "Kuopion PS": "KuPS",
     "AC Oulu": "AC Oulu",
-    # Brazil
+    "Inter Turku": "Inter Turku",
+    "TPS": "TPS",
+    # Brazil (openfootball)
     "Flamengo RJ": "Flamengo",
     "CR Flamengo": "Flamengo",
     "Santos FC": "Santos",
@@ -316,6 +386,8 @@ TEAM_NAME_ALIASES = {
     "Athletico-PR": "Athletico-PR",
     "Fortaleza EC": "Fortaleza",
     "Sao Paulo FC": "Sao Paulo",
+    # Japan J1 (openfootball)
+    "Kyoto Sanga FC": "Kyoto Sanga",
 }
 
 

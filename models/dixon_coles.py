@@ -209,10 +209,27 @@ def _resolve_team_name(name: str, known_teams: dict) -> str:
         "Vitoria SC": "Guimaraes", "FC Porto": "Porto",
         "SL Benfica": "Benfica", "Sporting Lisbon": "Sp Lisbon",
         "Sporting CP": "Sp Lisbon",
-        # Other leagues
+        # Norway (openfootball)
         "Rosenborg BK": "Rosenborg", "Molde FK": "Molde",
-        "HJK Helsinki": "HJK", "Flamengo RJ": "Flamengo",
-        "Santos FC": "Santos",
+        "Lillestrom SK": "Lillestrom", "Lillestrøm SK": "Lillestrom",
+        "Hamarkameratene": "HamKam", "Aalesunds FK": "Aalesund",
+        "Kristiansund BK": "Kristiansund",
+        # Sweden (openfootball)
+        "Hammarby IF": "Hammarby", "BK Hacken": "Hacken",
+        "BK Häcken": "Hacken", "IFK Goteborg": "IFK Goteborg",
+        "IFK Göteborg": "IFK Goteborg", "GAIS Goteborg": "GAIS",
+        "GAIS Göteborg": "GAIS", "Kalmar FF": "Kalmar",
+        "Halmstads BK": "Halmstads",
+        # Finland (openfootball)
+        "HJK Helsinki": "HJK", "FC Lahti": "Lahti",
+        "Kuopion PS": "KuPS", "AC Oulu": "AC Oulu",
+        "Inter Turku": "Inter Turku", "TPS": "TPS",
+        # Brazil (openfootball)
+        "Flamengo RJ": "Flamengo", "CR Flamengo": "Flamengo",
+        "Santos FC": "Santos", "Athletico Paranaense": "Athletico-PR",
+        "Fortaleza EC": "Fortaleza", "Sao Paulo FC": "Sao Paulo",
+        # Japan J1 (openfootball)
+        "Kyoto Sanga FC": "Kyoto Sanga",
     }
     if name in aliases:
         resolved = aliases[name]

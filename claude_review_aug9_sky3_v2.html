@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>克劳德 · 8月9日 sky3.0 v2交叉分析</title>
+<style>
+:root{--bg:#080b14;--card:#0d111c;--border:#161b2a;--text:#c8ccd8;--muted:#5a5e72;--a2:#a78bfa;--g:#3fb950;--r:#f85149;--y:#f0a838;--b:#58a6ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.top{background:linear-gradient(135deg,#0a0f1e,#11163a);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px}
+.top .icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#7c6ff7,#a78bfa);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9em}
+.top h1{font-size:0.9em}.top em{color:var(--a2);font-style:normal}.top .sub{font-size:0.55em;color:var(--muted)}
+.w{max-width:900px;margin:0 auto;padding:14px 12px}
+.dash{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.di{flex:1;min-width:55px;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:8px 6px;text-align:center}.di .n{font-size:1.1em;font-weight:800}.di .l{font-size:0.5em;color:var(--muted)}
+h2{font-size:0.78em;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)}h2 span{color:var(--a2)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:10px 12px;margin-bottom:6px;font-size:0.72em}
+.card.agree{border-left:3px solid var(--g)}.card.warn{border-left:3px solid var(--y)}.card.no{border-left:3px solid var(--r)}
+.card .hdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card .teams{flex:1;min-width:130px}.card .mt{font-weight:700}.card .mi{font-size:0.58em;color:var(--muted)}
+.tag{font-size:0.52em;font-weight:700;padding:2px 5px;border-radius:4px}.tg{background:rgba(63,185,80,0.1);color:var(--g)}.ty{background:rgba(240,168,56,0.1);color:var(--y)}.tr{background:rgba(248,81,73,0.1);color:var(--r)}
+.card .bet{font-weight:700;font-size:0.78em}
+.card .why{font-size:0.6em;color:var(--muted);margin-top:3px;line-height:1.5}
+.big{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0;font-size:0.7em}
+.big h3{font-size:0.78em;margin-bottom:5px}
+.insight{margin:2px 0;font-size:0.66em}.insight::before{content:'▸ ';color:var(--a2)}
+.insight.good::before{content:'🟢 ';color:var(--g);font-weight:700}
+.insight.bad::before{content:'🔴 ';color:var(--r);font-weight:700}
+.insight.warn::before{content:'🟡 ';color:var(--y)}
+.ft{text-align:center;padding:14px;color:var(--muted);font-size:0.5em;opacity:0.3}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="icon">C</div>
+<h1><em>克劳德</em> · 8月9日 sky3.0 v2交叉分析</h1>
+<span class="sub">v2修复: Pick方向与概率一致 · 24场全量Picks · 无推荐层级</span>
+</div>
+
+<div class="w">
+
+<div class="dash">
+<div class="di"><div class="n" style="color:var(--a2)">24</div><div class="l">全量Picks</div></div>
+<div class="di"><div class="n" style="color:var(--g)">18</div><div class="l">同意</div></div>
+<div class="di"><div class="n" style="color:var(--y)">4</div><div class="l">保留</div></div>
+<div class="di"><div class="n" style="color:var(--r)">2</div><div class="l">反对</div></div>
+<div class="di"><div class="n" style="color:var(--b)">4</div><div class="l">冷启动</div></div>
+</div>
+
+<!-- KEY CHANGE -->
+<div class="big">
+<h3>🟢 v2修复确认: Pick方向全部与概率对齐</h3>
+<div class="insight good">Hammarby vs Hacken: v1推Away(矛盾) → v2推<b>主胜</b>(H=49.9%✅)</div>
+<div class="insight good">Halmstads vs GAIS: v1推Home(矛盾) → v2推<b>客胜</b>(A=46.6%✅)</div>
+<div class="insight good">Flamengo vs Guimaraes: v1推Away(矛盾) → v2推<b>主胜</b>(H=74.7%✅)</div>
+<div class="insight good">Zwolle vs Ajax: v1推Home(矛盾) → v2推<b>客胜</b>(A=61.7%✅)</div>
+<div class="insight">已确认：所有24场Pick = 模型概率最高方向。内部一致性完全修复。</div>
+</div>
+
+<!-- BUT... -->
+<div class="big" style="border:1px solid rgba(240,168,56,0.2);background:rgba(240,168,56,0.02)">
+<h3>🟡 但新问题: 失去了推荐分层</h3>
+<div class="insight warn">v1有"5推荐/16参考/3跳过"的分层，v2变成了24场全部给出Pick，没有优先级。Porto (+316深盘) 和 Benfica (+320深盘) 仍然得到"主胜"Pick——虽然概率上主胜确实>80%，但<b>投注价值为零</b>（1.05赔率不值得下注）。</div>
+<div class="insight warn">模型现在只是一个方向指标，需要我额外判断哪些Pick有投注价值。这不是退步——但缺少了v1的edge/kelly筛选层。</div>
+</div>
+
+<!-- DEEP HANDICAP -->
+<h2>🔴 <span>反对 (2注) — 深盘无投注价值</span></h2>
+
+<div class="card no">
+<div class="hdr"><span class="tag tr">反对</span><div class="teams"><div class="mt">Porto vs Alverca</div><div class="mi">葡超 · ELO+316 · H=83.9% · 无贝叶斯后验</div></div><div class="bet" style="color:var(--r)">主胜 — 无投注价值</div></div>
+<div class="why">模型H=83.9%，方向没错。但市场赔率必然1.05-1.08，投注无意义。深盘-2.0以上参照深盘怀疑原则：即使波尔图大概率赢，穿盘率也不可靠。不反对方向，反对作为投注推荐。</div>
+</div>
+
+<div class="card no">
+<div class="hdr"><span class="tag tr">反对</span><div class="teams"><div class="mt">Benfica vs Viseu</div><div class="mi">葡超 · ELO+320 · H=80.6% · ❄️冷启动</div></div><div class="bet" style="color:var(--r)">主胜 — 冷启动+深盘</div></div>
+<div class="why">比Porto更糟——Viseu冷启动(无ELO数据)，Benfica ELO数据可能来自前赛季。两个不确定性叠加在深盘上。即使方向正确，1.05赔率+冷启动风险=不值得。</div>
+</div>
+
+<h2>🟡 <span>保留 (4注) — 冷启动或概率太近</span></h2>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">V-Varen Nagasaki vs Kyoto Sanga</div><div class="mi">J1 · ❄️冷启动 · H=45.9%</div></div><div class="bet" style="color:var(--y)">主胜</div></div>
+<div class="why">冷启动+概率不占绝对优势(45.9% vs 28.2%)。日职联主场优势真实存在，但冷启动让ELO数据不可靠。</div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">Montedio Yamagata vs Tochigi SC</div><div class="mi">J2 · ❄️冷启动 · ELO差=0 · H=45.5%</div></div><div class="bet" style="color:var(--y)">主胜</div></div>
+<div class="why">双冷启动+ELO差=0+日乙。45.5%的优势几乎完全来自主场先验，没有任何球队特定信息。日乙不确定性本来就高。</div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">KuPS vs TPS</div><div class="mi">芬超 · ❄️冷启动 · H=65.1% · ELO+220</div></div><div class="bet" style="color:var(--y)">主胜</div></div>
+<div class="why">冷启动让+220 ELO差的可信度打折扣。芬超球队ELO可能只有几场数据。H=65.1%看起来很稳但实际不确定性大。</div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">St Pauli vs Greuther Furth</div><div class="mi">德乙 · H=40.4% vs D=28.5% vs A=31.1%</div></div><div class="bet" style="color:var(--y)">主胜</div></div>
+<div class="why">三方高度接近(H=40.4%/D=28.5%/A=31.1%)。主胜只领先9个点。德乙开幕轮+接近概率=方向判断置信度低。模型选H可以理解，但实际任何结果都不意外。</div>
+</div>
+
+<h2>✅ <span>同意 (18注) — 方向认同</span></h2>
+
+<div class="big">
+<h3>🏆 高强度推荐 (概率>50% + 非冷启动 + 非深盘)</h3>
+<div class="insight good"><b>Feyenoord客胜</b> (A=58.1%, ELO-282) — 荷甲传统三强之一，ELO优势真实</div>
+<div class="insight good"><b>Ajax客胜</b> (A=61.7%, ELO-240) — 同样荷甲豪门vs中下游，市场信号强</div>
+<div class="insight good"><b>Rosenborg客胜</b> (A=53.9%, ELO-248) — 挪超传统强队，今天最佳</div>
+<div class="insight good"><b>Molde客胜</b> (A=63.2%, ELO-146) — 挪超强队，高概率</div>
+<div class="insight good"><b>HJK客胜</b> (A=56.9%, ELO-186) — 芬超班霸</div>
+<div class="insight good"><b>Sp Braga客胜</b> (A=58.4%, ELO-206) — 葡超第四强</div>
+</div>
+
+<div class="big">
+<h3>🥈 中等强度推荐 (概率45-50% + 方向清晰)</h3>
+<div class="insight"><b>川崎客胜</b> (A=54.1%), <b>Nurnberg主胜</b> (H=46.5%), <b>Hammarby主胜</b> (H=49.9%), <b>Utrecht客胜</b> (A=43.1%), <b>Inter Turku主胜</b> (H=62.5%), <b>GAIS客胜</b> (A=46.6%), <b>Goteborg主胜</b> (H=46.8%), <b>Twente客胜</b> (A=48.8%), <b>HamKam主胜</b> (H=53.9%), <b>Gil Vicente主胜</b> (H=56.4%), <b>Flamengo主胜</b> (H=74.7%), <b>Santos主胜</b> (H=41.5%)</div>
+</div>
+
+<div class="big">
+<h3>📊 总结</h3>
+<div class="insight good"><b>Pick方向修复:</b> v1的5个方向矛盾全部在v2解决。内部一致性✅</div>
+<div class="insight good"><b>Top 6高置信:</b> Feyenoord/Ajax/Rosenborg/Molde/HJK/Braga — 都是传统强队客场，ELO优势真实</div>
+<div class="insight warn"><b>丢失推荐分层:</b> 24个Picks没有优先级。实际值得投注的可能只有10-12场。需要我手动筛选。</div>
+<div class="insight bad"><b>Porto+Benfica深盘:</b> 方向对但无投注价值。参考深盘规则跳过。</div>
+<div class="insight"><b>整体: v2修复了方向Bug但变成了纯方向指示器。</b>建议sky3.0加回Edge/Kelly筛选层，把>80%概率的深盘和<45%概率的弱方向自动过滤。</div>
+</div>
+
+<div class="ft">© 克劳德独立分析师 · 8月9日 sky3.0 v2分析 · 已推 GitHub</div>
+</div>
+</body>
+</html>

@@ -13,12 +13,9 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
 .layout{display:flex;min-height:100vh;max-width:1280px;min-width:1024px;margin:0 auto;padding:24px}
-
-/* LEFT - JOYBOY */
 .left{width:130px;min-width:130px;background:linear-gradient(180deg,#050510 0%,#0c0c20 40%,#080818 60%,#050510 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-right:1px solid #1a1a2e;position:relative;flex-shrink:0}
 .left::before{content:'';position:absolute;top:15%;left:0;right:0;height:70%;background:radial-gradient(ellipse at center,rgba(0,212,255,0.04) 0%,transparent 60%);pointer-events:none}
 .left::after{content:'';position:absolute;bottom:10%;left:25%;right:25%;height:1px;background:linear-gradient(90deg,transparent,rgba(167,139,250,0.3),transparent)}
-
 .jb{display:flex;flex-direction:column;align-items:center;gap:6px;z-index:1}
 .jb span{font-family:'Georgia','Palatino','Times New Roman',serif;font-size:3.6em;font-weight:900;line-height:0.95;background:linear-gradient(180deg,#00d4ff 0%,#a78bfa 30%,#ff6b9d 55%,#f0a838 80%,#00d4ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:letterPulse 3s ease-in-out infinite}
 .jb span:nth-child(1){animation-delay:0s}.jb span:nth-child(2){animation-delay:0.1s}
@@ -26,18 +23,13 @@ body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg)
 .jb span:nth-child(5){animation-delay:0.4s}.jb span:nth-child(6){animation-delay:0.5s}
 @keyframes letterPulse{0%,100%{filter:drop-shadow(0 0 14px rgba(0,212,255,0.4))}50%{filter:drop-shadow(0 0 28px rgba(240,168,56,0.6))}}
 .jb .tag{font-size:0.55em;color:var(--muted);font-family:'PingFang SC','Microsoft YaHei',sans-serif;letter-spacing:8px;font-weight:300;writing-mode:vertical-rl;margin-top:10px;opacity:0.4}
-
-/* MAIN */
 .main{flex:1;padding:0 0 0 30px;overflow-y:auto}
-
 h1{font-size:1.25em;font-weight:800;margin-bottom:2px;letter-spacing:-0.3px}
 h1 em{color:var(--accent);font-style:normal}
 .sub{font-size:0.66em;color:var(--muted);margin-bottom:18px}
-
 .summary{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
 .si{flex:1;min-width:70px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:11px 9px;text-align:center}
 .si:hover{border-color:#2a2a3e}.si .n{font-size:1.3em;font-weight:800}.si .l{font-size:0.56em;color:var(--muted);margin-top:2px}
-
 .day{margin-bottom:7px;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--card)}
 .day:hover{border-color:#2a2a3e}
 .day-hdr{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;user-select:none;transition:background .15s}
@@ -47,7 +39,6 @@ h1 em{color:var(--accent);font-style:normal}
 .day.open .arw{transform:rotate(180deg)}
 .day-body{display:none;padding:6px 16px 12px;border-top:1px solid var(--border)}
 .day.open .day-body{display:block}
-
 .link{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.015);flex-wrap:wrap}
 .link:last-child{border-bottom:none}
 .link .icon{font-size:0.8em;min-width:20px;text-align:center}
@@ -55,17 +46,14 @@ h1 em{color:var(--accent);font-style:normal}
 .link a:hover{color:var(--accent)}
 .link .lbl{font-size:0.6em;color:var(--muted);min-width:46px}
 .link .note{font-size:0.66em;color:var(--muted);margin-left:auto}
-
 .tag{display:inline-block;padding:1px 5px;border-radius:4px;font-size:0.55em;font-weight:600}
 .tp{background:rgba(63,185,80,0.1);color:var(--green)}
 .tr{background:rgba(248,81,73,0.1);color:var(--red)}
 .tb{background:rgba(88,166,255,0.1);color:var(--blue)}
 .ts{background:rgba(240,168,56,0.1);color:var(--accent)}
 .tg{background:rgba(139,143,163,0.1);color:var(--muted)}
-
 .sec-label{font-size:0.65em;color:var(--muted);margin:5px 0 2px}
 .ft{text-align:center;padding:22px;color:var(--muted);font-size:0.55em;opacity:0.35}
-
 @media(max-width:768px){
   .layout{flex-direction:column;min-width:0!important;max-width:100%;padding:0;overflow-x:hidden}
   .left{width:100%;min-width:0;flex-direction:row;align-items:center;padding:8px 14px;border-right:none;border-bottom:1px solid #1a1a2e;overflow:hidden;position:relative;z-index:1}
@@ -100,26 +88,26 @@ h1 em{color:var(--accent);font-style:normal}
 
 <div class="summary">
   <div class="si"><div class="n">8</div><div class="l">预测日</div></div>
-  <div class="si"><div class="n" style="color:var(--green)">12</div><div class="l">预测报告</div></div>
+  <div class="si"><div class="n" style="color:var(--green)">10</div><div class="l">预测报告</div></div>
   <div class="si"><div class="n" style="color:var(--red)">5</div><div class="l">复盘报告</div></div>
-  <div class="si"><div class="n" style="color:var(--blue)">5</div><div class="l">系统文档</div></div>
+  <div class="si"><div class="n" style="color:var(--blue)">1</div><div class="l">系统文档</div></div>
 </div>
 
+<!-- ====== 8月9日 ====== -->
 <div class="day open">
   <div class="day-hdr" onclick="this.parentElement.classList.toggle('open')">
-    <span class="dt">8月9日 (周日)</span><span class="dn">体彩竞彩24场 · v3.0 Dixon-Coles 20/24训练完成 · 4场冷启动</span><span class="arw">▼</span>
+    <span class="dt">8月9日 (周日)</span><span class="dn">体彩竞彩24场 · v3.0 Dixon-Coles · 20/24训练完成 83%覆盖</span><span class="arw">▼</span>
   </div>
   <div class="day-body">
-    <div class="link"><span class="icon">🔍</span><span class="lbl"><span class="tag tp">早盘</span></span><a href="morning_20260809.html" target="_blank">早盘分析 (LLM增强)</a><span class="note">24场六维 · DeepSeek Actor-Reviewer · J1/J2/荷甲/德乙/瑞超/芬超/挪超/葡超/巴甲</span></div>
-    <div class="link"><span class="icon">🔄</span><span class="lbl"><span class="tag ts">v3.0</span></span><a href="data/output/predictions_2026-08-09.html" target="_blank">v3.0 终盘预测 🆕</a><span class="note">24场预测 · 20场完整训练 4场冷启动 · 队名匹配修复 · SWE/NOR/FIN/BSA全部破冰 · 83%覆盖</span></div>
-	    <div class="link"><span class="icon">🧠</span><span class="lbl"><span class="tag tb">独立</span></span><a href="claude_review_aug9_sky3.html" target="_blank">克劳德sky3.0交叉分析</a><span class="note">3同意2保留0反对 · 发现价值型反向策略 · Rosenborg最佳注</span></div>
-    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tb">数据</span></span><span style="color:var(--muted)">lottery_official_parsed · today_matches_v3.json · 体彩SPF赔率 · 9联赛48队</span></div>
+    <div class="link"><span class="icon">⚽</span><span class="lbl"><span class="tag ts">v3.0</span></span><a href="predictions_20260809.html" target="_blank">v3.0 终盘预测</a><span class="note">24场预测 · 20/24训练(83%) · Dixon-Coles + 贝叶斯融合 · SWE/NOR/FIN/BSA破冰 · 4场冷启动</span></div>
+    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tb">数据</span></span><span class="note">训练集26663场662队 · 24联赛 · 队名匹配已修复 · github.com/crazzy0924/football</span></div>
   </div>
 </div>
 
-<div class="day open">
+<!-- ====== 8月8日 ====== -->
+<div class="day">
   <div class="day-hdr" onclick="this.parentElement.classList.toggle('open')">
-    <span class="dt">8月8日 (周六)</span><span class="dn">中国体彩竞彩25场 · Kambi 24/25覆盖 · 早→午→终盘完整链路 · v3.0完成</span><span class="arw">▼</span>
+    <span class="dt">8月8日 (周六)</span><span class="dn">中国体彩竞彩25场 · 早→午→终盘完整链路 · v3.0重建完成</span><span class="arw">▼</span>
   </div>
   <div class="day-body">
     <div class="link"><span class="icon">🔍</span><span class="lbl"><span class="tag tp">早盘</span></span><a href="morning_20260808.html" target="_blank">早盘分析 (09:00)</a><span class="note">官方API接入 · 25场SPF赔率完整 · 深盘2场预警</span></div>
@@ -128,14 +116,13 @@ h1 em{color:var(--accent);font-style:normal}
     <div class="link"><span class="icon">⚽</span><span class="lbl"><span class="tag tg">终盘</span></span><a href="evening_final_20260808.html" target="_blank">晚场终盘预测 (21:00)</a><span class="note">16场六维预测 · 6推荐5参考5跳过 · 英联杯/荷甲/葡超/法乙/巴甲</span></div>
     <div class="link"><span class="icon">🌙</span><span class="lbl"><span class="tag tg">终盘</span></span><a href="today_final.html" target="_blank">晚场终盘预测 (22:00)</a><span class="note">12场六维 · 2推荐2轻注2跳过 · 瑞典超/芬超/荷甲/葡超/法乙/巴甲</span></div>
     <div class="link"><span class="icon">🧠</span><span class="lbl"><span class="tag tb">独立</span></span><a href="claude_review_aug8_early_evening.html" target="_blank">克劳德交叉分析 (早+晚)</a><span class="note">11推9同意2保留0反对 · v2.0升级验证 · 联赛分类修复+深盘规则确认</span></div>
-            <div class="link"><span class="icon">📝</span><span class="lbl"><span class="tag tr">复盘</span></span><a href="review_20260808_late.html" target="_blank">晚场赛后复盘 🆕</a><span class="note">12场对照 · 3/4投注命中(75%) · 净盈亏+51 · Brier 0.5763 · 方向30%→权重调整</span></div>
-    <div class="link"><span class="icon">🔄</span><span class="lbl"><span class="tag ts">v3.0</span></span><a href="data/output/predictions_2026-08-08.html" target="_blank">v3.0 模型预测</a><span class="note">Dixon-Coles + Bayesian Fusion + Kelly · 5场样本 · Brier 0.6006 · 重建完成</span></div>
-    <div class="link"><span class="icon">📋</span><span class="lbl"><span class="tag tr">v3.0</span></span><a href="data/output/review_2026-08-08.html" target="_blank">v3.0 复盘报告</a><span class="note">5场复盘 · ELO自动更新10队 · Brier 0.1816 · 方向3/5 · 追踪初始化</span></div>
-    <div class="link"><span class="icon">📊</span><span class="lbl"><span class="tag tb">数据</span></span><span style="color:var(--muted)">daily_tracking.json · lottery_official_*.json · 官方SPF+HHAD+TTG+CRS</span></div>
+    <div class="link"><span class="icon">📝</span><span class="lbl"><span class="tag tr">复盘</span></span><a href="review_20260808_late.html" target="_blank">晚场赛后复盘</a><span class="note">12场对照 · 3/4投注命中(75%) · 净盈亏+51 · Brier 0.5763</span></div>
+    <div class="link"><span class="icon">🔄</span><span class="lbl"><span class="tag ts">v3.0</span></span><a href="data/output/predictions_2026-08-08.html" target="_blank">v3.0 模型预测</a><span class="note">Dixon-Coles + Bayesian Fusion + Kelly · 5场样本 · Brier 0.6006</span></div>
+    <div class="link"><span class="icon">📋</span><span class="lbl"><span class="tag tr">v3.0</span></span><a href="data/output/review_2026-08-08.html" target="_blank">v3.0 复盘报告</a><span class="note">5场复盘 · ELO自动更新10队 · Brier 0.1816 · 方向3/5</span></div>
   </div>
 </div>
 
-<div class="ft">JOYBOY · Football Prediction Archive · v3.0</div>
+<div class="ft">JOYBOY · Football Prediction Archive · v3.0 · github.com/crazzy0924/football</div>
 
 </div>
 </div>

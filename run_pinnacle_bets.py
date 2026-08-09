@@ -1,4 +1,10 @@
-"""Pinnacle(平博)全维度预测 — 1X2 + 亚洲盘 + 大小球 — Shin去水 + Kelly下注"""
+"""Pinnacle(平博)全维度预测 — 1X2 + 亚洲盘 + 大小球 — Shin去水 + Kelly下注
+
+用法:
+  python run_pinnacle_bets.py                              # 默认读取 data/pinnacle_odds_DATE.json
+  python run_pinnacle_bets.py --odds data/pinnacle_early_2026-08-09.json
+  python run_pinnacle_bets.py --date 2026-08-09 --window early  # 等价于上面
+"""
 import json, sys, math
 from pathlib import Path
 
@@ -90,11 +96,34 @@ PINNACLE_NAME_MAP = {
 }
 
 # -- Load data --
-with open('data/pinnacle_odds_20260809.json', 'r', encoding='utf-8') as f:
-    pinnacle = json.load(f)
-with open('data/output/predictions_2026-08-09.json', 'r', encoding='utf-8') as f:
-    preds = json.load(f)
-with open('data/today_matches_v3.json', 'r', encoding='utf-8') as f:
+# Parse CLI args
+odds_file = None
+date_str = None
+time_window = None
+for i, arg in enumerate(sys.argv):
+    if arg == '--odds' and i+1 < len(sys.argv):
+        odds_file = sys.argv[i+1]
+    elif arg == '--date' and i+1 < len(sys.argv):
+        date_str = sys.argv[i+1]
+    elif arg == '--window' and i+1 < len(sys.argv):
+        time_window = sys.argv[i+1]
+
+if date_str is None:
+    from datetime import datetime, timezone, timedelta
+    bj = timezone(timedelta(hours=8))
+    date_str = datetime.now(bj).strftime('%Y-%m-%d')
+
+if odds_file is None:
+    if time_window:
+        odds_file = f'data/pinnacle_{time_window}_{date_str}.json'
+    else:
+        odds_file = f'data/pinnacle_odds_{date_str}.json'
+        if not Path(odds_file).exists():
+            odds_file = f'data/pinnacle_odds_{date_str.replace("-","")}.json'
+
+pred_path = f'data/output/predictions_{date_str}.json'
+today_match_file = 'data/today_matches_v3.json' if Path('data/today_matches_v3.json').exists() else f'data/today_matches_{date_str.replace("-","")}.json'
+with open(today_match_file, 'r', encoding='utf-8') as f:
     matches = json.load(f)
 
 # Build EN→CN name lookup (fuzzy: try exact first, then substring)
@@ -280,7 +309,8 @@ total = sum(b['stake'] for b in BETS)
 # -- Display --
 print()
 print('=' * 95)
-print('  JOYBOY | 8/9 Pinnacle(平博) 三维预测 | 1X2+亚洲盘+大小球 | Shin去水 | 1/4 Kelly')
+print('  JOYBOY | {} Pinnacle(平博) 三维预测 | 1X2+亚洲盘+大小球 | Shin去水 | 1/4 Kelly{}'.format(
+    date_str, f' | {time_window}窗口' if time_window else ''))
 print('=' * 95)
 for b in BETS:
     o = '{:.2f}'.format(b['odds']) if b['odds'] else '  --'
@@ -296,7 +326,7 @@ for b in BETS: dims[b['dim']] = dims.get(b['dim'], 0) + 1
 print('  Dims: {}'.format(dims))
 
 # Save
-out = Path('data/output/pinnacle_bets_20260809.json')
+out = Path(f'data/output/pinnacle_bets_{date_str}.json')
 out.write_text(json.dumps({'date':'2026-08-09','bets':BETS,'total':total,'source':'Pinnacle'},
     ensure_ascii=False, indent=2), encoding='utf-8')
 print('\nSaved: ' + str(out))

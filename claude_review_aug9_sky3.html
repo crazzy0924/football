@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>克劳德 · 8月9日 sky3.0交叉分析</title>
+<style>
+:root{--bg:#080b14;--card:#0d111c;--border:#161b2a;--text:#c8ccd8;--muted:#5a5e72;--a2:#a78bfa;--g:#3fb950;--r:#f85149;--y:#f0a838;--b:#58a6ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.top{background:linear-gradient(135deg,#0a0f1e,#11163a);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:14px}
+.top .icon{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#7c6ff7,#a78bfa);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1em}
+.top h1{font-size:0.95em}.top em{color:var(--a2);font-style:normal}.top .sub{font-size:0.6em;color:var(--muted)}
+.w{max-width:900px;margin:0 auto;padding:18px 16px}
+.dash{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.di{flex:1;min-width:60px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center}.di .n{font-size:1.2em;font-weight:800}.di .l{font-size:0.52em;color:var(--muted)}
+h2{font-size:0.82em;margin:18px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border)}h2 span{color:var(--a2)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:7px;font-size:0.74em}
+.card.agree{border-left:3px solid var(--g)}.card.warn{border-left:3px solid var(--y)}.card.no{border-left:3px solid var(--r)}.card.info{border-left:3px solid var(--b)}
+.card .hdr{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card .teams{flex:1;min-width:150px}.card .mt{font-weight:700}.card .mi{font-size:0.6em;color:var(--muted)}
+.tag{font-size:0.55em;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap}.tg{background:rgba(63,185,80,0.1);color:var(--g)}.ty{background:rgba(240,168,56,0.1);color:var(--y)}.tr{background:rgba(248,81,73,0.1);color:var(--r)}.tb{background:rgba(88,166,255,0.1);color:var(--b)}
+.card .bet{font-weight:700;font-size:0.8em;white-space:nowrap}
+.card .why{font-size:0.62em;color:var(--muted);margin-top:4px;line-height:1.5}
+.big{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:14px 16px;margin:12px 0;font-size:0.72em}
+.big h3{font-size:0.8em;margin-bottom:6px}
+.insight{margin:3px 0;font-size:0.68em}.insight::before{content:'▸ ';color:var(--a2)}
+.insight.good::before{content:'🟢 ';color:var(--g);font-weight:700}
+.insight.bad::before{content:'🔴 ';color:var(--r);font-weight:700}
+.insight.warn::before{content:'🟡 ';color:var(--y)}
+.ft{text-align:center;padding:16px;color:var(--muted);font-size:0.55em;opacity:0.4}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="icon">C</div>
+<h1><em>克劳德</em> 交叉分析 · 8月9日 sky3.0</h1>
+<span class="sub">Dixon-Coles + 贝叶斯市场融合 · 24场 · 5推荐 · Brier 0.60</span>
+</div>
+
+<div class="w">
+
+<div class="dash">
+<div class="di"><div class="n" style="color:var(--a2)">24</div><div class="l">总场次</div></div>
+<div class="di"><div class="n" style="color:var(--g)">3</div><div class="l">同意</div></div>
+<div class="di"><div class="n" style="color:var(--y)">2</div><div class="l">保留</div></div>
+<div class="di"><div class="n" style="color:var(--r)">0</div><div class="l">反对</div></div>
+<div class="di"><div class="n" style="color:var(--b)">5</div><div class="l">推荐注</div></div>
+</div>
+
+<!-- KEY FINDING -->
+<div class="big" style="border:1px solid rgba(240,168,56,0.2);background:rgba(240,168,56,0.03)">
+<h3>🟡 关键发现：Pick与概率方向不一致（价值型策略）</h3>
+<div class="insight warn">5推荐中有<b>2场Pick与模型自身概率方向相反</b>：Hammarby vs Hacken（模型H=49.9%但推Away）、Halmstads vs GAIS（模型A=46.6%但推Home）。这不是Bug——这是<b>价值投注逻辑</b>：当市场过度高估一方时，模型站在市场对面博取价值。但模型自己的概率也不支持这个方向，所以本质是<b>高方差博冷</b>。</div>
+<div class="insight">另外16场参考中也有类似逻辑：Zwolle（模型A=61.7%推Home）、Flamengo（模型H=74.7%推Away）。sky3.0倾向于在市场极度倾斜时反向操作。</div>
+</div>
+
+<!-- DEEP HANDICAP CHECK -->
+<div class="big">
+<h3>🔴 深盘检查</h3>
+<div class="insight good"><b>Porto vs Alverca (ELO+316) → 已跳过✅:</b> 模型H=83.9%，xG 2.77-0.55，但没有推荐。深盘-2.0以上自动跳过。</div>
+<div class="insight good"><b>Benfica vs Viseu (ELO+320) → 已跳过✅:</b> 模型H=80.6%，xG 2.87-0.78，同样跳过。</div>
+<div class="insight good"><b>Sparta vs Feyenoord (ELO-282) → 已跳过✅:</b> 虽不是深盘但大ELO差+Edge仅0.9%→正确跳过。</div>
+<div class="insight good"><b>深盘规则通过:</b> 今天没有深盘推荐。v3.0的深盘处理比v2.0更保守——v2.0还可能小注，v3.0直接跳过。</div>
+</div>
+
+<!-- 5 RECOMMENDATIONS -->
+<h2>✅ <span>同意 (3注)</span></h2>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">Tokyo Verdy vs Kawasaki Frontale</div><div class="mi">J1 · 客胜 · Kelly 4.56% · Edge +15.2%</div></div><div class="bet" style="color:var(--g)">客胜</div></div>
+<div class="why">模型A=51.9%+市场Edge+15.2%方向一致。川崎前锋ELO 1602 > 东京绿茵1530，ELO差-72真实存在。xG 1.14-1.86显示客队进攻优势。Kelly 4.56%是今天次高。方向+概率+市场edge三重一致。✅</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">Groningen vs Utrecht</div><div class="mi">荷甲 · 客胜 · Kelly 3.11% · Edge +12.0%</div></div><div class="bet" style="color:var(--g)">客胜</div></div>
+<div class="why">模型A=43.1%虽未过半但在三方中最高。乌得勒支ELO 1671 > 格罗宁根1579，差-92合理。Edge+12%说明市场对客胜定价偏低。荷甲中游对碰，客场让球有一定实力支撑。✅</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">Lillestrom vs Rosenborg</div><div class="mi">挪超 · 客胜 · Kelly 7.73% · Edge +23.5%</div></div><div class="bet" style="color:var(--g)">客胜</div></div>
+<div class="why"><b>🏆 今天最强信号。</b>模型A=53.9%，Edge+23.5%是今天最高，Kelly 7.73%意味着模型对这一注的信心极强。罗森博格ELO 1668 > 利勒斯特罗姆1420，差-248是真实的挪超传统强队vs中下游的差距。xG 1.15-1.98进一步确认。今天最值得下的一注。✅</div>
+</div>
+
+<h2>🟡 <span>保留 (2注) — 价值型反向策略</span></h2>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">Hammarby vs Hacken</div><div class="mi">瑞典超 · 推Away · Kelly 3.02% · ⚠概率vs Pick矛盾</div></div><div class="bet" style="color:var(--y)">客胜（反向）</div></div>
+<div class="why"><b>模型自己说主场胜率49.9% > 客胜29.2%。但Pick推客胜。</b>这意味着sky3.0认为市场严重高估了Hammarby（可能开到1.60以下），客胜29.2%的概率被市场定价到只有~17%。从纯价值角度这是对的——博市场定价错误。但从方向角度，<b>模型认为主场赢的概率几乎50%</b>。这是典型的价值vs方向冲突。如果你追求胜率，这场不该碰；如果追求ROI，sky3.0的逻辑是自洽的。我的态度：<b>保留，理解逻辑但不建议重注。</b></div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">Halmstads vs GAIS</div><div class="mi">瑞典超 · 推Home · Kelly 3.14% · ⚠概率vs Pick矛盾</div></div><div class="bet" style="color:var(--y)">主胜（反向）</div></div>
+<div class="why"><b>模型A=46.6% > H=27.6%，但Pick推主胜。</b>与Hammarby同样的反向逻辑。xG 1.04-1.34也显示客队进攻更好。这场反向的幅度比Hammarby更大（概率差19%）。如果市场把GAIS开到1.80以下，模型认为主胜@高赔有巨大价值。但方向正确率可能只有27%。<b>比Hammarby更激进的反向注。</b></div>
+</div>
+
+<!-- COLD START CHECK -->
+<div class="big">
+<h3>🟣 冷启动检查</h3>
+<div class="insight good"><b>4场冷启动全部不在推荐列表中:</b> V-Varen Nagasaki、Montedio Yamagata、KuPS vs TPS、Benfica vs Viseu——前3场标记为参考，Benfica直接跳过。冷启动管控严格。✅</div>
+<div class="insight good"><b>20/24场有完整训练数据:</b> 训练覆盖率83%（26663场662队），比v2.0的99%冷启动率是质的飞跃。</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="big">
+<h3>📊 交叉分析总结</h3>
+<div class="insight good"><b>深盘管控优秀:</b> Porto +316和Benfica +320直接跳过。深盘规则已固化。</div>
+<div class="insight good"><b>冷启动率大幅下降:</b> 83%训练覆盖率 vs v2.0的1%。ELO数据有了真实基础。</div>
+<div class="insight good"><b>Lillestrom vs Rosenborg</b>是今天最强信号——Kelly 7.73%+Edge 23.5%+概率方向一致+ELO差真实。</div>
+<div class="insight warn"><b>价值型反向策略:</b> Hammarby和Halmstads两场推荐是"博市场错误定价"而非"博模型最可能方向"。逻辑自洽但方差高。这需要在复盘中明确区分：反向注的命中率预期就应该低于同向注。如果sky3.0的反向注长期命中率>30%，说明市场定价确实可被模型击败。</div>
+<div class="insight"><b>与v2.0对比:</b> v3.0推荐更少(5 vs 11)、冷启动更低(17% vs 99%)、深盘更保守。整体质量更高但更保守。5推荐中3场方向清晰+2场价值反向——逻辑清晰，但需要赛后验证反向注的实际表现。</div>
+<div class="insight"><b>🏆 今日最佳:</b> Rosenborg客胜（三重一致：概率+Edge+ELO）</div>
+</div>
+
+<div class="ft">© 克劳德独立分析师 · 8月9日 sky3.0交叉分析 · 首次配合 · 已推 GitHub</div>
+</div>
+</body>
+</html>

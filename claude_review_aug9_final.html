@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>克劳德 · 8月9日 终盘下注单交叉分析</title>
+<style>
+:root{--bg:#080b14;--card:#0d111c;--border:#161b2a;--text:#c8ccd8;--muted:#5a5e72;--a2:#a78bfa;--g:#3fb950;--r:#f85149;--y:#f0a838;--b:#58a6ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.top{background:linear-gradient(135deg,#0a0f1e,#11163a);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px}
+.top .icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#7c6ff7,#a78bfa);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9em}
+.top h1{font-size:0.9em}.top em{color:var(--a2);font-style:normal}.top .sub{font-size:0.55em;color:var(--muted)}
+.w{max-width:900px;margin:0 auto;padding:14px 12px}
+.dash{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.di{flex:1;min-width:50px;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:8px 6px;text-align:center}.di .n{font-size:1.1em;font-weight:800}.di .l{font-size:0.5em;color:var(--muted)}
+h2{font-size:0.78em;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)}h2 span{color:var(--a2)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:10px 12px;margin-bottom:5px;font-size:0.7em}
+.card.agree{border-left:3px solid var(--g)}.card.warn{border-left:3px solid var(--y)}.card.no{border-left:3px solid var(--r)}.card.info{border-left:3px solid var(--b)}
+.card .hdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card .teams{flex:1;min-width:120px}.card .mt{font-weight:700}.card .mi{font-size:0.55em;color:var(--muted)}
+.tag{font-size:0.5em;font-weight:700;padding:2px 5px;border-radius:4px}.tg{background:rgba(63,185,80,0.1);color:var(--g)}.ty{background:rgba(240,168,56,0.1);color:var(--y)}.tr{background:rgba(248,81,73,0.1);color:var(--r)}.tb{background:rgba(88,166,255,0.1);color:var(--b)}
+.card .bet{font-weight:700;font-size:0.75em}
+.card .why{font-size:0.58em;color:var(--muted);margin-top:2px;line-height:1.4}
+.big{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0;font-size:0.68em}
+.big h3{font-size:0.76em;margin-bottom:5px}
+.insight{margin:2px 0;font-size:0.64em}.insight::before{content:'▸ ';color:var(--a2)}
+.insight.good::before{content:'🟢 ';color:var(--g);font-weight:700}
+.insight.bad::before{content:'🔴 ';color:var(--r);font-weight:700}
+.insight.warn::before{content:'🟡 ';color:var(--y)}
+.ft{text-align:center;padding:14px;color:var(--muted);font-size:0.5em;opacity:0.3}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="icon">C</div>
+<h1><em>克劳德</em> · 8月9日 终盘下注单 交叉分析</h1>
+<span class="sub">22注 ¥2490仓位24.9% · 四维优选 · Pick方向 vs 下注价值分离</span>
+</div>
+
+<div class="w">
+
+<div class="dash">
+<div class="di"><div class="n" style="color:var(--a2)">22</div><div class="l">总注数</div></div>
+<div class="di"><div class="n" style="color:var(--g)">11</div><div class="l">同意</div></div>
+<div class="di"><div class="n" style="color:var(--y)">7</div><div class="l">保留</div></div>
+<div class="di"><div class="n" style="color:var(--r)">4</div><div class="l">反对</div></div>
+<div class="di"><div class="n" style="color:var(--b)">¥2490</div><div class="l">总仓位</div></div>
+</div>
+
+<!-- KEY INSIGHT -->
+<div class="big" style="border:1px solid rgba(58,130,246,0.2)">
+<h3>🔵 核心发现：Pick方向 ≠ 下注方向（价值分离，不是Bug）</h3>
+<div class="insight">v2的方向表说Flamengo主胜(H=74.7%)，但下注单推<b>客胜@11.50 ¥8</b>。这不是矛盾——方向表告诉你谁最可能赢，下注单告诉你哪里有价值。如果市场开Flamengo 1.15(隐含87%)而模型只有74.7%，价值在对面。¥8是0.3%仓位=彩票价。</div>
+<div class="insight good">将方向预测和价值投注分离是正确的架构。但需要明确标注"这是价值注，模型认为大概率输"——否则用户会困惑。</div>
+</div>
+
+<!-- DEEP HANDICAP -->
+<h2>🔴 <span>反对 (4注)</span></h2>
+
+<div class="card no">
+<div class="hdr"><span class="tag tr">反对</span><div class="teams"><div class="mt">018 波尔图 vs 阿尔维卡</div><div class="mi">葡超 · 让球 · 主队让-2 · Kelly 4.7% · ¥77</div></div><div class="bet" style="color:var(--r)">波尔图-2 ⛔ 深盘</div></div>
+<div class="why"><b>直接违反深盘规则。</b>ELO+316, xG 2.77-0.55，波尔图大概率赢——但赢多少？8月6日5场>1.5深盘仅1场穿盘。让2球意味着波尔图必须赢3球以上，这在葡超开幕轮不现实。¥77仓位对一个深盘来说太大了。<b>建议取消或改为波尔图胜平负</b>。</div>
+</div>
+
+<div class="card no">
+<div class="hdr"><span class="tag tr">反对</span><div class="teams"><div class="mt">003 山形山神 vs 枥木城</div><div class="mi">日乙 · 让球 · 主让-1 @2.32 · ❄️冷启动 · ¥131</div></div><div class="bet" style="color:var(--r)">主队让-1</div></div>
+<div class="why">双冷启动+ELO差=0。H=45.5%的优势完全来自主场先验。让-1意味着山形必须赢2球以上——在ELO相等+冷启动的场景下毫无依据。这是今天最不应该下的一注。<b>建议跳过。</b></div>
+</div>
+
+<div class="card no">
+<div class="hdr"><span class="tag tr">反对</span><div class="teams"><div class="mt">008 库奥皮奥 vs TPS图尔库</div><div class="mi">芬超 · 让球 · 客队让1 @6.15 · ❄️冷启动 · ¥38</div></div><div class="bet" style="color:var(--r)">TPS+1</div></div>
+<div class="why">KuPS H=65.1%, ELO+220。赌TPS+1是在赌KuPS不会大胜。6.15赔率确实高但背后是市场认为TPS会输2球以上。冷启动让ELO+220不可靠，但这个方向是在对抗模型自己65.1%的判断。¥38小注不算大问题，但逻辑不清晰。</div>
+</div>
+
+<div class="card no">
+<div class="hdr"><span class="tag tr">反对</span><div class="teams"><div class="mt">024 弗拉门戈 vs 维多利亚</div><div class="mi">巴甲 · 胜平负 · 客胜@11.50 · Kelly 0.5% · ¥8</div></div><div class="bet" style="color:var(--r)">客胜@11.50</div></div>
+<div class="why">¥8彩票无所谓。但模型H=74.7%，这场真正有价值的可能是弗拉门戈让球盘(如果市场开得不够深)而不是客胜。与Porto同理——深盘方向对但投注方式应该是在让球盘上找价值，不是博冷。¥8忽略不计。</div>
+</div>
+
+<h2>🟡 <span>保留 (7注)</span></h2>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">005+007 价值型反向注</div></div><div class="bet" style="color:var(--y)">Furth+1@3.95 · Hacken+1@4.65</div></div>
+<div class="why">两场都是"模型认为主队大概率赢，但下注单站在客队+1这边博价值"。St Pauli H=40.4%、Hammarby H=49.9%——两家主队都不是压倒性优势。如果市场把他们开得太热，客队+1有真实价值。但如果主队正常发挥，这两注会输。高Kelly(10%cap)+高赔率=高方差。可以用小注验证，但今天的¥164×2=¥328仓位(13%总仓位)偏重。<b>建议各降至¥80-100。</b></div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">002 长崎航海 vs 京都不死鸟</div><div class="mi">日职联 · 主受让+1 @2.85 · ❄️冷启动 · ¥131</div></div><div class="bet" style="color:var(--y)">主队+1</div></div>
+<div class="why">冷启动让ELO数据不可靠，但+1让球提供了安全边际。长崎客场受让+1意味着京都不赢2球以上就是赢注。2.85赔率不错。冷启动降一档即可——小注保留。</div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">009 兹沃勒 vs 阿贾克斯</div><div class="mi">荷甲 · 大小球 · 大3.5 · Kelly 6.2% · ¥101</div></div><div class="bet" style="color:var(--y)">大3.5球</div></div>
+<div class="why">xG 1.29+2.38=3.67，刚过3.5线。AJax客场进攻力强，但兹沃勒可能摆大巴。大3.5在荷甲合理但需要比赛开放。无赔率数据无法判断市场预期。<b>可保留，降低注额。</b></div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">013 哈尔姆斯塔德 vs 哥德堡盖斯</div><div class="mi">瑞典超 · 主受让+1 @5.20 · Kelly 10% · ¥164</div></div><div class="bet" style="color:var(--y)">主队+1</div></div>
+<div class="why">模型A=46.6%>H=27.6%。5.20赔率意思是市场认为GAIS很可能赢2球以上。如果模型对GAIS优势的判断正确(但不至于大胜)，+1有巨大价值。但如果GAIS真的强，可能0-2输掉。高赔率+高Kelly cap → 极端价值注。¥164偏重。</div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">014 IFK哥德堡 vs 卡尔马</div><div class="mi">瑞典超 · 主让-1 @2.28 · Kelly 6.5% · ¥105</div></div><div class="bet" style="color:var(--y)">主队-1</div></div>
+<div class="why">H=46.8%, ELO仅+28。让-1需要赢2球——概率优势不足以支撑。这场可能1-0或1-1。如果改成主胜或小2.5会更好。让-1过于激进。</div>
+</div>
+
+<div class="card warn">
+<div class="hdr"><span class="tag ty">保留</span><div class="teams"><div class="mt">020 本菲卡 vs 维塞乌</div><div class="mi">葡超 · 让球 · 客队让2 · ❄️冷启动 · ¥118</div></div><div class="bet" style="color:var(--y)">维塞乌+2</div></div>
+<div class="why">方向对(深盘怀疑→bet underdog)。维塞乌+2意味着Benfica赢3球以上才输注。但维塞乌冷启动+Benfica ELO+320——本菲卡确实可能在开幕轮血洗升班马。冷启动+深盘双重不确定性。<b>¥118对一个冷启动深盘反向注来说偏重。</b></div>
+</div>
+
+<h2>✅ <span>同意 (11注)</span></h2>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">001 川崎前锋 +1 @2.28</div><div class="mi">日职联 · ¥164</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">ELO差-72真实，+1安全边际好。川崎只要不输就能赢注。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">004 费耶诺德 +1 @1.55</div><div class="mi">荷甲 · ¥38</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">ELO-282实力碾压。+1极安全——费耶诺德不输2球以上即可。低赔但稳健。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">010 乌德勒支 让1 @2.70</div><div class="mi">荷甲 · ¥161</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">ELO-92真实差+客场让球有实力支撑。2.70赔率是今天最佳价值之一。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">011 🏆 罗森博格 让1 @2.61</div><div class="mi">挪超 · ¥164</div></div><div class="bet" style="color:var(--g)">✅ 今日最佳</div></div>
+<div class="why">三重一致：概率A=53.9%+ELO-248真实+Kelly高。罗森博格挪超传统强队。2.61赔率隐含38%概率——但实际胜率>50%。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">012 国际图尔库 -1 @1.60</div><div class="mi">芬超 · ¥164</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">H=62.5%, ELO+216真实。芬超主场龙对下游，-1合理。1.60低赔但安全。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">015 特温特 +1 @2.10</div><div class="mi">荷甲 · ¥121</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">ELO-119真实差。特温特不输2球即可。海伦芬主场不弱但特温特更强。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">016 汉坎 -1 @1.93</div><div class="mi">挪超 · ¥85</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">H=53.9%, ELO+134。汉坎主场对下游，-1有依据。1.93赔率合理。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">017 赫尔辛基 客胜 @1.85</div><div class="mi">芬超 · ¥38</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">HJK芬超班霸，ELO-186真实。1.85纯方向注，安全可靠。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">019 莫尔德 +1 @1.58</div><div class="mi">挪超 · ¥106</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">ELO-146,Molde挪超强队。+1极安全。1.58低赔但几乎不会输。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">021 吉维森特 大2.5球</div><div class="mi">葡超 · ¥117</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">xG 1.84+1.04=2.88>2.5。葡超中游对碰通常开放。</div>
+</div>
+
+<div class="card agree">
+<div class="hdr"><span class="tag tg">同意</span><div class="teams"><div class="mt">023 桑托斯 大2.5球</div><div class="mi">巴甲 · ¥131</div></div><div class="bet" style="color:var(--g)">✅</div></div>
+<div class="why">xG 1.48+1.32=2.80>2.5。巴甲通常在主场开放。</div>
+</div>
+
+<!-- SUMMARY -->
+<div class="big">
+<h3>📊 终盘总结</h3>
+<div class="insight good"><b>Pick方向与下注价值分离</b>是正确的架构升级。方向表说"谁最可能赢"，下注单说"哪里有edge"。比v2纯方向的24个Pick更有实操价值。</div>
+<div class="insight good"><b>11注同意覆盖¥1,200+</b>仓位。罗森博格、乌德勒支、特温特是三大核心注。</div>
+<div class="insight bad"><b>Porto -2必须取消。</b>深盘规则经过8月6日验证，不能在新模型上重蹈覆辙。建议改为波尔图胜平负或跳过。</div>
+<div class="insight bad"><b>山形山神 -1冷启动</b>也应该取消。ELO=0+双冷启动让-1毫无依据。</div>
+<div class="insight warn"><b>Kelly 10% cap透明化:</b> 6注显示恰好10.0%——这是人工上限。建议sky3.0显示真实Kelly或标注"(capped)"，否则无法区分真正10%和被截断的更高值。</div>
+<div class="insight"><b>整体: 22注中11注可以放心投，7注需要调整仓位，4注应取消。</b>取消后实际投注约18注¥1,800仓位，剩余的更健康。sky3.0的下注逻辑比v2纯方向表成熟很多——让球盘+大小球的四维优化是真正的value betting。</div>
+</div>
+
+<div class="ft">© 克劳德独立分析师 · 8月9日 终盘交叉分析 · 双人共识规则 · 已推 GitHub</div>
+</div>
+</body>
+</html>

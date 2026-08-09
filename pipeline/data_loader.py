@@ -21,10 +21,21 @@ from typing import Any
 # League code mapping: football-data.co.uk Div codes → internal codes
 DIV_TO_LEAGUE = {
     "E0": "PL",   # Premier League
+    "E1": "ELC",  # Championship
     "SP1": "PD",  # La Liga
+    "SP2": "PD2",  # La Liga 2
     "D1": "BL1",  # Bundesliga
+    "D2": "BL2",  # 2. Bundesliga
     "I1": "SA",   # Serie A
+    "I2": "SB",   # Serie B
     "F1": "FL1",  # Ligue 1
+    "F2": "FL2",  # Ligue 2
+    "N1": "DED",  # Eredivisie
+    "P1": "PPL",  # Primeira Liga
+    "SC0": "SPL",  # Scotland Premiership
+    "B1": "BPL",  # Belgium Pro League
+    "T1": "TUR",  # Turkey Super Lig
+    "G1": "GRE",  # Greece Super League
 }
 
 # Odds columns we extract (bookmaker prefix → output key)
@@ -39,14 +50,19 @@ ODDS_COLUMNS = {
 }
 
 # CSV seasons to expected season label
-SEASON_PATTERN = re.compile(r"(\d{4})_(\d{4})\.csv$")
+# Handles both "E0_2021_2022.csv" and "D2_2425.csv" formats
+SEASON_PATTERN = re.compile(r"_(\d{4})_(\d{4})\.csv$")
+SEASON_PATTERN_SHORT = re.compile(r"_(\d{2})(\d{2})\.csv$")
 
 
 def parse_season_from_filename(filename: str) -> str:
-    """Extract season label from filename like 'E0_2021_2022.csv' → '21-22'"""
+    """Extract season label from filename like 'E0_2021_2022.csv' or 'D2_2425.csv' → '21-22'"""
     m = SEASON_PATTERN.search(filename)
     if m:
         return f"{m.group(1)[2:]}-{m.group(2)[2:]}"
+    m = SEASON_PATTERN_SHORT.search(filename)
+    if m:
+        return f"{m.group(1)}-{m.group(2)}"
     return "unknown"
 
 
@@ -253,6 +269,53 @@ TEAM_NAME_ALIASES = {
     "AS Monaco": "Monaco",
     "Toulouse FC": "Toulouse",
     "Angers SCO": "Angers",
+    # 2. Bundesliga
+    "Dynamo Dresden": "Dresden",
+    "SG Dynamo Dresden": "Dresden",
+    "1. FC Nurnberg": "Nurnberg",
+    "SpVgg Greuther Furth": "Greuther Furth",
+    # Eredivisie
+    "Ajax Amsterdam": "Ajax",
+    "PSV Eindhoven": "PSV",
+    "FC Utrecht": "Utrecht",
+    "PEC Zwolle": "Zwolle",
+    "FC Twente": "Twente",
+    "SC Heerenveen": "Heerenveen",
+    "FC Groningen": "Groningen",
+    "Sparta Rotterdam": "Sparta Rotterdam",
+    # Primeira Liga
+    "Braga": "Sp Braga",
+    "Sporting Braga": "Sp Braga",
+    "SC Braga": "Sp Braga",
+    "Vitoria Guimaraes": "Guimaraes",
+    "Vitoria SC": "Guimaraes",
+    "Vitoria de Guimaraes": "Guimaraes",
+    "FC Porto": "Porto",
+    "SL Benfica": "Benfica",
+    "Sporting Lisbon": "Sp Lisbon",
+    "Sporting CP": "Sp Lisbon",
+    # Norway
+    "Rosenborg BK": "Rosenborg",
+    "Lillestrom SK": "Lillestrom",
+    "Molde FK": "Molde",
+    # Sweden
+    "Hammarby IF": "Hammarby",
+    "BK Hacken": "Hacken",
+    "IFK Goteborg": "IFK Goteborg",
+    "GAIS Goteborg": "GAIS",
+    # Finland
+    "HJK Helsinki": "HJK",
+    "FC Lahti": "Lahti",
+    "Kuopion PS": "KuPS",
+    "AC Oulu": "AC Oulu",
+    # Brazil
+    "Flamengo RJ": "Flamengo",
+    "CR Flamengo": "Flamengo",
+    "Santos FC": "Santos",
+    "Athletico Paranaense": "Athletico-PR",
+    "Athletico-PR": "Athletico-PR",
+    "Fortaleza EC": "Fortaleza",
+    "Sao Paulo FC": "Sao Paulo",
 }
 
 

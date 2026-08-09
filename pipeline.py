@@ -119,6 +119,11 @@ def cmd_predict(args):
         if not home or not away:
             continue
 
+        # Normalize team names to CSV canonical forms
+        from pipeline.data_loader import normalize_team_name
+        home = normalize_team_name(home)
+        away = normalize_team_name(away)
+
         pred = dc.predict(home, away, league)
         elo_h = elo.get_elo(home, league)
         elo_a = elo.get_elo(away, league)

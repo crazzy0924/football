@@ -195,17 +195,32 @@ def _resolve_team_name(name: str, known_teams: dict) -> str:
         "Eintracht Frankfurt": "Ein Frankfurt",
         "Bayer Leverkusen": "Leverkusen",
         "Borussia M'gladbach": "M'gladbach",
+        # 2. Bundesliga
+        "Dynamo Dresden": "Dresden",
+        "SG Dynamo Dresden": "Dresden",
+        # Eredivisie
+        "Ajax Amsterdam": "Ajax", "PSV Eindhoven": "PSV",
+        "FC Utrecht": "Utrecht", "PEC Zwolle": "Zwolle",
+        "FC Twente": "Twente", "SC Heerenveen": "Heerenveen",
+        "FC Groningen": "Groningen",
+        # Primeira Liga
+        "Braga": "Sp Braga", "Sporting Braga": "Sp Braga",
+        "SC Braga": "Sp Braga", "Vitoria Guimaraes": "Guimaraes",
+        "Vitoria SC": "Guimaraes", "FC Porto": "Porto",
+        "SL Benfica": "Benfica", "Sporting Lisbon": "Sp Lisbon",
+        "Sporting CP": "Sp Lisbon",
+        # Other leagues
+        "Rosenborg BK": "Rosenborg", "Molde FK": "Molde",
+        "HJK Helsinki": "HJK", "Flamengo RJ": "Flamengo",
+        "Santos FC": "Santos",
     }
     if name in aliases:
         resolved = aliases[name]
         if resolved in known_teams:
             return resolved
 
-    # Substring match (e.g., "Borussia Dortmund" contains "Dortmund")
-    for known in known_teams:
-        if known.lower() in name.lower() or name.lower() in known.lower():
-            return known
-
+    # No substring fallback — too many false positives
+    # (e.g., "Inter" matched "Inter Turku", "Lille" matched "Lillestrom")
     return name
 
 
@@ -509,7 +524,7 @@ class DixonColesModel:
         result["away_attack"] = att_a
         result["away_defense"] = def_a
         result["cold_start"] = (
-            home_team not in self.team_attack or away_team not in self.team_attack
+            home_resolved not in self.team_attack or away_resolved not in self.team_attack
         )
 
         return result

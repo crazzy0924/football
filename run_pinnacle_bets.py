@@ -5,8 +5,11 @@
   python run_pinnacle_bets.py --odds data/pinnacle_early_2026-08-09.json
   python run_pinnacle_bets.py --date 2026-08-09 --window early  # 等价于上面
 """
-import json, sys, math
+import io, json, math, sys
 from pathlib import Path
+
+if hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 # -- Config --
 LEAGUE_CN = {'J1':'日职联','J2':'日乙','DED':'荷甲','BL2':'德乙',

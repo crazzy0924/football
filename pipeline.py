@@ -105,22 +105,46 @@ def cmd_predict(args):
         print("Draw cal: not available (run backtest to generate)")
 
     # Try to fetch live odds
+    api_matches = None
     try:
         from pipeline.odds_fetcher import fetch_today_matches
-        matches = fetch_today_matches()
-        print(f"Fetched {len(matches)} matches from odds API")
+        api_matches = fetch_today_matches()
+        print(f"Fetched {len(api_matches)} matches from odds API")
     except Exception as e:
         print(f"Odds API unavailable: {e}")
-        print("Provide matches via --matches-json")
-        if not args.matches_json:
-            sys.exit(1)
-        matches = None
 
-    # Or load from JSON
+    # Load match list from JSON (authoritative team list with CN names)
     if args.matches_json:
         with open(args.matches_json, "r", encoding="utf-8") as f:
             matches = json.load(f)
         print(f"Loaded {len(matches)} matches from {args.matches_json}")
+    elif api_matches:
+        matches = api_matches
+    else:
+        print("No matches to predict. Provide --matches-json or ensure odds API is available.")
+        sys.exit(1)
+
+    # Merge odds from API into JSON matches (fuzzy team name matching)
+    if api_matches and args.matches_json:
+        def _clean(s):
+            import unicodedata
+            s = s.lower().replace(' ','').replace('-','').replace('.','')
+            return ''.join(c for c in unicodedata.normalize('NFKD', s) if ord(c) < 128)
+        api_lookup = {}
+        for am in api_matches:
+            key = (_clean(am['home_team']), _clean(am['away_team']))
+            api_lookup[key] = am.get('odds')
+        merged = 0
+        for m in matches:
+            if m.get('odds'):
+                continue  # already has odds
+            h = m.get('home_team',''); a = m.get('away_team','')
+            k = (_clean(h), _clean(a))
+            if k in api_lookup:
+                m['odds'] = api_lookup[k]
+                merged += 1
+        if merged > 0:
+            print(f"合并赔率: {merged}/{len(matches)} 场")
 
     if not matches:
         print("No matches to predict.")

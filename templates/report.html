@@ -174,11 +174,11 @@
 
   <!-- Header -->
   <div class="header">
-    <h1>Football Predictions <span class="model-badge">v3.0</span></h1>
+    <h1>足球预测 <span class="model-badge">v3.0</span></h1>
     <div class="meta">
-      {{ date }} — Dixon-Coles + Bayesian Market Fusion
+      {{ date }} — Dixon-Coles + 贝叶斯市场融合
       {% if backtest_brier %}
-      &middot; Backtest Brier: {{ backtest_brier }}
+      &middot; 回测Brier: {{ backtest_brier }}
       {% endif %}
     </div>
   </div>
@@ -187,23 +187,23 @@
   <div class="summary">
     <div class="stat">
       <div class="value">{{ total_matches }}</div>
-      <div class="label">Matches</div>
+      <div class="label">场次</div>
     </div>
     <div class="stat">
       <div class="value">{{ recommended }}</div>
-      <div class="label">Recommended</div>
+      <div class="label">推荐</div>
     </div>
     <div class="stat">
       <div class="value">{{ reference }}</div>
-      <div class="label">Reference Only</div>
+      <div class="label">参考</div>
     </div>
     <div class="stat">
       <div class="value">{{ cold_start }}</div>
-      <div class="label">Cold Start</div>
+      <div class="label">冷启动</div>
     </div>
     <div class="stat">
       <div class="value">{{ direction_dist }}</div>
-      <div class="label">H/D/A Picks</div>
+      <div class="label">胜/平/负 推荐</div>
     </div>
   </div>
 
@@ -220,21 +220,21 @@
     <!-- Probabilities -->
     <div class="probs">
       <div class="prob-row">
-        <span class="prob-label">Home</span>
+        <span class="prob-label">主胜</span>
         <div class="prob-bar-wrap">
           <div class="prob-bar home" style="width: {{ m.p_home_pct }}%"></div>
         </div>
         <span class="prob-pct">{{ m.p_home }}</span>
       </div>
       <div class="prob-row">
-        <span class="prob-label">Draw</span>
+        <span class="prob-label">平局</span>
         <div class="prob-bar-wrap">
           <div class="prob-bar draw" style="width: {{ m.p_draw_pct }}%"></div>
         </div>
         <span class="prob-pct">{{ m.p_draw }}</span>
       </div>
       <div class="prob-row">
-        <span class="prob-label">Away</span>
+        <span class="prob-label">客胜</span>
         <div class="prob-bar-wrap">
           <div class="prob-bar away" style="width: {{ m.p_away_pct }}%"></div>
         </div>
@@ -244,28 +244,28 @@
 
     <!-- Details -->
     <div class="details">
-      <div class="detail">Over 2.5: <span>{{ m.over25 }}</span></div>
+      <div class="detail">大2.5球: <span>{{ m.over25 }}</span></div>
       <div class="detail">BTTS: <span>{{ m.btts }}</span></div>
-      <div class="detail">Expected Goals: <span>{{ m.eg }}</span></div>
-      <div class="detail">Top Score: <span>{{ m.top_score }}</span></div>
-      <div class="detail">ELO Diff: <span>{{ m.elo_diff }}</span></div>
+      <div class="detail">预期进球: <span>{{ m.eg }}</span></div>
+      <div class="detail">最可能比分: <span>{{ m.top_score }}</span></div>
+      <div class="detail">ELO差: <span>{{ m.elo_diff }}</span></div>
       {% if m.market_odds %}
-      <div class="detail">Market: <span>{{ m.market_odds }}</span></div>
+      <div class="detail">市场赔率: <span>{{ m.market_odds }}</span></div>
       {% endif %}
     </div>
 
     <!-- Signal -->
     <div class="signal">
       <span class="badge {{ m.signal_class }}">{{ m.signal_text }}</span>
-      <span>Pick: <strong>{{ m.pick }}</strong></span>
+      <span>推荐: <strong>{{ m.pick }}</strong></span>
       {% if m.kelly_fraction %}
-      <span>Kelly: <strong class="kelly {{ m.kelly_class }}">{{ m.kelly_fraction }}</strong></span>
+      <span>凯利: <strong class="kelly {{ m.kelly_class }}">{{ m.kelly_fraction }}</strong></span>
       {% endif %}
       {% if m.edge_direction %}
-      <span>Edge: {{ m.edge_direction }} (+{{ m.edge_pct }})</span>
+      <span>优势: {{ m.edge_direction }} (+{{ m.edge_pct }})</span>
       {% endif %}
       {% if m.cold_start_flag %}
-      <span class="badge cold">COLD START</span>
+      <span class="badge cold">冷启动</span>
       {% endif %}
     </div>
 
@@ -279,10 +279,10 @@
 
   <!-- Footer -->
   <div class="footer">
-    Football Prediction Model v3.0 &middot; Dixon-Coles + Bayesian Market Fusion
+    足球预测模型 v3.0 · Dixon-Coles + 贝叶斯市场融合
     &middot; Generated {{ date }}
     <br>
-    For reference only. Past performance does not guarantee future results.
+    仅供参考。历史表现不代表未来结果。
   </div>
 </div>
 </body>

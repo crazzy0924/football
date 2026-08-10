@@ -118,6 +118,12 @@ TEAM_CN = {
     "Tijuana": "蒂华纳",
     "Club America": "美洲",
     "Portland Timbers": "波特兰伐木者",
+    "IK Sirius": "天狼星",
+    "IF Brommapojkarna": "布鲁马波卡纳",
+    "Vasteras SK": "韦斯特罗斯",
+    "Djurgardens IF": "佐加顿斯",
+    "Santa Clara": "圣克拉拉",
+    "Nacional": "葡萄牙国民",
     # 俄超/其他
     "CSKA Moscow": "莫斯科中央陆军",
     "Spartak Moscow": "莫斯科斯巴达",
@@ -139,10 +145,10 @@ SIGNAL_CLASSES = {
 }
 
 SIGNAL_TEXTS = {
-    "high": "BET",
-    "medium": "WATCH",
-    "low": "REFERENCE",
-    "none": "SKIP",
+    "high": "投注",
+    "medium": "关注",
+    "low": "参考",
+    "none": "跳过",
 }
 
 
@@ -186,9 +192,9 @@ def generate_report(
     cold = sum(1 for m in match_cards if m["cold_start_flag"])
 
     # H/D/A pick distribution
-    h_picks = sum(1 for m in match_cards if "Home" in m["pick"])
-    d_picks = sum(1 for m in match_cards if "Draw" in m["pick"])
-    a_picks = sum(1 for m in match_cards if "Away" in m["pick"])
+    h_picks = sum(1 for m in match_cards if m["pick"] == "主胜")
+    d_picks = sum(1 for m in match_cards if m["pick"] == "平局")
+    a_picks = sum(1 for m in match_cards if m["pick"] == "客胜")
     direction_dist = f"{h_picks}/{d_picks}/{a_picks}"
 
     context = {
@@ -243,20 +249,20 @@ def _build_match_card(
     # Pick from value detection
     pick_dir = value.get("best_direction", "none")
     if pick_dir == "home":
-        pick = "Home Win"
+        pick = "主胜"
     elif pick_dir == "draw":
-        pick = "Draw"
+        pick = "平局"
     elif pick_dir == "away":
-        pick = "Away Win"
+        pick = "客胜"
     else:
         # Fall back to highest probability
         best_p = max(p_home, p_draw, p_away)
         if best_p == p_home:
-            pick = "Home Win"
+            pick = "主胜"
         elif best_p == p_draw:
-            pick = "Draw"
+            pick = "平局"
         else:
-            pick = "Away Win"
+            pick = "客胜"
 
     # Confidence / signal
     confidence = value.get("confidence", "none")
@@ -264,7 +270,7 @@ def _build_match_card(
     # Cold-start matches: model edge is noise → override signal
     if cold_start and confidence != "none":
         signal_class = "cold"
-        signal_text = "COLD START"
+        signal_text = "冷启动"
         confidence = "low"  # downgrade edge for recommendation logic
     else:
         signal_class = SIGNAL_CLASSES.get(confidence, "skip")

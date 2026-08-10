@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复盘报告 — 2026-08-10</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4eb;
+    --text-dim: #8b8fa3;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+
+  /* Scorecard */
+  .scorecard {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .sc {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .sc .value { font-size: 1.5rem; font-weight: 700; }
+  .sc .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+  .sc.good .value { color: var(--green); }
+  .sc.bad .value { color: var(--red); }
+  .sc.warn .value { color: var(--yellow); }
+
+  /* Direction breakdown */
+  .direction-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0 16px;
+    background: var(--bg);
+  }
+  .direction-bar .seg-home { background: #3b82f6; }
+  .direction-bar .seg-draw { background: #8b8fa3; }
+  .direction-bar .seg-away { background: #f59e0b; }
+
+  /* Match row */
+  .match-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    gap: 12px;
+    font-size: 0.85rem;
+  }
+  .match-row.hit { border-left: 3px solid var(--green); }
+  .match-row.miss { border-left: 3px solid var(--red); }
+  .match-row.push { border-left: 3px solid var(--yellow); }
+
+  .mr-teams { flex: 2; min-width: 0; }
+  .mr-teams .vs { color: var(--text-dim); margin: 0 6px; }
+  .mr-result { flex: 0 0 60px; text-align: center; font-weight: 700; font-size: 1rem; }
+  .mr-pred { flex: 1; text-align: center; font-size: 0.78rem; color: var(--text-dim); }
+  .mr-prob { flex: 0 0 70px; text-align: right; font-weight: 600; }
+  .mr-bet { flex: 0 0 80px; text-align: right; }
+  .mr-bet.won { color: var(--green); }
+  .mr-bet.lost { color: var(--red); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.7rem;
+  }
+  .badge.hit { background: #166534; color: #4ade80; }
+  .badge.miss { background: #451a1a; color: #f87171; }
+  .badge.push { background: #3b2f0e; color: #fbbf24; }
+
+  /* Section */
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 24px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Calibration table */
+  .cal-table {
+    width: 100%;
+    font-size: 0.8rem;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  .cal-table th, .cal-table td {
+    padding: 6px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .cal-table th { color: var(--text-dim); font-weight: 600; }
+
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Match Review</h1>
+    <div class="meta">2026-08-10 — 24/24 matches matched</div>
+  </div>
+
+  <!-- Scorecard -->
+  <div class="scorecard">
+    <div class="sc good">
+      <div class="value">0.2121</div>
+      <div class="label">Brier Score</div>
+    </div>
+    <div class="sc warn">
+      <div class="value">54.2%</div>
+      <div class="label">Accuracy</div>
+    </div>
+    <div class="sc bad">
+      <div class="value">1.0371</div>
+      <div class="label">Log Loss</div>
+    </div>
+    <div class="sc good">
+      <div class="value">+0.01u</div>
+      <div class="label">P&L (units)</div>
+    </div>
+    <div class="sc good">
+      <div class="value">+0.0%</div>
+      <div class="label">ROI</div>
+    </div>
+  </div>
+
+  <!-- Direction accuracy -->
+  <div class="section-title">Direction Breakdown</div>
+  <div style="display:flex;gap:20px;font-size:0.82rem;margin-bottom:8px">
+    <span>Home: 8/11 (72.7%)</span>
+    <span>Draw: 0/7 (0.0%)</span>
+    <span>Away: 5/6 (83.3%)</span>
+  </div>
+  <div class="direction-bar">
+    <div class="seg-home" style="width:46%"></div>
+    <div class="seg-draw" style="width:29%"></div>
+    <div class="seg-away" style="width:25%"></div>
+  </div>
+
+  <!-- Match results -->
+  <div class="section-title">Match Results</div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      Tokyo Verdy <span class="vs">vs</span> Kawasaki Frontale
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 25.8% / 24.2% / 50.0%
+    </div>
+    <div class="mr-prob">
+      50.0%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.027u
+      
+    </div>
+    <span class="badge miss">MISS</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      V-Varen Nagasaki <span class="vs">vs</span> Kyoto Sanga
+      
+      <span class="badge miss" style="font-size:0.6rem">COLD</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      2-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 41.8% / 28.0% / 30.2%
+    </div>
+    <div class="mr-prob">
+      41.8%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.057u
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      Montedio Yamagata <span class="vs">vs</span> Tochigi SC
+      
+      <span class="badge miss" style="font-size:0.6rem">COLD</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      2-0
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 45.5% / 25.8% / 28.8%
+    </div>
+    <div class="mr-prob">
+      45.5%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.017u
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      Sparta Rotterdam <span class="vs">vs</span> Feyenoord
+      
+    </div>
+    <div class="mr-result">
+      
+      0-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 21.2% / 26.5% / 52.2%
+    </div>
+    <div class="mr-prob">
+      26.5%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.004u
+      
+    </div>
+    <span class="badge push">PUSH</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      St Pauli <span class="vs">vs</span> Greuther Furth
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 51.6% / 29.3% / 19.1%
+    </div>
+    <div class="mr-prob">
+      29.3%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.025u
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      Nurnberg <span class="vs">vs</span> Dresden
+      
+    </div>
+    <div class="mr-result">
+      
+      3-0
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 45.3% / 24.8% / 29.9%
+    </div>
+    <div class="mr-prob">
+      45.3%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      Hammarby <span class="vs">vs</span> Hacken
+      
+    </div>
+    <div class="mr-result">
+      
+      3-0
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 48.5% / 20.7% / 30.7%
+    </div>
+    <div class="mr-prob">
+      30.7%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.029u
+      
+    </div>
+    <span class="badge push">PUSH</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      KuPS <span class="vs">vs</span> TPS
+      
+      <span class="badge miss" style="font-size:0.6rem">COLD</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 62.5% / 22.1% / 15.4%
+    </div>
+    <div class="mr-prob">
+      22.1%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.002u
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      Zwolle <span class="vs">vs</span> Ajax
+      
+    </div>
+    <div class="mr-result">
+      
+      0-2
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 20.3% / 24.3% / 55.5%
+    </div>
+    <div class="mr-prob">
+      24.3%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.004u
+      
+    </div>
+    <span class="badge push">PUSH</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      Groningen <span class="vs">vs</span> Utrecht
+      
+    </div>
+    <div class="mr-result">
+      
+      2-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 29.7% / 29.7% / 40.6%
+    </div>
+    <div class="mr-prob">
+      40.6%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.014u
+      
+    </div>
+    <span class="badge miss">MISS</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      Lillestrom <span class="vs">vs</span> Rosenborg
+      
+    </div>
+    <div class="mr-result">
+      
+      0-2
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 33.9% / 19.3% / 46.8%
+    </div>
+    <div class="mr-prob">
+      46.8%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.067u
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      Inter Turku <span class="vs">vs</span> Lahti
+      
+    </div>
+    <div class="mr-result">
+      
+      0-0
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 62.3% / 20.5% / 17.2%
+    </div>
+    <div class="mr-prob">
+      62.3%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">MISS</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      Halmstads <span class="vs">vs</span> GAIS
+      
+    </div>
+    <div class="mr-result">
+      
+      0-2
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 29.0% / 26.5% / 44.4%
+    </div>
+    <div class="mr-prob">
+      29.0%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.030u
+      
+    </div>
+    <span class="badge push">PUSH</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      IFK Goteborg <span class="vs">vs</span> Kalmar
+      
+    </div>
+    <div class="mr-result">
+      
+      3-2
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 47.3% / 24.0% / 28.7%
+    </div>
+    <div class="mr-prob">
+      47.3%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.024u
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      Heerenveen <span class="vs">vs</span> Twente
+      
+    </div>
+    <div class="mr-result">
+      
+      1-0
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 27.3% / 27.4% / 45.3%
+    </div>
+    <div class="mr-prob">
+      45.3%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">MISS</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      HamKam <span class="vs">vs</span> Aalesund
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 73.1% / 15.4% / 11.5%
+    </div>
+    <div class="mr-prob">
+      73.1%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.110u
+      
+    </div>
+    <span class="badge miss">MISS</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      AC Oulu <span class="vs">vs</span> HJK
+      
+    </div>
+    <div class="mr-result">
+      
+      0-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 20.7% / 20.7% / 58.6%
+    </div>
+    <div class="mr-prob">
+      58.6%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.027u
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      Porto <span class="vs">vs</span> Alverca
+      
+    </div>
+    <div class="mr-result">
+      
+      2-0
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 78.8% / 15.3% / 5.9%
+    </div>
+    <div class="mr-prob">
+      78.8%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      Kristiansund <span class="vs">vs</span> Molde
+      
+    </div>
+    <div class="mr-result">
+      
+      2-1
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 24.6% / 19.2% / 56.2%
+    </div>
+    <div class="mr-prob">
+      24.6%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      Benfica <span class="vs">vs</span> Viseu
+      
+      <span class="badge miss" style="font-size:0.6rem">COLD</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      2-2
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 80.8% / 13.2% / 6.0%
+    </div>
+    <div class="mr-prob">
+      80.8%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">MISS</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      Gil Vicente <span class="vs">vs</span> Rio Ave
+      
+    </div>
+    <div class="mr-result">
+      
+      1-0
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 52.3% / 26.8% / 20.9%
+    </div>
+    <div class="mr-prob">
+      52.3%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      Moreirense <span class="vs">vs</span> Sp Braga
+      
+    </div>
+    <div class="mr-result">
+      
+      2-2
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 20.6% / 25.7% / 53.7%
+    </div>
+    <div class="mr-prob">
+      20.6%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">MISS</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      Santos <span class="vs">vs</span> Athletico-PR
+      
+    </div>
+    <div class="mr-result">
+      
+      0-2
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 41.4% / 41.2% / 17.4%
+    </div>
+    <div class="mr-prob">
+      41.2%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.026u
+      
+    </div>
+    <span class="badge miss">MISS</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      Flamengo <span class="vs">vs</span> Guimaraes
+      
+    </div>
+    <div class="mr-result">
+      
+      2-0
+      
+    </div>
+    <div class="mr-pred">
+      Pred: 93.0% / 5.4% / 1.6%
+    </div>
+    <div class="mr-prob">
+      93.0%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.035u
+      
+    </div>
+    <span class="badge hit">HIT</span>
+  </div>
+  
+
+  <!-- ELO changes -->
+  
+  <div class="section-title">ELO Updates</div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Tokyo Verdy: 1531.2 → 1532.4
+    <span style="color:var(--green)">
+      (+1.2)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Kawasaki Frontale: 1600.5 → 1599.3
+    <span style="color:var(--red)">
+      (-1.2)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    V-Varen Nagasaki: 1516.1 → 1530.8
+    <span style="color:var(--green)">
+      (+14.7)
+    </span>
+    <span style="font-size:0.65rem"> — 2-1 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Kyoto Sanga: 1531.1 → 1516.4
+    <span style="color:var(--red)">
+      (-14.7)
+    </span>
+    <span style="font-size:0.65rem"> — 1-2 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Sparta Rotterdam: 1405.0 → 1397.5
+    <span style="color:var(--red)">
+      (-7.5)
+    </span>
+    <span style="font-size:0.65rem"> — 0-1 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Feyenoord: 1702.7 → 1710.2
+    <span style="color:var(--green)">
+      (+7.5)
+    </span>
+    <span style="font-size:0.65rem"> — 1-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    St Pauli: 1352.0 → 1350.5
+    <span style="color:var(--red)">
+      (-1.5)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Greuther Furth: 1384.9 → 1386.4
+    <span style="color:var(--green)">
+      (+1.5)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Nurnberg: 1509.1 → 1527.2
+    <span style="color:var(--green)">
+      (+18.1)
+    </span>
+    <span style="font-size:0.65rem"> — 3-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Dresden: 1445.1 → 1427.0
+    <span style="color:var(--red)">
+      (-18.1)
+    </span>
+    <span style="font-size:0.65rem"> — 0-3 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Hammarby: 1670.2 → 1682.9
+    <span style="color:var(--green)">
+      (+12.7)
+    </span>
+    <span style="font-size:0.65rem"> — 3-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Hacken: 1530.2 → 1517.5
+    <span style="color:var(--red)">
+      (-12.7)
+    </span>
+    <span style="font-size:0.65rem"> — 0-3 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    KuPS: 1709.0 → 1698.9
+    <span style="color:var(--red)">
+      (-10.1)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    TPS: 1510.6 → 1520.7
+    <span style="color:var(--green)">
+      (+10.1)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Zwolle: 1381.8 → 1369.0
+    <span style="color:var(--red)">
+      (-12.8)
+    </span>
+    <span style="font-size:0.65rem"> — 0-2 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Ajax: 1650.9 → 1663.7
+    <span style="color:var(--green)">
+      (+12.8)
+    </span>
+    <span style="font-size:0.65rem"> — 2-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Groningen: 1594.8 → 1609.3
+    <span style="color:var(--green)">
+      (+14.5)
+    </span>
+    <span style="font-size:0.65rem"> — 2-1 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Utrecht: 1655.2 → 1640.7
+    <span style="color:var(--red)">
+      (-14.5)
+    </span>
+    <span style="font-size:0.65rem"> — 1-2 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Lillestrom: 1412.1 → 1404.5
+    <span style="color:var(--red)">
+      (-7.6)
+    </span>
+    <span style="font-size:0.65rem"> — 0-2 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Rosenborg: 1676.0 → 1683.6
+    <span style="color:var(--green)">
+      (+7.6)
+    </span>
+    <span style="font-size:0.65rem"> — 2-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Inter Turku: 1595.3 → 1585.3
+    <span style="color:var(--red)">
+      (-10.0)
+    </span>
+    <span style="font-size:0.65rem"> — 0-0 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Lahti: 1400.4 → 1410.4
+    <span style="color:var(--green)">
+      (+10.0)
+    </span>
+    <span style="font-size:0.65rem"> — 0-0 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Halmstads: 1416.8 → 1398.3
+    <span style="color:var(--red)">
+      (-18.5)
+    </span>
+    <span style="font-size:0.65rem"> — 0-2 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    GAIS: 1570.8 → 1589.3
+    <span style="color:var(--green)">
+      (+18.5)
+    </span>
+    <span style="font-size:0.65rem"> — 2-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    IFK Goteborg: 1476.9 → 1487.4
+    <span style="color:var(--green)">
+      (+10.5)
+    </span>
+    <span style="font-size:0.65rem"> — 3-2 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Kalmar: 1425.8 → 1415.3
+    <span style="color:var(--red)">
+      (-10.5)
+    </span>
+    <span style="font-size:0.65rem"> — 2-3 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Heerenveen: 1601.4 → 1617.0
+    <span style="color:var(--green)">
+      (+15.6)
+    </span>
+    <span style="font-size:0.65rem"> — 1-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Twente: 1685.6 → 1670.0
+    <span style="color:var(--red)">
+      (-15.6)
+    </span>
+    <span style="font-size:0.65rem"> — 0-1 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    HamKam: 1474.1 → 1469.7
+    <span style="color:var(--red)">
+      (-4.4)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Aalesund: 1349.9 → 1354.3
+    <span style="color:var(--green)">
+      (+4.4)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    AC Oulu: 1384.1 → 1374.5
+    <span style="color:var(--red)">
+      (-9.6)
+    </span>
+    <span style="font-size:0.65rem"> — 0-1 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    HJK: 1591.2 → 1600.8
+    <span style="color:var(--green)">
+      (+9.6)
+    </span>
+    <span style="font-size:0.65rem"> — 1-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Porto: 1781.7 → 1786.2
+    <span style="color:var(--green)">
+      (+4.5)
+    </span>
+    <span style="font-size:0.65rem"> — 2-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Alverca: 1456.7 → 1452.2
+    <span style="color:var(--red)">
+      (-4.5)
+    </span>
+    <span style="font-size:0.65rem"> — 0-2 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Kristiansund: 1549.1 → 1570.7
+    <span style="color:var(--green)">
+      (+21.6)
+    </span>
+    <span style="font-size:0.65rem"> — 2-1 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Molde: 1648.0 → 1626.4
+    <span style="color:var(--red)">
+      (-21.6)
+    </span>
+    <span style="font-size:0.65rem"> — 1-2 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Benfica: 1807.1 → 1794.6
+    <span style="color:var(--red)">
+      (-12.5)
+    </span>
+    <span style="font-size:0.65rem"> — 2-2 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Viseu: 1512.9 → 1525.4
+    <span style="color:var(--green)">
+      (+12.5)
+    </span>
+    <span style="font-size:0.65rem"> — 2-2 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Gil Vicente: 1490.7 → 1499.8
+    <span style="color:var(--green)">
+      (+9.1)
+    </span>
+    <span style="font-size:0.65rem"> — 1-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Rio Ave: 1401.7 → 1392.6
+    <span style="color:var(--red)">
+      (-9.1)
+    </span>
+    <span style="font-size:0.65rem"> — 0-1 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Moreirense: 1441.1 → 1446.6
+    <span style="color:var(--green)">
+      (+5.5)
+    </span>
+    <span style="font-size:0.65rem"> — 2-2 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Sp Braga: 1634.9 → 1629.4
+    <span style="color:var(--red)">
+      (-5.5)
+    </span>
+    <span style="font-size:0.65rem"> — 2-2 DRAW</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Santos: 1477.2 → 1451.9
+    <span style="color:var(--red)">
+      (-25.3)
+    </span>
+    <span style="font-size:0.65rem"> — 0-2 LOSS</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Athletico-PR: 1582.7 → 1608.0
+    <span style="color:var(--green)">
+      (+25.3)
+    </span>
+    <span style="font-size:0.65rem"> — 2-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Flamengo: 1631.4 → 1638.1
+    <span style="color:var(--green)">
+      (+6.7)
+    </span>
+    <span style="font-size:0.65rem"> — 2-0 WIN</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Guimaraes: 1440.4 → 1433.7
+    <span style="color:var(--red)">
+      (-6.7)
+    </span>
+    <span style="font-size:0.65rem"> — 0-2 LOSS</span>
+  </div>
+  
+  
+
+  <div class="footer">
+    Football Prediction Model v3.0 &middot; Review 2026-08-10
+    &middot; ELO auto-updated from results
+  </div>
+</div>
+</body>
+</html>

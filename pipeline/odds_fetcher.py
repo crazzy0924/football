@@ -1,164 +1,226 @@
 """
-Odds Fetcher v3.0
+Odds Fetcher v3.0 (Fixed)
 
-Fetches today's football matches with odds from odds-api.io.
-Simplified from the v2.0 fetch_kambi.py approach.
-Falls back gracefully to stub data when API is unavailable.
+Fetches today's football matches with odds from the-odds-api.com v4.
+Previously used wrong base URL (odds-api.io) and wrong API version (v4 on a v3 API).
+Now correctly uses api.the-odds-api.com/v4.
 """
 from __future__ import annotations
 
 import json
 import os
-from datetime import date
+from datetime import date, datetime, timezone, timedelta
 from typing import Any
 
 import config
 
+# All available soccer sport keys from the-odds-api.com v4 (42 total)
+DEFAULT_SPORT_KEYS = [
+    # Tier 1: Big 5 + major European
+    "soccer_epl", "soccer_spain_la_liga", "soccer_germany_bundesliga",
+    "soccer_italy_serie_a", "soccer_france_ligue_one",
+    "soccer_netherlands_eredivisie", "soccer_portugal_primeira_liga",
+    "soccer_efl_champ",
+    # Tier 2: Other Europe
+    "soccer_belgium_first_div", "soccer_austria_bundesliga",
+    "soccer_denmark_superliga", "soccer_norway_eliteserien",
+    "soccer_sweden_allsvenskan", "soccer_poland_ekstraklasa",
+    "soccer_finland_veikkausliiga", "soccer_germany_bundesliga2",
+    "soccer_france_ligue_two", "soccer_italy_serie_b",
+    "soccer_spain_segunda_division", "soccer_greece_super_league",
+    "soccer_turkey_super_league", "soccer_russia_premier_league",
+    # Tier 3: Americas + Asia
+    "soccer_brazil_campeonato", "soccer_brazil_serie_b",
+    "soccer_japan_j_league", "soccer_korea_kleague1",
+    "soccer_usa_mls", "soccer_mexico_ligamx",
+    "soccer_argentina_primera_division",
+    "soccer_china_superleague",
+    # Tier 4: England lower + cups
+    "soccer_england_league1", "soccer_england_league2",
+    "soccer_england_efl_cup", "soccer_germany_dfb_pokal",
+    "soccer_germany_liga3",
+    # Continental
+    "soccer_uefa_champs_league_qualification",
+    "soccer_uefa_nations_league",
+    "soccer_conmebol_copa_libertadores",
+    "soccer_conmebol_copa_sudamericana",
+    "soccer_concacaf_leagues_cup",
+    "soccer_chile_campeonato",
+]
 
-def fetch_today_matches(sport: str = "soccer_europe") -> list[dict]:
-    """Fetch today's football matches with odds.
+# the-odds-api sport_title → internal league code mapping
+LEAGUE_MAP = {
+    "epl": "PL",
+    "la liga": "PD",
+    "bundesliga": "BL1",
+    "serie a": "SA",
+    "ligue 1": "FL1",
+    "ligue 2": "FL2",
+    "serie b": "SB",
+    "eredivisie": "DED",
+    "primeira liga": "PPL",
+    "championship": "ELC",
+    "league 1": "EL1",
+    "league 2": "EL2",
+    "efl cup": "EFL",
+    "mls": "MLS",
+    "brazil série a": "BSA",
+    "brazil série b": "BSB",
+    "j league": "J1",
+    "k league 1": "KLEAGUE",
+    "belgium first div": "BEL",
+    "austrian football bundesliga": "AUT",
+    "denmark superliga": "DEN",
+    "eliteserien": "NOR",
+    "allsvenskan": "SWE",
+    "ekstraklasa": "POL",
+    "super league": "GSL",  # Greece
+    "turkey super league": "TUR",
+    "bundesliga 2": "BL2",
+    "veikkausliiga": "FIN",
+    "la liga 2": "PD2",
+    "liga mx": "LMX",
+    "primera división": "ARG",  # Argentina
+    "super league - china": "CSL",
+    "dfb-pokal": "DFB",
+    "3. liga": "BL3",
+    "copa libertadores": "LIB",
+    "copa sudamericana": "SUD",
+    "champions league qualification": "UCLQ",
+    "nations league": "UNL",
+    "leagues cup": "LCUP",
+    "superettan": "SWE2",
+    "russia premier league": "RPL",
+    "chile": "CHI",
+}
 
-    Uses odds-api.io (Kambi/Unibet odds).
-    Falls back to stub if API key is not configured.
+
+def fetch_today_matches(
+    sport_keys: list[str] | None = None,
+    bookmakers: str = "unibet",
+    date_str: str | None = None,
+) -> list[dict]:
+    """Fetch today's football matches with odds from the-odds-api.com v4.
+
+    Args:
+        sport_keys: list of sport keys (default: DEFAULT_SPORT_KEYS)
+        bookmakers: comma-separated bookmaker keys (default: "unibet")
+        date_str: target date in YYYY-MM-DD (default: today Beijing time)
 
     Returns:
-        list of dicts with: home_team, away_team, league_code, odds
+        list of dicts with: home_team, away_team, league_code, odds, kickoff
     """
-    api_key = config.ODDS_API_KEY
+    api_key = config.THE_ODDS_API_KEY or config.ODDS_API_IO_KEY
 
     if not api_key:
-        print("ODDS_API_IO_KEY not configured. Using stub data.")
+        print("No odds API key configured. Use stub data.")
         return _stub_matches()
+
+    if sport_keys is None:
+        sport_keys = DEFAULT_SPORT_KEYS
+
+    # Default: today Beijing time
+    beijing_tz = timezone(timedelta(hours=8))
+    if date_str is None:
+        date_str = datetime.now(beijing_tz).strftime("%Y-%m-%d")
+
+    all_matches = []
 
     try:
         import httpx
 
-        today = date.today().isoformat()
-        url = f"https://api.odds-api.io/v4/sports/{sport}/odds"
-        params = {
-            "apiKey": api_key,
-            "regions": "eu",
-            "markets": "h2h",
-            "oddsFormat": "decimal",
-            "dateFormat": "iso",
-        }
+        with httpx.Client(timeout=20) as client:
+            for sport_key in sport_keys:
+                url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds"
+                params = {
+                    "apiKey": api_key,
+                    "regions": "eu",
+                    "markets": "h2h",
+                    "bookmakers": bookmakers,
+                    "oddsFormat": "decimal",
+                    "dateFormat": "iso",
+                }
 
-        with httpx.Client(timeout=15) as client:
-            # First get events
-            events_url = f"https://api.odds-api.io/v4/sports/{sport}/events"
-            events_resp = client.get(events_url, params={"apiKey": api_key, "dateFormat": "iso"})
-            if events_resp.status_code != 200:
-                print(f"Events API error: {events_resp.status_code}")
-                return _stub_matches()
+                resp = client.get(url, params=params)
+                if resp.status_code != 200:
+                    print(f"  {sport_key}: HTTP {resp.status_code} — {resp.text[:120]}")
+                    continue
 
-            events = events_resp.json()
-            if not events:
-                print("No events found for today.")
-                return []
+                events = resp.json()
+                if not events:
+                    continue
 
-            # Get odds for these events
-            event_ids = [e["id"] for e in events[:50]]  # cap at 50
-            odds_resp = client.get(
-                url,
-                params={**params, "eventIds": ",".join(event_ids)},
-            )
-            if odds_resp.status_code != 200:
-                print(f"Odds API error: {odds_resp.status_code}")
-                return _stub_matches()
+                # Filter by target date (Beijing time)
+                for e in events:
+                    ct = e.get("commence_time", "")
+                    if not ct:
+                        continue
+                    try:
+                        utc_time = datetime.fromisoformat(ct.replace("Z", "+00:00"))
+                        bj_time = utc_time.astimezone(beijing_tz)
+                        if bj_time.strftime("%Y-%m-%d") != date_str:
+                            continue
+                    except (ValueError, TypeError):
+                        continue
 
-            odds_data = odds_resp.json()
+                    home = e.get("home_team", "")
+                    away = e.get("away_team", "")
+                    sport_title = e.get("sport_title", "")
 
-        return _parse_odds_response(events, odds_data)
+                    if not home or not away:
+                        continue
+
+                    # Extract H2H odds from first bookmaker
+                    h2h_odds = None
+                    for bm in e.get("bookmakers", []):
+                        for mkt in bm.get("markets", []):
+                            if mkt.get("key") == "h2h":
+                                outcomes = mkt.get("outcomes", [])
+                                if len(outcomes) >= 3:
+                                    # outcomes order: home, draw, away
+                                    h2h_odds = {
+                                        "home": outcomes[0]["price"],
+                                        "draw": outcomes[1]["price"],
+                                        "away": outcomes[2]["price"],
+                                    }
+                                break
+                        if h2h_odds:
+                            break
+
+                    if not h2h_odds:
+                        continue
+
+                    league_code = _map_league(sport_title)
+
+                    all_matches.append({
+                        "home_team": home,
+                        "away_team": away,
+                        "league_code": league_code,
+                        "league_name": sport_title,
+                        "odds": h2h_odds,
+                        "kickoff": ct,
+                        "source": "the-odds-api.com",
+                    })
+
+        return all_matches
 
     except Exception as e:
         print(f"Error fetching odds: {e}")
         return _stub_matches()
 
 
-def _parse_odds_response(events: list, odds_data: list) -> list[dict]:
-    """Parse odds-api.io response into our match format."""
-    matches = []
-
-    # Build event lookup
-    event_map = {}
-    for e in events:
-        event_map[e["id"]] = e
-
-    for odds_entry in odds_data:
-        eid = odds_entry.get("id") or odds_entry.get("event_id")
-        event = event_map.get(eid, {})
-        home = event.get("home_team", odds_entry.get("home_team", ""))
-        away = event.get("away_team", odds_entry.get("away_team", ""))
-        league = event.get("sport_title", event.get("league", ""))
-
-        if not home or not away:
-            continue
-
-        # Find Unibet/Kambi odds
-        bookmakers = odds_entry.get("bookmakers", [])
-        unibet_odds = None
-        for bm in bookmakers:
-            if "unibet" in bm.get("key", "").lower():
-                markets = bm.get("markets", [])
-                for mk in markets:
-                    if mk.get("key") == "h2h":
-                        outcomes = mk.get("outcomes", [])
-                        if len(outcomes) >= 3:
-                            unibet_odds = {
-                                "home": outcomes[0]["price"],
-                                "draw": outcomes[1]["price"],
-                                "away": outcomes[2]["price"],
-                            }
-                        break
-                break
-
-        if not unibet_odds:
-            continue
-
-        # Map league to our code
-        league_code = _map_league(league)
-
-        matches.append({
-            "home_team": home,
-            "away_team": away,
-            "league_code": league_code,
-            "league_name": league,
-            "odds": unibet_odds,
-        })
-
-    return matches
-
-
 def _map_league(sport_title: str) -> str:
-    """Map odds-api league name to our internal league code."""
-    title = sport_title.lower()
-    mapping = {
-        "premier league": "PL",
-        "la liga": "PD",
-        "bundesliga": "BL1",
-        "serie a": "SA",
-        "ligue 1": "FL1",
-        "eredivisie": "DED",
-        "primeira liga": "PPL",
-        "championship": "ELC",
-        "mls": "MLS",
-        "brazil serie a": "BSA",
-        "j1 league": "J1",
-        "j league": "J1",
-        "k league": "KLEAGUE",
-        "belgian pro league": "BEL",
-        "swiss super league": "SWI",
-        "austrian bundesliga": "AUT",
-        "danish superliga": "DEN",
-        "norwegian eliteserien": "NOR",
-        "swedish allsvenskan": "SWE",
-        "polish ekstraklasa": "POL",
-        "czech liga 1": "CZE",
-    }
-    for query, code in mapping.items():
-        if query in title:
+    """Map the-odds-api sport_title to internal league code."""
+    title_lower = sport_title.lower().strip()
+    # Exact match first
+    if title_lower in LEAGUE_MAP:
+        return LEAGUE_MAP[title_lower]
+    # Substring match (longer patterns first)
+    for pattern, code in sorted(LEAGUE_MAP.items(), key=lambda x: -len(x[0])):
+        if pattern in title_lower:
             return code
-    return title[:3].upper()
+    # Fallback
+    return title_lower[:3].upper()
 
 
 def _stub_matches() -> list[dict]:

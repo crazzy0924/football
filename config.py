@@ -32,5 +32,10 @@ def get(key: str, default: str = "") -> str:
 
 
 # API keys
-ODDS_API_KEY = get("ODDS_API_IO_KEY", "")
+# the-odds-api.com (v4) — 32-char key, used by odds_fetcher + fetch_pinnacle
+THE_ODDS_API_KEY = get("ODDS_API_KEY", "")
+# odds-api.io (v3) — 64-char key, legacy; prefer the-odds-api.com
+ODDS_API_IO_KEY = get("ODDS_API_IO_KEY", "")
+# Backward-compat alias
+ODDS_API_KEY = THE_ODDS_API_KEY or ODDS_API_IO_KEY
 ANTHROPIC_API_KEY = get("ANTHROPIC_API_KEY", "")

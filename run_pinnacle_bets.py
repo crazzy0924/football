@@ -145,6 +145,39 @@ def get_cn(h_en, a_en):
             return (hcn, acn)
     return (h_en, a_en)
 
+# -- Load model predictions --
+pred_path = f'data/output/predictions_{date_str}.json'
+preds = json.loads(Path(pred_path).read_text(encoding='utf-8')) if Path(pred_path).exists() else []
+
+# -- Load Pinnacle odds (or fall back to 体彩 SPF) --
+pinnacle = []
+if Path(odds_file).exists():
+    pinnacle = json.loads(Path(odds_file).read_text(encoding='utf-8'))
+    print(f'Pinnacle odds loaded: {odds_file} ({len(pinnacle)} matches)')
+else:
+    print(f'Pinnacle odds NOT FOUND: {odds_file}, falling back to 体彩 SPF from today_matches_v3.json')
+    # Build Pinnacle-compatible structure from 体彩 SPF odds
+    for m in matches:
+        odds = m.get('odds', {})
+        if not odds: continue
+        entry = {
+            'home_team': m['home_team'],
+            'away_team': m['away_team'],
+            'bookmakers': [{
+                'key': 'pinnacle',
+                'markets': [
+                    {'key': 'h2h', 'outcomes': [
+                        {'name': m['home_team'], 'price': odds['home']},
+                        {'name': 'Draw', 'price': odds['draw']},
+                        {'name': m['away_team'], 'price': odds['away']}
+                    ]}
+                ]
+            }]
+        }
+        pinnacle.append(entry)
+
+source_label = 'Pinnacle' if Path(odds_file).exists() else '体彩SPF'
+
 # -- Build Pinnacle lookup --
 pinn_map = {}
 for e in pinnacle:
@@ -243,8 +276,11 @@ for p in preds:
         fair = ph['fair']
         edges = {'home': dc_h-fair[0], 'draw': dc_d-fair[1], 'away': dc_a-fair[2]}
         best = max(edges, key=edges.get)
-        kelly = max(0, edges[best])
-        if kelly > 0.005:
+        edge_val = edges[best]
+        kelly = max(0, edge_val)
+        model_prob = {'home': dc_h, 'draw': dc_d, 'away': dc_a}[best]
+        # 终盘A筛选: edge>5% + Kelly>1% + 非冷启动 + 方向概率>=35%
+        if kelly > 0.01 and edge_val > 0.05 and not cs and model_prob >= 0.35:
             candidates.append(('胜平负', DIRMAP[best], kelly, ph['raw'][best]))
 
     # === DIM 2: Asian Handicap ===
@@ -259,14 +295,16 @@ for p in preds:
             if home_pt > 0.01: label = '主队(受+{:.2f})'.format(home_pt)
             elif home_pt < -0.01: label = '主队(让{:.2f})'.format(-home_pt)
             else: label = '主队(平手)'
-            candidates.append(('亚洲盘', label, kelly, pa['home_price']))
+            if kelly > 0.01 and dc_home_edge > 0.05 and not cs and dc_hp['home'] >= 0.35:
+                candidates.append(('亚洲盘', label, kelly, pa['home_price']))
         elif dc_away_edge > 0:
             kelly = dc_away_edge
             away_pt = pa.get('away_pt', -home_pt)
             if away_pt > 0.01: label = '客队(受+{:.2f})'.format(away_pt)
             elif away_pt < -0.01: label = '客队(让{:.2f})'.format(-away_pt)
             else: label = '客队(平手)'
-            candidates.append(('亚洲盘', label, kelly, pa['away_price']))
+            if kelly > 0.01 and dc_away_edge > 0.05 and not cs and dc_hp['away'] >= 0.35:
+                candidates.append(('亚洲盘', label, kelly, pa['away_price']))
 
     # === DIM 3: Totals ===
     if pu and dc_tot and pu.get('fair_over'):
@@ -283,9 +321,11 @@ for p in preds:
         over_edge = dc_over - pu['fair_over']
         under_edge = (1-dc_over) - pu['fair_under']
         if over_edge > under_edge and over_edge > 0:
-            candidates.append(('大小球', '大{:.1f}球'.format(line), over_edge, pu['over_price']))
+            if over_edge > 0.05 and not cs and dc_over >= 0.35:
+                candidates.append(('大小球', '大{:.1f}球'.format(line), over_edge, pu['over_price']))
         elif under_edge > 0:
-            candidates.append(('大小球', '小{:.1f}球'.format(line), under_edge, pu['under_price']))
+            if under_edge > 0.05 and not cs and (1-dc_over) >= 0.35:
+                candidates.append(('大小球', '小{:.1f}球'.format(line), under_edge, pu['under_price']))
 
     if not candidates: continue
 
@@ -322,14 +362,14 @@ for b in BETS:
         tag, b['home'], b['away'], b['league'], b['dim'], b['direction'],
         o, b['kelly'], b['stake']))
 print('=' * 95)
-print('  {} bets | ${:,} | {:.1f}% exposure | Source: Pinnacle via the-odds-api.com'.format(
-    len(BETS), total, total/BANKROLL*100))
+print('  {} bets | ${:,} | {:.1f}% exposure | Source: {}'.format(
+    len(BETS), total, total/BANKROLL*100, source_label))
 dims = {}
 for b in BETS: dims[b['dim']] = dims.get(b['dim'], 0) + 1
 print('  Dims: {}'.format(dims))
 
 # Save
 out = Path(f'data/output/pinnacle_bets_{date_str}.json')
-out.write_text(json.dumps({'date':'2026-08-09','bets':BETS,'total':total,'source':'Pinnacle'},
+out.write_text(json.dumps({'date':date_str,'bets':BETS,'total':total,'source':source_label},
     ensure_ascii=False, indent=2), encoding='utf-8')
 print('\nSaved: ' + str(out))

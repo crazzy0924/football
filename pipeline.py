@@ -271,7 +271,7 @@ def cmd_review(args):
 
     with open(pred_path, "r", encoding="utf-8") as f:
         predictions = json.load(f)
-    print(f"Loaded {len(predictions)} predictions from {pred_path}")
+    print(f"加载 {len(predictions)} 条预测，来自 {pred_path}")
 
     # ---- Load results ----
     from pipeline.result_fetcher import (
@@ -292,7 +292,7 @@ def cmd_review(args):
     if not results and args.results_json:
         if os.path.exists(args.results_json):
             results = load_results_from_json(args.results_json)
-            print(f"Loaded {len(results)} results from {args.results_json}")
+            print(f"加载 {len(results)} 条赛果，来自 {args.results_json}")
 
     # 3) Try auto-fetch
     if not results:
@@ -305,23 +305,23 @@ def cmd_review(args):
         default_results = os.path.join(output_dir, f"results_{date_str}.json")
         if os.path.exists(default_results):
             results = load_results_from_json(default_results)
-            print(f"Loaded {len(results)} results from {default_results}")
+            print(f"加载 {len(results)} 条赛果，来自 {default_results}")
 
     if not results:
-        print(f"\nNo results found for {date_str}.")
-        print("Provide results via one of:")
-        print(f"  1. --results-json PATH   (JSON file)")
-        print(f"  2. --results-text TEXT    (e.g. 'Arsenal 2-1 Liverpool')")
-        print(f"  3. Create {output_dir}/results_{date_str}.json")
-        print(f"\nFormat: [{{\"home_team\":\"A\",\"away_team\":\"B\",\"home_goals\":2,\"away_goals\":1}}]")
+        print(f"\n未找到 {date_str} 的赛果。")
+        print("请通过以下方式提供赛果：")
+        print(f"  1. --results-json PATH   (JSON 文件)")
+        print(f"  2. --results-text TEXT   (例: 'Arsenal 2-1 Liverpool')")
+        print(f"  3. 创建 {output_dir}/results_{date_str}.json")
+        print(f"\n格式: [{{\"home_team\":\"A\",\"away_team\":\"B\",\"home_goals\":2,\"away_goals\":1}}]")
         sys.exit(1)
 
     # ---- Match predictions to results ----
     matched = match_predictions_to_results(predictions, results)
-    print(f"Matched {len(matched)}/{len(predictions)} predictions to results")
+    print(f"匹配 {len(matched)}/{len(predictions)} 条预测与赛果")
 
     if not matched:
-        print("No matches found. Check team names.")
+        print("未找到匹配的赛果，请检查球队名。")
         sys.exit(1)
 
     # ---- Update ELO ----
@@ -363,7 +363,7 @@ def cmd_review(args):
                 "new": round(new_h, 1),
                 "delta": round(new_h - old_h, 1),
                 "delta_signed": f"{new_h - old_h:+.1f}",
-                "reason": f"{gh}-{ga} {'WIN' if goal_diff > 0 else 'DRAW' if goal_diff == 0 else 'LOSS'}",
+                "reason": f"{gh}-{ga} {'胜' if goal_diff > 0 else '平' if goal_diff == 0 else '负'}",
             })
             elo_changes.append({
                 "team": away,
@@ -371,12 +371,12 @@ def cmd_review(args):
                 "new": round(new_a, 1),
                 "delta": round(new_a - old_a, 1),
                 "delta_signed": f"{new_a - old_a:+.1f}",
-                "reason": f"{ga}-{gh} {'WIN' if goal_diff < 0 else 'DRAW' if goal_diff == 0 else 'LOSS'}",
+                "reason": f"{ga}-{gh} {'胜' if goal_diff < 0 else '平' if goal_diff == 0 else '负'}",
             })
 
         elo.save()
         n_updated = len(set(c["team"] for c in elo_changes))
-        print(f"[OK] ELO updated for {n_updated} teams ({len(elo_changes)} entries)")
+        print(f"[OK] ELO 已更新 {n_updated} 支球队 ({len(elo_changes)} 条记录)")
 
     # ---- Generate review report ----
     from pipeline.reporter import generate_review_report, update_tracking_file
@@ -416,17 +416,17 @@ def cmd_review(args):
                  ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == "A")
 
     print(f"\n{'='*60}")
-    print(f"REVIEW SUMMARY — {date_str}")
+    print(f"复盘总结 — {date_str}")
     print(f"{'='*60}")
-    print(f"  Matches:   {n}")
+    print(f"  场次:      {n}")
     print(f"  Brier:     {brier:.4f}")
-    print(f"  Accuracy:  {correct}/{n} ({correct/n:.1%})")
-    print(f"  Direction: H={hh} D={dd} A={aa}")
+    print(f"  准确率:    {correct}/{n} ({correct/n:.1%})")
+    print(f"  方向:     主={hh} 平={dd} 客={aa}")
     if tracking.get("cumulative"):
         c = tracking["cumulative"]
-        print(f"  All-time:  {c['total_matches']} matches, Brier {c['avg_brier']:.4f}, Acc {c['avg_accuracy']:.1%}")
-    print(f"  Review:    {review_path}")
-    print(f"  Tracking:  {os.path.join(output_dir, 'daily_tracking.json')}")
+        print(f"  历史累计:  {c['total_matches']} 场, Brier {c['avg_brier']:.4f}, Acc {c['avg_accuracy']:.1%}")
+    print(f"  复盘报告:  {review_path}")
+    print(f"  跟踪文件:  {os.path.join(output_dir, 'daily_tracking.json')}")
 
 
 def cmd_summary(args):

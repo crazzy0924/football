@@ -399,13 +399,13 @@ def generate_review_report(
 
         if pick == actual:
             outcome = "hit"
-            verdict = "HIT"
+            verdict = "✓ 命中"
         elif pick != best_pred and best_pred == actual:
             outcome = "push"
-            verdict = "PUSH"
+            verdict = "△ 走水"
         else:
             outcome = "miss"
-            verdict = "MISS"
+            verdict = "✗ 失误"
 
         prob_pick = pred_vec[{"H": 0, "D": 1, "A": 2}.get(pick, 0)]
 

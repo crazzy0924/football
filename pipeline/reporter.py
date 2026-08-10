@@ -121,7 +121,9 @@ TEAM_CN = {
     "IK Sirius": "天狼星",
     "IF Brommapojkarna": "布鲁马波卡纳",
     "Vasteras SK": "韦斯特罗斯",
+    "Västerås SK": "韦斯特罗斯",
     "Djurgardens IF": "佐加顿斯",
+    "Djurgårdens IF": "佐加顿斯",
     "Santa Clara": "圣克拉拉",
     "Nacional": "葡萄牙国民",
     # 俄超/其他

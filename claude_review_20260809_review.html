@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>克劳德 · 8月9日 赛后复盘</title>
+<style>
+:root{--bg:#080b14;--card:#0d111c;--border:#161b2a;--text:#c8ccd8;--muted:#5a5e72;--a2:#a78bfa;--g:#3fb950;--r:#f85149;--y:#f0a838;--b:#58a6ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.top{background:linear-gradient(135deg,#0a0f1e,#11163a);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px}
+.top .icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#a78bfa,#7c6ff7);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9em}
+.top h1{font-size:0.9em}.top em{color:var(--a2);font-style:normal}.top .sub{font-size:0.55em;color:var(--muted)}
+.w{max-width:900px;margin:0 auto;padding:14px 12px}
+.dash{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.di{flex:1;min-width:45px;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:8px 6px;text-align:center}.di .n{font-size:1.1em;font-weight:800}.di .l{font-size:0.5em;color:var(--muted)}
+h2{font-size:0.78em;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)}h2 span{color:var(--a2)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:10px 12px;margin-bottom:4px;font-size:0.7em}
+.card.hit{border-left:3px solid var(--g)}.card.miss{border-left:3px solid var(--r)}.card.push{border-left:3px solid var(--y)}
+.card .hdr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card .teams{flex:1;min-width:120px}.card .mt{font-weight:700}.card .mi{font-size:0.53em;color:var(--muted)}
+.tag{font-size:0.5em;font-weight:700;padding:2px 5px;border-radius:4px}.tg{background:rgba(63,185,80,0.1);color:var(--g)}.tr{background:rgba(248,81,73,0.1);color:var(--r)}.ty{background:rgba(240,168,56,0.1);color:var(--y)}
+.card .bet{font-weight:700;font-size:0.75em}
+.card .pnl{font-weight:700;font-size:0.72em;min-width:55px;text-align:right}
+.big{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin:10px 0;font-size:0.68em}
+.big h3{font-size:0.76em;margin-bottom:5px}
+.insight{margin:2px 0;font-size:0.64em}.insight::before{content:'▸ ';color:var(--a2)}
+.insight.good::before{content:'🟢 ';color:var(--g);font-weight:700}
+.insight.bad::before{content:'🔴 ';color:var(--r);font-weight:700}
+.insight.warn::before{content:'🟡 ';color:var(--y)}
+.insight.best::before{content:'🏆 '}
+.claude_tag{font-size:0.5em;padding:1px 4px;border-radius:3px;margin-left:4px}.cta{background:rgba(63,185,80,0.1);color:var(--g)}.ctr{background:rgba(248,81,73,0.1);color:var(--r)}.cty{background:rgba(240,168,56,0.1);color:var(--y)}
+.ft{text-align:center;padding:14px;color:var(--muted);font-size:0.5em;opacity:0.3}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="icon">R</div>
+<h1><em>克劳德</em> · 8月9日 赛后复盘</h1>
+<span class="sub">终盘B 20注对照 · 全维度复盘 · 模型盲区验证 · 独立信用分更新</span>
+</div>
+
+<div class="w">
+
+<div class="dash">
+<div class="di"><div class="n" style="color:var(--a2)">20</div><div class="l">总注数</div></div>
+<div class="di"><div class="n" style="color:var(--g)">7</div><div class="l">命中</div></div>
+<div class="di"><div class="n" style="color:var(--r)">12</div><div class="l">失利</div></div>
+<div class="di"><div class="n" style="color:var(--y)">1</div><div class="l">走水</div></div>
+<div class="di"><div class="n" style="color:var(--r)">-¥424</div><div class="l">净盈亏</div></div>
+<div class="di"><div class="n" style="color:var(--r)">-17.0%</div><div class="l">ROI</div></div>
+<div class="di"><div class="n" style="color:var(--y)">36.8%</div><div class="l">方向命中</div></div>
+</div>
+
+<!-- CLAUDE SCORECARD -->
+<div class="big" style="border:1px solid rgba(63,185,80,0.3);background:rgba(63,185,80,0.02)">
+<h3>🟢 克劳德独立信用分验证</h3>
+<div class="insight good"><b>3反对全中:</b> 圣保利客胜(-¥201)、乌德勒支客胜(-¥216)、哈尔姆斯塔德主胜(-¥125)全部失利。反对注合计¥542，100%正确。如果去掉这3注，ROI从-17.0%→+6.1%。</div>
+<div class="insight bad"><b>但同意注也踩了坑:</b> 兹沃勒大2.2(-¥216)、国际图尔库主胜(-¥216)——这两场我同意的加起来亏了¥432，抵消了反对注的贡献。</div>
+<div class="insight good"><b>伤病盲区验证:</b> 乌德勒支9人缺阵→爆冷输球(2-1)。市场把赔率推到7.26是对的，模型解读为"价值"是错的。此规律建立。</div>
+<div class="insight good"><b>反向注全灭:</b> 哈尔姆斯塔德(27.6%方向)和圣保利(高赔反向)都输了。v1时代的"价值反向"策略本日0/2。</div>
+<div class="insight best"><b>罗森博格:</b> 尽管双方伤兵满营+我降档为保留，罗森博格还是0-2客场穿盘。模型的方向是对的，我的伤停顾虑过度了。</div>
+</div>
+
+<!-- 7 HITS -->
+<h2>✅ <span>命中 (7注) · +¥1,102</span></h2>
+
+<div class="card hit">
+<div class="hdr"><span class="tag tg">命中</span><div class="teams"><div class="mt">罗森博格 客胜 @2.88</div><div class="mi">挪超 · 0-2 · ¥406</div></div><div class="pnl" style="color:var(--g)">+¥406</div></div>
+<div class="hdr style="font-size:0.58em;color:var(--muted)">克劳德: 🟡保留(伤停顾虑) | 模型: 凯利24.5%重注 → 模型正确，我过度保守</div>
+</div>
+
+<div class="card hit">
+<div class="hdr"><span class="tag tg">命中</span><div class="teams"><div class="mt">汉坎 小3.2球 @1.88</div><div class="mi">挪超 · 1-1 (2球) · ¥190</div></div><div class="pnl" style="color:var(--g)">+¥190</div></div>
+</div>
+
+<div class="card hit">
+<div class="hdr"><span class="tag tg">命中</span><div class="teams"><div class="mt">赫尔辛基 客胜 @2.21</div><div class="mi">芬超 · 0-1 · ¥190</div></div><div class="pnl" style="color:var(--g)">+¥190</div></div>
+</div>
+
+<div class="card hit">
+<div class="hdr"><span class="tag tg">命中</span><div class="teams"><div class="mt">IFK哥德堡 主胜 @2.42</div><div class="mi">瑞典超 · 3-2 · ¥129</div></div><div class="pnl" style="color:var(--g)">+¥129</div></div>
+</div>
+
+<div class="card hit">
+<div class="hdr"><span class="tag tg">命中</span><div class="teams"><div class="mt">摩雷伦斯 大2.5球 @2.01</div><div class="mi">葡超 · 2-2 (4球) · ¥104</div></div><div class="pnl" style="color:var(--g)">+¥104</div></div>
+</div>
+
+<div class="card hit">
+<div class="hdr"><span class="tag tg">命中</span><div class="teams"><div class="mt">哈马比 小3.5球 @2.05</div><div class="mi">瑞典超 · 3-0 (3球) · ¥71</div></div><div class="pnl" style="color:var(--g)">+¥71</div></div>
+</div>
+
+<div class="card hit">
+<div class="hdr"><span class="tag tg">命中</span><div class="teams"><div class="mt">波尔图 主胜 @1.21</div><div class="mi">葡超 · 2-0 · ¥12</div></div><div class="pnl" style="color:var(--g)">+¥12</div></div>
+</div>
+
+<!-- 1 PUSH -->
+<h2>↔️ <span>走水 (1注)</span></h2>
+
+<div class="card push">
+<div class="hdr"><span class="tag ty">走水</span><div class="teams"><div class="mt">纽伦堡 大3.0球 @1.75</div><div class="mi">德乙 · 3-0 (3球=3.0线) · ±¥0</div></div></div>
+</div>
+
+<!-- 12 LOSSES -->
+<h2>❌ <span>失利 (12注) · -¥1,526</span></h2>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">兹沃勒 大2.2球 @2.08</div><div class="mi">荷甲 · 0-2 (2球) · -¥216 <span class="claude_tag cta">克:同意</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥216</div></div>
+<div style="font-size:0.55em;color:var(--muted)">Ajax 2-0胜但总进球仅2球。大2.2线需要3球全赢——Zwolle 10人应战(57分钟红牌)后完全死守。红牌是模型无法预测的变量。</div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">格罗宁根 2-1 乌德勒支</div><div class="mi">荷甲 · 客胜 @7.26 · -¥216 <span class="claude_tag ctr">克:反对✅</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥216</div></div>
+<div style="font-size:0.55em;color:var(--muted)">⛔ 模型盲区案例。Utrecht 9人缺阵——赔率7.26不是价值，是市场理性定价。克劳德反对正确。</div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">国际图尔库 0-0 拉赫蒂</div><div class="mi">芬超 · 主胜 @2.41 · -¥216 <span class="claude_tag cta">克:同意</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥216</div></div>
+<div style="font-size:0.55em;color:var(--muted)">Inter Turku 19射3正，完全压制但就是不进。xG优势未转化为进球——运气因素，但也是模型盲区。</div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">圣保利 1-1 菲尔特</div><div class="mi">德乙 · 客胜 @7.52 · -¥201 <span class="claude_tag ctr">克:反对✅</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥201</div></div>
+<div style="font-size:0.55em;color:var(--muted)">⛔ 已确认失利。赔率2.05→7.52是市场理性反应(菲尔特5新人+队长离队)。克劳德反对正确。</div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">克里斯蒂安松 2-1 莫尔德</div><div class="mi">挪超 · 客让0.75 @1.87 · -¥134 <span class="claude_tag cty">克:保留</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥134</div></div>
+<div style="font-size:0.55em;color:var(--muted)">莫尔德5人伤缺+让0.75=要求赢至少1球。爆冷输球。伤停顾虑验证——但保留评级不够强，应该反对。</div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">哈尔姆斯塔德 0-2 哥德堡盖斯</div><div class="mi">瑞典超 · 主胜 @5.38 · -¥125 <span class="claude_tag ctr">克:反对✅</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥125</div></div>
+<div style="font-size:0.55em;color:var(--muted)">⛔ 反向注(27.6%方向)。GAIS 2-0完胜——模型的方向概率(A=46.6%)是对的。克劳德反对正确。</div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">吉维森特 1-0 里奥阿维</div><div class="mi">葡超 · 大2.2球 @1.83 · -¥111 <span class="claude_tag cta">克:同意</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥111</div></div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">桑托斯 0-2 巴拉纳竞技</div><div class="mi">巴甲 · 大2.2球 @1.86 · -¥96 <span class="claude_tag cta">克:同意</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥96</div></div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">库奥皮奥 1-1 TPS图尔库</div><div class="mi">芬超 · 让0.25 @1.88 · -¥43 <span class="claude_tag cty">克:保留</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥43</div></div>
+<div style="font-size:0.55em;color:var(--muted)">平局输半(-¥43)。TPS 92分钟绝平。冷启动+低让球=高风险。</div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">弗拉门戈 2-0 维多利亚</div><div class="mi">巴甲 · 大3.0球 @2.01 · -¥74 <span class="claude_tag cta">克:同意</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥74</div></div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">海伦芬 1-0 特温特</div><div class="mi">荷甲 · 客胜 @2.18 · -¥61 <span class="claude_tag cta">克:同意</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥61</div></div>
+</div>
+
+<div class="card miss">
+<div class="hdr"><span class="tag tr">失利</span><div class="teams"><div class="mt">本菲卡 2-2 维塞乌</div><div class="mi">葡超 · 客胜(维塞乌) @22.54 · -¥33 <span class="claude_tag cty">克:保留</span></div></div>
+<div class="pnl" style="color:var(--r)">-¥33</div></div>
+<div style="font-size:0.55em;color:var(--muted)">Benfica绝平——维塞乌爆冷拿1分但没赢。彩票未中。¥33仓位控制合理。</div>
+</div>
+
+<!-- LESSONS -->
+<h2>📊 <span>复盘教训</span></h2>
+
+<div class="big">
+<h3>🔴 模型盲区（今天最显著）</h3>
+<div class="insight bad"><b>1. 伤停信息完全盲区:</b> Utrecht 9人缺阵、Molde 5人伤缺——市场把赔率推高是理性的。模型把"市场大幅调价"等同于"市场犯错"。<b>建议加入赔率异常波动检测——当临盘赔率变动>2x时，自动标记而非自动加注。</b></div>
+<div class="insight bad"><b>2. 红牌/突发事件的不可预测性:</b> Zwolle 57分钟红牌→死守→0-2。大2.2盘口被红牌摧毁。<b>足球的离散事件(红牌/点球/伤病)是任何模型的天然边界。</b></div>
+</div>
+
+<div class="big">
+<h3>🟡 策略层面</h3>
+<div class="insight warn"><b>3. 反向注今日0/2:</b> 圣保利客胜@7.52(方向概率~30%)和哈尔姆斯塔德主胜@5.38(27.6%)全灭。v1时代的"价值反向"策略在v3.0的Pinnacle版中应当压制——<b>建议概率方向<35%的注自动跳过。</b></div>
+<div class="insight warn"><b>4. 亚洲盘口计算:</b> KuPS让0.25被92分钟绝平输半——浅盘的高波动性未被充分定价。让0.25/0.5的盘口比1X2方向注更易受运气影响。</div>
+<div class="insight good"><b>5. 大小球模型相对稳健:</b> 8个大小球注中3中4失1走——成功率37.5%与方向注持平。HamKam小3.2(+190)和哈马比小3.5(+71)都是好注。</div>
+</div>
+
+<div class="big">
+<h3>🟢 克劳德自评</h3>
+<div class="insight good"><b>3反对全中:</b> ¥542避免损失。伤停情报+赔率结构分析是有效方法。</div>
+<div class="insight bad"><b>最大失误:</b> 兹沃勒大2.2和大国际图尔库主胜两场"同意"共亏¥432——都是我认为"没问题"但实际有隐藏风险(红牌/xG未转化)的注。我应该更仔细地审size最大的注，而不仅仅是方向。</div>
+<div class="insight good"><b>罗森博格教训:</b> 伤停顾虑让我从"同意"降级到"保留"——但模型方向是正确的。伤停信息不是无限权重，应与ELO/概率方向平衡使用。</div>
+<div class="insight"><b>新规则建议:</b> ①临盘赔率变动>2x → 自动标记"人工审核" ②概率方向<35% → 跳过不推 ③亚洲盘让0.25/受0.25 → 仓位减半 ④当注意到核心伤停(>4人缺阵)→ 至少降为保留。</div>
+</div>
+
+<div class="ft">© 克劳德独立分析师 · 8月9日赛后复盘 · 全维度 · 已推 GitHub</div>
+</div>
+</body>
+</html>

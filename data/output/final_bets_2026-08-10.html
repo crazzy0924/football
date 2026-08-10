@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>终盘A 三维预测 · 2026-08-10</title>
+<style>
+:root{--bg:#0b0c10;--card:#14161d;--border:#1e2030;--text:#c8ccd6;--dim:#656a78;
+  --home:#4da6ff;--draw:#8b8fa3;--away:#f0a838;--green:#3fb950;--red:#f85149;
+  --cyan:#00d4ff;--purple:#a78bfa;--pink:#ff6b9d;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);padding:20px;line-height:1.5}
+.container{max-width:960px;margin:0 auto}
+.header{text-align:center;padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.header h1{font-size:1.3em}
+.header .sub{color:var(--dim);font-size:0.8em;margin-top:4px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.7em;margin-left:6px;vertical-align:middle}
+.badge-v3{background:#1a3a5c;color:var(--cyan)}
+.badge-kambi{background:#2a1a0a;color:var(--away)}
+.badge-live{background:#1a2a1a;color:var(--green)}
+
+/* Match card */
+.match{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:14px}
+.match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.teams{font-size:1.1em;font-weight:700}
+.vs{color:var(--dim);margin:0 8px}
+.league-tag{font-size:0.65em;background:var(--border);padding:3px 8px;border-radius:4px;color:var(--dim)}
+
+/* 3D grid */
+.dim-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px}
+@media(max-width:700px){.dim-grid{grid-template-columns:1fr}}
+.dim{background:rgba(255,255,255,0.015);border:1px solid var(--border);border-radius:8px;padding:12px}
+.dim-title{font-size:0.7em;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.prob-row{display:flex;align-items:center;margin-bottom:4px;font-size:0.8em}
+.prob-label{width:36px;text-align:right;margin-right:8px;flex-shrink:0;font-size:0.85em}
+.prob-bar-wrap{flex:1;height:14px;background:var(--bg);border-radius:3px;overflow:hidden}
+.prob-bar{height:100%;border-radius:3px}
+.prob-bar.h{background:var(--home)}.prob-bar.d{background:var(--draw)}.prob-bar.a{background:var(--away)}
+.prob-pct{width:48px;margin-left:8px;text-align:right;font-weight:600;font-size:0.8em}
+
+.detail-row{display:flex;justify-content:space-between;font-size:0.75em;margin-top:4px;color:var(--dim)}
+.detail-row span{color:var(--text)}
+
+/* Edge indicators */
+.edge-up{color:var(--green);font-weight:600}
+.edge-down{color:var(--red)}
+.edge-neutral{color:var(--dim)}
+
+/* Bet slip */
+.bet-section{background:var(--card);border:2px solid var(--green);border-radius:10px;padding:20px;margin-top:24px}
+.bet-section h2{font-size:1em;margin-bottom:12px;color:var(--green)}
+.bet-table{width:100%;border-collapse:collapse;font-size:0.85em}
+.bet-table th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--border);color:var(--dim);font-size:0.75em}
+.bet-table td{padding:10px 6px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.bet-stake{font-weight:700;color:var(--green)}
+.bet-summary{display:flex;gap:16px;margin-top:14px;font-size:0.85em}
+.bet-summary .stat{color:var(--dim)}
+.bet-summary .stat b{color:var(--text)}
+.bet-dim-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:0.7em;font-weight:600}
+.dim-1x2{background:rgba(77,166,255,0.15);color:var(--home)}
+.dim-ah{background:rgba(167,139,250,0.15);color:var(--purple)}
+.dim-ou{background:rgba(255,107,157,0.15);color:var(--pink)}
+
+.cold-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:0.65em;background:rgba(192,38,211,0.15);color:#e879f9}
+
+.footer{text-align:center;padding:28px;color:var(--dim);font-size:0.7em;border-top:1px solid var(--border);margin-top:28px}
+.footer a{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>🔴 终盘A 三维预测<span class="badge badge-v3">v3.0</span><span class="badge badge-kambi">Kambi</span></h1>
+  <div class="sub">2026-08-10 · Dixon-Coles + Kambi三线(1X2+亚盘+大小球) · Shin去水 · 1/4 Kelly</div>
+</div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">天狼星 <span class="vs">vs</span> 布鲁马波卡纳</div>
+    <div class="league-tag">瑞典超 · ELO差81</div>
+  </div>
+  <div class="dim-grid">
+    <!-- DIM 1: 1X2 -->
+    <div class="dim">
+      <div class="dim-title">📊 胜平负</div>
+      <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:59%"></div></div><span class="prob-pct">58.6%</span></div>
+      <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:18%"></div></div><span class="prob-pct">18.0%</span></div>
+      <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:23%"></div></div><span class="prob-pct">23.4%</span></div>
+      <div class="detail-row" style="margin-top:10px">
+        <span>Kambi: </span>
+        <span>主1.28 / 平5.30 / 客8.50</span>
+      </div>
+      <div class="detail-row">
+        <span>Edge: 主<span class="edge-down">-12.3%</span> 平<span class="">1.1%</span> 客<span class="edge-up">11.2%</span></span>
+      </div>
+    </div>
+    <!-- DIM 2: 亚洲盘 -->
+    <div class="dim">
+      <div class="dim-title">🏹 亚洲盘</div>
+
+      <div class="detail-row"><span>Kambi公平盘口: 主队让1.50</span></div>
+      <div class="detail-row"><span>主赔: 1.73 / 客赔: 1.95</span></div>
+
+    </div>
+    <!-- DIM 3: 大小球 -->
+    <div class="dim">
+      <div class="dim-title">⚽ 大小球</div>
+
+      <div class="detail-row"><span>大2.5球: 71.3%</span><span>大3.5球: 50.5%</span></div>
+      <div class="detail-row"><span>预期总进球: 3.70</span></div>
+      <div class="detail-row"><span>Kambi 盘口2.50: 大@1.36 / 小@2.80</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">韦斯特罗斯 <span class="vs">vs</span> 佐加顿斯</div>
+    <div class="league-tag">瑞典超 · ELO差-163</div>
+  </div>
+  <div class="dim-grid">
+    <!-- DIM 1: 1X2 -->
+    <div class="dim">
+      <div class="dim-title">📊 胜平负</div>
+      <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:25%"></div></div><span class="prob-pct">25.4%</span></div>
+      <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.9%</span></div>
+      <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:49%"></div></div><span class="prob-pct">48.7%</span></div>
+      <div class="detail-row" style="margin-top:10px">
+        <span>Kambi: </span>
+        <span>主4.20 / 平3.70 / 客1.72</span>
+      </div>
+      <div class="detail-row">
+        <span>Edge: 主<span class="">2.4%</span> 平<span class="">2.9%</span> 客<span class="edge-down">-5.3%</span></span>
+      </div>
+    </div>
+    <!-- DIM 2: 亚洲盘 -->
+    <div class="dim">
+      <div class="dim-title">🏹 亚洲盘</div>
+
+      <div class="detail-row"><span>Kambi公平盘口: 主队受+0.50</span></div>
+      <div class="detail-row"><span>主赔: 2.00 / 客赔: 1.68</span></div>
+
+    </div>
+    <!-- DIM 3: 大小球 -->
+    <div class="dim">
+      <div class="dim-title">⚽ 大小球</div>
+
+      <div class="detail-row"><span>大2.5球: 35.6%</span><span>大3.5球: 16.6%</span></div>
+      <div class="detail-row"><span>预期总进球: 2.13</span></div>
+      <div class="detail-row"><span>Kambi 盘口2.50: 大@1.58 / 小@2.18</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">圣克拉拉 <span class="vs">vs</span> 葡萄牙国民</div>
+    <div class="league-tag">葡超 · ELO差51</div>
+  </div>
+  <div class="dim-grid">
+    <!-- DIM 1: 1X2 -->
+    <div class="dim">
+      <div class="dim-title">📊 胜平负</div>
+      <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:44%"></div></div><span class="prob-pct">44.2%</span></div>
+      <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:34%"></div></div><span class="prob-pct">33.5%</span></div>
+      <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:22%"></div></div><span class="prob-pct">22.2%</span></div>
+      <div class="detail-row" style="margin-top:10px">
+        <span>Kambi: </span>
+        <span>主1.86 / 平3.20 / 客4.60</span>
+      </div>
+      <div class="detail-row">
+        <span>Edge: 主<span class="edge-down">-7.9%</span> 平<span class="edge-up">5.7%</span> 客<span class="">2.2%</span></span>
+      </div>
+    </div>
+    <!-- DIM 2: 亚洲盘 -->
+    <div class="dim">
+      <div class="dim-title">🏹 亚洲盘</div>
+
+      <div class="detail-row"><span>Kambi公平盘口: 主队让0.50</span></div>
+      <div class="detail-row"><span>主赔: 1.78 / 客赔: 1.89</span></div>
+
+    </div>
+    <!-- DIM 3: 大小球 -->
+    <div class="dim">
+      <div class="dim-title">⚽ 大小球</div>
+
+      <div class="detail-row"><span>大2.5球: 30.2%</span><span>大3.5球: 12.9%</span></div>
+      <div class="detail-row"><span>预期总进球: 1.93</span></div>
+      <div class="detail-row"><span>Kambi 盘口2.50: 大@2.45 / 小@1.46</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="bet-section">
+  <h2>💰 投注单</h2>
+
+  <table class="bet-table">
+    <tr><th>#</th><th>比赛</th><th>维度</th><th>方向</th><th>赔率</th><th>Kelly</th><th>金额</th></tr>
+    <tr>
+      <td>1</td><td>天狼星 vs 布鲁马波卡纳 </td>
+      <td><span class="bet-dim-tag dim-ah">亚洲盘</span></td>
+      <td>客队(受+1.50)</td>
+      <td>1.95</td>
+      <td class="edge-up">17%</td>
+      <td class="bet-stake">¥427</td>
+    </tr>
+    <tr>
+      <td>2</td><td>韦斯特罗斯 vs 佐加顿斯 </td>
+      <td><span class="bet-dim-tag dim-ou">大小球</span></td>
+      <td>小2.5球</td>
+      <td>2.18</td>
+      <td class="edge-up">22%</td>
+      <td class="bet-stake">¥500</td>
+    </tr>
+    <tr>
+      <td>3</td><td>圣克拉拉 vs 葡萄牙国民 </td>
+      <td><span class="bet-dim-tag dim-ou">大小球</span></td>
+      <td>小2.5球</td>
+      <td>1.46</td>
+      <td class="edge-up">7%</td>
+      <td class="bet-stake">¥179</td>
+    </tr>
+  </table>
+
+  <div class="bet-summary">
+    <div class="stat">注数: <b>3</b></div>
+    <div class="stat">总金额: <b>¥1106</b></div>
+    <div class="stat">仓位: <b>11.1%</b></div>
+    <div class="stat">分布: <b>{'亚洲盘': 1, '大小球': 2}</b></div>
+    <div class="stat">数据源: <b>Pinnacle</b></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  足球预测模型 v3.0 &middot; Dixon-Coles + Kambi三线 &middot; Shin去水 &middot; 1/4 Kelly<br>
+  生成时间: 2026-08-10 &middot; 仅供参考 · 历史表现不代表未来结果<br>
+  <a href="../archive.html" style="color:var(--dim)">← 返回档案</a>
+</div>
+</div>
+</body>
+</html>

@@ -342,6 +342,7 @@ def cmd_review(args):
         print(f"ELO load failed: {e}")
 
     if elo:
+        from pipeline.reporter import TEAM_CN
         for m in matched:
             home = m["home_team"]
             away = m["away_team"]
@@ -365,7 +366,7 @@ def cmd_review(args):
 
             goal_diff = gh - ga
             elo_changes.append({
-                "team": home,
+                "team": TEAM_CN.get(home, home),
                 "old": round(old_h, 1),
                 "new": round(new_h, 1),
                 "delta": round(new_h - old_h, 1),
@@ -373,7 +374,7 @@ def cmd_review(args):
                 "reason": f"{gh}-{ga} {'胜' if goal_diff > 0 else '平' if goal_diff == 0 else '负'}",
             })
             elo_changes.append({
-                "team": away,
+                "team": TEAM_CN.get(away, away),
                 "old": round(old_a, 1),
                 "new": round(new_a, 1),
                 "delta": round(new_a - old_a, 1),
@@ -386,7 +387,7 @@ def cmd_review(args):
         print(f"[OK] ELO 已更新 {n_updated} 支球队 ({len(elo_changes)} 条记录)")
 
     # ---- Generate review report ----
-    from pipeline.reporter import generate_review_report, update_tracking_file
+    from pipeline.reporter import generate_review_report, update_tracking_file, TEAM_CN
 
     review_path = generate_review_report(
         matched,

@@ -35,6 +35,102 @@ LEAGUE_NAMES_CN = {
     "FL1": "法甲",
 }
 
+# English → 中文 team name mapping
+TEAM_CN = {
+    # 日职/日乙
+    "Tokyo Verdy": "东京绿茵",
+    "Kawasaki Frontale": "川崎前锋",
+    "V-Varen Nagasaki": "长崎成功丸",
+    "Kyoto Sanga": "京都不死鸟",
+    "Montedio Yamagata": "山形山神",
+    "Tochigi SC": "栃木SC",
+    "Cottbus": "科特布斯",
+    "Hannover": "汉诺威96",
+    # 荷甲
+    "Sparta Rotterdam": "鹿特丹斯巴达",
+    "Feyenoord": "费耶诺德",
+    "Zwolle": "兹沃勒",
+    "Ajax": "阿贾克斯",
+    "Groningen": "格罗宁根",
+    "Utrecht": "乌得勒支",
+    "Heerenveen": "海伦芬",
+    "Twente": "特温特",
+    # 德乙
+    "St Pauli": "圣保利",
+    "Greuther Furth": "菲尔特",
+    "Nurnberg": "纽伦堡",
+    "Dresden": "德累斯顿",
+    # 瑞典超
+    "Hammarby": "哈马比",
+    "Hacken": "赫根",
+    "Halmstads": "哈尔姆斯塔德",
+    "GAIS": "哥德堡盖斯",
+    "IFK Goteborg": "IFK哥德堡",
+    "Kalmar": "卡尔马",
+    "Malmo": "马尔默",
+    "Degerfors": "代格福什",
+    # 芬超
+    "KuPS": "库普斯",
+    "TPS": "TPS图尔库",
+    "Inter Turku": "国际图尔库",
+    "Lahti": "拉赫蒂",
+    "Ilves": "伊尔韦斯",
+    "Mariehamn": "玛丽港",
+    "AC Oulu": "AC奥卢",
+    "HJK": "HJK赫尔辛基",
+    "HJK Helsinki": "HJK赫尔辛基",
+    # 挪超
+    "Lillestrom": "利勒斯特伦",
+    "Rosenborg": "罗森博格",
+    "HamKam": "汉坎",
+    "Aalesund": "奥勒松",
+    "Kristiansund": "克里斯蒂安松",
+    "Molde": "莫尔德",
+    # 葡超
+    "Porto": "波尔图",
+    "Alverca": "阿尔维卡",
+    "Benfica": "本菲卡",
+    "Viseu": "维塞乌",
+    "Gil Vicente": "吉维森特",
+    "Rio Ave": "里奥阿维",
+    "Moreirense": "莫雷伦斯",
+    "Sp Braga": "布拉加",
+    "Braga": "布拉加",
+    # 巴甲
+    "Santos": "桑托斯",
+    "Athletico-PR": "巴拉纳竞技",
+    "Flamengo": "弗拉门戈",
+    "Guimaraes": "吉马良斯",
+    "Vitoria Guimaraes": "吉马良斯",
+    "Vitoria": "维多利亚",
+    "Cruzeiro": "克鲁塞罗",
+    "Mirassol": "米拉索尔",
+    "Bahia": "巴伊亚",
+    "Vasco": "瓦斯科达伽马",
+    "Palmeiras": "帕尔梅拉斯",
+    "Internacional": "巴西国际",
+    "Bragantino": "布拉甘蒂诺",
+    "Corinthians": "科林蒂安",
+    # 美职联/LCUP
+    "Austin FC": "奥斯汀FC",
+    "Puebla": "普埃布拉",
+    "San Diego FC": "圣地亚哥FC",
+    "Tijuana": "蒂华纳",
+    "Club America": "美洲",
+    "Portland Timbers": "波特兰伐木者",
+    # 俄超/其他
+    "CSKA Moscow": "莫斯科中央陆军",
+    "Spartak Moscow": "莫斯科斯巴达",
+    "Zenit": "泽尼特",
+    "Krasnodar": "克拉斯诺达尔",
+    "Lokomotiv Moscow": "莫斯科火车头",
+    "Dinamo Moscow": "莫斯科迪纳摩",
+}
+
+def _cn(home_team: str, away_team: str) -> tuple[str, str]:
+    """Return Chinese team names for a match pair."""
+    return TEAM_CN.get(home_team, home_team), TEAM_CN.get(away_team, away_team)
+
 SIGNAL_CLASSES = {
     "high": "bet",
     "medium": "watch",
@@ -126,8 +222,9 @@ def _build_match_card(
     bayes = p.get("bayesian") or {}
     odds_data = p.get("odds") or {}
 
-    home_team = p.get("home_team", "?")
-    away_team = p.get("away_team", "?")
+    home_team_en = p.get("home_team", "?")
+    away_team_en = p.get("away_team", "?")
+    home_team, away_team = _cn(home_team_en, away_team_en)
     league_code = p.get("league_code", "")
     league_name = LEAGUE_NAMES.get(league_code, league_code)
     cold_start = p.get("cold_start", False)
@@ -217,8 +314,8 @@ def _build_match_card(
     # ELO
     elo_diff = p.get("elo_diff", 0)
 
-    # Analyst note
-    match_key = f"{home_team} vs {away_team}"
+    # Analyst note — lookup by English names (keys are EN)
+    match_key = f"{home_team_en} vs {away_team_en}"
     analyst_note = (analyst_notes or {}).get(match_key)
 
     return {
@@ -409,9 +506,10 @@ def generate_review_report(
 
         prob_pick = pred_vec[{"H": 0, "D": 1, "A": 2}.get(pick, 0)]
 
+        home_cn, away_cn = _cn(m["home_team"], m["away_team"])
         match_rows.append({
-            "home_team": m["home_team"],
-            "away_team": m["away_team"],
+            "home_team": home_cn,
+            "away_team": away_cn,
             "home_goals": home_goals,
             "away_goals": away_goals,
             "actual": actual,

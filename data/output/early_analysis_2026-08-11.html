@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早盘预测 · 2026-08-11</title>
+<style>
+:root{--bg:#0b0c10;--card:#14161d;--border:#1e2030;--text:#c8ccd6;--dim:#656a78;
+  --home:#4da6ff;--draw:#8b8fa3;--away:#f0a838;--green:#3fb950;--red:#f85149;
+  --cyan:#00d4ff;--purple:#a78bfa;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);padding:20px;line-height:1.5}
+.container{max-width:1000px;margin:0 auto}
+.header{text-align:center;padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.header h1{font-size:1.3em}.header .sub{color:var(--dim);font-size:0.8em;margin-top:4px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.7em;margin-left:6px}
+.badge-v3{background:#1a3a5c;color:var(--cyan)}.badge-cold{background:rgba(192,38,211,0.2);color:#e879f9}
+
+.summary{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.stat-card{flex:1;min-width:110px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.stat-card .n{font-size:1.5em;font-weight:800}
+.stat-card .l{font-size:0.65em;color:var(--dim);margin-top:2px}
+.stat-card.warn{border-color:rgba(248,81,73,0.3)}.stat-card.warn .n{color:var(--red)}
+.stat-card.ok{border-color:rgba(63,185,80,0.3)}.stat-card.ok .n{color:var(--green)}
+
+.match{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px}
+.match-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.teams{font-size:1em;font-weight:700}.vs{color:var(--dim);margin:0 6px}
+.meta{display:flex;gap:8px;align-items:center}
+.league-tag{font-size:0.6em;background:var(--border);padding:2px 7px;border-radius:4px;color:var(--dim)}
+.status-tag{font-size:0.6em;padding:2px 7px;border-radius:4px;font-weight:600}
+.st-live{background:rgba(248,81,73,0.15);color:var(--red)}
+.st-done{background:rgba(101,103,120,0.15);color:var(--dim)}
+.st-upcoming{background:rgba(63,185,80,0.1);color:var(--green)}
+
+.prob-row{display:flex;align-items:center;margin-bottom:3px;font-size:0.78em}
+.prob-label{width:28px;text-align:right;margin-right:6px;font-size:0.85em}
+.prob-bar-wrap{flex:1;height:12px;background:var(--bg);border-radius:3px;overflow:hidden}
+.prob-bar{height:100%;border-radius:3px}
+.prob-bar.h{background:var(--home)}.prob-bar.d{background:var(--draw)}.prob-bar.a{background:var(--away)}
+.prob-pct{width:44px;margin-left:6px;text-align:right;font-weight:600;font-size:0.78em}
+
+.detail-row{display:flex;justify-content:space-between;font-size:0.72em;margin-top:3px;color:var(--dim)}
+.detail-row span{color:var(--text)}
+
+.odds-section{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.03);font-size:0.73em}
+.odds-section .label{color:var(--dim);margin-right:8px}
+
+.cold-banner{background:rgba(192,38,211,0.08);border:1px solid rgba(192,38,211,0.2);border-radius:6px;padding:8px 12px;font-size:0.73em;color:#e879f9;margin-top:8px}
+.warning-box{background:rgba(248,81,73,0.05);border:1px solid rgba(248,81,73,0.2);border-radius:6px;padding:12px 16px;margin-top:14px;font-size:0.78em}
+.warning-box b{color:var(--red)}
+
+.footer{text-align:center;padding:28px;color:var(--dim);font-size:0.7em;border-top:1px solid var(--border);margin-top:28px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <h1>🌅 早盘预测<span class="badge badge-v3">v3.0</span></h1>
+  <div class="sub">2026-08-11 · Dixon-Coles + 联赛画像 + 12场覆盖 · the-odds-api.com配额耗尽(回退odds-api.io)</div>
+</div>
+
+<div class="summary">
+  <div class="stat-card"><div class="n">12</div><div class="l">总场次</div></div>
+  <div class="stat-card warn"><div class="n">9</div><div class="l">冷启动 ⚠️</div></div>
+  <div class="stat-card"><div class="n">1</div><div class="l">有赔率</div></div>
+  <div class="stat-card"><div class="n">0</div><div class="l">投注信号</div></div>
+  <div class="stat-card ok"><div class="n">3</div><div class="l">ELO就绪</div></div>
+</div>
+
+<div class="warning-box">
+  <b>⚠ API配额告急</b> · the-odds-api.com v4 500/500耗尽 · odds-api.io v3仅Kambi+Unibet · 11/12场赔率缺失 · 9/12场冷启动(默认联赛均值)
+</div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">穆拉 <span class="vs">vs</span> 拉多姆利</div>
+    <div class="meta">
+      <span class="league-tag">斯洛文尼亚甲 · 差0</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用斯洛文尼亚甲联赛均值攻防参数</div></div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">博特夫弗拉察 <span class="vs">vs</span> 索菲亚斯拉维亚</div>
+    <div class="meta">
+      <span class="league-tag">保加利亚甲 · 差0</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用保加利亚甲联赛均值攻防参数</div></div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">沃罗涅日火炬 <span class="vs">vs</span> 格罗兹尼艾哈迈德</div>
+    <div class="meta">
+      <span class="league-tag">俄超 · 差0</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用俄超联赛均值攻防参数</div></div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">韦斯特罗斯 <span class="vs">vs</span> 佐加顿斯</div>
+    <div class="meta">
+      <span class="league-tag">瑞典超 · 差-163</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:25%"></div></div><span class="prob-pct">25.4%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.9%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:49%"></div></div><span class="prob-pct">48.7%</span></div>
+  <div class="detail-row"><span>预期进球: 2.13</span><span>大2.5: 35.6%</span></div>
+</div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">天狼星 <span class="vs">vs</span> 布鲁马波卡纳</div>
+    <div class="meta">
+      <span class="league-tag">瑞典超 · 差81</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:59%"></div></div><span class="prob-pct">58.6%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:18%"></div></div><span class="prob-pct">18.0%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:23%"></div></div><span class="prob-pct">23.4%</span></div>
+  <div class="detail-row"><span>预期进球: 3.70</span><span>大2.5: 71.3%</span></div>
+</div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">锡尔克堡 <span class="vs">vs</span> 欧登塞</div>
+    <div class="meta">
+      <span class="league-tag">丹超 · 差0</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用丹超联赛均值攻防参数</div></div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">普罗夫迪夫博特夫 <span class="vs">vs</span> 瓦尔纳斯巴达</div>
+    <div class="meta">
+      <span class="league-tag">保加利亚甲 · 差0</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用保加利亚甲联赛均值攻防参数</div></div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">圣格奥尔基塞普西 <span class="vs">vs</span> 布加勒斯特星</div>
+    <div class="meta">
+      <span class="league-tag">罗甲 · 差0</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用罗甲联赛均值攻防参数</div></div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">克卢日 <span class="vs">vs</span> 克卢日大学</div>
+    <div class="meta">
+      <span class="league-tag">罗甲 · 差0</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用罗甲联赛均值攻防参数</div></div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">普利茅斯 <span class="vs">vs</span> 埃克塞特城</div>
+    <div class="meta">
+      <span class="league-tag">英联杯 · 差0</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用英联杯联赛均值攻防参数</div></div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">圣克拉拉 <span class="vs">vs</span> 葡萄牙国民</div>
+    <div class="meta">
+      <span class="league-tag">葡超 · 差51</span>
+      <span class="status-tag st-done">已完赛</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:44%"></div></div><span class="prob-pct">44.2%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:34%"></div></div><span class="prob-pct">33.5%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:22%"></div></div><span class="prob-pct">22.2%</span></div>
+  <div class="detail-row"><span>预期进球: 1.93</span><span>大2.5: 30.2%</span></div>
+</div>
+
+<div class="match">
+  <div class="match-header">
+    <div class="teams">奥达克斯意大利人 <span class="vs">vs</span> 努布伦斯</div>
+    <div class="meta">
+      <span class="league-tag">智利甲 · 差0</span>
+      <span class="status-tag st-live">进行中</span>
+    </div>
+  </div>
+  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:45%"></div></div><span class="prob-pct">45.5%</span></div>
+  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:26%"></div></div><span class="prob-pct">25.8%</span></div>
+  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:29%"></div></div><span class="prob-pct">28.8%</span></div>
+  <div class="detail-row"><span>预期进球: 3.05</span><span>大2.5: 58.8%</span></div>
+
+  <div class="odds-section">
+    <span class="label">Kambi赔率:</span>
+    <span>主7.00 / 平1.23 / 客7.00</span>
+  </div><div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用智利甲联赛均值攻防参数</div><div class="odds-section"><span class="label">亚洲盘(Kambi):</span> 主受+0.50 · 主1.08 客6.00</div><div class="odds-section"><span class="label">大小球(Kambi):</span> 盘口2.5 · 大3.55 小1.24</div></div>
+
+<div style="margin-top:20px;background:var(--card);border:2px solid var(--green);border-radius:8px;padding:16px;">
+  <h2 style="font-size:0.9em;color:var(--green);margin-bottom:8px;">💰 投注信号</h2>
+<p style="color:var(--dim);font-size:0.8em;">⚠ 0注通过筛选 · 唯一有赔率的场次(Audax Italiano vs Nublense)为冷启动+进行中 · edge>5%+Kelly>1%+非冷启动+方向≥35%均未满足</p>
+</div>
+<div class="footer">
+  足球预测模型 v3.0 · Dixon-Coles · 2026-08-11 早盘<br>
+  配额耗尽预警: the-odds-api.com 500/500 · 回退odds-api.io Kambi/Unibet<br>
+  数据源: odds-api.io v3 · 仅供参考
+</div>
+</div></body></html>

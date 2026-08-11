@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足球预测报告 — 2026-08-11</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4eb;
+    --text-dim: #8b8fa3;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+    --home: #3b82f6;
+    --draw: #8b8fa3;
+    --away: #f59e0b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+  .model-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* Summary */
+  .summary {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat .value { font-size: 1.5rem; font-weight: 700; }
+  .stat .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+
+  /* Match card */
+  .match-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .match-card.recommended { border-left: 3px solid var(--green); }
+  .match-card.reference { border-left: 3px solid var(--text-dim); }
+  .match-card.skip { opacity: 0.55; }
+
+  .match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .teams { font-size: 1.1rem; font-weight: 600; }
+  .teams .vs { color: var(--text-dim); margin: 0 10px; }
+  .league-tag {
+    font-size: 0.7rem;
+    background: var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--text-dim);
+  }
+
+  /* Probability bars */
+  .probs { margin-bottom: 14px; }
+  .prob-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+  }
+  .prob-label { width: 50px; text-align: right; margin-right: 10px; flex-shrink: 0; }
+  .prob-bar-wrap { flex: 1; height: 20px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+  .prob-bar { height: 100%; border-radius: 4px; transition: width 0.3s; }
+  .prob-bar.home { background: var(--home); }
+  .prob-bar.draw { background: var(--draw); }
+  .prob-bar.away { background: var(--away); }
+  .prob-pct { width: 55px; margin-left: 10px; text-align: right; font-weight: 600; font-size: 0.85rem; }
+
+  /* Details grid */
+  .details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+  }
+  .detail { color: var(--text-dim); }
+  .detail span { color: var(--text); font-weight: 500; }
+
+  /* Signal */
+  .signal {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+  .badge.bet { background: #166534; color: #4ade80; }
+  .badge.watch { background: #3b2f0e; color: #fbbf24; }
+  .badge.skip { background: #1a1d27; color: var(--text-dim); }
+  .badge.cold { background: #3b1136; color: #e879f9; }
+  .kelly { font-weight: 600; }
+  .kelly.pos { color: var(--green); }
+  .kelly.neg { color: var(--red); }
+
+  /* Analyst note */
+  .analyst-note {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #1e2430;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    font-style: italic;
+    border-left: 3px solid #6366f1;
+  }
+  .analyst-note strong { color: #a5b4fc; font-style: normal; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>足球预测 <span class="model-badge">v3.0</span></h1>
+    <div class="meta">
+      2026-08-11 — Dixon-Coles + 贝叶斯市场融合
+      
+      &middot; 回测Brier: 0.6250
+      
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="summary">
+    <div class="stat">
+      <div class="value">12</div>
+      <div class="label">场次</div>
+    </div>
+    <div class="stat">
+      <div class="value">0</div>
+      <div class="label">推荐</div>
+    </div>
+    <div class="stat">
+      <div class="value">1</div>
+      <div class="label">参考</div>
+    </div>
+    <div class="stat">
+      <div class="value">9</div>
+      <div class="label">冷启动</div>
+    </div>
+    <div class="stat">
+      <div class="value">11/0/1</div>
+      <div class="label">胜/平/负 推荐</div>
+    </div>
+  </div>
+
+  <!-- Match cards -->
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        Mura Murska Sobota <span class="vs">vs</span> NK Radomlje
+      </div>
+      <div class="league-tag">SVN</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        POFC Botev Vratsa <span class="vs">vs</span> PFC Slavia Sofia
+      </div>
+      <div class="league-tag">BUL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        FC Fakel Voronezh <span class="vs">vs</span> RFK Akhmat Grozny
+      </div>
+      <div class="league-tag">RPL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        韦斯特罗斯 <span class="vs">vs</span> 佐加顿斯
+      </div>
+      <div class="league-tag">SWE</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 25.4%"></div>
+        </div>
+        <span class="prob-pct">25.4%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.9%"></div>
+        </div>
+        <span class="prob-pct">25.9%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 48.7%"></div>
+        </div>
+        <span class="prob-pct">48.7%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>35.6%</span></div>
+      <div class="detail">BTTS: <span>39.8%</span></div>
+      <div class="detail">预期进球: <span>0.84 - 1.28</span></div>
+      <div class="detail">最可能比分: <span>0-1</span></div>
+      <div class="detail">ELO差: <span>-164</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>客胜</strong></span>
+      
+      
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        天狼星 <span class="vs">vs</span> 布鲁马波卡纳
+      </div>
+      <div class="league-tag">SWE</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 58.6%"></div>
+        </div>
+        <span class="prob-pct">58.6%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 18.0%"></div>
+        </div>
+        <span class="prob-pct">18.0%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 23.4%"></div>
+        </div>
+        <span class="prob-pct">23.4%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>71.3%</span></div>
+      <div class="detail">BTTS: <span>67.0%</span></div>
+      <div class="detail">预期进球: <span>2.29 - 1.41</span></div>
+      <div class="detail">最可能比分: <span>2-1</span></div>
+      <div class="detail">ELO差: <span>+82</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        Silkeborg IF <span class="vs">vs</span> Odense Boldklub
+      </div>
+      <div class="league-tag">DEN</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        Botev Plovdiv <span class="vs">vs</span> FK Spartak 1918 Varna
+      </div>
+      <div class="league-tag">BUL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        ACS Sepsi OSK Sfantu Gheorghe <span class="vs">vs</span> Fotbal Club FCSB
+      </div>
+      <div class="league-tag">ROM</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        FC CFR 1907 Cluj <span class="vs">vs</span> FC Universitatea Cluj
+      </div>
+      <div class="league-tag">ROM</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        Plymouth Argyle <span class="vs">vs</span> Exeter City
+      </div>
+      <div class="league-tag">EFL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 45.5%"></div>
+        </div>
+        <span class="prob-pct">45.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 25.8%"></div>
+        </div>
+        <span class="prob-pct">25.8%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 28.8%"></div>
+        </div>
+        <span class="prob-pct">28.8%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card skip">
+    <div class="match-header">
+      <div class="teams">
+        圣克拉拉 <span class="vs">vs</span> 葡萄牙国民
+      </div>
+      <div class="league-tag">PPL</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 44.2%"></div>
+        </div>
+        <span class="prob-pct">44.2%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 33.5%"></div>
+        </div>
+        <span class="prob-pct">33.5%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 22.2%"></div>
+        </div>
+        <span class="prob-pct">22.2%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>30.2%</span></div>
+      <div class="detail">BTTS: <span>35.0%</span></div>
+      <div class="detail">预期进球: <span>1.18 - 0.75</span></div>
+      <div class="detail">最可能比分: <span>1-0</span></div>
+      <div class="detail">ELO差: <span>+52</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge skip">跳过</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      
+      
+    </div>
+
+    
+  </div>
+  
+  <div class="match-card reference">
+    <div class="match-header">
+      <div class="teams">
+        Audax Italiano <span class="vs">vs</span> Nublense
+      </div>
+      <div class="league-tag">CHI</div>
+    </div>
+
+    <!-- Probabilities -->
+    <div class="probs">
+      <div class="prob-row">
+        <span class="prob-label">主胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar home" style="width: 40.2%"></div>
+        </div>
+        <span class="prob-pct">40.2%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">平局</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar draw" style="width: 33.6%"></div>
+        </div>
+        <span class="prob-pct">33.6%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">客胜</span>
+        <div class="prob-bar-wrap">
+          <div class="prob-bar away" style="width: 26.3%"></div>
+        </div>
+        <span class="prob-pct">26.3%</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div class="details">
+      <div class="detail">大2.5球: <span>58.8%</span></div>
+      <div class="detail">BTTS: <span>61.4%</span></div>
+      <div class="detail">预期进球: <span>1.72 - 1.32</span></div>
+      <div class="detail">最可能比分: <span>1-1</span></div>
+      <div class="detail">ELO差: <span>0</span></div>
+      
+    </div>
+
+    <!-- Signal -->
+    <div class="signal">
+      <span class="badge cold">冷启动</span>
+      <span>推荐: <strong>主胜</strong></span>
+      
+      <span>凯利: <strong class="kelly pos">7.58%</strong></span>
+      
+      
+      <span>优势: Home (+25.8%)</span>
+      
+      
+      <span class="badge cold">冷启动</span>
+      
+    </div>
+
+    
+  </div>
+  
+
+  <!-- Footer -->
+  <div class="footer">
+    足球预测模型 v3.0 · Dixon-Coles + 贝叶斯市场融合
+    &middot; Generated 2026-08-11
+    <br>
+    仅供参考。历史表现不代表未来结果。
+  </div>
+</div>
+</body>
+</html>

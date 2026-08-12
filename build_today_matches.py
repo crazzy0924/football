@@ -7,7 +7,7 @@ import config
 
 key = config.ODDS_API_IO_KEY
 beijing_tz = timezone(timedelta(hours=8))
-target_date = '2026-08-11'
+target_date = sys.argv[1] if len(sys.argv) > 1 else '2026-08-12'
 
 # Map odds-api.io league slugs → internal league codes
 LEAGUE_SLUG_MAP = {

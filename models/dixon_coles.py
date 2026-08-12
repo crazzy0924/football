@@ -626,6 +626,59 @@ class DixonColesModel:
     # Prediction
     # ================================================================
 
+    def _market_implied_lambda(
+        self,
+        home_team: str,
+        away_team: str,
+        league_code: str,
+        market_probs: list[float],  # [p_home, p_draw, p_away] fair (devigged)
+        home_adv: float,
+        rho: float,
+        avg_goals: float,
+    ) -> tuple[float, float]:
+        """Back-solve implied λh, λa from market probabilities via KL-minimization.
+
+        Uses a coarse→fine grid search to find the (λh, λa) pair whose
+        Dixon-Coles output best matches the market fair probabilities.
+
+        Returns (lam_h, lam_a).
+        """
+        best_kl = float("inf")
+        best_lam = (1.2, 1.0)
+
+        # Coarse grid
+        for lh in [x / 10 for x in range(3, 41)]:  # 0.3 to 4.0
+            for la in [x / 10 for x in range(3, 41)]:
+                result = dc_marginals(lh, la, max_g=6, rho=rho)
+                kl = 0.0
+                for i, key in enumerate(["home_win", "draw", "away_win"]):
+                    p = result[key]
+                    q = market_probs[i]
+                    if p > 0 and q > 0:
+                        kl += q * math.log(q / p)
+                if kl < best_kl:
+                    best_kl = kl
+                    best_lam = (lh, la)
+
+        # Fine grid around best
+        lh0, la0 = best_lam
+        for lh in [lh0 + x * 0.02 for x in range(-10, 11)]:
+            for la in [la0 + x * 0.02 for x in range(-10, 11)]:
+                if lh < 0.2 or la < 0.2:
+                    continue
+                result = dc_marginals(lh, la, max_g=6, rho=rho)
+                kl = 0.0
+                for i, key in enumerate(["home_win", "draw", "away_win"]):
+                    p = result[key]
+                    q = market_probs[i]
+                    if p > 0 and q > 0:
+                        kl += q * math.log(q / p)
+                if kl < best_kl:
+                    best_kl = kl
+                    best_lam = (lh, la)
+
+        return round(best_lam[0], 4), round(best_lam[1], 4)
+
     def predict(
         self,
         home_team: str,
@@ -633,6 +686,8 @@ class DixonColesModel:
         league_code: str,
         max_g: int = 8,
         form_factors: dict[str, dict[str, float]] | None = None,
+        market_odds: dict[str, float] | None = None,
+        market_probs: list[float] | None = None,
     ) -> dict[str, Any]:
         """Predict match outcome probabilities.
 
@@ -641,8 +696,8 @@ class DixonColesModel:
             away_team: away team name
             league_code: league identifier (e.g., "PL", "BL1")
             form_factors: optional {team: {attack_form, defense_form}}
-                from compute_form_factors(). When provided, recent form adjusts
-                the long-term attack/defense parameters multiplicatively.
+            market_odds: optional {"home": 2.10, "draw": 3.50, "away": 3.80}
+            market_probs: optional [p_home, p_draw, p_away] (pre-devigged fair probs)
 
         Returns:
             Full prediction dict with H/D/A, over/under, BTTS, top scores
@@ -660,11 +715,73 @@ class DixonColesModel:
         # Cold start detection
         home_cold = home_resolved not in self.team_attack
         away_cold = away_resolved not in self.team_attack
+        is_cold = home_cold or away_cold
 
-        # Use league-median fallback for unknown teams
-        if home_cold or away_cold:
+        # Get league parameters
+        avg_goals = self.league_avg_goals.get(league_code, 2.65)
+        home_adv = self.league_home_adv.get(league_code, 0.30)
+        rho = self.league_rho.get(league_code, -0.10)
+
+        # ── Market-informed cold start ──
+        # When team(s) unknown to ELO and we have market odds, back-solve
+        # implied λ from market fair probabilities instead of blind league-median.
+        market_informed = False
+        if is_cold and (market_odds or market_probs):
+            # Get fair market probabilities
+            if market_probs:
+                mp = market_probs
+            else:
+                from models.odds import implied_probability
+                imp = implied_probability(
+                    market_odds["home"], market_odds["draw"], market_odds["away"]
+                )
+                mp = [imp["home"], imp["draw"], imp["away"]]
+
+            # Back-solve λ from market probs
+            mkt_lam_h, mkt_lam_a = self._market_implied_lambda(
+                home_team, away_team, league_code, mp, home_adv, rho, avg_goals,
+            )
+
+            # Blend: cold team gets market-informed λ as a stronger signal
+            # than league-median 1.0. When both cold, fully market-driven.
+            if home_cold and away_cold:
+                # Both unknown → market λ IS the prediction
+                lam_h = mkt_lam_h
+                lam_a = mkt_lam_a
+                market_informed = True
+            elif home_cold:
+                # Only home unknown → blend market λ with model λ
+                model_lam_h = (avg_goals / 2) * att_h * def_a * (1 + home_adv)
+                model_lam_a = (avg_goals / 2) * att_a * def_h
+                # Market-informed home attack: back-solve from mkt_lam_h
+                # mkt_lam_h = (avg/2) * att_h_implied * def_a * (1+home_adv)
+                if def_a > 0 and (avg_goals / 2) * (1 + home_adv) > 0:
+                    att_h_implied = mkt_lam_h / ((avg_goals / 2) * def_a * (1 + home_adv))
+                else:
+                    att_h_implied = 1.0
+                att_h = att_h_implied
+                lam_h = mkt_lam_h
+                lam_a = model_lam_a
+                market_informed = True
+            elif away_cold:
+                model_lam_h = (avg_goals / 2) * att_h * def_a * (1 + home_adv)
+                model_lam_a = (avg_goals / 2) * att_a * def_h
+                if def_h > 0 and (avg_goals / 2) > 0:
+                    att_a_implied = mkt_lam_a / ((avg_goals / 2) * def_h)
+                else:
+                    att_a_implied = 1.0
+                att_a = att_a_implied
+                lam_h = model_lam_h
+                lam_a = mkt_lam_a
+                market_informed = True
+
+            if market_informed:
+                # Store market-implied λ metadata
+                self._last_market_lam = (mkt_lam_h, mkt_lam_a)
+
+        # Standard fallback for unknown teams (no market odds available)
+        if is_cold and not market_informed:
             league_medians = self._get_league_medians()
-            # Find which league(s) these teams belong to (use current match's league as proxy)
             med = league_medians.get(league_code, {"att": 1.0, "def": 1.0})
             if home_cold:
                 att_h = med["att"]
@@ -672,15 +789,13 @@ class DixonColesModel:
             if away_cold:
                 att_a = med["att"]
                 def_a = med["def"]
-
-        # Get league parameters
-        avg_goals = self.league_avg_goals.get(league_code, 2.65)
-        home_adv = self.league_home_adv.get(league_code, 0.30)
-        rho = self.league_rho.get(league_code, -0.10)
-
-        # Compute expected goals
-        lam_h = (avg_goals / 2) * att_h * def_a * (1 + home_adv)
-        lam_a = (avg_goals / 2) * att_a * def_h
+            # Compute λ from (possibly league-median) parameters
+            lam_h = (avg_goals / 2) * att_h * def_a * (1 + home_adv)
+            lam_a = (avg_goals / 2) * att_a * def_h
+        elif not is_cold:
+            # Both teams known — standard computation
+            lam_h = (avg_goals / 2) * att_h * def_a * (1 + home_adv)
+            lam_a = (avg_goals / 2) * att_a * def_h
 
         # ── Apply recent form factors if available ──
         form_h = None
@@ -721,6 +836,8 @@ class DixonColesModel:
             "away_cold": away_cold,
             "home_fallback_att": att_h if home_cold else None,
             "away_fallback_att": att_a if away_cold else None,
+            "market_informed": market_informed,
+            "market_lam": list(self._last_market_lam) if market_informed and hasattr(self, '_last_market_lam') else None,
         }
         if form_h:
             result["home_form"] = form_h

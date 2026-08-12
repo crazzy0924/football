@@ -165,7 +165,9 @@ def cmd_predict(args):
         home = normalize_team_name(home)
         away = normalize_team_name(away)
 
-        pred = dc.predict(home, away, league)
+        # ── Market-informed cold start: pass market odds to DC ──
+        market = m.get("odds") or m.get("market_odds")
+        pred = dc.predict(home, away, league, market_odds=market)
 
         # Apply draw calibration
         cal_h, cal_d, cal_a = apply_draw_calibration(
@@ -180,7 +182,6 @@ def cmd_predict(args):
         elo_a = elo.get_elo(away, league)
 
         # Market comparison
-        market = m.get("odds") or m.get("market_odds")
         if market:
             from models.odds import detect_value, implied_probability
             from models.bayesian import bayesian_fusion_predict
@@ -189,10 +190,13 @@ def cmd_predict(args):
                 [pred["home_win"], pred["draw"], pred["away_win"]],
                 market,
             )
+            # ── Cold start: reduce model confidence so Bayesian leans market ──
+            is_cold = pred.get("cold_start", False)
+            mc = 0.20 if is_cold else 0.50  # cold: 20% model, 80% market
             bayes = bayesian_fusion_predict(
                 [pred["home_win"], pred["draw"], pred["away_win"]],
                 market,
-                model_confidence=0.5,
+                model_confidence=mc,
             )
         else:
             value = None

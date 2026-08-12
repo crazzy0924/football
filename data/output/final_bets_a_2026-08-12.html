@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>终盘A投注 · 2026-08-12</title>
+<style>
+:root{--bg:#0b0c10;--card:#13151d;--border:#1e2030;--text:#c8ccd6;--dim:#656a78;--home:#4da6ff;--draw:#8b8fa3;--away:#f0a838;--green:#3fb950;--red:#f85149;--cyan:#00d4ff;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);padding:20px;line-height:1.5}
+.container{max-width:850px;margin:0 auto}
+.hdr{text-align:center;padding:24px 0 16px;border-bottom:2px solid var(--border);margin-bottom:20px}
+.hdr h1{font-size:1.2em}.hdr .sub{color:var(--dim);font-size:0.72em;margin-top:4px}
+.tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.65em;font-weight:700;margin:0 4px}
+.tag-a{background:#3a1a0a;color:var(--red)}.tag-v{background:#1a3a5c;color:var(--cyan)}
+
+.kpi{display:flex;gap:8px;margin-bottom:20px}
+.k{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.k .n{font-size:1.4em;font-weight:800}.k .lb{font-size:0.6em;color:var(--dim);margin-top:3px}
+.k.g .n{color:var(--green)}.k.r .n{color:var(--red)}.k.c .n{color:var(--cyan)}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:10px}
+.teams{display:flex;justify-content:space-between;margin-bottom:12px}
+.teams .name{font-weight:700;font-size:0.95em}.teams i{color:var(--dim);margin:0 8px;font-weight:400;font-style:normal}
+.teams .info{font-size:0.65em;color:var(--dim)}
+.grid{display:flex;gap:14px}
+.dim{flex:1;background:var(--bg);border-radius:8px;padding:12px}
+.dim-title{font-size:0.65em;color:var(--dim);font-weight:700;margin-bottom:8px;letter-spacing:1px}
+
+.bar-row{display:flex;align-items:center;margin-bottom:3px;font-size:0.72em}
+.lbl{width:14px;text-align:center;font-weight:700;font-size:0.75em}
+.lbl.h{color:var(--home)}.lbl.d{color:var(--draw)}.lbl.a{color:var(--away)}
+.bar{flex:1;height:7px;background:rgba(255,255,255,0.03);border-radius:4px;overflow:hidden;margin:0 6px}
+.fill{height:100%;border-radius:4px}.fill.h{background:var(--home)}.fill.d{background:var(--draw)}.fill.a{background:var(--away)}
+.val{width:40px;text-align:right;font-weight:600;font-size:0.72em}
+
+.meta{font-size:0.62em;color:var(--dim);margin-top:6px}
+.ah,.ou{font-size:0.8em;font-weight:600;padding:4px 0}
+
+.bet-line{display:flex;gap:6px;align-items:center;margin-top:8px;padding:6px 8px;background:rgba(63,185,80,0.06);border-radius:6px;font-size:0.7em}
+.bet-dir{color:var(--green);font-weight:700}.stake{margin-left:auto;color:var(--green);font-weight:800}
+
+.rule-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:16px}
+.rule-box h3{font-size:0.82em;color:var(--cyan);margin-bottom:6px}
+.rule-box p{font-size:0.68em;color:var(--dim);line-height:1.7}
+
+.ftr{text-align:center;padding:20px;color:var(--dim);font-size:0.62em;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="hdr">
+  <h1>🔴 终盘A 投注单<span class="tag tag-a">终盘A</span><span class="tag tag-v">v3.1</span></h1>
+  <div class="sub">2026-08-12 · 体彩三盘(SPF+HHAD+TTG) · ≤21:00开踢 · 市场驱动冷启动 · Dixon-Coles + Shin去水 + 1/4 Kelly</div>
+</div>
+
+<div class="kpi">
+  <div class="k c"><div class="n">3</div><div class="lb">竞彩场次</div></div>
+  <div class="k"><div class="n">2</div><div class="lb">冷启动</div></div>
+  <div class="k"><div class="n">1</div><div class="lb">已知ELO</div></div>
+  <div class="k g"><div class="n">1</div><div class="lb">投注信号</div></div>
+  <div class="k"><div class="n">¥217</div><div class="lb">建议仓位</div></div>
+</div>
+
+<div class="rule-box">
+  <h3>📋 筛选规则</h3>
+  <p>
+    <b>通过条件:</b> edge &gt; 5% + Kelly &gt; 1% + 非冷启动 + 方向概率 &ge; 35%<br>
+    <b>三维覆盖:</b> 1X2 (胜平负) + 让球盘 (HHAD) + 大小球 (O/U 2.5 从TTG总进球反推)<br>
+    <b>v3.1 冷启动修复:</b> 未知球队用体彩市场赔率反推λ参数(KL最小化)，不再盲猜45.5%<br>
+    <b>数据源降级链:</b> odds-api.io → the-odds-api → 体彩(当前)
+  </p>
+</div>
+
+<div class="card">
+<div class="teams">
+  <span class="name">Paris SG <i>vs</i> Aston Villa</span>
+  <span class="info"> · ELO差+165</span>
+</div>
+<div class="grid">
+  <div class="dim">
+    <div class="dim-title">1X2 胜平负</div>
+    <div class="bars">
+      <div class="bar-row"><span class="lbl h">主</span><div class="bar"><div class="fill h" style="width:64.9%"></div></div><span class="val">64.9%</span></div>
+      <div class="bar-row"><span class="lbl d">平</span><div class="bar"><div class="fill d" style="width:20.48%"></div></div><span class="val">20.5%</span></div>
+      <div class="bar-row"><span class="lbl a">客</span><div class="bar"><div class="fill a" style="width:14.62%"></div></div><span class="val">14.6%</span></div>
+    </div>
+    <div class="meta">模型主胜 · 市场— · 体彩-/-/-</div>
+  </div>
+  <div class="dim">
+    <div class="dim-title">让球盘 HHAD</div>
+    <div class="ah">—</div>
+    
+  </div>
+  <div class="dim">
+    <div class="dim-title">大小球 O/U 2.5</div>
+    <div class="ou">—</div>
+    <div class="bet-line">
+  <span>大小球</span>
+  <span class="bet-dir">大2.5球</span>
+  <span>@1.82</span>
+  <span>Kelly<b>8.7%</b></span>
+  <span class="stake">¥217</span>
+</div>
+  </div>
+</div>
+</div><div class="card">
+<div class="teams">
+  <span class="name">Platense <i>vs</i> Coquimbo Unido</span>
+  <span class="info">解放者杯 · ELO差+0 🧊→📊市场驱动</span>
+</div>
+<div class="grid">
+  <div class="dim">
+    <div class="dim-title">1X2 胜平负</div>
+    <div class="bars">
+      <div class="bar-row"><span class="lbl h">主</span><div class="bar"><div class="fill h" style="width:50.8%"></div></div><span class="val">50.8%</span></div>
+      <div class="bar-row"><span class="lbl d">平</span><div class="bar"><div class="fill d" style="width:28.98%"></div></div><span class="val">29.0%</span></div>
+      <div class="bar-row"><span class="lbl a">客</span><div class="bar"><div class="fill a" style="width:20.22%"></div></div><span class="val">20.2%</span></div>
+    </div>
+    <div class="meta">模型主胜 · 市场主胜 · 体彩1.74/3.05/4.4</div>
+  </div>
+  <div class="dim">
+    <div class="dim-title">让球盘 HHAD</div>
+    <div class="ah">主让1 主3.65/3.15/1.86</div>
+    <div class="meta">O2.5 模型: 大40.6% / 小59.4%</div>
+  </div>
+  <div class="dim">
+    <div class="dim-title">大小球 O/U 2.5</div>
+    <div class="ou">O2.5 大2.63/小1.61</div>
+    
+  </div>
+</div>
+</div><div class="card">
+<div class="teams">
+  <span class="name">Palmeiras <i>vs</i> Cerro Porteno</span>
+  <span class="info">解放者杯 · ELO差+52 🧊→📊市场驱动</span>
+</div>
+<div class="grid">
+  <div class="dim">
+    <div class="dim-title">1X2 胜平负</div>
+    <div class="bars">
+      <div class="bar-row"><span class="lbl h">主</span><div class="bar"><div class="fill h" style="width:87.59%"></div></div><span class="val">87.6%</span></div>
+      <div class="bar-row"><span class="lbl d">平</span><div class="bar"><div class="fill d" style="width:8.959999999999999%"></div></div><span class="val">9.0%</span></div>
+      <div class="bar-row"><span class="lbl a">客</span><div class="bar"><div class="fill a" style="width:3.45%"></div></div><span class="val">3.5%</span></div>
+    </div>
+    <div class="meta">模型主胜 · 市场主胜 · 体彩1.2/4.9/11.0</div>
+  </div>
+  <div class="dim">
+    <div class="dim-title">让球盘 HHAD</div>
+    <div class="ah">主让1 主1.8/3.4/3.58</div>
+    <div class="meta">O2.5 模型: 大77.0% / 小23.0%</div>
+  </div>
+  <div class="dim">
+    <div class="dim-title">大小球 O/U 2.5</div>
+    <div class="ou">O2.5 大1.98/小2.02</div>
+    
+  </div>
+</div>
+</div>
+
+<div class="rule-box">
+  <h3>💰 投注单 (1注 · ¥217 · 2.2%仓位)</h3>
+<div style="display:flex;gap:12px;align-items:center;padding:10px 14px;background:var(--bg);border-radius:8px;margin-bottom:4px;font-size:0.82em">
+  <span style="font-weight:700;flex:2">Paris SG vs Aston Villa</span>
+  <span style="color:var(--dim);font-size:0.7em;flex:1">UCL</span>
+  <span style="background:var(--border);padding:2px 8px;border-radius:4px;font-size:0.7em">大小球</span>
+  <span style="color:var(--green);font-weight:700;flex:1">大2.5球 @1.82</span>
+  <span style="color:var(--cyan);flex:0 0 100px">Kelly 8.7%</span>
+  <span style="color:var(--green);font-weight:800;font-size:1.1em">¥217</span>
+</div>
+</div>
+
+<div class="ftr">
+  足球预测模型 v3.1 · 终盘A 2026-08-12 · 体彩独家数据<br>
+  ⚠ 仅供研究参考 · 理性购彩 · 不构成投注建议
+</div>
+</div></body></html>

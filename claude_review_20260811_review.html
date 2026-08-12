@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>克劳德 · 8月11日 赛后复盘</title>
+<style>
+:root{--bg:#080b14;--card:#0d111c;--border:#161b2a;--text:#c8ccd8;--muted:#5a5e72;--a2:#a78bfa;--g:#3fb950;--r:#f85149;--y:#f0a838}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.top{background:linear-gradient(135deg,#0a0f1e,#11163a);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px}
+.top .icon{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#5a5e72,#3a3e52);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.9em}
+.top h1{font-size:0.9em}.top em{color:var(--muted);font-style:normal}.top .sub{font-size:0.55em;color:var(--muted)}
+.w{max-width:900px;margin:0 auto;padding:14px 12px}
+.big{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:10px 0;font-size:0.68em}
+.big h3{font-size:0.8em;margin-bottom:8px}
+.insight{margin:3px 0;font-size:0.64em}.insight::before{content:'▸ ';color:var(--a2)}
+.insight.good::before{content:'🟢 '}.insight.bad::before{content:'🔴 '}.insight.warn::before{content:'🟡 '}
+.dash{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.di{flex:1;min-width:45px;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:8px 6px;text-align:center}.di .n{font-size:1.1em;font-weight:800}.di .l{font-size:0.5em;color:var(--muted)}
+.ft{text-align:center;padding:14px;color:var(--muted);font-size:0.5em;opacity:0.3}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="icon">—</div>
+<h1><em>克劳德</em> · 8月11日 赛后复盘</h1>
+<span class="sub">休盘日 · 0注 · 全链路空仓验证</span>
+</div>
+
+<div class="w">
+
+<div class="dash">
+<div class="di"><div class="n" style="color:var(--a2)">0</div><div class="l">注数</div></div>
+<div class="di"><div class="n" style="color:var(--a2)">—</div><div class="l">净盈亏</div></div>
+<div class="di"><div class="n">12</div><div class="l">原始场次</div></div>
+<div class="di"><div class="n" style="color:var(--r)">10</div><div class="l">冷启动</div></div>
+<div class="di"><div class="n" style="color:var(--r)">3</div><div class="l">昨日重复</div></div>
+</div>
+
+<div class="big">
+<h3>🟢 休盘日复盘</h3>
+<div class="insight good"><b>sky3.0全链路0注:</b> 早盘→午盘→终盘A→终盘B全部正确判定为0注。12场原始数据中3场昨日重复+9场冷启动(未追踪联赛)。</div>
+<div class="insight good"><b>克劳德交叉分析:</b> 终盘A和终盘B均"同意0注"，判断正确。</div>
+<div class="insight"><b>sky3.0技术复盘:</b> Brier 0.2467 · 准确率25%(3/12) · 平局0/6盲区再次确认 · 冷启动3/9(33%)运气性命中</div>
+<div class="insight warn"><b>平局盲区持续:</b> 8月10日3场2平局→模型1X2全错；8月11日12场6平局→全miss。平局识别是DC模型的系统性缺陷，论文2608.05030也确认了这点。</div>
+</div>
+
+<div class="big">
+<h3>📈 克劳德信用分 · 8月11日更新</h3>
+<div class="insight good">休盘日无交叉分析评估。空仓判断正确。</div>
+<table style="width:100%;font-size:0.63em;border-collapse:collapse;margin-top:6px">
+<tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px">日期</th><th>反对正确</th><th>同意正确</th><th>同意失误</th><th>过度保守</th><th>净贡献</th></tr>
+<tr style="border-bottom:1px solid var(--border)"><td>8月9日</td><td style="color:var(--g)">3/3</td><td style="color:var(--g)">5/7</td><td style="color:var(--r)">2</td><td style="color:var(--y)">1</td><td style="color:var(--g)">+¥542</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td>8月10日</td><td>—</td><td style="color:var(--g)">1/2</td><td style="color:var(--r)">1</td><td style="color:var(--y)">1</td><td style="color:var(--y)">-¥295</td></tr>
+<tr style="border-bottom:1px solid var(--border)"><td>8月11日</td><td colspan="4" style="color:var(--muted)">休盘日 · 0注 · 空仓正确</td><td>—</td></tr>
+<tr style="border-top:1px solid var(--g)"><td><b>累计</b></td><td><b>3/3</b></td><td><b>6/9</b></td><td><b>3</b></td><td><b>2</b></td><td><b>+¥247</b></td></tr>
+</table>
+</div>
+
+<div class="ft">© 克劳德独立分析师 · 8月11日赛后复盘 · 休盘日 · 已推 GitHub</div>
+</div>
+</body>
+</html>

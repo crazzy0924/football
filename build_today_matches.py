@@ -10,51 +10,78 @@ beijing_tz = timezone(timedelta(hours=8))
 target_date = sys.argv[1] if len(sys.argv) > 1 else '2026-08-12'
 
 # Map odds-api.io league slugs → internal league codes
+# Codes match ELO state (data/state/elo_ratings.json) where available
 LEAGUE_SLUG_MAP = {
+    # === Big 5 Europe ===
     'england-premier-league': 'PL',
     'spain-la-liga': 'PD',
     'germany-bundesliga': 'BL1',
     'italy-serie-a': 'SA',
     'france-ligue-1': 'FL1',
-    'netherlands-eredivisie': 'DED',
-    'portugal-liga-portugal': 'PPL',
+    # === 2nd tier Big 5 ===
     'england-championship': 'ELC',
-    'england-league-1': 'EL1',
-    'england-league-2': 'EL2',
-    'england-efl-cup': 'EFL',
-    'usa-mls': 'MLS',
-    'brazil-brasileiro-a': 'BSA',
-    'brazil-brasileiro-b': 'BSB',
-    'japan-j1-league': 'J1',
-    'japan-j2-league': 'J2',
-    'korea-k-league-1': 'KLEAGUE',
-    'belgium-first-division-a': 'BEL',
-    'austria-bundesliga': 'AUT',
-    'denmark-superligaen': 'DEN',
-    'norway-eliteserien': 'NOR',
-    'sweden-allsvenskan': 'SWE',
-    'poland-ekstraklasa': 'POL',
-    'greece-super-league': 'GSL',
-    'turkiye-super-lig': 'TUR',
     'germany-bundesliga-2': 'BL2',
-    'finland-veikkausliiga': 'FIN',
     'spain-la-liga-2': 'PD2',
     'france-ligue-2': 'FL2',
     'italy-serie-b': 'SB',
-    'mexico-liga-mx': 'LMX',
+    # === Other European leagues (tracked in ELO) ===
+    'netherlands-eredivisie': 'DED',
+    'portugal-liga-portugal': 'PPL',
+    'belgium-first-division-a': 'BPL',
+    'turkiye-super-lig': 'TUR',
+    'greece-super-league': 'GRE',
+    'norway-eliteserien': 'NO1',
+    'sweden-allsvenskan': 'SWE',
+    'finland-veikkausliiga': 'FIN',
+    'scotland-premiership': 'SPL',
+    # === Americas (tracked in ELO) ===
+    'brazil-brasileiro-a': 'BSA',
+    'brazil-brasileiro-b': 'BS1',
     'argentina-primera-division': 'ARG',
-    'china-super-league': 'CSL',
+    'usa-mls': 'MLS',
+    # === Asia (tracked in ELO) ===
+    'japan-j1-league': 'J1',
+    'japan-j2-league': 'J2',
+    # === UEFA club competitions (NEW - Aug 2026 qualifying) ===
+    'international-clubs-uefa-champions-league-qualification': 'UCL',
+    'international-clubs-uefa-europa-league-qualification': 'UEL',
+    'international-clubs-uefa-conference-league-qualification': 'UEC',
+    # === CONMEBOL club competitions (NEW) ===
+    'international-clubs-conmebol-libertadores-knockout-stage': 'CLB',
+    'international-clubs-conmebol-sudamericana-knockout-stage': 'CSD',
+    # === Other Americas (NEW) ===
+    'international-clubs-leagues-cup-group-stage': 'LGC',
+    'colombia-torneo-dimayor-clausura': 'COL',
+    'colombia-liga-dimayor-finalizacion': 'COL',
+    'argentina-primera-lpf-clausura': 'ARG',
+    # === Other notable leagues (NEW - Aug 2026) ===
+    'south-africa-premiership': 'RSA',
+    'czechia-czech-cup': 'CZE',
+    'denmark-dbu-pokalen': 'DEN',
+    'sweden-superettan': 'SW2',
+    'australia-australia-cup-knockout-stage': 'AUS',
+    'canada-canadian-championship': 'CAN',
+    'chile-liga-de-ascenso': 'CHI',
+    'romania-cupa-romaniei-knockout-stage': 'ROM',
+    'bulgaria-vtora-liga': 'BUL',
+    # === Lower tiers (tracked) ===
+    'england-league-1': 'EL1',
+    'england-league-2': 'EL2',
+    'england-efl-cup': 'EFL',
     'germany-3-liga': 'BL3',
     'russia-premier-league': 'RPL',
-    'chile-primera-division': 'CHI',
-    'romania-superliga': 'ROM',
-    'czechia-1-liga': 'CZE',
+    'korea-k-league-1': 'KLEAGUE',
+    'china-super-league': 'CSL',
+    'mexico-liga-mx': 'LMX',
+    'austria-bundesliga': 'AUT',
+    'denmark-superligaen': 'DEN',
+    'poland-ekstraklasa': 'POL',
     'serbia-super-liga': 'SRB',
     'slovenia-prvaliga': 'SVN',
     'croatia-hnl': 'HRV',
-    'bulgaria-parva-liga': 'BUL',
     'slovakia-superliga': 'SVK',
     'hungary-nb-i': 'HUN',
+    # === Amateur/youth/reserve - skip (mapped to None below) ===
 }
 
 # Canonical team name fixes
@@ -69,7 +96,7 @@ NAME_FIX = {
 print(f'=== Fetching events for {target_date} ===')
 all_today = []
 with httpx.Client(timeout=15) as client:
-    resp = client.get(f'https://api.odds-api.io/v3/events?apiKey={key}&sport=football&limit=200')
+    resp = client.get(f'https://api.odds-api.io/v3/events?apiKey={key}&sport=football&limit=300')
     if resp.status_code != 200:
         print(f'ERROR: {resp.status_code}'); sys.exit(1)
     for e in resp.json():

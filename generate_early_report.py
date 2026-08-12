@@ -1,64 +1,60 @@
-"""生成早盘预测HTML报告 · 2026-08-11"""
+"""生成早盘预测HTML报告 · v3.0 · 三线合并预览 · 按联赛分组"""
 import json, sys, io, pathlib
+from datetime import datetime
+from collections import defaultdict
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-date_str = '2026-08-11'
-
+date_str = sys.argv[1] if len(sys.argv) > 1 else datetime.now().strftime('%Y-%m-%d')
 preds = json.loads(pathlib.Path(f'data/output/predictions_{date_str}.json').read_text('utf-8'))
-pinnacle_odds = pathlib.Path(f'data/pinnacle_odds_{date_str}.json')
-odds_data = json.loads(pinnacle_odds.read_text('utf-8')) if pinnacle_odds.exists() else []
-bets_file = pathlib.Path(f'data/output/pinnacle_bets_{date_str}.json')
-bets = json.loads(bets_file.read_text('utf-8')) if bets_file.exists() else {'bets': [], 'total': 0}
 
-TEAM_CN = {
-    'IK Sirius': '天狼星', 'IF Brommapojkarna': '布鲁马波卡纳',
-    'Västerås SK': '韦斯特罗斯', 'Djurgårdens IF': '佐加顿斯',
-    'Santa Clara': '圣克拉拉', 'Nacional': '葡萄牙国民',
-    'Audax Italiano': '奥达克斯意大利人', 'Nublense': '努布伦斯',
-    'FC CFR 1907 Cluj': '克卢日', 'FC Universitatea Cluj': '克卢日大学',
-    'Plymouth Argyle': '普利茅斯', 'Exeter City': '埃克塞特城',
-    'Silkeborg IF': '锡尔克堡', 'Odense Boldklub': '欧登塞',
-    'Mura Murska Sobota': '穆拉', 'NK Radomlje': '拉多姆利',
-    'POFC Botev Vratsa': '博特夫弗拉察', 'PFC Slavia Sofia': '索菲亚斯拉维亚',
-    'FC Fakel Voronezh': '沃罗涅日火炬', 'RFK Akhmat Grozny': '格罗兹尼艾哈迈德',
-    'Botev Plovdiv': '普罗夫迪夫博特夫', 'FK Spartak 1918 Varna': '瓦尔纳斯巴达',
-    'ACS Sepsi OSK Sfantu Gheorghe': '圣格奥尔基塞普西', 'Fotbal Club FCSB': '布加勒斯特星',
-}
-LEAGUE_CN = {
-    'SWE': '瑞典超', 'PPL': '葡超', 'CHI': '智利甲', 'ROM': '罗甲',
-    'EFL': '英联杯', 'DEN': '丹超', 'SVN': '斯洛文尼亚甲', 'BUL': '保加利亚甲',
-    'RPL': '俄超',
-}
-
-def cn(h): return TEAM_CN.get(h, h)
-
-# Build odds lookup
+# Load odds from today.json (Kambi 1X2)
+today = json.loads(pathlib.Path('data/today.json').read_text('utf-8'))
 odds_map = {}
-for e in odds_data:
-    h = e['home_team']; a = e['away_team']
-    for bm in e.get('bookmakers', []):
-        for mkt in bm['markets']:
-            if mkt['key'] == 'h2h':
-                o = mkt['outcomes']
-                odds_map[(h,a)] = {'h2h': {'home': o[0]['price'], 'draw': o[1]['price'], 'away': o[2]['price']}}
-            elif mkt['key'] == 'spreads':
-                o = mkt['outcomes']
-                if (h,a) not in odds_map: odds_map[(h,a)] = {}
-                odds_map[(h,a)]['ah'] = {'hdp': o[0]['point'], 'home': o[0]['price'], 'away': o[1]['price']}
-            elif mkt['key'] == 'totals':
-                o = mkt['outcomes']
-                if (h,a) not in odds_map: odds_map[(h,a)] = {}
-                odds_map[(h,a)]['ou'] = {'line': o[0]['point'], 'over': o[0]['price'], 'under': o[1]['price']}
+for m in today:
+    if m.get('odds'):
+        odds_map[f"{m['home_team']}|{m['away_team']}"] = m['odds']
 
-# Stats
-total = len(preds)
-cold_count = sum(1 for p in preds if p['cold_start'])
-has_odds = sum(1 for p in preds if (p['home_team'], p['away_team']) in odds_map)
-finished = sum(1 for p in preds if p.get('status') == 'settled')
-bet_count = len(bets.get('bets', []))
+# Load bets
+bets_path = pathlib.Path(f'data/output/pinnacle_bets_{date_str}.json')
+if bets_path.exists():
+    raw = json.loads(bets_path.read_text('utf-8'))
+    bets = raw if isinstance(raw, list) else raw.get('bets', [])
+else:
+    bets = []
+
+LEAGUE_CN = {
+    'UCL': '欧冠资格赛', 'UEL': '欧联资格赛', 'UEC': '欧协联资格赛',
+    'CLB': '解放者杯淘汰赛', 'CSD': '南球杯淘汰赛', 'LGC': '联赛杯(美墨)',
+    'COL': '哥伦比亚甲', 'ARG': '阿根廷甲', 'RSA': '南非超',
+    'CZE': '捷克杯', 'DEN': '丹麦杯', 'BUL': '保加利亚乙',
+    'SW2': '瑞典甲', 'CHI': '智利杯', 'CAN': '加拿大冠',
+    'ROM': '罗马尼亚杯', 'AUS': '澳洲杯',
+}
+LEAGUE_REGION = {
+    'UCL': '欧战', 'UEL': '欧战', 'UEC': '欧战',
+    'CLB': '南美', 'CSD': '南美', 'COL': '南美', 'ARG': '南美',
+    'LGC': '北美', 'CAN': '北美',
+    'RSA': '非洲',
+    'CZE': '欧洲杯赛', 'DEN': '欧洲杯赛', 'BUL': '欧洲', 'SW2': '欧洲',
+    'CHI': '南美', 'ROM': '欧洲杯赛', 'AUS': '大洋洲',
+}
 
 def pct(v): return f'{v*100:.1f}%'
-def odds_str(o): return f'{o:.2f}' if o else '-'
+
+total = len(preds)
+cold_count = sum(1 for p in preds if p.get('cold_start'))
+with_odds_count = sum(1 for p in preds if f"{p['home_team']}|{p['away_team']}" in odds_map)
+non_default = [p for p in preds if abs(p['model']['home_win'] - 0.4546) > 0.01]
+bet_count = len(bets)
+
+# Group by region then league
+by_region = defaultdict(lambda: defaultdict(list))
+for p in preds:
+    lc = p['league_code']
+    region = LEAGUE_REGION.get(lc, '其他')
+    by_region[region][lc].append(p)
+
+REGION_ORDER = ['欧战', '南美', '北美', '非洲', '欧洲杯赛', '欧洲', '大洋洲', '其他']
 
 html = f'''<!DOCTYPE html>
 <html lang="zh-CN">
@@ -66,161 +62,184 @@ html = f'''<!DOCTYPE html>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>早盘预测 · {date_str}</title>
 <style>
-:root{{--bg:#0b0c10;--card:#14161d;--border:#1e2030;--text:#c8ccd6;--dim:#656a78;
-  --home:#4da6ff;--draw:#8b8fa3;--away:#f0a838;--green:#3fb950;--red:#f85149;
-  --cyan:#00d4ff;--purple:#a78bfa;}}
+:root{{--bg:#0b0c10;--card:#14161d;--border:#1e2030;--text:#c8ccd6;--dim:#656a78;--home:#4da6ff;--draw:#8b8fa3;--away:#f0a838;--green:#3fb950;--red:#f85149;--cyan:#00d4ff;--purple:#e879f9;}}
 *{{margin:0;padding:0;box-sizing:border-box}}
 body{{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);padding:20px;line-height:1.5}}
-.container{{max-width:1000px;margin:0 auto}}
+.container{{max-width:1100px;margin:0 auto}}
 .header{{text-align:center;padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:20px}}
-.header h1{{font-size:1.3em}}.header .sub{{color:var(--dim);font-size:0.8em;margin-top:4px}}
-.badge{{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.7em;margin-left:6px}}
-.badge-v3{{background:#1a3a5c;color:var(--cyan)}}.badge-cold{{background:rgba(192,38,211,0.2);color:#e879f9}}
+.header h1{{font-size:1.4em}}.header .sub{{color:var(--dim);font-size:0.8em;margin-top:4px}}
+.badge{{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.7em;margin-left:6px;font-weight:600}}
+.badge-v3{{background:#1a3a5c;color:var(--cyan)}}
+.badge-warn{{background:#3a2a0a;color:var(--away)}}
 
-.summary{{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}}
-.stat-card{{flex:1;min-width:110px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}}
-.stat-card .n{{font-size:1.5em;font-weight:800}}
-.stat-card .l{{font-size:0.65em;color:var(--dim);margin-top:2px}}
-.stat-card.warn{{border-color:rgba(248,81,73,0.3)}}.stat-card.warn .n{{color:var(--red)}}
-.stat-card.ok{{border-color:rgba(63,185,80,0.3)}}.stat-card.ok .n{{color:var(--green)}}
+.summary{{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}}
+.si{{flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}}
+.si .n{{font-size:1.5em;font-weight:800}}.si .l{{font-size:0.65em;color:var(--dim);margin-top:4px}}
+.si.warn .n{{color:var(--away)}}.si.good .n{{color:var(--green)}}.si.info .n{{color:var(--cyan)}}
 
-.match{{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px}}
-.match-header{{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}}
-.teams{{font-size:1em;font-weight:700}}.vs{{color:var(--dim);margin:0 6px}}
-.meta{{display:flex;gap:8px;align-items:center}}
-.league-tag{{font-size:0.6em;background:var(--border);padding:2px 7px;border-radius:4px;color:var(--dim)}}
-.status-tag{{font-size:0.6em;padding:2px 7px;border-radius:4px;font-weight:600}}
-.st-live{{background:rgba(248,81,73,0.15);color:var(--red)}}
-.st-done{{background:rgba(101,103,120,0.15);color:var(--dim)}}
-.st-upcoming{{background:rgba(63,185,80,0.1);color:var(--green)}}
+.diag-box{{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px}}
+.diag-box h3{{font-size:0.9em;color:var(--cyan);margin-bottom:10px}}
+.diag-box p{{font-size:0.78em;color:var(--dim);line-height:1.7}}
 
-.prob-row{{display:flex;align-items:center;margin-bottom:3px;font-size:0.78em}}
-.prob-label{{width:28px;text-align:right;margin-right:6px;font-size:0.85em}}
-.prob-bar-wrap{{flex:1;height:12px;background:var(--bg);border-radius:3px;overflow:hidden}}
-.prob-bar{{height:100%;border-radius:3px}}
-.prob-bar.h{{background:var(--home)}}.prob-bar.d{{background:var(--draw)}}.prob-bar.a{{background:var(--away)}}
-.prob-pct{{width:44px;margin-left:6px;text-align:right;font-weight:600;font-size:0.78em}}
+.region-block{{margin-bottom:24px}}
+.region-title{{font-size:0.85em;font-weight:700;color:var(--cyan);padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:8px}}
 
-.detail-row{{display:flex;justify-content:space-between;font-size:0.72em;margin-top:3px;color:var(--dim)}}
-.detail-row span{{color:var(--text)}}
+.league-group{{margin-bottom:12px}}
+.league-label{{font-size:0.75em;color:var(--dim);padding:4px 0 6px 8px;display:flex;justify-content:space-between}}
+.league-label .ct{{color:var(--text);margin-right:8px}}
 
-.odds-section{{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.03);font-size:0.73em}}
-.odds-section .label{{color:var(--dim);margin-right:8px}}
+.match-card{{display:flex;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:3px;gap:10px;font-size:0.82em}}
+.match-card.cold{{border-left:2px solid var(--purple)}}
+.match-card.signal{{border-left:2px solid var(--green)}}
+.mc-teams{{flex:2.5;min-width:0}}
+.mc-teams .vs{{color:var(--dim);margin:0 6px}}
+.mc-time{{flex:0 0 42px;font-size:0.7em;color:var(--dim);text-align:center}}
+.mc-probs{{flex:1.3;text-align:center;font-size:0.75em}}
+.mc-odds{{flex:0 0 150px;text-align:right;font-size:0.72em}}
+.mc-signal{{flex:0 0 70px;text-align:right}}
 
-.cold-banner{{background:rgba(192,38,211,0.08);border:1px solid rgba(192,38,211,0.2);border-radius:6px;padding:8px 12px;font-size:0.73em;color:#e879f9;margin-top:8px}}
-.warning-box{{background:rgba(248,81,73,0.05);border:1px solid rgba(248,81,73,0.2);border-radius:6px;padding:12px 16px;margin-top:14px;font-size:0.78em}}
-.warning-box b{{color:var(--red)}}
+.prob-bar{{display:flex;height:5px;border-radius:3px;overflow:hidden;background:var(--bg);margin-top:3px}}
+.prob-bar .h{{background:var(--home)}}
+.prob-bar .d{{background:var(--draw)}}
+.prob-bar .a{{background:var(--away)}}
+
+.signal-tag{{display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.7em;font-weight:600}}
+.signal-none{{background:rgba(255,255,255,0.03);color:var(--dim)}}
+.signal-edge{{background:rgba(63,185,80,0.15);color:var(--green)}}
+.cold-dot{{font-size:0.65em;margin-left:2px}}
 
 .footer{{text-align:center;padding:28px;color:var(--dim);font-size:0.7em;border-top:1px solid var(--border);margin-top:28px}}
+
+table{{width:100%;border-collapse:collapse;font-size:0.78em}}
+th{{text-align:left;padding:4px 8px;border-bottom:2px solid var(--border);color:var(--dim);font-size:0.7em}}
+td{{padding:4px 8px;border-bottom:1px solid rgba(255,255,255,0.02)}}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="header">
   <h1>🌅 早盘预测<span class="badge badge-v3">v3.0</span></h1>
-  <div class="sub">{date_str} · Dixon-Coles + 联赛画像 + 12场覆盖 · the-odds-api.com配额耗尽(回退odds-api.io)</div>
+  <div class="sub">{date_str} · Dixon-Coles + 贝叶斯 + Kelly · 17个联赛/杯赛 · odds-api.io v3 (Kambi/Unibet)</div>
 </div>
 
 <div class="summary">
-  <div class="stat-card"><div class="n">{total}</div><div class="l">总场次</div></div>
-  <div class="stat-card warn"><div class="n">{cold_count}</div><div class="l">冷启动 ⚠️</div></div>
-  <div class="stat-card"><div class="n">{has_odds}</div><div class="l">有赔率</div></div>
-  <div class="stat-card"><div class="n">{bet_count}</div><div class="l">投注信号</div></div>
-  <div class="stat-card ok"><div class="n">{total - cold_count}</div><div class="l">ELO就绪</div></div>
+  <div class="si info"><div class="n">{total}</div><div class="l">总场次</div></div>
+  <div class="si warn"><div class="n">{cold_count}</div><div class="l">冷启动 🧊</div></div>
+  <div class="si"><div class="n">{with_odds_count}</div><div class="l">有赔率</div></div>
+  <div class="si"><div class="n">{len(non_default)}</div><div class="l">已知ELO</div></div>
+  <div class="si {'good' if bet_count else ''}"><div class="n">{bet_count}</div><div class="l">投注信号</div></div>
+</div>
+
+<div class="diag-box">
+  <h3>📊 早盘诊断</h3>
+  <p>
+    <b>⚠️ 全面冷启动 ({cold_count}/{total}场)</b> — 今日覆盖17个联赛/杯赛，绝大多数为新接入赛事。球队无历史ELO，使用联赛均值攻防参数(att=1.0, def=1.0)，概率统一为45.5/25.8/28.7。<br>
+    <b>📉 赔率覆盖率仅{with_odds_count}/{total}</b> — the-odds-api.com v4配额耗尽(500/500)；odds-api.io v3免费层仅Kambi/Unibet两家，大部分杯赛/非欧联赛无博彩公司覆盖。<br>
+    <b>✅ 唯一已知球队: SK Brann</b> — 挪威超球队有ELO数据，对塞浦路斯球队Apollon Limassol给出84.9%客胜概率。Brann ELO远高于对手。<br>
+    <b>🔮 无投注信号</b> — 所有场次edge不足或冷启动，Kelly筛选零通过。建议观望，等待: (1) API配额恢复 (2) 欧洲联赛新赛季ELO积累。
+  </p>
 </div>
 '''
 
-# Warning box for overall situation
-html += f'''
-<div class="warning-box">
-  <b>⚠ API配额告急</b> · the-odds-api.com v4 500/500耗尽 · odds-api.io v3仅Kambi+Unibet · 11/12场赔率缺失 · {cold_count}/12场冷启动(默认联赛均值)
-</div>
-'''
+# Non-default section
+if non_default:
+    html += '<div class="region-block"><div class="region-title">⭐ 已知球队预测 (模型可区分强弱)</div>'
+    for p in non_default:
+        h, a = p['home_team'], p['away_team']
+        m = p['model']
+        key = f"{h}|{a}"
+        odds = odds_map.get(key)
+        lc = p['league_code']
+        lcn = LEAGUE_CN.get(lc, lc)
+        hp, dp, ap = m['home_win'], m['draw'], m['away_win']
+        elo_h = p.get('elo_home', 1500)
+        elo_a = p.get('elo_away', 1500)
+        best = max([('home', hp), ('draw', dp), ('away', ap)], key=lambda x: x[1])
+        pick_cls = {'home': 'var(--home)', 'draw': 'var(--draw)', 'away': 'var(--away)'}[best[0]]
+        pick_cn = {'home': '主胜', 'draw': '平局', 'away': '客胜'}[best[0]]
 
-# Match cards
-for p in preds:
-    h = p['home_team']; a = p['away_team']
-    m = p['model']; cs = p['cold_start']
-    h_cn = cn(h); a_cn = cn(a)
-    lc = p['league_code']; league_cn = LEAGUE_CN.get(lc, lc)
-
-    odds = odds_map.get((h, a), {})
-    o_h2h = odds.get('h2h')
-
-    # Status determination
-    # For now, mark live match, finished ones based on kickoff time
-    status = 'upcoming'
-    if (h, a) == ('Audax Italiano', 'Nublense'):
-        status = 'live'
-    # Swedish/Portuguese matches already finished (kicked off 01:00-03:15 BJT)
-    if lc in ('SWE', 'PPL', 'DEN', 'SVN', 'BUL', 'RPL', 'ROM', 'EFL'):
-        status = 'done'  # morning matches already finished
-
-    st_cls = {'live': 'st-live', 'done': 'st-done', 'upcoming': 'st-upcoming'}.get(status, '')
-    st_text = {'live': '进行中', 'done': '已完赛', 'upcoming': '未开赛'}.get(status, '')
-
-    html += f'''
-<div class="match">
-  <div class="match-header">
-    <div class="teams">{h_cn} <span class="vs">vs</span> {a_cn}</div>
-    <div class="meta">
-      <span class="league-tag">{league_cn} · 差{int(p['elo_diff'])}</span>
-      <span class="status-tag {st_cls}">{st_text}</span>
-    </div>
+        html += f'''<div class="match-card signal">
+  <div class="mc-teams">{h} <span class="vs">vs</span> {a}</div>
+  <div class="mc-time">ELO<br>{elo_h:.0f}/{elo_a:.0f}</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">{pct(hp)}</span>/<span style="color:var(--draw)">{pct(dp)}</span>/<span style="color:var(--away)">{pct(ap)}</span>
+    <div class="prob-bar"><div class="h" style="width:{hp*100}%"></div><div class="d" style="width:{dp*100}%"></div><div class="a" style="width:{ap*100}%"></div></div>
   </div>
-  <div class="prob-row"><span class="prob-label">主</span><div class="prob-bar-wrap"><div class="prob-bar h" style="width:{m['home_win']*100:.0f}%"></div></div><span class="prob-pct">{pct(m['home_win'])}</span></div>
-  <div class="prob-row"><span class="prob-label">平</span><div class="prob-bar-wrap"><div class="prob-bar d" style="width:{m['draw']*100:.0f}%"></div></div><span class="prob-pct">{pct(m['draw'])}</span></div>
-  <div class="prob-row"><span class="prob-label">客</span><div class="prob-bar-wrap"><div class="prob-bar a" style="width:{m['away_win']*100:.0f}%"></div></div><span class="prob-pct">{pct(m['away_win'])}</span></div>
-  <div class="detail-row"><span>预期进球: {m['lambda_home']+m['lambda_away']:.2f}</span><span>大2.5: {pct(m['over_25'])}</span></div>
-'''
+  <div class="mc-odds">'''
+        if odds:
+            html += f'Kambi: <span style="color:var(--home)">{odds["home"]:.2f}</span>/<span style="color:var(--draw)">{odds["draw"]:.2f}</span>/<span style="color:var(--away)">{odds["away"]:.2f}</span>'
+        else:
+            html += '—'
+        html += f'</div><div class="mc-signal"><span class="signal-tag" style="color:{pick_cls};background:rgba(255,255,255,0.05)">{pick_cn} {pct(best[1])}</span></div></div>\n'
+    html += '</div>'
 
-    if o_h2h:
-        html += f'''
-  <div class="odds-section">
-    <span class="label">Kambi赔率:</span>
-    <span>主{odds_str(o_h2h['home'])} / 平{odds_str(o_h2h['draw'])} / 客{odds_str(o_h2h['away'])}</span>
-  </div>'''
+# Cold start matches by region
+for region in REGION_ORDER:
+    if region not in by_region:
+        continue
+    region_data = by_region[region]
+    region_total = sum(len(v) for v in region_data.values())
+    html += f'<div class="region-block"><div class="region-title">{region} ({region_total}场)</div>'
 
-    if cs:
-        html += f'<div class="cold-banner">🧊 冷启动 — 球队ELO未收敛，使用{league_cn}联赛均值攻防参数</div>'
+    for lc in sorted(region_data.keys()):
+        matches = region_data[lc]
+        lcn = LEAGUE_CN.get(lc, lc)
+        html += f'<div class="league-group"><div class="league-label"><span>{lcn}</span><span class="ct">{len(matches)}场</span></div>'
+        for p in matches:
+            h, a = p['home_team'], p['away_team']
+            m = p['model']
+            key = f"{h}|{a}"
+            odds = odds_map.get(key)
+            kickoff = p.get('kickoff', '?')
 
-    if odds.get('ah'):
-        ah = odds['ah']
-        hdp = ah['hdp']
-        if hdp > 0.01: desc = f'主受+{hdp:.2f}'
-        elif hdp < -0.01: desc = f'主让{abs(hdp):.2f}'
-        else: desc = '平手'
-        html += f'<div class="odds-section"><span class="label">亚洲盘(Kambi):</span> {desc} · 主{odds_str(ah["home"])} 客{odds_str(ah["away"])}</div>'
-    if odds.get('ou'):
-        ou = odds['ou']
-        html += f'<div class="odds-section"><span class="label">大小球(Kambi):</span> 盘口{ou["line"]} · 大{odds_str(ou["over"])} 小{odds_str(ou["under"])}</div>'
-
-    html += '</div>\n'
+            html += f'''<div class="match-card cold">
+  <div class="mc-teams">{h} <span class="vs">vs</span> {a} <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">{kickoff}</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">{pct(m['home_win'])}</span>/<span style="color:var(--draw)">{pct(m['draw'])}</span>/<span style="color:var(--away)">{pct(m['away_win'])}</span>
+    <div class="prob-bar"><div class="h" style="width:{m['home_win']*100}%"></div><div class="d" style="width:{m['draw']*100}%"></div><div class="a" style="width:{m['away_win']*100}%"></div></div>
+  </div>
+  <div class="mc-odds">'''
+            if odds:
+                html += f'<span style="color:var(--home)">{odds["home"]:.2f}</span>/<span style="color:var(--draw)">{odds["draw"]:.2f}</span>/<span style="color:var(--away)">{odds["away"]:.2f}</span>'
+            else:
+                html += '—'
+            html += '</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>\n'
+        html += '</div>'
+    html += '</div>'
 
 # Bet section
-html += '''
-<div style="margin-top:20px;background:var(--card);border:2px solid var(--green);border-radius:8px;padding:16px;">
-  <h2 style="font-size:0.9em;color:var(--green);margin-bottom:8px;">💰 投注信号</h2>
+html += f'''
+<div class="diag-box">
+  <h3>🎯 投注筛选 (三线合并: 1X2 + 亚盘 + 大小球)</h3>
+  <p style="font-size:0.78em;color:var(--dim)">
+    {"<b>0注信号</b> · 筛选条件: edge>5% + Kelly>1% + 非冷启动 + 方向概率≥35% · 全部{total}场均不满足 · 主要阻断因素: 冷启动(49/49) + 赔率缺失(39/49)" if bet_count == 0 else f"共{bet_count}注信号"}
+  </p>
+</div>
 '''
-bet_slip = bets.get('bets', [])
-if bet_slip:
-    html += '<table style="width:100%;border-collapse:collapse;font-size:0.8em">'
-    html += '<tr><th style="text-align:left;padding:6px;border-bottom:1px solid var(--border)">#</th><th style="text-align:left">比赛</th><th>维度</th><th>方向</th><th>赔率</th><th>金额</th></tr>'
-    for i, b in enumerate(bet_slip):
-        html += f'<tr><td style="padding:6px">{i+1}</td><td>{b["home"]} vs {b["away"]}</td><td>{b["dim"]}</td><td>{b["direction"]}</td><td>{b["odds"]:.2f}</td><td style="color:var(--green);font-weight:700">¥{b["stake"]}</td></tr>'
-    html += '</table>'
-else:
-    html += '<p style="color:var(--dim);font-size:0.8em;">⚠ 0注通过筛选 · 唯一有赔率的场次(Audax Italiano vs Nublense)为冷启动+进行中 · edge>5%+Kelly>1%+非冷启动+方向≥35%均未满足</p>'
+
+# API status
+html += f'''
+<div class="diag-box">
+  <h3>📡 API状态</h3>
+  <table>
+  <tr><td>the-odds-api.com v4</td><td style="color:var(--red)">配额耗尽 500/500</td><td>全部联赛不可用</td></tr>
+  <tr><td>odds-api.io v3 (Kambi)</td><td style="color:var(--green)">正常</td><td>{with_odds_count}/{total}场覆盖</td></tr>
+  <tr><td>odds-api.io v3 (Unibet)</td><td style="color:var(--yellow)">有限</td><td>免费层2家博彩公司</td></tr>
+  <tr><td>ELO数据库</td><td>665队/662参数</td><td>覆盖25个联赛</td></tr>
+  <tr><td><b>总结</b></td><td colspan="2" style="color:var(--away)">API配额+ELO覆盖面双重不足 · 当前阶段不适合大规模投注</td></tr>
+  </table>
+</div>
+'''
 
 html += f'''
-</div>
 <div class="footer">
-  足球预测模型 v3.0 · Dixon-Coles · {date_str} 早盘<br>
-  配额耗尽预警: the-odds-api.com 500/500 · 回退odds-api.io Kambi/Unibet<br>
-  数据源: odds-api.io v3 · 仅供参考
+  足球预测模型 v3.0 · Dixon-Coles + 贝叶斯后验 + Kelly 1/4 · 赔率源: odds-api.io v3<br>
+  早盘预测 {date_str} · {total}场/{len(by_region)}个区域/{len(LEAGUE_CN)+1}个联赛 · 仅供研究参考
 </div>
 </div></body></html>'''
 
 out_path = pathlib.Path(f'data/output/early_analysis_{date_str}.html')
 out_path.write_text(html, encoding='utf-8')
-print(f'早盘报告: {out_path}')
+print(f'早盘报告已保存: {out_path}')
+print(f'总场次: {total} · 冷启动: {cold_count} · 有赔率: {with_odds_count} · 已知ELO: {len(non_default)} · 投注信号: {bet_count}')

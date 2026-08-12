@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早盘预测 · 2026-08-12</title>
+<style>
+:root{--bg:#0b0c10;--card:#14161d;--border:#1e2030;--text:#c8ccd6;--dim:#656a78;--home:#4da6ff;--draw:#8b8fa3;--away:#f0a838;--green:#3fb950;--red:#f85149;--cyan:#00d4ff;--purple:#e879f9;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);padding:20px;line-height:1.5}
+.container{max-width:1100px;margin:0 auto}
+.header{text-align:center;padding:28px 0 20px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.header h1{font-size:1.4em}.header .sub{color:var(--dim);font-size:0.8em;margin-top:4px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.7em;margin-left:6px;font-weight:600}
+.badge-v3{background:#1a3a5c;color:var(--cyan)}
+.badge-warn{background:#3a2a0a;color:var(--away)}
+
+.summary{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.si{flex:1;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.si .n{font-size:1.5em;font-weight:800}.si .l{font-size:0.65em;color:var(--dim);margin-top:4px}
+.si.warn .n{color:var(--away)}.si.good .n{color:var(--green)}.si.info .n{color:var(--cyan)}
+
+.diag-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px}
+.diag-box h3{font-size:0.9em;color:var(--cyan);margin-bottom:10px}
+.diag-box p{font-size:0.78em;color:var(--dim);line-height:1.7}
+
+.region-block{margin-bottom:24px}
+.region-title{font-size:0.85em;font-weight:700;color:var(--cyan);padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:8px}
+
+.league-group{margin-bottom:12px}
+.league-label{font-size:0.75em;color:var(--dim);padding:4px 0 6px 8px;display:flex;justify-content:space-between}
+.league-label .ct{color:var(--text);margin-right:8px}
+
+.match-card{display:flex;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:3px;gap:10px;font-size:0.82em}
+.match-card.cold{border-left:2px solid var(--purple)}
+.match-card.signal{border-left:2px solid var(--green)}
+.mc-teams{flex:2.5;min-width:0}
+.mc-teams .vs{color:var(--dim);margin:0 6px}
+.mc-time{flex:0 0 42px;font-size:0.7em;color:var(--dim);text-align:center}
+.mc-probs{flex:1.3;text-align:center;font-size:0.75em}
+.mc-odds{flex:0 0 150px;text-align:right;font-size:0.72em}
+.mc-signal{flex:0 0 70px;text-align:right}
+
+.prob-bar{display:flex;height:5px;border-radius:3px;overflow:hidden;background:var(--bg);margin-top:3px}
+.prob-bar .h{background:var(--home)}
+.prob-bar .d{background:var(--draw)}
+.prob-bar .a{background:var(--away)}
+
+.signal-tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.7em;font-weight:600}
+.signal-none{background:rgba(255,255,255,0.03);color:var(--dim)}
+.signal-edge{background:rgba(63,185,80,0.15);color:var(--green)}
+.cold-dot{font-size:0.65em;margin-left:2px}
+
+.footer{text-align:center;padding:28px;color:var(--dim);font-size:0.7em;border-top:1px solid var(--border);margin-top:28px}
+
+table{width:100%;border-collapse:collapse;font-size:0.78em}
+th{text-align:left;padding:4px 8px;border-bottom:2px solid var(--border);color:var(--dim);font-size:0.7em}
+td{padding:4px 8px;border-bottom:1px solid rgba(255,255,255,0.02)}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+  <h1>🌅 早盘预测<span class="badge badge-v3">v3.0</span></h1>
+  <div class="sub">2026-08-12 · Dixon-Coles + 贝叶斯 + Kelly · 17个联赛/杯赛 · odds-api.io v3 (Kambi/Unibet)</div>
+</div>
+
+<div class="summary">
+  <div class="si info"><div class="n">49</div><div class="l">总场次</div></div>
+  <div class="si warn"><div class="n">49</div><div class="l">冷启动 🧊</div></div>
+  <div class="si"><div class="n">10</div><div class="l">有赔率</div></div>
+  <div class="si"><div class="n">1</div><div class="l">已知ELO</div></div>
+  <div class="si "><div class="n">0</div><div class="l">投注信号</div></div>
+</div>
+
+<div class="diag-box">
+  <h3>📊 早盘诊断</h3>
+  <p>
+    <b>⚠️ 全面冷启动 (49/49场)</b> — 今日覆盖17个联赛/杯赛，绝大多数为新接入赛事。球队无历史ELO，使用联赛均值攻防参数(att=1.0, def=1.0)，概率统一为45.5/25.8/28.7。<br>
+    <b>📉 赔率覆盖率仅10/49</b> — the-odds-api.com v4配额耗尽(500/500)；odds-api.io v3免费层仅Kambi/Unibet两家，大部分杯赛/非欧联赛无博彩公司覆盖。<br>
+    <b>✅ 唯一已知球队: SK Brann</b> — 挪威超球队有ELO数据，对塞浦路斯球队Apollon Limassol给出84.9%客胜概率。Brann ELO远高于对手。<br>
+    <b>🔮 无投注信号</b> — 所有场次edge不足或冷启动，Kelly筛选零通过。建议观望，等待: (1) API配额恢复 (2) 欧洲联赛新赛季ELO积累。
+  </p>
+</div>
+<div class="region-block"><div class="region-title">⭐ 已知球队预测 (模型可区分强弱)</div><div class="match-card signal">
+  <div class="mc-teams">Apollon Limassol <span class="vs">vs</span> SK Brann</div>
+  <div class="mc-time">ELO<br>1500/1717</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">4.1%</span>/<span style="color:var(--draw)">11.0%</span>/<span style="color:var(--away)">84.9%</span>
+    <div class="prob-bar"><div class="h" style="width:4.14%"></div><div class="d" style="width:10.979999999999999%"></div><div class="a" style="width:84.88%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag" style="color:var(--away);background:rgba(255,255,255,0.05)">客胜 84.9%</span></div></div>
+</div><div class="region-block"><div class="region-title">欧战 (12场)</div><div class="league-group"><div class="league-label"><span>欧冠资格赛</span><span class="ct">9场</span></div><div class="match-card cold">
+  <div class="mc-teams">Bodoe/Glimt <span class="vs">vs</span> Union Saint-Gilloise <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Sabah Masazir <span class="vs">vs</span> AGF Aarhus <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">FK Kauno Zalgiris <span class="vs">vs</span> GNK Dinamo Zagreb <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">NEC Nijmegen <span class="vs">vs</span> Olympiacos Piraeus <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">FK Crvena Zvezda Belgrade <span class="vs">vs</span> Hapoel Be`er Sheva FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">SK Slovan Bratislava <span class="vs">vs</span> Mjallby AIF <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">NK Celje <span class="vs">vs</span> FC Ararat-Armenia <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">SK Sturm Graz <span class="vs">vs</span> Fenerbahce Istanbul <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Olympique Lyon <span class="vs">vs</span> Sparta Prague <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>欧协联资格赛</span><span class="ct">2场</span></div><div class="match-card cold">
+  <div class="mc-teams">Apollon Limassol <span class="vs">vs</span> SK Brann <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">4.1%</span>/<span style="color:var(--draw)">11.0%</span>/<span style="color:var(--away)">84.9%</span>
+    <div class="prob-bar"><div class="h" style="width:4.14%"></div><div class="d" style="width:10.979999999999999%"></div><div class="a" style="width:84.88%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">FC CSKA 1948 <span class="vs">vs</span> Panathinaikos Athens <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>欧联资格赛</span><span class="ct">1场</span></div><div class="match-card cold">
+  <div class="mc-teams">FC Iberia 1999 <span class="vs">vs</span> Larne FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div></div><div class="region-block"><div class="region-title">南美 (14场)</div><div class="league-group"><div class="league-label"><span>阿根廷甲</span><span class="ct">1场</span></div><div class="match-card cold">
+  <div class="mc-teams">CA Talleres de Cordoba <span class="vs">vs</span> CA Lanus <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>智利杯</span><span class="ct">1场</span></div><div class="match-card cold">
+  <div class="mc-teams">Puerto Montt <span class="vs">vs</span> Union Espanola <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>解放者杯淘汰赛</span><span class="ct">3场</span></div><div class="match-card cold">
+  <div class="mc-teams">Fluminense FC RJ <span class="vs">vs</span> Independiente Rivadavia <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Estudiantes de La Plata <span class="vs">vs</span> CD Universidad Catolica <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">1.17</span>/<span style="color:var(--draw)">5.75</span>/<span style="color:var(--away)">21.00</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">CD Tolima <span class="vs">vs</span> CSD Independiente del Valle <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>哥伦比亚甲</span><span class="ct">7场</span></div><div class="match-card cold">
+  <div class="mc-teams">Tigres FC <span class="vs">vs</span> Envigado FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">CD Real Santander <span class="vs">vs</span> Barranquilla FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Aguilas Doradas Rionegro <span class="vs">vs</span> Llaneros FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Real Cartagena FC <span class="vs">vs</span> Bogota FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Boyaca Patriotas <span class="vs">vs</span> Orsomarso SC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Independiente Medellin <span class="vs">vs</span> Millonarios FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Boca Juniors de Cali <span class="vs">vs</span> Union Magdalena <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>南球杯淘汰赛</span><span class="ct">2场</span></div><div class="match-card cold">
+  <div class="mc-teams">Boca Juniors <span class="vs">vs</span> Recoleta FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Club Bolivar <span class="vs">vs</span> Sao Paulo FC SP <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">6.50</span>/<span style="color:var(--draw)">3.00</span>/<span style="color:var(--away)">1.68</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div></div><div class="region-block"><div class="region-title">北美 (8场)</div><div class="league-group"><div class="league-label"><span>加拿大冠</span><span class="ct">1场</span></div><div class="match-card cold">
+  <div class="mc-teams">Atletico Ottawa <span class="vs">vs</span> FC Supra Du Quebec <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>联赛杯(美墨)</span><span class="ct">7场</span></div><div class="match-card cold">
+  <div class="mc-teams">Columbus Crew <span class="vs">vs</span> Pumas UNAM <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">FC Cincinnati <span class="vs">vs</span> Atlas FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">1.11</span>/<span style="color:var(--draw)">7.00</span>/<span style="color:var(--away)">34.00</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Minnesota <span class="vs">vs</span> Mazatlan <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Minnesota United FC <span class="vs">vs</span> Atlante FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">5.80</span>/<span style="color:var(--draw)">3.45</span>/<span style="color:var(--away)">1.62</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Charlotte FC <span class="vs">vs</span> CF Pachuca <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">2.23</span>/<span style="color:var(--draw)">2.95</span>/<span style="color:var(--away)">3.40</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Real Salt Lake <span class="vs">vs</span> FC Juarez <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">1.63</span>/<span style="color:var(--draw)">4.10</span>/<span style="color:var(--away)">4.50</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Tigres UANL <span class="vs">vs</span> Vancouver Whitecaps FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">1.41</span>/<span style="color:var(--draw)">4.80</span>/<span style="color:var(--away)">6.50</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div></div><div class="region-block"><div class="region-title">非洲 (4场)</div><div class="league-group"><div class="league-label"><span>南非超</span><span class="ct">4场</span></div><div class="match-card cold">
+  <div class="mc-teams">Chippa United FC <span class="vs">vs</span> Richards Bay FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Marumo Gallants FC <span class="vs">vs</span> Kruger United <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Polokwane City <span class="vs">vs</span> Stellenbosch FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">TS Galaxy FC <span class="vs">vs</span> Mamelodi Sundowns <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div></div><div class="region-block"><div class="region-title">欧洲杯赛 (7场)</div><div class="league-group"><div class="league-label"><span>捷克杯</span><span class="ct">4场</span></div><div class="match-card cold">
+  <div class="mc-teams">Vysoke Myto <span class="vs">vs</span> FC Vlasim <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">FK Cechie Vykan <span class="vs">vs</span> Dukla Prague <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Sokol Hostoun <span class="vs">vs</span> SK Kladno <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">TJ Hluboka Nad Vlatvou <span class="vs">vs</span> SK Aritma Prague <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>丹麦杯</span><span class="ct">2场</span></div><div class="match-card cold">
+  <div class="mc-teams">BK Frederiksholm Sydhavnen <span class="vs">vs</span> Taarnby FF <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Vaerlose BK <span class="vs">vs</span> Saaby Fodbold <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>罗马尼亚杯</span><span class="ct">1场</span></div><div class="match-card cold">
+  <div class="mc-teams">SC Popesti Leordeni <span class="vs">vs</span> CS Dinamo Bucuresti <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">1.66</span>/<span style="color:var(--draw)">3.75</span>/<span style="color:var(--away)">4.00</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div></div><div class="region-block"><div class="region-title">欧洲 (2场)</div><div class="league-group"><div class="league-label"><span>保加利亚乙</span><span class="ct">1场</span></div><div class="match-card cold">
+  <div class="mc-teams">FC Yantra Gabrovo <span class="vs">vs</span> PFC Montana 1921 <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div><div class="league-group"><div class="league-label"><span>瑞典甲</span><span class="ct">1场</span></div><div class="match-card cold">
+  <div class="mc-teams">Helsingborgs IF <span class="vs">vs</span> IFK Varnamo <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds">—</div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div></div><div class="region-block"><div class="region-title">大洋洲 (2场)</div><div class="league-group"><div class="league-label"><span>澳洲杯</span><span class="ct">2场</span></div><div class="match-card cold">
+  <div class="mc-teams">APIA Leichhardt <span class="vs">vs</span> Sydney United 58 FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">2.14</span>/<span style="color:var(--draw)">3.50</span>/<span style="color:var(--away)">2.75</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+<div class="match-card cold">
+  <div class="mc-teams">Brunswick Juventus FC <span class="vs">vs</span> Preston Lions FC <span class="cold-dot">🧊</span></div>
+  <div class="mc-time">?</div>
+  <div class="mc-probs">
+    <span style="color:var(--home)">45.5%</span>/<span style="color:var(--draw)">25.8%</span>/<span style="color:var(--away)">28.8%</span>
+    <div class="prob-bar"><div class="h" style="width:45.46%"></div><div class="d" style="width:25.77%"></div><div class="a" style="width:28.77%"></div></div>
+  </div>
+  <div class="mc-odds"><span style="color:var(--home)">4.70</span>/<span style="color:var(--draw)">4.25</span>/<span style="color:var(--away)">1.49</span></div><div class="mc-signal"><span class="signal-tag signal-none">冷启动</span></div></div>
+</div></div>
+<div class="diag-box">
+  <h3>🎯 投注筛选 (三线合并: 1X2 + 亚盘 + 大小球)</h3>
+  <p style="font-size:0.78em;color:var(--dim)">
+    <b>0注信号</b> · 筛选条件: edge>5% + Kelly>1% + 非冷启动 + 方向概率≥35% · 全部{total}场均不满足 · 主要阻断因素: 冷启动(49/49) + 赔率缺失(39/49)
+  </p>
+</div>
+
+<div class="diag-box">
+  <h3>📡 API状态</h3>
+  <table>
+  <tr><td>the-odds-api.com v4</td><td style="color:var(--red)">配额耗尽 500/500</td><td>全部联赛不可用</td></tr>
+  <tr><td>odds-api.io v3 (Kambi)</td><td style="color:var(--green)">正常</td><td>10/49场覆盖</td></tr>
+  <tr><td>odds-api.io v3 (Unibet)</td><td style="color:var(--yellow)">有限</td><td>免费层2家博彩公司</td></tr>
+  <tr><td>ELO数据库</td><td>665队/662参数</td><td>覆盖25个联赛</td></tr>
+  <tr><td><b>总结</b></td><td colspan="2" style="color:var(--away)">API配额+ELO覆盖面双重不足 · 当前阶段不适合大规模投注</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  足球预测模型 v3.0 · Dixon-Coles + 贝叶斯后验 + Kelly 1/4 · 赔率源: odds-api.io v3<br>
+  早盘预测 2026-08-12 · 49场/7个区域/18个联赛 · 仅供研究参考
+</div>
+</div></body></html>

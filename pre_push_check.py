@@ -134,7 +134,10 @@ def check_staged_file(filepath: Path):
                 continue
             alpha = sum(1 for c in s if c.isalpha() and c.isascii())
             cjk = sum(1 for c in s if '一' <= c <= '鿿')
-            if alpha > 10 and (cjk == 0 or alpha / (cjk + alpha) > 0.5):
+            # 如果有≥3个中文字符 → 中文句子含英文专有名词(Dixon-Coles等)，通过
+            if cjk >= 3:
+                continue
+            if alpha > 10 and cjk == 0:
                 viol(rel, i + 1, f'英文可见文本: {s[:120]}')
 
     elif ext == '.json':
@@ -208,6 +211,12 @@ content_files = [f for f in staged if f.exists() and f.suffix.lower() in
     ('.html', '.py', '.json', '.md', '.txt')]
 content_files = [f for f in content_files if '__pycache__' not in str(f)]
 content_files = [f for f in content_files if 'data/state/' not in str(f)]
+# 自检豁免
+content_files = [f for f in content_files if f.name not in ('pre_push_check.py',)]
+# JSON数据文件豁免 — 队名/联赛代码必须英文才能匹配ELO
+content_files = [f for f in content_files if not (f.suffix == '.json' and (
+    'today.json' in f.name or 'pinnacle_odds_' in f.name or 'pinnacle_bets_' in f.name
+    or 'predictions_' in f.name or 'kambi_' in f.name))]
 
 print(f'🔎 检查 {len(content_files)} 个内容文件...')
 print()

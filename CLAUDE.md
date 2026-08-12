@@ -2,11 +2,28 @@
 
 ## 强制规则 (违反=偷懒)
 
+### 🚨 推送前汉化检查 (最高优先级 · 违反=自残)
+
+**任何 git push 之前必须跑这条命令，不通过不准 push：**
+
+```bash
+python pre_push_check.py
+```
+
+检查项：
+- HTML/JSON 报告的可读文本是否含英文（CSS/标签除外）
+- commit message 是否中文
+- 归档链接描述是否中文
+- 推送文件名是否中文命名
+
+**不通过 → 修改后重新检查 → 通过才 push。没有例外。**
+
 ### 每次生成预测后必须:
 
 1. ✅ 更新 `archive.html` — 在对应日期下追加预测和复盘链接
-2. ✅ `git add -A && git commit -m "说明" && git push origin master`
-3. ✅ 确认 push 成功才结束任务
+2. ✅ `python pre_push_check.py` ← 🚨 推送前汉化检查（不通过不push）
+3. ✅ `git add -A && git commit -m "中文说明" && git push origin master`
+4. ✅ 确认 push 成功才结束任务
 
 ### 每次复盘必须:
 

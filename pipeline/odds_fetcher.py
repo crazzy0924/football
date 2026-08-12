@@ -129,8 +129,11 @@ def fetch_today_matches(
     try:
         import httpx
 
+        quota_exhausted = False
         with httpx.Client(timeout=20) as client:
             for sport_key in sport_keys:
+                if quota_exhausted:
+                    break  # skip remaining calls once quota confirmed dead
                 url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds"
                 params = {
                     "apiKey": api_key,
@@ -143,7 +146,9 @@ def fetch_today_matches(
 
                 resp = client.get(url, params=params)
                 if resp.status_code != 200:
-                    print(f"  {sport_key}: HTTP {resp.status_code} — {resp.text[:120]}")
+                    if resp.status_code in (401, 403):
+                        print(f"  odds API quota exhausted ({resp.status_code}), skipping remaining leagues")
+                        quota_exhausted = True
                     continue
 
                 events = resp.json()

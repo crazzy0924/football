@@ -25,7 +25,7 @@ import os
 import sys
 from pathlib import Path
 
-# ---- Windows GBK workaround: force UTF-8 stdout ----
+# ---- Windows GBK修复: 强制UTF-8输出 ----
 if hasattr(sys.stdout, "buffer"):
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 if hasattr(sys.stderr, "buffer"):
@@ -40,19 +40,19 @@ def cmd_train(args):
     csv_dir = args.csv_dir or "data/historical_odds"
     state_dir = args.state_dir or "data/state"
 
-    print(f"Loading all match data...")
+    print("加载全部比赛数据...")
     matches = load_all_matches(csv_dir)
-    print(f"Loaded {len(matches)} matches from {len(set(m['season'] for m in matches))} seasons")
-    print(f"Leagues: {set(m['league_code'] for m in matches)}")
+    print(f"已加载 {len(matches)} 场比赛, 来自 {len(set(m['season'] for m in matches))} 个赛季")
+    print(f"联赛: {set(m['league_code'] for m in matches)}")
 
     summary = train_all(matches, state_dir, use_mle=args.mle)
 
-    print(f"\n[OK] Training complete")
-    print(f"  Teams with ELO: {summary['elo']['teams']}")
-    print(f"  Teams with attack/defense: {summary['dc_teams']}")
-    print(f"  Leagues trained: {summary['leagues']}")
-    print(f"  Fit method: {summary['fit_method']}")
-    print(f"  State saved to {state_dir}/")
+    print("\n[OK] 训练完成")
+    print(f"  ELO球队数: {summary['elo']['teams']}")
+    print(f"  攻防参数球队数: {summary['dc_teams']}")
+    print(f"  训练联赛: {summary['leagues']}")
+    print(f"  拟合方法: {summary['fit_method']}")
+    print(f"  状态已保存至 {state_dir}/")
 
 
 def cmd_backtest(args):
@@ -64,17 +64,17 @@ def cmd_backtest(args):
     state_dir = args.state_dir or "data/state"
     output_dir = args.output_dir or "data/output"
 
-    print("Loading all match data...")
+    print("加载全部比赛数据...")
     matches = load_all_matches(csv_dir)
 
     report = run_backtest(matches, state_dir, output_dir)
 
     if report.get("gate_result") == "FAIL":
-        print("\n⚠ BACKTEST GATE FAILED — model cannot be deployed")
+        print("\n⚠ 回测门禁未通过 — 模型禁止上线")
         if not args.force:
             sys.exit(1)
     else:
-        print("\n[PASS] BACKTEST GATE PASSED — model ready for deployment")
+        print("\n[PASS] 回测门禁通过 — 模型可上线")
 
 
 def cmd_predict(args):
@@ -85,46 +85,46 @@ def cmd_predict(args):
     state_dir = args.state_dir or "data/state"
     output_dir = args.output_dir or "data/output"
 
-    # Load trained models
+    # 加载训练好的模型
     try:
         elo, dc = load_models(state_dir)
     except FileNotFoundError as e:
-        print(f"Error: {e}")
+        print(f"错误: {e}")
         sys.exit(1)
 
-    print(f"Loaded: {elo.team_count} ELO ratings, {dc.team_count} DC parameters")
+    print(f"已加载: {elo.team_count} 支ELO球队, {dc.team_count} 组DC参数")
 
-    # Load draw calibration
+    # 加载平局校准
     from models.draw_calibration import load_calibration, apply_draw_calibration
     draw_cal = load_calibration(os.path.join(state_dir, "draw_calibration.json"))
     if draw_cal:
         n_cal = len(draw_cal)
         boosted = sum(1 for v in draw_cal.values() if v.get("draw_factor", 1.0) > 1.01)
-        print(f"Draw cal: {n_cal} leagues, {boosted} draw-boosted")
+        print(f"平局校准: {n_cal} 个联赛, {boosted} 个平局加成")
     else:
-        print("Draw cal: not available (run backtest to generate)")
+        print("平局校准: 不可用(先跑backtest生成)")
 
-    # Try to fetch live odds
+    # 尝试拉取实时赔率
     api_matches = None
     try:
         from pipeline.odds_fetcher import fetch_today_matches
         api_matches = fetch_today_matches()
-        print(f"Fetched {len(api_matches)} matches from odds API")
+        print(f"从赔率API拉取 {len(api_matches)} 场比赛")
     except Exception as e:
-        print(f"Odds API unavailable: {e}")
+        print(f"赔率API不可用: {e}")
 
-    # Load match list from JSON (authoritative team list with CN names)
+    # 从JSON加载比赛列表(含中文队名的权威名单)
     if args.matches_json:
         with open(args.matches_json, "r", encoding="utf-8") as f:
             matches = json.load(f)
-        print(f"Loaded {len(matches)} matches from {args.matches_json}")
+        print(f"从 {args.matches_json} 加载 {len(matches)} 场比赛")
     elif api_matches:
         matches = api_matches
     else:
-        print("No matches to predict. Provide --matches-json or ensure odds API is available.")
+        print("无比赛可预测。请提供 --matches-json 或确认赔率API可用。")
         sys.exit(1)
 
-    # Merge odds from API into JSON matches (fuzzy team name matching)
+    # API赔率合并进JSON比赛(队名模糊匹配)
     if api_matches and args.matches_json:
         def _clean(s):
             import unicodedata
@@ -147,10 +147,10 @@ def cmd_predict(args):
             print(f"合并赔率: {merged}/{len(matches)} 场")
 
     if not matches:
-        print("No matches to predict.")
+        print("无比赛可预测。")
         return
 
-    # Predict each match
+    # 逐场预测
     predictions = []
     for m in matches:
         home = m.get("home_team") or m.get("home")
@@ -160,16 +160,16 @@ def cmd_predict(args):
         if not home or not away:
             continue
 
-        # Normalize team names to CSV canonical forms
+        # 队名标准化为CSV规范形式
         from pipeline.data_loader import normalize_team_name
         home = normalize_team_name(home)
         away = normalize_team_name(away)
 
-        # ── Market-informed cold start: pass market odds to DC ──
+        # ── 市场驱动冷启动: 把市场赔率传给DC ──
         market = m.get("odds") or m.get("market_odds")
         pred = dc.predict(home, away, league, market_odds=market)
 
-        # Apply draw calibration
+        # 应用平局校准
         cal_h, cal_d, cal_a = apply_draw_calibration(
             {"home_win": pred["home_win"], "draw": pred["draw"], "away_win": pred["away_win"]},
             league, draw_cal,
@@ -181,7 +181,7 @@ def cmd_predict(args):
         elo_h = elo.get_elo(home, league)
         elo_a = elo.get_elo(away, league)
 
-        # Market comparison
+        # 市场对比
         if market:
             from models.odds import detect_value, implied_probability
             from models.bayesian import bayesian_fusion_predict
@@ -190,7 +190,7 @@ def cmd_predict(args):
                 [pred["home_win"], pred["draw"], pred["away_win"]],
                 market,
             )
-            # ── Cold start: reduce model confidence so Bayesian leans market ──
+            # ── 冷启动: 降低模型置信度让贝叶斯倾向市场 ──
             is_cold = pred.get("cold_start", False)
             mc = 0.20 if is_cold else 0.50  # cold: 20% model, 80% market
             bayes = bayesian_fusion_predict(
@@ -202,7 +202,7 @@ def cmd_predict(args):
             value = None
             bayes = None
 
-        # Asian Handicap prediction (if AH odds available)
+        # 让球盘预测(如有AH赔率)
         ah_pred = None
         ah_line = m.get("ah_line") or m.get("goal_line")
         ah_odds = m.get("ah_odds")
@@ -239,37 +239,37 @@ def cmd_predict(args):
             "ah_handicap": ah_pred,
         })
 
-    # Save JSON
+    # 保存JSON
     os.makedirs(output_dir, exist_ok=True)
     today_str = _today_str()
     out_path = os.path.join(output_dir, f"predictions_{today_str}.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(predictions, f, ensure_ascii=False, indent=2)
-    print(f"Saved {len(predictions)} predictions to {out_path}")
+    print(f"已保存 {len(predictions)} 条预测至 {out_path}")
 
-    # Generate HTML report
+    # 生成HTML报告
     try:
         from pipeline.reporter import generate_report
 
-        # Optional LLM qualitative analysis
+        # 可选LLM定性分析
         analyst_notes = None
         if args.llm:
-            print(f"\n[LLM] Running Claude qualitative analysis on {len(predictions)} matches...")
+            print(f"\n[LLM] 正在对 {len(predictions)} 场比赛运行定性分析...")
             try:
                 from pipeline.analyst import batch_analyze
                 analyst_notes = batch_analyze(predictions)
                 n_notes = sum(1 for v in analyst_notes.values() if v and not v.startswith("["))
-                print(f"[LLM] {n_notes}/{len(predictions)} matches annotated")
+                print(f"[LLM] 已标注 {n_notes}/{len(predictions)} 场")
             except Exception as e:
-                print(f"[LLM] Analysis failed: {e}")
+                print(f"[LLM] 分析失败: {e}")
 
         html_path = generate_report(predictions, output_dir, analyst_notes=analyst_notes)
-        print(f"HTML report: {html_path}")
+        print(f"HTML报告: {html_path}")
     except Exception as e:
-        print(f"HTML report generation failed: {e}")
+        print(f"HTML报告生成失败: {e}")
 
-    # Print summary table
-    print(f"\n{'Home':<20} {'Away':<20} {'H':>6} {'D':>6} {'A':>6} {'Pick':>10} {'Edge':>6}")
+    # 打印汇总表
+    print(f"\n{'主队':<20} {'客队':<20} {'主':>6} {'平':>6} {'客':>6} {'方向':>10} {'Edge':>6}")
     print("-" * 80)
     for p in predictions:
         m = p["model"]
@@ -301,14 +301,14 @@ def cmd_review(args):
     # Load predictions
     pred_path = os.path.join(output_dir, f"predictions_{date_str}.json")
     if not os.path.exists(pred_path):
-        print(f"No predictions found for {date_str} at {pred_path}")
+        print(f"未找到 {date_str} 的预测: {pred_path}")
         sys.exit(1)
 
     with open(pred_path, "r", encoding="utf-8") as f:
         predictions = json.load(f)
     print(f"加载 {len(predictions)} 条预测，来自 {pred_path}")
 
-    # ---- Load results ----
+    # ---- 加载赛果 ----
     from pipeline.result_fetcher import (
         load_results_from_json,
         load_results_from_text,
@@ -321,7 +321,7 @@ def cmd_review(args):
     # 1) Try --results-text
     if args.results_text:
         results = load_results_from_text(args.results_text)
-        print(f"Parsed {len(results)} results from --results-text")
+        print(f"从 --results-text 解析 {len(results)} 条赛果")
 
     # 2) Try --results-json
     if not results and args.results_json:
@@ -333,9 +333,9 @@ def cmd_review(args):
     if not results:
         results = try_fetch_results(date_str)
         if results:
-            print(f"Fetched {len(results)} results from API")
+            print(f"从API拉取 {len(results)} 条赛果")
 
-    # 4) Fallback: look for default results file
+    # 4) 兜底: 查找默认赛果文件
     if not results:
         default_results = os.path.join(output_dir, f"results_{date_str}.json")
         if os.path.exists(default_results):
@@ -351,7 +351,7 @@ def cmd_review(args):
         print(f"\n格式: [{{\"home_team\":\"A\",\"away_team\":\"B\",\"home_goals\":2,\"away_goals\":1}}]")
         sys.exit(1)
 
-    # ---- Match predictions to results ----
+    # ---- 预测与赛果匹配 ----
     matched = match_predictions_to_results(predictions, results)
     print(f"匹配 {len(matched)}/{len(predictions)} 条预测与赛果")
 
@@ -359,7 +359,7 @@ def cmd_review(args):
         print("未找到匹配的赛果，请检查球队名。")
         sys.exit(1)
 
-    # ---- Update ELO ----
+    # ---- 更新ELO ----
     elo = None
     elo_changes = []
     try:
@@ -384,7 +384,7 @@ def cmd_review(args):
             old_h = elo.get_elo(home, league)
             old_a = elo.get_elo(away, league)
 
-            # Skip if team not in ELO system (cold start)
+            # 冷启动球队跳过ELO更新
             if old_h == 1500 and old_a == 1500:
                 continue
 
@@ -414,7 +414,7 @@ def cmd_review(args):
         n_updated = len(set(c["team"] for c in elo_changes))
         print(f"[OK] ELO 已更新 {n_updated} 支球队 ({len(elo_changes)} 条记录)")
 
-    # ---- Generate review report ----
+    # ---- 生成复盘报告 ----
     from pipeline.reporter import generate_review_report, update_tracking_file, TEAM_CN
 
     review_path = generate_review_report(
@@ -424,11 +424,25 @@ def cmd_review(args):
         elo_changes=elo_changes,
     )
 
-    # ---- Update tracking ----
+    # ---- 更新跟踪 ----
     elo_summary = {"teams_updated": len(set(c["team"] for c in elo_changes))} if elo_changes else None
     tracking = update_tracking_file(matched, date_str, output_dir, elo_summary)
 
-    # ---- Print summary ----
+    # ---- 多维度复盘(v1.0) ----
+    from pipeline.dimension_review import (
+        evaluate_dimensions,
+        update_ledger,
+        print_dimension_summary,
+        load_matches_info,
+    )
+    matches_info = load_matches_info(date_str)
+    day_dims = evaluate_dimensions(matched, matches_info)
+    ledger_path = os.path.join(state_dir, "dimension_ledger.json")
+    ledger = update_ledger(day_dims, ledger_path)
+    print(f"\n[OK] 维度成绩已累计 → {ledger_path}")
+    print(print_dimension_summary(day_dims, ledger))
+
+    # ---- 打印总结 ----
     n = len(matched)
     correct = sum(1 for m in matched if
         max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
@@ -471,7 +485,7 @@ def cmd_summary(args):
     summary_path = os.path.join(state_dir, "training_summary.json")
 
     if not os.path.exists(summary_path):
-        print("No training summary found. Run 'train' first.")
+        print("无训练摘要。先运行 'train'。")
         return
 
     with open(summary_path, "r", encoding="utf-8") as f:
@@ -491,8 +505,8 @@ def cmd_summary(args):
     for team, rating in s['elo']['top_10']:
         print(f"  {team:<25} {rating}")
 
-    # Show league parameters
-    print(f"\nLeague Parameters:")
+    # 展示联赛参数
+    print("\n联赛参数:")
     for code, params in s.get("league_params", {}).items():
         print(f"  {code}: ρ={params['rho']:.4f}, home_adv={params['home_adv']:.4f}, "
               f"avg_goals={params['avg_goals']}")
@@ -501,29 +515,29 @@ def cmd_summary(args):
 def cmd_full(args):
     """Run the complete pipeline: train → backtest → (predict)."""
     print("=" * 60)
-    print("FULL PIPELINE")
+    print("完整管线")
     print("=" * 60)
 
     # Step 1: Train
-    print("\n[1/3] TRAINING")
+    print("\n[1/3] 训练")
     cmd_train(args)
 
     # Step 2: Backtest
-    print("\n[2/3] BACKTEST")
+    print("\n[2/3] 回测")
     try:
         cmd_backtest(args)
     except SystemExit as e:
         if e.code == 1:
-            print("\nPipeline stopped: backtest gate failed.")
+            print("\n管线停止: 回测门禁未通过。")
             return
         raise
 
-    # Step 3: Predict (if --predict flag)
+    # 第3步: 预测(如带--predict)
     if args.predict_live:
         print("\n[3/3] LIVE PREDICTION")
         cmd_predict(args)
     else:
-        print("\n[3/3] SKIPPED (use --predict for live predictions)")
+        print("\n[3/3] 跳过(带--predict才执行预测)")
 
 
 def _today_str() -> str:

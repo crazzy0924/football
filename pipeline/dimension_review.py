@@ -171,6 +171,13 @@ def evaluate_dimensions(
         key = f'{m.get("home_team", "")}|{m.get("away_team", "")}'
         info = matches_info.get(key, {})
         line = info.get("handicap")
+        # 队名标准化导致today.json查找失败时, 用预测自带的盘口兜底
+        if line is None:
+            ah_pred = m.get("ah_handicap")
+            if isinstance(ah_pred, dict):
+                line = ah_pred.get("goal_line")
+            else:
+                line = ah_pred
         if line is not None and lam_h is not None and lam_a is not None:
             ah = ah_probabilities(lam_h, lam_a, rho or 0.0, line)
             # 主队覆盖概率 (走盘概率平分)
@@ -254,6 +261,9 @@ def _climatology_brier(samples: list[dict], dim: str) -> float:
         p = sum(1 for s in samples if s.get("actual_over")) / n
     elif dim == "BTTS":
         p = sum(1 for s in samples if s.get("actual_btts")) / n
+    elif dim == "AH":
+        # 覆盖率: 主=1 走=0.5 客=0
+        p = sum({"主": 1.0, "走": 0.5, "客": 0.0}.get(s.get("actual", "客"), 0.0) for s in samples) / n
     else:
         # 1X2: 恒猜样本中最常见结果
         from collections import Counter
@@ -311,9 +321,13 @@ def load_matches_info(date_str: str) -> dict[str, dict]:
         return {}
     with open(path, "r", encoding="utf-8") as f:
         matches = json.load(f)
+    from pipeline.data_loader import normalize_team_name
     info = {}
     for m in matches:
-        key = f'{m.get("home_team", "")}|{m.get("away_team", "")}'
+        # 标准化队名 — 与match_predictions_to_results的键对齐
+        h = normalize_team_name(m.get("home_team", ""))
+        a = normalize_team_name(m.get("away_team", ""))
+        key = f"{h}|{a}"
         entry = {}
         if m.get("handicap") is not None:
             entry["handicap"] = m["handicap"]

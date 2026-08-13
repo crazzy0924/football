@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 
-# League code → display name
+# 联赛代码 → 显示名
 LEAGUE_NAMES = {
     "PL": "Premier League",
     "PD": "La Liga",
@@ -177,11 +177,11 @@ def generate_report(
     out_name = output_name or f"predictions_{today}.html"
     out_path = os.path.join(output_dir, out_name)
 
-    # Load backtest Brier if available
+    # 如可用则加载回测Brier
     if backtest_brier is None:
         backtest_brier = _load_backtest_brier(output_dir)
 
-    # Build template context
+    # 构建模板上下文
     match_cards = []
     for p in predictions:
         card = _build_match_card(p, analyst_notes)
@@ -193,7 +193,7 @@ def generate_report(
     reference_only = sum(1 for m in match_cards if m["recommendation"] == "reference")
     cold = sum(1 for m in match_cards if m["cold_start_flag"])
 
-    # H/D/A pick distribution
+    # 胜平负方向分布
     h_picks = sum(1 for m in match_cards if m["pick"] == "主胜")
     d_picks = sum(1 for m in match_cards if m["pick"] == "平局")
     a_picks = sum(1 for m in match_cards if m["pick"] == "客胜")
@@ -216,7 +216,7 @@ def generate_report(
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print(f"[OK] HTML report saved to {out_path}")
+    print(f"[OK] HTML报告已保存 → {out_path}")
     return out_path
 
 
@@ -237,7 +237,7 @@ def _build_match_card(
     league_name = LEAGUE_NAMES.get(league_code, league_code)
     cold_start = p.get("cold_start", False)
 
-    # Probabilities — prefer Bayesian posterior if available, else model
+    # 概率 — 优先贝叶斯后验, 否则用模型
     if bayes and "posterior" in bayes:
         post = bayes["posterior"]
         p_home = post.get("home", model.get("home_win", 0.33))
@@ -248,7 +248,7 @@ def _build_match_card(
         p_draw = model.get("draw", 0.34)
         p_away = model.get("away_win", 0.33)
 
-    # Pick from value detection
+    # 从价值检测取方向
     pick_dir = value.get("best_direction", "none")
     if pick_dir == "home":
         pick = "主胜"
@@ -257,7 +257,7 @@ def _build_match_card(
     elif pick_dir == "away":
         pick = "客胜"
     else:
-        # Fall back to highest probability
+        # 兜底: 最高概率方向
         best_p = max(p_home, p_draw, p_away)
         if best_p == p_home:
             pick = "主胜"
@@ -266,10 +266,10 @@ def _build_match_card(
         else:
             pick = "客胜"
 
-    # Confidence / signal
+    # 置信度 / 信号
     confidence = value.get("confidence", "none")
 
-    # Cold-start matches: model edge is noise → override signal
+    # 冷启动场次: 模型edge是噪音 → 覆盖信号
     if cold_start and confidence != "none":
         signal_class = "cold"
         signal_text = "冷启动"
@@ -278,7 +278,7 @@ def _build_match_card(
         signal_class = SIGNAL_CLASSES.get(confidence, "skip")
         signal_text = SIGNAL_TEXTS.get(confidence, "SKIP")
 
-    # Recommendation level
+    # 推荐等级
     if confidence == "high" and not cold_start:
         recommendation = "recommended"
     elif confidence in ("medium", "high") or (cold_start and confidence != "none"):
@@ -322,7 +322,7 @@ def _build_match_card(
     # ELO
     elo_diff = p.get("elo_diff", 0)
 
-    # Analyst note — lookup by English names (keys are EN)
+    # 分析师注释 — 按英文名查(键为英文)
     match_key = f"{home_team_en} vs {away_team_en}"
     analyst_note = (analyst_notes or {}).get(match_key)
 
@@ -366,7 +366,7 @@ def _get_template():
     try:
         from jinja2 import Template as Jinja2Template
     except ImportError:
-        # Fallback: simple string interpolation
+        # 兜底: 简单字符串插值
         return _SimpleTemplate(_read_template_content())
 
     return Jinja2Template(_read_template_content())
@@ -390,6 +390,7 @@ def generate_review_report(
     output_dir: str = "data/output",
     date_str: str | None = None,
     elo_changes: list[dict] | None = None,
+    dimension_summary: str = "",
 ) -> str:
     """Generate review HTML report from matched predictions and results.
 
@@ -398,6 +399,7 @@ def generate_review_report(
         output_dir: output directory
         date_str: date string (defaults to today)
         elo_changes: optional list of {team, old, new, delta, reason}
+        dimension_summary: 5维度复盘纯文本 (来自dimension_review)
 
     Returns:
         Path to generated HTML file
@@ -416,7 +418,7 @@ def generate_review_report(
     n_total = len(matched)
     n_matched = sum(1 for m in matched if m.get("matched"))
 
-    # ---- Evaluation metrics ----
+    # ---- 评估指标 ----
     import math
     brier_sum = 0.0
     logloss_sum = 0.0
@@ -424,7 +426,7 @@ def generate_review_report(
     total_pl = 0.0
     n_bets = 0
 
-    # Directional tracking
+    # 方向统计
     h_total = h_correct = 0
     d_total = d_correct = 0
     a_total = a_correct = 0
@@ -437,13 +439,13 @@ def generate_review_report(
         home_goals = m.get("home_goals")
         away_goals = m.get("away_goals")
 
-        # Brier: mean squared error across 3 outcomes
+        # Brier: 三个结果的均方误差
         outcomes = {"H": [1, 0, 0], "D": [0, 1, 0], "A": [0, 0, 1]}
         actual_vec = outcomes.get(actual, [0, 0, 0])
         pred_vec = [pred["home_win"], pred["draw"], pred["away_win"]]
         brier_sum += sum((p - a) ** 2 for p, a in zip(pred_vec, actual_vec)) / 3
 
-        # Log loss: -ln(prob of actual outcome)
+        # 对数损失: -ln(实际结果的概率)
         idx = {"H": 0, "D": 1, "A": 2}.get(actual, 0)
         p_actual = max(pred_vec[idx], 0.001)
         logloss_sum += -math.log(p_actual)
@@ -472,11 +474,11 @@ def generate_review_report(
             if best_pred == "A":
                 a_correct += 1
 
-        # P&L: simulate 1-unit bet on best direction
+        # 盈亏: 模拟最优方向1单位投注
         bet_dir = value.get("best_direction", "none")
         kelly = value.get("kelly", 0) or 0
         pl = 0.0
-        # Map bet_dir ("home"/"draw"/"away") to actual code ("H"/"D"/"A")
+        # 投注方向映射到实际代码
         bet_to_actual = {"home": "H", "draw": "D", "away": "A"}
         if bet_dir != "none" and kelly > 0:
             n_bets += 1
@@ -572,6 +574,7 @@ def generate_review_report(
         "a_pct": round(a_total / n * 100) if n > 0 else 33,
         "matches": match_rows,
         "elo_changes": elo_changes or [],
+        "dimension_summary": dimension_summary,
     }
 
     # Render
@@ -582,7 +585,7 @@ def generate_review_report(
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print(f"[OK] Review report saved to {out_path}")
+    print(f"[OK] 复盘报告已保存 → {out_path}")
     return out_path
 
 
@@ -621,7 +624,7 @@ def update_tracking_file(
     else:
         tracking = {"days": [], "cumulative": {}}
 
-    # Calculate day metrics
+    # 计算当日指标
     n = len(matched)
     if n == 0:
         return tracking
@@ -656,7 +659,7 @@ def update_tracking_file(
     if elo_summary:
         day_entry["elo_updates"] = elo_summary.get("teams_updated", 0)
 
-    # Replace existing entry for same date, or append new
+    # 同日记录替换, 否则追加
     existing_idx = None
     for i, d in enumerate(tracking["days"]):
         if d.get("date") == date_str:
@@ -667,7 +670,7 @@ def update_tracking_file(
     else:
         tracking["days"].append(day_entry)
 
-    # Update cumulative
+    # 更新累计值
     all_n = sum(d["matches"] for d in tracking["days"])
     all_brier = sum(d["brier"] * d["matches"] for d in tracking["days"]) / all_n if all_n > 0 else 0
     all_acc = sum(d["accuracy"] * d["matches"] for d in tracking["days"]) / all_n if all_n > 0 else 0
@@ -681,7 +684,7 @@ def update_tracking_file(
     with open(tracking_path, "w", encoding="utf-8") as f:
         json.dump(tracking, f, ensure_ascii=False, indent=2)
 
-    print(f"[OK] Tracking updated: {tracking['cumulative']}")
+    print(f"[OK] 跟踪已更新: {tracking['cumulative']}")
     return tracking
 
 
@@ -716,7 +719,7 @@ class _SimpleTemplate:
             template,
         )
 
-        # Stack-based parsing
+        # 基于栈的解析
         i = 0
         while i < len(tokens):
             token = tokens[i]
@@ -724,7 +727,7 @@ class _SimpleTemplate:
             if token.startswith("{% if ") and token.endswith(" %}"):
                 var_name = token[6:-3].strip()
                 condition = self._resolve(var_name, context)
-                # Find matching endif/else
+                # 查找匹配的endif/else
                 depth = 1
                 j = i + 1
                 else_idx = -1
@@ -754,13 +757,13 @@ class _SimpleTemplate:
                 i = endif_idx + 1
 
             elif token.startswith("{% for ") and token.endswith(" %}"):
-                # Parse: for ITEM in LIST
+                # 解析: for ITEM in LIST
                 m = _re.match(r'\{%\s*for\s+(\w+)\s+in\s+(\w+)\s*%\}', token)
                 if m:
                     item_name = m.group(1)
                     list_name = m.group(2)
                     items = context.get(list_name, [])
-                    # Find matching endfor
+                    # 查找匹配的endfor
                     depth = 1
                     j = i + 1
                     while j < len(tokens):

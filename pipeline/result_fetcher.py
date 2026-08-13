@@ -54,7 +54,7 @@ def load_results_from_text(text: str) -> list[dict]:
         if not line or line.startswith("#"):
             continue
 
-        # Try "TeamA X-Y TeamB" format
+        # 尝试 "TeamA X-Y TeamB" 格式
         import re
         m = re.match(r"(.+?)\s+(\d+)\s*[-–—]\s*(\d+)\s+(.+)", line)
         if m:
@@ -70,7 +70,7 @@ def load_results_from_text(text: str) -> list[dict]:
             })
             continue
 
-        # Try JSON-like inline
+        # 尝试类JSON内联格式
         try:
             obj = json.loads(line)
             if "home_team" in obj or "home" in obj:
@@ -128,7 +128,7 @@ def _normalize_results(data: list[dict]) -> list[dict]:
     """Normalize and validate results data."""
     results = []
     for item in data:
-        # Normalize field names
+        # 标准化字段名
         home = item.get("home_team") or item.get("home", "")
         away = item.get("away_team") or item.get("away", "")
         if not home or not away:
@@ -137,7 +137,7 @@ def _normalize_results(data: list[dict]) -> list[dict]:
         home = normalize_team_name(home)
         away = normalize_team_name(away)
 
-        # Derive result from goals if missing
+        # 缺少result时从进球推导
         if "result" not in item:
             hg = item.get("home_goals")
             ag = item.get("away_goals")
@@ -200,16 +200,24 @@ def match_predictions_to_results(
 
         if found:
             model = pred.get("model", {})
+            # 透传model全字段 — 维度复盘需要 over_25/over_35/btts/lambda/rho
+            predicted = {
+                "home_win": model.get("home_win", 0.33),
+                "draw": model.get("draw", 0.34),
+                "away_win": model.get("away_win", 0.33),
+            }
+            for k in ("over_25", "over_35", "btts",
+                      "lambda_home", "lambda_away", "rho",
+                      "score_distribution"):
+                if model.get(k) is not None:
+                    predicted[k] = model[k]
             matched.append({
                 "home_team": ph,
                 "away_team": pa,
                 "league_code": pred.get("league_code", ""),
-                "predicted": {
-                    "home_win": model.get("home_win", 0.33),
-                    "draw": model.get("draw", 0.34),
-                    "away_win": model.get("away_win", 0.33),
-                },
+                "predicted": predicted,
                 "actual": found["result"],
+                "ah_handicap": pred.get("ah_handicap"),
                 "home_goals": found.get("home_goals"),
                 "away_goals": found.get("away_goals"),
                 "value": pred.get("value"),
@@ -222,7 +230,7 @@ def match_predictions_to_results(
             unmatched_pred.append(pred)
 
     if unmatched_pred:
-        print(f"  [WARN] {len(unmatched_pred)} predictions could not be matched to results")
+        print(f"  [警告] {len(unmatched_pred)} 条预测未能匹配赛果")
 
     return matched
 

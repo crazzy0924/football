@@ -204,7 +204,7 @@ def cmd_predict(args):
 
         # 让球盘预测(如有AH赔率)
         ah_pred = None
-        ah_line = m.get("ah_line") or m.get("goal_line")
+        ah_line = m.get("ah_line") or m.get("goal_line") or m.get("handicap")
         ah_odds = m.get("ah_odds")
         if ah_line is not None and ah_odds:
             from pipeline.five_dim_predictor import compute_handicap_probs, analyze_hhad_edge
@@ -414,17 +414,9 @@ def cmd_review(args):
         n_updated = len(set(c["team"] for c in elo_changes))
         print(f"[OK] ELO 已更新 {n_updated} 支球队 ({len(elo_changes)} 条记录)")
 
-    # ---- 生成复盘报告 ----
-    from pipeline.reporter import generate_review_report, update_tracking_file, TEAM_CN
-
-    review_path = generate_review_report(
-        matched,
-        output_dir=output_dir,
-        date_str=date_str,
-        elo_changes=elo_changes,
-    )
-
     # ---- 更新跟踪 ----
+    from pipeline.reporter import update_tracking_file, TEAM_CN
+
     elo_summary = {"teams_updated": len(set(c["team"] for c in elo_changes))} if elo_changes else None
     tracking = update_tracking_file(matched, date_str, output_dir, elo_summary)
 
@@ -439,8 +431,20 @@ def cmd_review(args):
     day_dims = evaluate_dimensions(matched, matches_info)
     ledger_path = os.path.join(state_dir, "dimension_ledger.json")
     ledger = update_ledger(day_dims, ledger_path)
+    dim_summary = print_dimension_summary(day_dims, ledger)
     print(f"\n[OK] 维度成绩已累计 → {ledger_path}")
-    print(print_dimension_summary(day_dims, ledger))
+    print(dim_summary)
+
+    # ---- 生成复盘报告 (含维度成绩) ----
+    from pipeline.reporter import generate_review_report, update_tracking_file, TEAM_CN
+
+    review_path = generate_review_report(
+        matched,
+        output_dir=output_dir,
+        date_str=date_str,
+        elo_changes=elo_changes,
+        dimension_summary=dim_summary,
+    )
 
     # ---- 打印总结 ----
     n = len(matched)

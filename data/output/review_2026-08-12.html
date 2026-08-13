@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>复盘报告 — {{ date }}</title>
+<title>复盘报告 — 2026-08-12</title>
 <style>
   :root {
     --bg: #0f1117;
@@ -151,29 +151,29 @@
 
   <div class="header">
     <h1>赛后复盘</h1>
-    <div class="meta">{{ date }} — 匹配 {{ n_matched }}/{{ n_total }} 场</div>
+    <div class="meta">2026-08-12 — 匹配 3/3 场</div>
   </div>
 
   <!-- 指标卡片 -->
   <div class="scorecard">
-    <div class="sc {{ brier_class }}">
-      <div class="value">{{ brier }}</div>
+    <div class="sc good">
+      <div class="value">0.2803</div>
       <div class="label">Brier 分数</div>
     </div>
-    <div class="sc {{ accuracy_class }}">
-      <div class="value">{{ accuracy }}</div>
+    <div class="sc good">
+      <div class="value">33.3%</div>
       <div class="label">准确率</div>
     </div>
-    <div class="sc {{ logloss_class }}">
-      <div class="value">{{ logloss }}</div>
+    <div class="sc bad">
+      <div class="value">1.3345</div>
       <div class="label">对数损失</div>
     </div>
-    <div class="sc {{ pl_class }}">
-      <div class="value">{{ total_pl }}</div>
+    <div class="sc bad">
+      <div class="value">-0.07u</div>
       <div class="label">盈亏 (单位)</div>
     </div>
-    <div class="sc {{ roi_class }}">
-      <div class="value">{{ roi }}</div>
+    <div class="sc bad">
+      <div class="value">-3.7%</div>
       <div class="label">回报率</div>
     </div>
   </div>
@@ -181,70 +181,151 @@
   <!-- 方向准确率 -->
   <div class="section-title">方向分解</div>
   <div style="display:flex;gap:20px;font-size:0.82rem;margin-bottom:8px">
-    <span>主胜: {{ h_correct }}/{{ h_total }} ({{ h_rate }})</span>
-    <span>平局: {{ d_correct }}/{{ d_total }} ({{ d_rate }})</span>
-    <span>客胜: {{ a_correct }}/{{ a_total }} ({{ a_rate }})</span>
+    <span>主胜: 1/1 (100.0%)</span>
+    <span>平局: 0/2 (0.0%)</span>
+    <span>客胜: 0/0 (N/A)</span>
   </div>
   <div class="direction-bar">
-    <div class="seg-home" style="width:{{ h_pct }}%"></div>
-    <div class="seg-draw" style="width:{{ d_pct }}%"></div>
-    <div class="seg-away" style="width:{{ a_pct }}%"></div>
+    <div class="seg-home" style="width:33%"></div>
+    <div class="seg-draw" style="width:67%"></div>
+    <div class="seg-away" style="width:0%"></div>
   </div>
 
   <!-- 多维度复盘 -->
-  {% if dimension_summary %}
+  
   <div class="section-title">多维度复盘 (5维度独立计分)</div>
-  <pre class="dim-box">{{ dimension_summary }}</pre>
-  {% endif %}
+  <pre class="dim-box">维度复盘 (门禁: 模型Brier < 气候基线):
+--------------------------------------------------------
+  1X2    胜平负 (3-way)          今日3场 Brier 0.2803 vs 基线0.2443 ❌无技能
+        累计44场 Brier 0.2227 vs 基线0.24 命中45% ✅
+  OU25   大小球2.5 (2-way)       今日3场 Brier 0.2697 vs 基线0.2388 ❌无技能
+        累计44场 Brier 0.2631 vs 基线0.24 命中45% ❌
+  OU35   大小球3.5 (2-way)       今日3场 Brier 0.1677 vs 基线0.1837 ✅有技能
+        累计44场 Brier 0.1858 vs 基线0.1956 命中77% ✅
+  BTTS   双方进球 (2-way)         今日3场 Brier 0.3056 vs 基线0.2498 ❌无技能
+        累计44场 Brier 0.2704 vs 基线0.2489 命中41% ❌
+  AH     让球盘 (2-way)          今日3场 Brier 0.2634 vs 基线0.1389 ❌无技能
+        累计3场 Brier 0.2634 vs 基线0.1389 命中67% ❌</pre>
+  
 
   <!-- 比赛结果 -->
   <div class="section-title">比赛结果</div>
-  {% for m in matches %}
-  <div class="match-row {{ m.outcome }}">
+  
+  <div class="match-row hit">
     <div class="mr-teams">
-      {{ m.home_team }} <span class="vs">vs</span> {{ m.away_team }}
-      {% if m.cold_start %}
-      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
-      {% endif %}
+      Paris SG <span class="vs">vs</span> Aston Villa
+      
     </div>
     <div class="mr-result">
-      {% if m.home_goals is not none and m.away_goals is not none %}
-      {{ m.home_goals }}-{{ m.away_goals }}
-      {% else %}
-      {{ m.actual }}
-      {% endif %}
+      
+      2-1
+      
     </div>
     <div class="mr-pred">
-      预测: {{ m.pred_h }} / {{ m.pred_d }} / {{ m.pred_a }}
+      预测: 64.9% / 20.5% / 14.6%
     </div>
     <div class="mr-prob">
-      {{ m.pred_pick_prob }}
+      64.9%
     </div>
-    <div class="mr-bet {{ m.pl_class }}">
-      {% if m.pl is not none and m.pl != 0 %}
-      {{ m.pl }}
-      {% endif %}
+    <div class="mr-bet won">
+      
+      +0.013u
+      
     </div>
-    <span class="badge {{ m.outcome }}">{{ m.verdict }}</span>
+    <span class="badge hit">✓ 命中</span>
   </div>
-  {% endfor %}
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      Platense <span class="vs">vs</span> Coquimbo Unido
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      预测: 47.7% / 32.5% / 19.8%
+    </div>
+    <div class="mr-prob">
+      47.7%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      帕尔梅拉斯 <span class="vs">vs</span> Cerro Porteno
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      预测: 88.2% / 8.6% / 3.1%
+    </div>
+    <div class="mr-prob">
+      88.2%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.086u
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
 
   <!-- ELO更新 -->
-  {% if elo_changes %}
+  
   <div class="section-title">ELO 更新</div>
-  {% for e in elo_changes %}
+  
   <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
-    {{ e.team }}: {{ e.old }} → {{ e.new }}
-    <span style="color:{% if e.delta > 0 %}var(--green){% elif e.delta < 0 %}var(--red){% else %}var(--text-dim){% endif %}">
-      ({{ e.delta_signed }})
+    Paris SG: 1819.0 → 1824.7
+    <span style="color:var(--green)">
+      (+5.7)
     </span>
-    <span style="font-size:0.65rem"> — {{ e.reason }}</span>
+    <span style="font-size:0.65rem"> — 2-1 胜</span>
   </div>
-  {% endfor %}
-  {% endif %}
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Aston Villa: 1654.4 → 1648.7
+    <span style="color:var(--red)">
+      (-5.7)
+    </span>
+    <span style="font-size:0.65rem"> — 1-2 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    帕尔梅拉斯: 1551.9 → 1545.3
+    <span style="color:var(--red)">
+      (-6.6)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    Cerro Porteno: 1500.0 → 1506.6
+    <span style="color:var(--green)">
+      (+6.6)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  
 
   <div class="footer">
-    足球预测模型 v3.0 · 复盘 {{ date }}
+    足球预测模型 v3.0 · 复盘 2026-08-12
     · 赛果自动更新ELO
   </div>
 </div>

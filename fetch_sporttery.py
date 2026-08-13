@@ -1,5 +1,5 @@
 """从体彩官网拉取今日三线赔率 (SPF + 让球 + 总进球) → 写入 today.json"""
-import sys, io, json, httpx, pathlib
+import sys, io, json, urllib.request, ssl, time, pathlib
 from datetime import datetime, timezone, timedelta
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
@@ -11,13 +11,33 @@ headers = {
     'Referer': 'https://www.sporttery.cn/',
 }
 
-# Step 1: Fetch all 3 pools
+# httpx走系统代理常SSL断连 → urllib直连+重试
+_ctx = ssl.create_default_context()
+_ctx.check_hostname = False
+_ctx.verify_mode = ssl.CERT_NONE
+_opener = urllib.request.build_opener(
+    urllib.request.ProxyHandler({}),      # 禁用系统代理
+    urllib.request.HTTPSHandler(context=_ctx),
+)
+
+def _get_json(url, retries=4):
+    for i in range(retries):
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with _opener.open(req, timeout=15) as resp:
+                return json.loads(resp.read().decode('utf-8'))
+        except Exception as e:
+            if i == retries - 1:
+                raise
+            print(f'  重试 {i+1}/{retries-1}: {e}')
+            time.sleep(2)
+
+# 第1步: 拉取三个彩池(HAD胜平负/HHAD让球/TTG总进球)
 all_matches = {}
 
 for pool in ['HAD', 'HHAD', 'TTG']:
     url = f'https://webapi.sporttery.cn/gateway/uniform/football/getMatchCalculatorV1.qry?poolCode={pool}&channelId=500'
-    with httpx.Client(timeout=15, verify=False) as client:
-        data = client.get(url, headers=headers).json()
+    data = _get_json(url)
     mlist = data['value']['matchInfoList']
     for db in mlist:
         for m in db.get('subMatchList', []):
@@ -34,6 +54,7 @@ for pool in ['HAD', 'HHAD', 'TTG']:
                     'league_name': league_name,
                     'league_id': m.get('leagueId', ''),
                     'match_num': m.get('matchNumCode', ''),
+                    'match_time': m.get('matchTime') or m.get('matchTime2') or '',
                 }
             if pool == 'HAD':
                 all_matches[mid]['had'] = m.get('had', {})
@@ -44,7 +65,7 @@ for pool in ['HAD', 'HHAD', 'TTG']:
 
 print(f'体彩 {date_str} 比赛: {len(all_matches)}场')
 
-# Step 2: Build today.json entries
+# 第2步: 组装 today.json 数据项
 # Map 体彩 league names to internal codes
 LEAGUE_CN_TO_CODE = {
     '英格兰超级联赛': 'PL',
@@ -61,11 +82,14 @@ LEAGUE_CN_TO_CODE = {
     '挪威超级联赛': 'NO1',
     '欧洲冠军联赛': 'UCL',
     '欧罗巴联赛': 'UEL',
+    '欧罗巴': 'UEL',
     '英格兰冠军联赛': 'ELC',
     '美国职业大联盟': 'MLS',
+    '沙特职业联赛': 'SPL',
+    '沙职': 'SPL',
 }
 
-# Chinese → English team name mapping for common teams
+# 中文→英文队名映射(常见球队)
 CN_TO_EN_TEAM = {
     '巴黎圣日尔曼': 'Paris Saint-Germain',
     '阿斯顿维拉': 'Aston Villa',
@@ -90,24 +114,59 @@ CN_TO_EN_TEAM = {
     '弗拉门戈': 'Flamengo',
     '圣保罗': 'Sao Paulo',
     '桑托斯': 'Santos',
+    # 欧罗巴资格赛
+    '克拉约瓦': 'Universitatea Craiova',
+    '克拉约瓦大学': 'Universitatea Craiova',
+    '库奥皮奥': 'KuPS',
+    '帕福斯': 'Pafos',
+    '萨尔茨堡': 'Salzburg',
+    '雷克维京': 'Vikingur Reykjavik',
+    '雷克雅未克维京人': 'Vikingur Reykjavik',
+    '图恩': 'Thun',
+    '流浪者': 'Rangers',
+    '格拉斯哥流浪者': 'Rangers',
+    '比亚韦': 'Jagiellonia',
+    '比亚韦斯托克': 'Jagiellonia',
+    '安德莱': 'Anderlecht',
+    '安德莱赫特': 'Anderlecht',
+    '塞萨洛': 'PAOK',
+    '塞萨洛尼基': 'PAOK',
+    '哈茨': 'Hearts',
+    '本菲卡': 'Benfica',
+    # 解放者杯
+    '米拉索尔': 'Mirassol',
+    '基多体大': 'LDU Quito',
+    '基多体育大学': 'LDU Quito',
+    '罗萨里奥': 'Rosario Central',
+    '罗萨里奥中央': 'Rosario Central',
+    '科林蒂安': 'Corinthians',
+    # 沙特联
+    '艾卜哈': 'Abha',
+    '拉斯决心': 'Al Hazm',
+    '利雅青年': 'Al Shabab',
+    '利雅得青年': 'Al Shabab',
+    '利雅得青年人': 'Al Shabab',
+    '胡巴卡德': 'Al Qadsiah',
+    '胡巴尔卡德西亚': 'Al Qadsiah',
 }
 
-# Fallback: try to match by league name substring, then by team name
+# 兜底: 先按联赛名子串匹配, 再按队名
 def guess_league_code(name, home, away):
     if name:
         for cn, code in LEAGUE_CN_TO_CODE.items():
             if cn in name or name in cn:
                 return code
-    # Team-based guessing for common intl club competitions
+    # 按队名猜常见国际俱乐部赛事
     big_euro = {'巴黎圣日尔曼','皇家马德里','巴塞罗那','拜仁慕尼黑','曼城','利物浦','阿斯顿维拉','阿森纳','切尔西','多特蒙德','国际米兰','AC米兰','尤文图斯'}
     if home in big_euro or away in big_euro:
         if any(t in {'巴黎圣日尔曼','阿斯顿维拉','皇家马德里'} for t in [home, away]):
             return 'UCL'  # UEFA CL
     # CONMEBOL
-    south_american = {'帕尔梅拉斯','波特诺山丘','博卡青年','河床','弗拉门戈'}
+    south_american = {'帕尔梅拉斯','波特诺山丘','博卡青年','河床','弗拉门戈',
+                      '米拉索尔','基多体大','罗萨里奥','科林蒂安'}
     if home in south_american or away in south_american:
         return 'CLB'  # Libertadores
-    # Check for Sudamericana teams
+    # 南球杯球队检测
     if any(team in ['普拉滕斯','科金博联'] for team in [home, away]):
         return 'CSD'
     return 'UNK'
@@ -130,6 +189,7 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
         'league_code': lc,
         'league_name': m.get('league_name', ''),
         'match_num': m.get('match_num', ''),
+        'kickoff_time': m.get('match_time', ''),
     }
 
     # SPF odds
@@ -150,7 +210,7 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
             'away': float(hhad['a']),
         }
 
-    # Total goals exact → derive O/U 2.5
+    # 总进球精确赔率 → 推导大小2.5
     if ttg.get('s0'):
         tg_odds = {}
         for k in ['s0', 's1', 's2', 's3', 's4', 's5', 's6', 's7']:
@@ -158,8 +218,8 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
                 tg_odds[k] = float(ttg[k])
         entry['total_goals_odds'] = tg_odds
 
-        # Derive over/under 2.5: over = P(3+) = s3 + s4 + s5 + s6 + s7
-        # First devig: compute raw implied probs
+        # 大小2.5推导: 大 = P(3球以上) = s3+s4+s5+s6+s7
+        # 先去水: 计算原始隐含概率
         total_prob = sum(1/o for o in tg_odds.values())
         over_raw = sum(1/tg_odds[k] for k in ['s3', 's4', 's5', 's6', 's7'] if k in tg_odds)
         under_raw = sum(1/tg_odds[k] for k in ['s0', 's1', 's2'] if k in tg_odds)
@@ -168,7 +228,7 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
             devig_factor = 1.0 / total_prob
             fair_over_prob = over_raw * devig_factor
             fair_under_prob = under_raw * devig_factor
-            # Convert fair probs back to decimal odds
+            # 公平概率转回十进制赔率
             if fair_over_prob > 0:
                 entry['ou_line'] = 2.5
                 entry['over_odds'] = round(1.0 / fair_over_prob, 2)
@@ -176,7 +236,7 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
 
     today.append(entry)
 
-    # Print match summary
+    # 打印场次摘要
     print(f'\n[{m["match_num"]}] {home} vs {away}')
     print(f'  联赛: {m["league_name"]} → {lc}')
     if entry.get('odds'):
@@ -194,7 +254,7 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
 pathlib.Path('data/today.json').write_text(json.dumps(today, ensure_ascii=False, indent=2), encoding='utf-8')
 print(f'\n✅ 保存 {len(today)} 场到 data/today.json')
 
-# Also save in pinnacle-compatible format for run_pinnacle_bets.py
+# 另存pinnacle兼容格式供 run_pinnacle_bets.py 使用
 pinnacle_format = []
 for m in today:
     if not m.get('odds'):
@@ -211,7 +271,7 @@ for m in today:
             ]}
         ]}]
     }
-    # Add handicap if available
+    # 有让球盘则加入
     if m.get('handicap') is not None and m.get('ah_odds'):
         ah = m['ah_odds']
         gl = m['handicap']
@@ -221,7 +281,7 @@ for m in today:
                 {'name': m['away_team'], 'price': ah['away'], 'point': -gl},
             ]
         })
-    # Add totals if available
+    # 有大小球则加入
     if m.get('ou_line') and m.get('over_odds'):
         entry['bookmakers'][0]['markets'].append({
             'key': 'totals', 'outcomes': [

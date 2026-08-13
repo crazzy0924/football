@@ -1,4 +1,4 @@
-"""Pinnacle(平博)全维度预测 — 1X2 + 亚洲盘 + 大小球 — Shin去水 + Kelly下注
+"""三线合并全维度预测 — 1X2 + 亚洲盘 + 大小球 — Shin去水 + Kelly下注
 
 用法:
   python run_pinnacle_bets.py                              # 默认读取 data/pinnacle_odds_DATE.json
@@ -35,7 +35,7 @@ def shin_binary(price_a, price_b):
     p, c = shin_1x2(price_a, price_b, 999.0)
     return p[:2], c
 
-# -- Score distribution helpers --
+# -- 比分分布工具 --
 def handicap_probs(score_dist, goal_line):
     hc = ps = ac = 0.0
     for score, prob in score_dist.items():
@@ -56,7 +56,7 @@ def totals_probs(score_dist):
     over_35 = sum(p for g, p in dist.items() if g >= 4)
     return {'over_2_5': over_25, 'over_3_5': over_35, 'exp_goals': sum(g*p for g,p in dist.items())}
 
-# -- Pinnacle → our canonical English name map --
+# -- 体彩/平博 → 规范英文队名映射 --
 PINNACLE_NAME_MAP = {
     # J1
     'Tokyo Verdy': 'Tokyo Verdy', 'Kawasaki Frontale': 'Kawasaki Frontale',
@@ -99,7 +99,7 @@ PINNACLE_NAME_MAP = {
 }
 
 # -- Load data --
-# Parse CLI args
+# 解析命令行参数
 odds_file = None
 date_str = None
 time_window = None
@@ -129,34 +129,34 @@ today_match_file = 'data/today_matches_v3.json' if Path('data/today_matches_v3.j
 with open(today_match_file, 'r', encoding='utf-8') as f:
     matches = json.load(f)
 
-# Build EN→CN name lookup (fuzzy: try exact first, then substring)
+# 构建英→中队名映射(先精确后子串)
 en_to_cn = {}
 for m in matches:
     h_full = m['home_team']; a_full = m['away_team']
     en_to_cn[(h_full, a_full)] = (m.get('home_cn',''), m.get('away_cn',''))
 
 def get_cn(h_en, a_en):
-    """Get Chinese names, with fuzzy fallback for short names like HJK→HJK Helsinki"""
+    """获取中文队名, 短名模糊兜底(HJK→HJK Helsinki)"""
     if (h_en, a_en) in en_to_cn:
         return en_to_cn[(h_en, a_en)]
-    # Try substring matching
+    # 子串模糊匹配
     for (kh, ka), (hcn, acn) in en_to_cn.items():
         if (h_en in kh or kh in h_en) and (a_en in ka or ka in a_en):
             return (hcn, acn)
     return (h_en, a_en)
 
-# -- Load model predictions --
+# -- 加载模型预测 --
 pred_path = f'data/output/predictions_{date_str}.json'
 preds = json.loads(Path(pred_path).read_text(encoding='utf-8')) if Path(pred_path).exists() else []
 
-# -- Load Pinnacle odds (or fall back to 体彩 SPF) --
+# -- 加载三线赔率 (缺失则回退体彩SPF) --
 pinnacle = []
 if Path(odds_file).exists():
     pinnacle = json.loads(Path(odds_file).read_text(encoding='utf-8'))
-    print(f'Pinnacle odds loaded: {odds_file} ({len(pinnacle)} matches)')
+    print(f'赔率数据已加载: {odds_file} ({len(pinnacle)}场)')
 else:
-    print(f'Pinnacle odds NOT FOUND: {odds_file}, falling back to 体彩 SPF from today_matches_v3.json')
-    # Build Pinnacle-compatible structure from 体彩 SPF odds
+    print(f'赔率文件未找到: {odds_file}, 回退体彩SPF(today_matches_v3.json)')
+    # 从体彩SPF赔率构造兼容结构
     for m in matches:
         odds = m.get('odds', {})
         if not odds: continue
@@ -176,9 +176,9 @@ else:
         }
         pinnacle.append(entry)
 
-source_label = 'Pinnacle' if Path(odds_file).exists() else '体彩SPF'
+source_label = '体彩三线' if (pinnacle and pinnacle[0].get('source') == '体彩三线') else ('Pinnacle' if Path(odds_file).exists() else '体彩SPF')
 
-# -- Build Pinnacle lookup --
+# -- 构建赔率查找表 --
 pinn_map = {}
 for e in pinnacle:
     h_raw = e['home_team']; a_raw = e['away_team']
@@ -217,12 +217,12 @@ for e in pinnacle:
                     odds['ou']['fair_over'] = fair_ou[0]; odds['ou']['fair_under'] = fair_ou[1]
     pinn_map[(h_en, a_en)] = odds
 
-# Fallback: fuzzy match for remaining unmatched predictions
+# 兜底: 对未匹配预测做模糊匹配
 def fuzzy_pinnacle(h, a):
-    """Match prediction team names to Pinnacle entries, handling garbled chars"""
+    """预测队名→赔率条目模糊匹配, 处理乱码字符"""
     h_clean = h.lower().replace(' ','').replace('-','').replace('.','')
     a_clean = a.lower().replace(' ','').replace('-','').replace('.','')
-    # Strip non-ASCII (handles garbled ü/é/etc)
+    # 去非ASCII(处理乱码ü/é等)
     h_ascii = ''.join(c for c in h_clean if ord(c) < 128)
     a_ascii = ''.join(c for c in a_clean if ord(c) < 128)
     for (kh, ka) in pinn_map:
@@ -230,7 +230,7 @@ def fuzzy_pinnacle(h, a):
         ka_clean = ka.lower().replace(' ','').replace('-','').replace('.','')
         kh_ascii = ''.join(c for c in kh_clean if ord(c) < 128)
         ka_ascii = ''.join(c for c in ka_clean if ord(c) < 128)
-        # Try full ascii matching
+        # 纯ASCII前缀匹配
         if len(h_ascii) >= 4 and len(a_ascii) >= 4:
             if h_ascii[:6] in kh_ascii or kh_ascii[:6] in h_ascii:
                 if a_ascii[:6] in ka_ascii or ka_ascii[:6] in a_ascii:
@@ -243,13 +243,37 @@ for p in preds:
         r = fuzzy_pinnacle(h, a)
         if r:
             pinn_map[(h, a)] = pinn_map[r]
-            print('Fuzzy: {} vs {} -> {} vs {}'.format(h, a, r[0], r[1]))
+            print('模糊匹配: {} vs {} -> {} vs {}'.format(h, a, r[0], r[1]))
 
 matched = sum(1 for p in preds if (p['home_team'], p['away_team']) in pinn_map)
-print('Pinnacle coverage: {}/{}'.format(matched, len(preds)))
+print('赔率覆盖率: {}/{}'.format(matched, len(preds)))
 for p in preds:
     if (p['home_team'], p['away_team']) not in pinn_map:
-        print('  NO Pinnacle: {} vs {} ({})'.format(p['home_team'], p['away_team'], p['league_code']))
+        print('  无赔率: {} vs {} ({})'.format(p['home_team'], p['away_team'], p['league_code']))
+
+# -- 维度门禁: 模型Brier < 气候基线才过门; 样本<30或未过门 → 禁注 --
+def load_dim_gates():
+    try:
+        from pipeline.dimension_review import _climatology_brier
+        import json as _json
+        led = _json.load(open('data/state/dimension_ledger.json', encoding='utf-8'))
+        gates = {}
+        for dim, d in led.get('dimensions', {}).items():
+            n = d.get('n', 0)
+            if n >= 30:
+                clim = _climatology_brier(d.get('samples', []), dim)
+                gates[dim] = d['brier'] < clim
+            else:
+                gates[dim] = False   # 样本不足30 → 视为未过门禁
+        return gates
+    except Exception:
+        return {}
+
+gates = load_dim_gates()
+_gate_txt = {k: ('✅' if v else '❌') for k, v in gates.items()}
+print('维度门禁: 1X2{} OU25{} OU35{} BTTS{} AH{}(3样本)'.format(
+    _gate_txt.get('1X2', '—'), _gate_txt.get('OU25', '—'), _gate_txt.get('OU35', '—'),
+    _gate_txt.get('BTTS', '—'), _gate_txt.get('AH', '—')))
 
 # -- Generate bets --
 BETS = []
@@ -260,7 +284,7 @@ for p in preds:
     m = p['model']; sd = m.get('score_distribution', {})
     dc_h, dc_d, dc_a = m['home_win'], m['draw'], m['away_win']
 
-    # Try exact, then fuzzy short-name (e.g. HJK → HJK Helsinki)
+    # 先精确后模糊短名(如 HJK→HJK Helsinki)
     po = pinn_map.get((h, a))
     if po is None:
         for (kh, ka), v in pinn_map.items():
@@ -271,7 +295,7 @@ for p in preds:
     dc_tot = totals_probs(sd) if sd else None
     candidates = []
 
-    # === DIM 1: 1X2 ===
+    # === 维度1: 胜平负 ===
     if ph:
         fair = ph['fair']
         edges = {'home': dc_h-fair[0], 'draw': dc_d-fair[1], 'away': dc_a-fair[2]}
@@ -280,22 +304,24 @@ for p in preds:
         kelly = max(0, edge_val)
         model_prob = {'home': dc_h, 'draw': dc_d, 'away': dc_a}[best]
         # 终盘A筛选: edge>5% + Kelly>1% + 非冷启动 + 方向概率>=35%
-        if kelly > 0.01 and edge_val > 0.05 and not cs and model_prob >= 0.35:
+        if kelly > 0.01 and edge_val > 0.05 and not cs and model_prob >= 0.35 and gates.get('1X2', True):
             candidates.append(('胜平负', DIRMAP[best], kelly, ph['raw'][best]))
 
-    # === DIM 2: Asian Handicap ===
+    # === 维度2: 亚洲盘 ===
     if pa and sd and pa.get('fair_home'):
         home_pt = pa['home_pt']
         dc_hp = handicap_probs(sd, home_pt)
         dc_home_edge = dc_hp['home'] - pa['fair_home']
         dc_away_edge = dc_hp['away'] - pa['fair_away']
+        if not gates.get('AH', True):
+            print('  [门禁拦截] {} vs {} 亚洲盘 → AH维度未过门禁'.format(h, a))
 
         if dc_home_edge > 0 and dc_home_edge > dc_away_edge:
             kelly = dc_home_edge
             if home_pt > 0.01: label = '主队(受+{:.2f})'.format(home_pt)
             elif home_pt < -0.01: label = '主队(让{:.2f})'.format(-home_pt)
             else: label = '主队(平手)'
-            if kelly > 0.01 and dc_home_edge > 0.05 and not cs and dc_hp['home'] >= 0.35:
+            if kelly > 0.01 and dc_home_edge > 0.05 and not cs and dc_hp['home'] >= 0.35 and gates.get('AH', True):
                 candidates.append(('亚洲盘', label, kelly, pa['home_price']))
         elif dc_away_edge > 0:
             kelly = dc_away_edge
@@ -303,13 +329,13 @@ for p in preds:
             if away_pt > 0.01: label = '客队(受+{:.2f})'.format(away_pt)
             elif away_pt < -0.01: label = '客队(让{:.2f})'.format(-away_pt)
             else: label = '客队(平手)'
-            if kelly > 0.01 and dc_away_edge > 0.05 and not cs and dc_hp['away'] >= 0.35:
+            if kelly > 0.01 and dc_away_edge > 0.05 and not cs and dc_hp['away'] >= 0.35 and gates.get('AH', True):
                 candidates.append(('亚洲盘', label, kelly, pa['away_price']))
 
-    # === DIM 3: Totals ===
+    # === 维度3: 大小球 ===
     if pu and dc_tot and pu.get('fair_over'):
         line = pu['line']
-        # Interpolate DC model probability for exact Pinnacle line
+        # 按赔率线插值DC模型概率
         if abs(line - 2.5) < 0.15: dc_over = dc_tot['over_2_5']
         elif abs(line - 3.5) < 0.15: dc_over = dc_tot['over_3_5']
         elif abs(line - 3.0) < 0.15: dc_over = dc_tot.get('over_2_5', 0.5) * 0.8
@@ -320,11 +346,16 @@ for p in preds:
         else: dc_over = 0.5
         over_edge = dc_over - pu['fair_over']
         under_edge = (1-dc_over) - pu['fair_under']
+        # 维度门禁: 线2.5→OU25, 线3.5→OU35, 未过门禁维度禁注
+        ou_dim = 'OU25' if abs(line - 2.5) < 0.3 else ('OU35' if abs(line - 3.5) < 0.3 else None)
+        ou_gate = gates.get(ou_dim, True) if ou_dim else True
+        if not ou_gate:
+            print('  [门禁拦截] {} vs {} 大小球线{} → {}维度未过门禁'.format(h, a, line, ou_dim))
         if over_edge > under_edge and over_edge > 0:
-            if over_edge > 0.05 and not cs and dc_over >= 0.35:
+            if over_edge > 0.05 and not cs and dc_over >= 0.35 and ou_gate:
                 candidates.append(('大小球', '大{:.1f}球'.format(line), over_edge, pu['over_price']))
         elif under_edge > 0:
-            if under_edge > 0.05 and not cs and (1-dc_over) >= 0.35:
+            if under_edge > 0.05 and not cs and (1-dc_over) >= 0.35 and ou_gate:
                 candidates.append(('大小球', '小{:.1f}球'.format(line), under_edge, pu['under_price']))
 
     if not candidates: continue
@@ -342,7 +373,7 @@ for p in preds:
         'odds': odds_val, 'stake': stake, 'cold': cs,
     })
 
-# Cap total exposure at 25%
+# 总仓位上限25%
 total = sum(b['stake'] for b in BETS)
 if total > 2500:
     s = 2500.0 / total
@@ -352,24 +383,24 @@ total = sum(b['stake'] for b in BETS)
 # -- Display --
 print()
 print('=' * 95)
-print('  JOYBOY | {} Pinnacle(平博) 三维预测 | 1X2+亚洲盘+大小球 | Shin去水 | 1/4 Kelly{}'.format(
+print('  JOYBOY | {} 三线合并预测 | 1X2+亚洲盘+大小球 | Shin去水 | 1/4 Kelly{}'.format(
     date_str, f' | {time_window}窗口' if time_window else ''))
 print('=' * 95)
 for b in BETS:
     o = '{:.2f}'.format(b['odds']) if b['odds'] else '  --'
-    tag = 'COLD ' if b['cold'] else '     '
-    print('  {}{} vs {} | {} | {} | {} @{} Kelly={:.0%} ${}'.format(
+    tag = '冷启动 ' if b['cold'] else '      '
+    print('  {}{} vs {} | {} | {} | {} @{} Kelly={:.0%} ¥{}'.format(
         tag, b['home'], b['away'], b['league'], b['dim'], b['direction'],
         o, b['kelly'], b['stake']))
 print('=' * 95)
-print('  {} bets | ${:,} | {:.1f}% exposure | Source: {}'.format(
+print('  {}注 | ¥{:,} | {:.1f}%仓位 | 数据源: {}'.format(
     len(BETS), total, total/BANKROLL*100, source_label))
 dims = {}
 for b in BETS: dims[b['dim']] = dims.get(b['dim'], 0) + 1
-print('  Dims: {}'.format(dims))
+print('  维度分布: {}'.format(dims))
 
 # Save
 out = Path(f'data/output/pinnacle_bets_{date_str}.json')
 out.write_text(json.dumps({'date':date_str,'bets':BETS,'total':total,'source':source_label},
     ensure_ascii=False, indent=2), encoding='utf-8')
-print('\nSaved: ' + str(out))
+print('\n已保存: ' + str(out))

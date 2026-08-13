@@ -261,6 +261,7 @@ for m in today:
         continue
     o = m['odds']
     entry = {
+        'source': '体彩三线',   # 数据源标记: run_pinnacle_bets.py 据此标注
         'home_team': m['home_team'],
         'away_team': m['away_team'],
         'bookmakers': [{'key': 'pinnacle', 'markets': [

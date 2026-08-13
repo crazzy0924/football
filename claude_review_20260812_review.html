@@ -92,6 +92,20 @@ h2{font-size:0.78em;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid
 </div>
 </div>
 
+<div class="big">
+<h3>📊 sky3.0官方多维度复盘 · 5维度门禁状态 (44场样本)</h3>
+<table>
+<tr style="background:rgba(255,255,255,0.02)"><th>维度</th><th>样本</th><th>Brier</th><th>气候基线</th><th>准确率</th><th>门禁</th></tr>
+<tr><td>1X2 胜平负</td><td>44</td><td style="color:var(--g)">0.2227</td><td>0.24</td><td>45.5%</td><td style="color:var(--g)">✅微弱技能</td></tr>
+<tr><td>OU25 大小2.5</td><td>44</td><td style="color:var(--r)">0.2631</td><td>0.24</td><td>45.5%</td><td style="color:var(--r)">❌无技能</td></tr>
+<tr><td>OU35 大小3.5</td><td>44</td><td style="color:var(--g)">0.1858</td><td>0.1956</td><td>77.3%</td><td style="color:var(--g)">✅微弱技能</td></tr>
+<tr><td>BTTS 双方进球</td><td>44</td><td style="color:var(--r)">0.2704</td><td>0.24</td><td>40.9%</td><td style="color:var(--r)">❌无技能</td></tr>
+<tr><td>AH 让球盘</td><td>3</td><td>0.2634</td><td>—</td><td>66.7%</td><td style="color:var(--y)">首批3样本</td></tr>
+</table>
+<div class="insight warn" style="margin-top:6px"><b>铁证:</b> 终盘A的注是OU25维度(大2.5)——该维度44场Brier 0.2631 > 基线0.24 <b>无技能</b>，按门禁本就不该产生信号。sky3.0切换到1X2主胜(✅过门维度)后才合规。这次切换不只是赔率驱动，也是<b>维度门禁的正确回归</b>。教训: 未过门维度的信号产生时，应优先怀疑信号本身而非市场赔率。</div>
+<div class="insight good"><b>今日3场维度表现:</b> 1X2方向1/3(仅PSG对) · OU25大小2/3(仅帕尔梅拉斯错,模型O77%被1-1证伪) · BTTS 3/3全中(今天全部双方进球) · 两场平局继续暴露DC模型平局盲区</div>
+</div>
+
 <!-- CREDIT SCORE UPDATE -->
 <div class="big">
 <h3>📈 克劳德信用分 · 8月12日更新</h3>

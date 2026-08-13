@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any
 
 
-# League code mapping: football-data.co.uk Div codes → internal codes
+# 联赛代码映射: football-data.co.uk Div代码 → 内部代码
 DIV_TO_LEAGUE = {
     "E0": "PL",   # Premier League
     "E1": "ELC",  # Championship
@@ -38,7 +38,7 @@ DIV_TO_LEAGUE = {
     "G1": "GRE",  # Greece Super League
 }
 
-# Odds columns we extract (bookmaker prefix → output key)
+# 抽取的赔率列 (博彩商前缀 → 输出键)
 ODDS_COLUMNS = {
     "B365": "bet365",
     "PS": "pinnacle",
@@ -49,8 +49,8 @@ ODDS_COLUMNS = {
     "IW": "interwetten",
 }
 
-# CSV seasons to expected season label
-# Handles both "E0_2021_2022.csv" and "D2_2425.csv" formats
+# CSV赛季 → 期望赛季标签
+# 兼容 "E0_2021_2022.csv" 与 "D2_2425.csv" 两种文件名格式
 SEASON_PATTERN = re.compile(r"_(\d{4})_(\d{4})\.csv$")
 SEASON_PATTERN_SHORT = re.compile(r"_(\d{2})(\d{2})\.csv$")
 
@@ -102,7 +102,7 @@ def load_all_csvs(csv_dir: str = "data/historical_odds") -> list[dict]:
         matches = _parse_csv(csv_path, league_code, season)
         all_matches.extend(matches)
 
-    # Sort chronologically
+    # 按时间排序
     all_matches.sort(key=lambda m: m["date"])
     return all_matches
 
@@ -221,7 +221,7 @@ def _parse_row(row: dict, league_code: str, season: str) -> dict | None:
             except (ValueError, TypeError):
                 pass
 
-    # Extract Asian Handicap — opening line (AHh) + Pinnacle odds (PAHH/PAHA)
+    # 抽取亚洲盘 — 初盘线(AHh) + Pinnacle赔率(PAHH/PAHA)
     ah_line = None
     ah_odds = None
     try:
@@ -266,7 +266,7 @@ def _parse_date(date_str: str) -> str:
     return f"{year}-{month.zfill(2)}-{day.zfill(2)}"
 
 
-# Canonical team name aliases — maps API names to CSV names
+# 规范队名别名 — API名 → CSV名
 TEAM_NAME_ALIASES = {
     # Bundesliga
     "Borussia Dortmund": "Dortmund",
@@ -320,6 +320,7 @@ TEAM_NAME_ALIASES = {
     # Ligue 1
     "Paris Saint-Germain": "Paris SG",
     "Paris Saint Germain": "Paris SG",
+    "PSG": "Paris SG",
     "Saint-Etienne": "St Etienne",
     "AS Saint-Etienne": "St Etienne",
     "Saint-Étienne": "St Etienne",
@@ -371,7 +372,7 @@ TEAM_NAME_ALIASES = {
     "SL Benfica": "Benfica",
     "Sporting Lisbon": "Sp Lisbon",
     "Sporting CP": "Sp Lisbon",
-    # Norway (CSV + openfootball)
+    # 挪威 (CSV + openfootball)
     "Rosenborg BK": "Rosenborg",
     "Lillestrom SK": "Lillestrom",
     "Lillestrøm SK": "Lillestrom",
@@ -379,7 +380,7 @@ TEAM_NAME_ALIASES = {
     "Hamarkameratene": "HamKam",
     "Aalesunds FK": "Aalesund",
     "Kristiansund BK": "Kristiansund",
-    # Sweden (openfootball)
+    # 瑞典 (openfootball)
     "Hammarby IF": "Hammarby",
     "BK Hacken": "Hacken",
     "BK Häcken": "Hacken",
@@ -389,14 +390,14 @@ TEAM_NAME_ALIASES = {
     "GAIS Göteborg": "GAIS",
     "Kalmar FF": "Kalmar",
     "Halmstads BK": "Halmstads",
-    # Finland (openfootball)
+    # 芬兰 (openfootball)
     "HJK Helsinki": "HJK",
     "FC Lahti": "Lahti",
     "Kuopion PS": "KuPS",
     "AC Oulu": "AC Oulu",
     "Inter Turku": "Inter Turku",
     "TPS": "TPS",
-    # Brazil (openfootball)
+    # 巴西 (openfootball)
     "Flamengo RJ": "Flamengo",
     "CR Flamengo": "Flamengo",
     "Santos FC": "Santos",
@@ -404,7 +405,7 @@ TEAM_NAME_ALIASES = {
     "Athletico-PR": "Athletico-PR",
     "Fortaleza EC": "Fortaleza",
     "Sao Paulo FC": "Sao Paulo",
-    # Japan J1 (openfootball)
+    # 日本J1 (openfootball)
     "Kyoto Sanga FC": "Kyoto Sanga",
 }
 
@@ -431,13 +432,13 @@ def detect_team_name_variants(matches: list[dict]) -> dict[str, list[str]]:
     Returns dict of canonical_name → [variant1, variant2, ...]
     for manual review and correction.
     """
-    # Group teams by league
+    # 按联赛分组球队
     league_teams: dict[str, set[str]] = defaultdict(set)
     for m in matches:
         league_teams[m["league_code"]].add(m["home_team"])
         league_teams[m["league_code"]].add(m["away_team"])
 
-    # For each league, find fuzzy matches
+    # 每个联赛内找模糊匹配
     variants: dict[str, list[str]] = {}
     for league, teams in league_teams.items():
         team_list = sorted(teams)
@@ -453,19 +454,19 @@ def detect_team_name_variants(matches: list[dict]) -> dict[str, list[str]]:
 
 def _is_likely_same_team(a: str, b: str) -> bool:
     """Heuristic: are these likely the same team with different spellings?"""
-    # Normalize for comparison
+    # 归一化后比较
     a_norm = a.lower().replace(" ", "").replace(".", "").replace("'", "")
     b_norm = b.lower().replace(" ", "").replace(".", "").replace("'", "")
 
-    # Exact match after normalization
+    # 归一化后精确匹配
     if a_norm == b_norm:
         return a != b  # Only if original strings differ
 
-    # One contains the other
+    # 双向包含
     if a_norm in b_norm or b_norm in a_norm:
         return True
 
-    # Levenshtein-like: share long common prefix
+    # 类编辑距离: 共享长公共前缀
     common = 0
     for c1, c2 in zip(a_norm, b_norm):
         if c1 == c2:

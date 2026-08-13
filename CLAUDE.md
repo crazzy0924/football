@@ -78,6 +78,13 @@ python pipeline.py review YYYY-MM-DD --results-text "TeamA 2-1 TeamB\n..."
 
 # 4. 查看复盘报告
 # data/output/review_YYYY-MM-DD.html
+
+# 5. 历史交锋查询 (本地全库3万场, 按联赛区分)
+python h2h.py "Benfica" "Porto"          # 联赛内战可查; 跨国对决无数据会明确提示
+python h2h.py --stats                    # 全库按联赛分布
+python h2h.py --append data/output/results_DATE.json   # 每日复盘赛果回灌全库
+python h2h.py --rebuild                  # 重建全库 (txt/CSV/JSON三源)
+# 覆盖外联赛(沙特/冰岛/瑞士/巴拉圭/杯赛跨国对决)需外部源 transfermarkt/soccerway
 ```
 
 ## 模型门禁 (硬性)

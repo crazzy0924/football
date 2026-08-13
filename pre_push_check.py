@@ -216,7 +216,7 @@ content_files = [f for f in content_files if f.name not in ('pre_push_check.py',
 # JSON数据文件豁免 — 队名/联赛代码必须英文才能匹配ELO
 content_files = [f for f in content_files if not (f.suffix == '.json' and (
     'today.json' in f.name or 'pinnacle_odds_' in f.name or 'pinnacle_bets_' in f.name
-    or 'predictions_' in f.name or 'kambi_' in f.name))]
+    or 'predictions_' in f.name or 'kambi_' in f.name or 'local_match_db' in f.name))]
 
 print(f'🔎 检查 {len(content_files)} 个内容文件...')
 print()

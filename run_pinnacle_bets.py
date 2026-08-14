@@ -303,8 +303,15 @@ for p in preds:
         edge_val = edges[best]
         kelly = max(0, edge_val)
         model_prob = {'home': dc_h, 'draw': dc_d, 'away': dc_a}[best]
+        # 翻市场纪律(8-13确立): 模型方向≠市场方向 → 需双重证据(置信≥60%+结构性理由)
+        # 当前分歧胜率2-2 → 模型尚无翻市场资格 → 一律拦截
+        m_dir = max(('home', dc_h), ('draw', dc_d), ('away', dc_a), key=lambda x: x[1])[0]
+        k_dir = min(ph['raw'].items(), key=lambda kv: kv[1])[0]
+        if m_dir != k_dir:
+            print('  [翻市场拦截] {} vs {} 胜平负 → 模型{}方向({:.1%})≠市场({:.2f}赔率最低), 无翻市场资格'.format(
+                h, a, DIRMAP[m_dir], {'home': dc_h, 'draw': dc_d, 'away': dc_a}[m_dir], ph['raw'][k_dir]))
         # 终盘A筛选: edge>5% + Kelly>1% + 非冷启动 + 方向概率>=35%
-        if kelly > 0.01 and edge_val > 0.05 and not cs and model_prob >= 0.35 and gates.get('1X2', True):
+        elif kelly > 0.01 and edge_val > 0.05 and not cs and model_prob >= 0.35 and gates.get('1X2', True):
             candidates.append(('胜平负', DIRMAP[best], kelly, ph['raw'][best]))
 
     # === 维度2: 亚洲盘 ===

@@ -321,6 +321,8 @@ TEAM_NAME_ALIASES = {
     "Paris Saint-Germain": "Paris SG",
     "Paris Saint Germain": "Paris SG",
     "PSG": "Paris SG",
+    "Västerås": "Vasteras",
+    "TPS Turku": "TPS",
     "Saint-Etienne": "St Etienne",
     "AS Saint-Etienne": "St Etienne",
     "Saint-Étienne": "St Etienne",
@@ -374,6 +376,7 @@ TEAM_NAME_ALIASES = {
     "Sporting CP": "Sp Lisbon",
     # 挪威 (CSV + openfootball)
     "Rosenborg BK": "Rosenborg",
+  "Viking": "Viking FK",
     "Lillestrom SK": "Lillestrom",
     "Lillestrøm SK": "Lillestrom",
     "Molde FK": "Molde",
@@ -382,6 +385,8 @@ TEAM_NAME_ALIASES = {
     "Kristiansund BK": "Kristiansund",
     # 瑞典 (openfootball)
     "Hammarby IF": "Hammarby",
+  "Elfsborg": "IF Elfsborg",
+  "Vasteras": "Västerås SK",
     "BK Hacken": "Hacken",
     "BK Häcken": "Hacken",
     "IFK Goteborg": "IFK Goteborg",
@@ -407,6 +412,7 @@ TEAM_NAME_ALIASES = {
     "Sao Paulo FC": "Sao Paulo",
     # 日本J1 (openfootball)
     "Kyoto Sanga FC": "Kyoto Sanga",
+  "Kashiwa": "Kashiwa Reysol",
 }
 
 

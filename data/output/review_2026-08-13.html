@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复盘报告 — 2026-08-13</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4eb;
+    --text-dim: #8b8fa3;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+
+  /* 指标卡片 */
+  .scorecard {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .sc {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .sc .value { font-size: 1.5rem; font-weight: 700; }
+  .sc .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+  .sc.good .value { color: var(--green); }
+  .sc.bad .value { color: var(--red); }
+  .sc.warn .value { color: var(--yellow); }
+
+  /* 方向分解 */
+  .direction-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0 16px;
+    background: var(--bg);
+  }
+  .direction-bar .seg-home { background: #3b82f6; }
+  .direction-bar .seg-draw { background: #8b8fa3; }
+  .direction-bar .seg-away { background: #f59e0b; }
+
+  /* 比赛行 */
+  .match-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    gap: 12px;
+    font-size: 0.85rem;
+  }
+  .match-row.hit { border-left: 3px solid var(--green); }
+  .match-row.miss { border-left: 3px solid var(--red); }
+  .match-row.push { border-left: 3px solid var(--yellow); }
+
+  .mr-teams { flex: 2; min-width: 0; }
+  .mr-teams .vs { color: var(--text-dim); margin: 0 6px; }
+  .mr-result { flex: 0 0 60px; text-align: center; font-weight: 700; font-size: 1rem; }
+  .mr-pred { flex: 1; text-align: center; font-size: 0.78rem; color: var(--text-dim); }
+  .mr-prob { flex: 0 0 70px; text-align: right; font-weight: 600; }
+  .mr-bet { flex: 0 0 80px; text-align: right; }
+  .mr-bet.won { color: var(--green); }
+  .mr-bet.lost { color: var(--red); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.7rem;
+  }
+  .badge.hit { background: #166534; color: #4ade80; }
+  .badge.miss { background: #451a1a; color: #f87171; }
+  .badge.push { background: #3b2f0e; color: #fbbf24; }
+
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 24px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dim-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+  }
+
+  .cal-table {
+    width: 100%;
+    font-size: 0.8rem;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  .cal-table th, .cal-table td {
+    padding: 6px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .cal-table th { color: var(--text-dim); font-weight: 600; }
+
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>赛后复盘</h1>
+    <div class="meta">2026-08-13 — 匹配 10/10 场</div>
+  </div>
+
+  <!-- 指标卡片 -->
+  <div class="scorecard">
+    <div class="sc good">
+      <div class="value">0.2313</div>
+      <div class="label">Brier 分数</div>
+    </div>
+    <div class="sc good">
+      <div class="value">30.0%</div>
+      <div class="label">准确率</div>
+    </div>
+    <div class="sc bad">
+      <div class="value">1.1196</div>
+      <div class="label">对数损失</div>
+    </div>
+    <div class="sc good">
+      <div class="value">+0.08u</div>
+      <div class="label">盈亏 (单位)</div>
+    </div>
+    <div class="sc good">
+      <div class="value">+3.8%</div>
+      <div class="label">回报率</div>
+    </div>
+  </div>
+
+  <!-- 方向准确率 -->
+  <div class="section-title">方向分解</div>
+  <div style="display:flex;gap:20px;font-size:0.82rem;margin-bottom:8px">
+    <span>主胜: 2/3 (66.7%)</span>
+    <span>平局: 0/5 (0.0%)</span>
+    <span>客胜: 1/2 (50.0%)</span>
+  </div>
+  <div class="direction-bar">
+    <div class="seg-home" style="width:30%"></div>
+    <div class="seg-draw" style="width:50%"></div>
+    <div class="seg-away" style="width:20%"></div>
+  </div>
+
+  <!-- 多维度复盘 -->
+  
+  <div class="section-title">多维度复盘 (5维度独立计分)</div>
+  <pre class="dim-box">维度复盘 (门禁: 模型Brier < 气候基线):
+--------------------------------------------------------
+  1X2    胜平负 (3-way)          今日10场 Brier 0.2313 vs 基线0.25 ✅有技能
+        累计54场 Brier 0.2243 vs 基线0.25 命中43% ✅
+  OU25   大小球2.5 (2-way)       今日10场 Brier 0.2259 vs 基线0.2494 ✅有技能
+        累计54场 Brier 0.2562 vs 基线0.25 命中50% ❌
+  OU35   大小球3.5 (2-way)       今日10场 Brier 0.2262 vs 基线0.2344 ✅有技能
+        累计54场 Brier 0.1933 vs 基线0.2322 命中74% ✅
+  BTTS   双方进球 (2-way)         今日10场 Brier 0.1914 vs 基线0.21 ✅有技能
+        累计54场 Brier 0.2558 vs 基线0.2322 命中46% ❌
+  AH     让球盘 (2-way)          今日10场 Brier 0.137 vs 基线0.233 ✅有技能
+        累计13场 Brier 0.1662 vs 基线0.2263 命中62% ✅</pre>
+  
+
+  <!-- 比赛结果 -->
+  <div class="section-title">比赛结果</div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      艾卜哈 <span class="vs">vs</span> 哈森姆
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      1-2
+      
+    </div>
+    <div class="mr-pred">
+      预测: 36.3% / 31.5% / 32.2%
+    </div>
+    <div class="mr-prob">
+      31.5%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      克拉约瓦大学 <span class="vs">vs</span> 库普斯
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      2-1
+      
+    </div>
+    <div class="mr-pred">
+      预测: 53.4% / 22.1% / 24.5%
+    </div>
+    <div class="mr-prob">
+      24.5%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.032u
+      
+    </div>
+    <span class="badge push">△ 走水</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      帕福斯 <span class="vs">vs</span> 萨尔茨堡
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      3-3
+      
+    </div>
+    <div class="mr-pred">
+      预测: 29.2% / 25.8% / 45.1%
+    </div>
+    <div class="mr-prob">
+      29.2%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      雷克雅未克维京人 <span class="vs">vs</span> 图恩
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      3-2
+      
+    </div>
+    <div class="mr-pred">
+      预测: 39.4% / 23.6% / 37.0%
+    </div>
+    <div class="mr-prob">
+      39.4%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge hit">✓ 命中</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      利雅得青年 <span class="vs">vs</span> 胡巴尔卡德西亚
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      1-3
+      
+    </div>
+    <div class="mr-pred">
+      预测: 19.2% / 23.6% / 57.2%
+    </div>
+    <div class="mr-prob">
+      23.6%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge push">△ 走水</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      格拉斯哥流浪者 <span class="vs">vs</span> 比亚韦斯托克
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      预测: 61.3% / 20.9% / 17.8%
+    </div>
+    <div class="mr-prob">
+      61.3%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      安德莱赫特 <span class="vs">vs</span> 塞萨洛尼基
+      
+    </div>
+    <div class="mr-result">
+      
+      3-2
+      
+    </div>
+    <div class="mr-pred">
+      预测: 28.9% / 26.9% / 44.2%
+    </div>
+    <div class="mr-prob">
+      44.2%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      哈茨 <span class="vs">vs</span> 本菲卡
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      预测: 24.9% / 28.6% / 46.5%
+    </div>
+    <div class="mr-prob">
+      28.6%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.108u
+      
+    </div>
+    <span class="badge hit">✓ 命中</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      米拉索尔 <span class="vs">vs</span> 基多体育大学
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      预测: 59.6% / 24.4% / 16.1%
+    </div>
+    <div class="mr-prob">
+      16.1%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      罗萨里奥中央 <span class="vs">vs</span> 科林蒂安
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      0-0
+      
+    </div>
+    <div class="mr-pred">
+      预测: 43.5% / 32.7% / 23.8%
+    </div>
+    <div class="mr-prob">
+      23.8%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+
+  <!-- ELO更新 -->
+  
+  <div class="section-title">ELO 更新</div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    克拉约瓦大学: 1500.0 → 1519.6
+    <span style="color:var(--green)">
+      (+19.6)
+    </span>
+    <span style="font-size:0.65rem"> — 2-1 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    库普斯: 1680.5 → 1660.9
+    <span style="color:var(--red)">
+      (-19.6)
+    </span>
+    <span style="font-size:0.65rem"> — 1-2 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    格拉斯哥流浪者: 1702.0 → 1690.8
+    <span style="color:var(--red)">
+      (-11.2)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    比亚韦斯托克: 1500.0 → 1511.2
+    <span style="color:var(--green)">
+      (+11.2)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    安德莱赫特: 1553.3 → 1574.3
+    <span style="color:var(--green)">
+      (+21.0)
+    </span>
+    <span style="font-size:0.65rem"> — 3-2 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    塞萨洛尼基: 1764.8 → 1743.8
+    <span style="color:var(--red)">
+      (-21.0)
+    </span>
+    <span style="font-size:0.65rem"> — 2-3 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    哈茨: 1696.0 → 1694.9
+    <span style="color:var(--red)">
+      (-1.1)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    本菲卡: 1771.1 → 1772.2
+    <span style="color:var(--green)">
+      (+1.1)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  
+
+  <div class="footer">
+    足球预测模型 v3.0 · 复盘 2026-08-13
+    · 赛果自动更新ELO
+  </div>
+</div>
+</body>
+</html>

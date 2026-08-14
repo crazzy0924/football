@@ -10,6 +10,10 @@ from pathlib import Path
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 ROOT = Path(__file__).resolve().parent
 
+# 连续2+英文单词片段 → 队名漏译检测 ("IF Elfsborg"/"Al Ettifaq"/"Viking FK")
+# 至少一个词≥4字母, 避免误报中文队名前缀("TPS图尔库"的"vs TPS")
+WORDSEQ = re.compile(r'(?=[A-Za-z\s]*[A-Za-z]{4,})[A-Za-z]{2,}(?:\s+[A-Za-z]{2,})+')
+
 VIOLATIONS = 0
 
 def viol(filename: str, line: int, detail: str):
@@ -132,6 +136,10 @@ def check_staged_file(filepath: Path):
             s = line.strip()
             if len(s) < 15:
                 continue
+            # 新规则(8-14确立): 连续2+英文单词片段("IF Elfsborg"/"Al Ettifaq") → 违规
+            # 旧规则漏点: 中文行混英文队名时 cjk≥3 整行放行
+            for m in WORDSEQ.finditer(s):
+                viol(rel, i + 1, f'英文可见片段: ...{s[max(0,m.start()-10):m.end()+10]}...')
             alpha = sum(1 for c in s if c.isalpha() and c.isascii())
             cjk = sum(1 for c in s if '一' <= c <= '鿿')
             # 如果有≥3个中文字符 → 中文句子含英文专有名词(Dixon-Coles等)，通过
@@ -141,13 +149,11 @@ def check_staged_file(filepath: Path):
                 viol(rel, i + 1, f'英文可见文本: {s[:120]}')
 
     elif ext == '.json':
-        # JSON: 检查值的英文字段
+        # JSON: 检查字符串值 (投注单等用户可见JSON, 队名必须中文)
         def check_json_value(v, path=''):
-            if isinstance(v, str) and len(v) > 15:
-                alpha = sum(1 for c in v if c.isalpha() and c.isascii())
-                cjk = sum(1 for c in v if '一' <= c <= '鿿')
-                if alpha > 15 and cjk == 0 and not v.startswith('http') and '/' not in v:
-                    viol(rel, 0, f'JSON英文字段{path}: {v[:100]}')
+            if isinstance(v, str):
+                for m in WORDSEQ.finditer(v):
+                    viol(rel, 0, f'JSON英文片段{path}: {v[max(0,m.start()-10):m.end()+10]}')
             elif isinstance(v, dict):
                 for k, val in v.items():
                     check_json_value(val, f'{path}.{k}')
@@ -213,9 +219,10 @@ content_files = [f for f in content_files if '__pycache__' not in str(f)]
 content_files = [f for f in content_files if 'data/state/' not in str(f).replace(chr(92), '/')]
 # 自检豁免
 content_files = [f for f in content_files if f.name not in ('pre_push_check.py',)]
-# JSON数据文件豁免 — 队名/联赛代码必须英文才能匹配ELO
+# JSON数据文件豁免 — 机器内部数据(队名/联赛代码必须英文才能匹配ELO)
+# 注意: pinnacle_bets_ 是投注单(用户可见) → 不豁免, 队名必须中文 (8-14修正)
 content_files = [f for f in content_files if not (f.suffix == '.json' and (
-    'today.json' in f.name or 'pinnacle_odds_' in f.name or 'pinnacle_bets_' in f.name
+    'today.json' in f.name or 'pinnacle_odds_' in f.name
     or 'predictions_' in f.name or 'kambi_' in f.name or 'local_match_db' in f.name))]
 
 print(f'🔎 检查 {len(content_files)} 个内容文件...')

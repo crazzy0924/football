@@ -136,14 +136,19 @@ for m in matches:
     en_to_cn[(h_full, a_full)] = (m.get('home_cn',''), m.get('away_cn',''))
 
 def get_cn(h_en, a_en):
-    """获取中文队名, 短名模糊兜底(HJK→HJK Helsinki)"""
+    """获取中文队名, 短名模糊兜底(HJK→HJK Helsinki) → TEAM_CN兜底(8-14汉化补漏: today.json home_cn为空时不再漏英文)"""
     if (h_en, a_en) in en_to_cn:
-        return en_to_cn[(h_en, a_en)]
+        hcn, acn = en_to_cn[(h_en, a_en)]
+        if hcn and acn:
+            return (hcn, acn)
     # 子串模糊匹配
     for (kh, ka), (hcn, acn) in en_to_cn.items():
         if (h_en in kh or kh in h_en) and (a_en in ka or ka in a_en):
-            return (hcn, acn)
-    return (h_en, a_en)
+            if hcn and acn:
+                return (hcn, acn)
+    # TEAM_CN兜底 (home_cn字段缺失时)
+    from pipeline.reporter import TEAM_CN
+    return (TEAM_CN.get(h_en, h_en), TEAM_CN.get(a_en, a_en))
 
 # -- 加载模型预测 --
 pred_path = f'data/output/predictions_{date_str}.json'

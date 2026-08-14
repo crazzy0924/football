@@ -53,7 +53,7 @@ for p, m in zip(preds, today):
     cards.append({
         'home': cn(p['home_team']), 'away': cn(p['away_team']),
         'kickoff': ko, 'elo_h': p.get('elo_home', 0), 'elo_a': p.get('elo_away', 0),
-        'odds_h': o.get('home'), 'odds_d': o.get('draw'), 'odds_a': o.get('away'),
+        'odds_h': o.get('home') or '无', 'odds_d': o.get('draw') or '无', 'odds_a': o.get('away') or '无',
         'handicap': m.get('handicap'), 'ah': ah, 'ou': m.get('ou_line'),
         'over': m.get('over_odds'), 'under': m.get('under_odds'),
         'mh': model.get('home_win', 0), 'md': model.get('draw', 0), 'ma': model.get('away_win', 0),

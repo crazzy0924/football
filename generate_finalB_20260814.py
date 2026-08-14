@@ -90,7 +90,7 @@ hdr h1{{font-size:1.12em}}hdr sub{{font-size:0.62em;color:var(--dim)}}
 </div>
 
 <div class="card">
-  <h3>🎫 投注单: IF Elfsborg vs Västerås SK<span class="t"> 瑞典超 · 北京 01:00 开踢</span></h3>
+  <h3>🎫 投注单: 埃尔夫斯堡 vs 韦斯特罗斯<span class="t"> 瑞典超 · 北京 01:00 开踢</span></h3>
   <div class="meta-line">
     <span>胜平负 主胜 @1.57</span><span>Kelly(edge)=15%</span><span>¥372 (3.7%仓位)</span>
     <span>移动: 主1.67→1.57(-6%) · 客4.01→4.65(+16%) — 资金全天持续流向主队, 顺移确认</span>

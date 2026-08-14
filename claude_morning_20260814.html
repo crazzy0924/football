@@ -37,133 +37,191 @@ td,th{padding:3px 6px;text-align:center;border-bottom:1px solid var(--border)}
 <div class="top">
 <div class="icon">🌅</div>
 <h1><em>克劳德</em> · 8月14日 早盘独立研究</h1>
-<span class="sub">sky3.0未推送今日单 · 昨夜10场赛果速览 · 今晚预计slate预览(意杯+英冠揭幕+沙特联) · 次回合跟踪链更新</span>
+<span class="sub">17场slate已出 · 昨夜赛果速览 · 3场假冷启动确诊(队名映射) · λ反推异常值警告</span>
 </div>
 
 <div class="w">
 
 <div class="dash">
-<div class="di"><div class="n" style="color:var(--r)">0</div><div class="l">sky今日推送</div></div>
-<div class="di"><div class="n" style="color:var(--y)">4+3</div><div class="l">预计今晚场次</div></div>
-<div class="di"><div class="n" style="color:var(--r)">2</div><div class="l">深盘警告</div></div>
-<div class="di"><div class="n" style="color:var(--y)">1</div><div class="l">揭幕战</div></div>
-<div class="di"><div class="n" style="color:var(--g)">2/3</div><div class="l">昨夜方向已知命中</div></div>
+<div class="di"><div class="n" style="color:var(--a2)">17</div><div class="l">今日场次</div></div>
+<div class="di"><div class="n" style="color:var(--r)">9</div><div class="l">冷启动</div></div>
+<div class="di"><div class="n" style="color:var(--r)">3</div><div class="l">假冷(可修)</div></div>
+<div class="di"><div class="n" style="color:var(--g)">8</div><div class="l">非冷启动</div></div>
+<div class="di"><div class="n" style="color:var(--y)">2</div><div class="l">λ反推异常</div></div>
+<div class="di"><div class="n" style="color:var(--g)">2/3</div><div class="l">昨夜方向命中</div></div>
 </div>
 
 <!-- SKY STATUS -->
 <div class="big">
-<h3>🤖 sky3.0 状态检查</h3>
-<div class="insight bad"><b>未推送今日预测。</b>git pull已最新，data/output/下无 predictions_2026-08-14.json，today.json仍是昨夜10场(全部已开踢完赛)。预计午盘前后出新一轮slate。</div>
-<div class="insight"><b>竞彩"主任"今日单尚未开盘</b>，本文为克劳德独立预览，等sky3.0出单后再做正式交叉分析。</div>
+<h3>🤖 sky3.0 状态</h3>
+<div class="insight good"><b>今日17场slate已落地</b>(本地生成，sky尚未提交git): 日职1 · 芬超1 · 德乙2 · 沙职3 · 瑞超1 · 挪超1 · 荷甲1 · 荷乙2 · 法乙3 · 英冠1 · 葡超1。</div>
+<div class="insight warn"><b>克劳德早盘预览修正:</b> 我猜测"意杯4场+英冠+沙特"——实际slate无意大利杯，主打<b>德乙/法乙揭幕轮+北欧联赛</b>。已按实际slate重写本篇。</div>
+<div class="insight"><b>好消息:</b> 今天联赛结构对模型友好——德乙/法乙/英冠/葡超/挪超/瑞超全部在库，<b>17场中8场非冷启动</b>(昨日10场仅2场)。1X2维度(已过门)今天有真实用武之地。</div>
+</div>
+
+<!-- NAME MAPPING FIX -->
+<div class="big" style="border-left:3px solid var(--r)">
+<h3>🔴 重大发现: 3场假冷启动确诊 (队名映射问题·延续昨日结论)</h3>
+<div class="insight bad"><b>今天9场冷启动中3场是假的</b>——库里数据齐全，today.json名字对不上:</div>
+<table>
+<tr style="background:rgba(255,255,255,0.02)"><th>场次</th><th>today.json名字</th><th>库里的键</th><th>库里数据</th><th>影响</th></tr>
+<tr><td>东京绿茵 vs 柏太阳神</td><td>Kashiwa</td><td><b>Kashiwa Reysol</b> [J1]</td><td>✅有</td><td style="color:var(--r)">整场假冷</td></tr>
+<tr><td>罗森博格 vs 维京</td><td>Viking</td><td><b>Viking FK</b> [NOR]</td><td>✅有</td><td style="color:var(--r)">整场假冷</td></tr>
+<tr><td>埃尔夫斯堡 vs 韦斯特罗斯</td><td>Elfsborg</td><td><b>IF Elfsborg</b> [SWE]</td><td>✅有</td><td style="color:var(--y)">半场假冷(韦斯特罗斯真缺)</td></tr>
+</table>
+<div class="insight good"><b>修复方案(3条别名即可):</b> "Kashiwa"→"Kashiwa Reysol" · "Viking"→"Viking FK" · "Elfsborg"→"IF Elfsborg"。加进 _resolve_team_name 别名表，2场立即解冻+1场半解冻。<b>这不是Football-Data.co.uk的问题——数据在库里，名字没对上。</b>已留待sky3.0处理(代码地盘)。</div>
+<div class="insight warn"><b>真冷启动6场(无解):</b> 沙职3场(Neom/达曼协作/新月——沙特联未入库) · 芬超半场(TPS升班马) · 荷乙两场半场(多德雷赫特/登博斯升班马) · 瑞超半场(韦斯特罗斯升班马)。升班马缺数据属正常，下赛季自然积累。</div>
 </div>
 
 <!-- OVERNIGHT RESULTS -->
 <h2>🌙 <span>昨夜10场赛果速览 (10:37正式复盘)</span></h2>
 <div class="big">
-<div class="insight good"><b>流浪者 1-1 比亚韦(总比分2-3):</b> 比亚韦晋级! 尚克兰19分钟点球先开，普雷莱茨65分钟扳平。流浪者出局→欧协联附加赛，麦金尼斯4场0胜公开承认"没准备好"。<b>克劳德"客队不败"方向命中✅</b>——市场移动(主胜资金流)与我的定性对赌，定性赢了。</div>
-<div class="insight bad"><b>安德莱赫特 3-2 塞萨洛尼基(总比分4-2):</b> 安德莱赫特晋级。佩特罗/安布罗斯/西坎/日夫科维奇/杰雷梅杰夫(点球)进球，PAOK终场前双红牌。<b>克劳德"平局/客队"方向错❌</b>——我说"轮换+低进球"，实际3-2对攻。PAOK出局。</div>
-<div class="insight good"><b>米尔拉斯 1-1 LDU基多:</b> 爱德华多14分钟首开，埃斯特拉达81分钟扳平(科罗索助攻)。<b>克劳德"主队小胜/不胜"方向命中✅</b>(1-1=不胜)。LDU两次中柱+米尔拉斯浪费扩大比分机会→<b>次回合基多高原，平局即点球，米尔拉斯毫无优势</b>。</div>
-<div class="insight"><b>本菲卡晋级</b>(总比分7-1以上)，哈茨入欧协联附加赛。罗萨里奥vs科林蒂安(08:30开踢)结果10:37复盘时补。</div>
-<div class="insight warn"><b>8强对决链更新:</b> 米尔拉斯/LDU胜者 将在1/4决赛对阵 <b>帕尔梅拉斯/山丘胜者</b>(8月19日亚松森次回合)——解放者杯上下半区连起来了，8月19日三场次回合全部值得跟踪。</div>
+<div class="insight good"><b>流浪者 1-1 比亚韦(总2-3):</b> 比亚韦晋级! 流浪者出局→欧协联附加赛，麦金尼斯4场0胜承认"没准备好"。<b>"客队不败"命中✅</b>——市场移动主胜资金 vs 我的定性，定性赢。</div>
+<div class="insight bad"><b>安德莱赫特 3-2 塞萨洛尼基(总4-2):</b> 安德莱赫特晋级。"平局/客队"方向错❌(实际对攻3-2)，PAOK终场双红牌。</div>
+<div class="insight good"><b>米尔拉斯 1-1 LDU:</b> 埃斯特拉达81'扳平。"主队小胜/不胜"命中✅。次回合基多高原，平局即点球，米尔拉斯无优势。</div>
+<div class="insight"><b>本菲卡晋级。</b>罗萨里奥vs科林蒂安结果10:37复盘补。8强对决链: 米尔拉斯/LDU胜者 vs 帕尔梅拉斯/山丘胜者。</div>
 </div>
 
-<!-- TONIGHT SLATE PREVIEW -->
-<h2>🌆 <span>今晚预计slate预览 · 独立研究 (sky未出单)</span></h2>
-
-<div class="card warn">
-<div class="hdr">
-<span class="tag tr">🔴 深盘警告</span>
-<div class="teams"><div class="mt">利雅得新月 vs 费萨利哈马</div><div class="mi">沙特联第1轮 · 王国竞技场 · 8月15日01:00</div></div>
-<div class="bet" style="color:var(--muted)">预计深盘 · 历史26战20胜6平0负</div>
-</div>
-<div class="why">
-<strong>沙特最悬殊对决之一——但有三个扣分项：</strong>
-<div class="dim-box">
-<div class="dim-item"><span>🟢 实力碾压:</span> 新月上季34轮不败84分(仅差纳斯尔2分)捧国王杯。本泽马+萨默维尔新援，核心内维斯/米林科维奇-萨维奇/马尔科姆/特奥·埃尔南德斯全留。费萨利是升班马(甲级第2)，<b>近18次做客新月不胜(2007年起)</b>。</div>
-<div class="dim-item"><span>🔴 轮换风险:</span> 新月<b>3天后有国王杯</b>——深盘+轮换=穿盘概率下降。库利巴利腿伤存疑+马里无资格。费萨利核心恩迪亚耶十字韧带伤缺(8月22日才复出)。</div>
-<div class="dim-item"><span>🟡 规律④:</span> 沙特联=红牌联赛。昨夜10场中沙特两场又是大小球盲区。若sky给新月让2球深盘信号，先怀疑轮换再怀疑穿盘。</div>
-</div>
-<strong>早盘判断:</strong> 方向主胜无悬念，但<b>让球深盘必须看轮换名单</b>——国王杯优先级的球队不会在揭幕战全力打穿升班马。
-</div>
-</div>
+<!-- KEY MATCHES -->
+<h2>🎯 <span>重点场次交叉 · 模型value × 克劳德定性</span></h2>
 
 <div class="card warn">
 <div class="hdr">
-<span class="tag tr">🔴 深盘警告</span>
-<div class="teams"><div class="mt">佛罗伦萨 vs 贝内文托</div><div class="mi">意大利杯1/32决赛 · 弗兰基球场 · 8月15日02:15</div></div>
-<div class="bet" style="color:var(--muted)">意甲 vs 意乙升班马 · 格罗索首场正式赛</div>
+<span class="tag ty">🟡 模型反对市场</span>
+<div class="teams"><div class="mt">圣埃蒂安 vs 克莱蒙</div><div class="mi">法乙第1轮 · 02:45 · 非冷启动</div></div>
+<div class="bet" style="color:var(--muted)">市场: 1.35/4.30/6.40 · 模型: 客方向edge+12% Kelly 3.03%置信高</div>
 </div>
 <div class="why">
-<strong>格罗索的佛罗伦萨首秀——阵容磨合是最大变量：</strong>
+<strong>模型认为1.35的圣埃蒂安定价虚高：</strong>
 <div class="dim-box">
-<div class="dim-item"><span>🟢 首发成色:</span> 德赫亚/德拉古辛/拉涅利/基恩/古德蒙松/恩杜尔——主力框架出战。贝内文托刚升意乙，资格赛5-3过拉文纳。</div>
-<div class="dim-item"><span>🟡 杯赛阶段权重(规律⑨):</span> 意杯1/32=意甲队第一场正式比赛。格罗索体系未成型，揭幕战不确定性(规律⑥)叠加。深盘让球信不过。</div>
-<div class="dim-item"><span>🟡 战意双向:</span> 佛罗伦萨首秀会认真踢(新帅立威)，但上半场慢热+磨合失误常见。贝内文托无压力反击。</div>
+<div class="dim-item"><span>🔵 模型value:</span> 客edge+12.0%是今天非冷启动场次中<b>最大的真实信号</b>。克莱蒙6.40隐含15.6%客胜，模型给到~27%。</div>
+<div class="dim-item"><span>🟢 基本面佐证:</span> 圣埃蒂安上季从法甲降级(法乙第1轮主场揭幕)，夏窗大清洗阵容不稳定。克莱蒙是法乙老油条。</div>
+<div class="dim-item"><span>🟡 克劳德态度:</span> 方向认同(1.35太贵)，但Kelly 3.03%经1/4 Kelly后0.76%<b>低于1%门槛</b>→按纪律仍不可下注。客队不败方向记录。</div>
 </div>
-<strong>早盘判断:</strong> 主胜方向对，深盘谨慎。若sky出让1.5以上信号，按"深盘自动降一档"处理。
+<strong>早盘判断:</strong> 法乙揭幕+降班马主场首秀，模型反市场信号合理。若午盘Kelly达标再议。
+</div>
+</div>
+
+<div class="card warn">
+<div class="hdr">
+<span class="tag ty">🟡 模型反对市场</span>
+<div class="teams"><div class="mt">不伦瑞克 vs 波鸿</div><div class="mi">德乙第1轮 · 00:30 · 非冷启动</div></div>
+<div class="bet" style="color:var(--muted)">市场: 2.38/3.18/2.53 · 模型: 客方向edge+10.7% Kelly 2.56%</div>
+</div>
+<div class="why">
+<strong>波鸿德甲降班马首战客场——模型看多：</strong>
+<div class="dim-box">
+<div class="dim-item"><span>🟢 波鸿:</span> 上季德甲降级，阵容保留度高，德乙首战战意足(想立即回德甲)。</div>
+<div class="dim-item"><span>🟡 不伦瑞克:</span> 德乙中下游，上季惊险保级。</div>
+<div class="dim-item"><span>🟡 克劳德态度:</span> 客方向认同，Kelly 2.56%>1%门槛<b>值得sky3.0出单前仔细核</b>——但揭幕战不确定性(规律⑥)适用，降班马首战客场冷门土壤存在。</div>
+</div>
+<strong>早盘判断:</strong> 波鸿客胜方向记录，午盘看赔率移动再定。
 </div>
 </div>
 
 <div class="card warn">
 <div class="hdr">
 <span class="tag ty">🟡 揭幕战</span>
-<div class="teams"><div class="mt">狼队 vs 布莱克本</div><div class="mi">英冠揭幕战 · 莫利纽 · 8月15日02:00 · 双方共7人缺阵</div></div>
-<div class="bet" style="color:var(--muted)">狼队降级后首场英冠 · 佩克索托新帅首秀</div>
+<div class="teams"><div class="mt">狼队 vs 布莱克本</div><div class="mi">英冠揭幕战 · 03:00 · 非冷启动</div></div>
+<div class="bet" style="color:var(--muted)">市场: 1.38/4.05/6.35 · 模型: 主edge-6.4% 平edge+5.5% Kelly 0.89%</div>
 </div>
 <div class="why">
-<strong>英冠新赛季第一场——揭幕战不确定性规律(⑥)适用：</strong>
+<strong>模型不买1.38的狼队——与我的定性同向：</strong>
 <div class="dim-box">
-<div class="dim-item"><span>🟢 狼队:</span> 周末联赛杯3-0维尔港。伤缺: 约翰斯通(肩手术)/贝勒加德(腿筋)/阿哈马达(膝伤)。预计沿用胜阵: 特里皮尔+莫斯克拉领防线，<b>阿姆斯特朗对旧主</b>(2020-21为布莱克本进28球)被普遍看好破门。</div>
-<div class="dim-item"><span>🟡 布莱克本:</span> 莫布雷回归执教，周末2-1逆转伯顿。伤缺5人(沃顿/米勒跟腱/巴拉吉/卡尔博/德内韦)。古德约翰森+费夫里埃冲击首发。</div>
-<div class="dim-item"><span>🟡 预测共识:</span> 多家媒体2-0/2-1狼队胜。但揭幕战+双方合计7人伤缺+新帅首秀——<b>主流预测共识本身要打折扣</b>。</div>
+<div class="dim-item"><span>🔵 模型:</span> 主胜edge为负(市场高估)，平局edge+5.5%。Kelly 0.89%<1%门槛。</div>
+<div class="dim-item"><span>🟢 克劳德定性:</span> 揭幕战+双方7人伤缺+新帅首秀+阿姆斯特朗对旧主——"主队不败"而非主胜。狼队1.38吃的是名气。</div>
+<div class="dim-item"><span>🟡 共识:</span> 模型与克劳德都认为1.38偏贵——但都不到可下注强度。平局4.05的edge值得午盘追踪。</div>
 </div>
-<strong>早盘判断:</strong> 方向主队不败，不追深盘。英冠揭幕历史上低进球占比高，大小球信号若出小2.5需过OU25门禁(未过门→反正拦截)。
+<strong>早盘判断:</strong> 主队不败方向记录，不追深盘。大小球信号若出，OU25门禁会拦(该维度无技能)。
 </div>
 </div>
 
 <div class="card warn">
 <div class="hdr">
-<span class="tag ty">🟡 杯赛混战</span>
-<div class="teams"><div class="mt">意杯其他三场: 帕尔马vs卡塔尼亚 · 卡利亚里vs阿雷佐 · 蒙扎vs阿韦利诺</div><div class="mi">8月14日23:00-15日01:45 · 意甲队全在主场</div></div>
-<div class="bet" style="color:var(--muted)">三场意甲vs低级别 · 轮换大乱炖</div>
+<span class="tag tr">🔴 λ反推异常值警告</span>
+<div class="teams"><div class="mt">罗森博格 vs 维京</div><div class="mi">挪超 · 01:00 · 假冷启动</div></div>
+<div class="bet" style="color:var(--muted)">市场: 2.43/3.65/2.25 · 模型: 主edge+50% Kelly 19.2%置信高</div>
 </div>
 <div class="why">
-<strong>三条关键情报：</strong>
+<strong>+50%主胜edge是假信号——这是门禁存在的意义：</strong>
 <div class="dim-box">
-<div class="dim-item"><span>🔴 帕尔马门将变动:</span> 首发门将<b>铃木彩艳未入名单(转会传闻中)</b>→替补科维首发。佩莱格里诺已离队。防线三角仍在。</div>
-<div class="dim-item"><span>🟡 卡塔尼亚(意丙)财务混乱:</span> 保函未缴，主帅隆戈一度可能无法派新援上场——上轮点球5-4过维琴察全凭老班底。</div>
-<div class="dim-item"><span>🟢 阿雷佐:</span> 资格赛2-0干净淘汰布雷西亚联——意丙队状态不差，卡利亚里若大幅轮换有爆冷土壤。</div>
+<div class="dim-item"><span>🔴 异常根源:</span> "Viking"没匹配上"Viking FK"→客队落冷启动→罗森博格真实参数+维京联赛中位数+市场λ反推，KL最小化在单侧真实参数下产生极端后验。<b>主胜88% vs 市场38%</b>——物理上不可能。</div>
+<div class="dim-item"><span>🟢 纪律正确:</span> 冷启动门禁拦下了这个Kelly 19.2%的巨注。如果下注，这是灾难级注单。</div>
+<div class="dim-item"><span>🟡 待修:</span> ①别名修复后此场变成非冷启动，真实参数会给出合理概率 ②sky3.0的λ反推器建议加后验截断(如模型-市场偏差>30%时标记异常)。</div>
 </div>
-<strong>早盘判断:</strong> 三场都是"意甲队轮换 vs 低级别全主力"的结构，杯赛阶段权重⑨=谨慎。若sky出主胜深盘信号一律降权处理。
+<strong>早盘判断:</strong> 此场今日绝不碰。维京是挪超劲旅，市场2.25客胜定价方向合理。修复映射后明日再看。
 </div>
 </div>
 
-<div class="card">
+<div class="card warn">
 <div class="hdr">
-<span class="tag tb">🔵 其他</span>
-<div class="teams"><div class="mt">日职联: 东京绿茵vs柏太阳神(17:00) · 中超: 山东泰山vs青岛海牛(18:35) · 青岛西海岸vs重庆铜梁龙(19:00) · 武汉三镇vs上海海港</div><div class="mi">J1数据已入库27队(模型可算) · 中超未入库</div></div>
+<span class="tag tr">🔴 λ反推异常值警告</span>
+<div class="teams"><div class="mt">赫拉克勒斯 vs 登博斯 · 东京绿茵 vs 柏太阳神</div><div class="mi">荷乙/日职 · 同族异常</div></div>
+<div class="bet" style="color:var(--muted)">赫拉克勒斯场: 客edge+18.7% Kelly 5.2% · 东京场: 主edge+16.4% Kelly 4.5%</div>
 </div>
 <div class="why">
-<strong>J1场次是今晚唯一模型有底子的联赛</strong>——team_params有J1全部27队。若sky今日出单包含此场，非冷启动概率高，值得重点看1X2维度(已过门)。
+<strong>同族异常值——都是单侧冷启动的λ反推产物：</strong>
+<div class="dim-box">
+<div class="dim-item"><span>🟡 赫拉克勒斯场:</span> 赫拉克勒斯在库(荷甲降班马)，登博斯升班马缺→客edge+18.7%可疑(登博斯6.4的定价模型给到~25%)。</div>
+<div class="dim-item"><span>🟡 东京场:</span> 两队其实都在库(柏太阳神名字bug)→双中位数λ反推，主edge+16.4%可疑。柏太阳神客1.84被模型认为高估。</div>
+<div class="dim-item"><span>🟢 全部被门禁拦截:</span> 三个异常信号零金钱损失。今天的假冷bug反而展示了门禁的兜底价值。</div>
+</div>
+<strong>早盘判断:</strong> 三场异常信号只记录不下注。修复别名后模型输出会回归正常区间。
 </div>
 </div>
 
-<!-- WEEKEND PREVIEW -->
+<div class="card warn">
+<div class="hdr">
+<span class="tag tr">🔴 深盘警告</span>
+<div class="teams"><div class="mt">里斯本竞技 vs 吉马良斯</div><div class="mi">葡超第1轮 · 03:15 · 非冷启动</div></div>
+<div class="bet" style="color:var(--muted)">市场: 1.14/6.00/11.8 · 模型: 主edge+2.3% Kelly 0</div>
+</div>
+<div class="why">
+<strong>1.14超级深盘+揭幕战——模型与市场一致无edge：</strong>
+<div class="dim-box">
+<div class="dim-item"><span>🟡 深盘规则(CLAUDE.md):</span> ELO差>200+联赛场均<2.5→深盘自动降一档。葡超揭幕战=规律⑥适用。</div>
+<div class="dim-item"><span>🟢 吉马良斯:</span> 上季葡超第4(拿到欧战资格)，客场不是鱼腩。1.14隐含87.7%主胜对揭幕战而言激进。</div>
+<div class="dim-item"><span>🟢 模型:</span> Kelly 0——非冷启动模型没有找到任何edge，市场定价合理。</div>
+</div>
+<strong>早盘判断:</strong> 主胜方向无悬念但1.14无投注价值。让球盘若sky出信号，AH门禁(3样本)会拦。记录不碰。
+</div>
+</div>
+
+<!-- OTHER MATCHES TABLE -->
+<div class="big">
+<h3>📊 其余10场速览 (模型value + 克劳德方向)</h3>
+<table>
+<tr style="background:rgba(255,255,255,0.02)"><th>场次</th><th>联赛</th><th>冷启动</th><th>模型best</th><th>克劳德方向</th><th>备注</th></tr>
+<tr><td>瓦桑PS vs TPS</td><td>芬超</td><td>🟡半(TPS升班马)</td><td>主(edge+3.7%)</td><td style="color:var(--y)">主队不败</td><td>TPS刚回芬超</td></tr>
+<tr><td>基尔 vs 圣保利</td><td>德乙</td><td>✅非冷</td><td>平(edge+5%)</td><td style="color:var(--y)">平局倾向</td><td>双降班马对决</td></tr>
+<tr><td>Neom vs 马杰马</td><td>沙职</td><td>🔴真冷</td><td>平(edge+2.8%)</td><td style="color:var(--r)">不碰</td><td>沙特红牌联赛</td></tr>
+<tr><td>达曼协作 vs 利雅得</td><td>沙职</td><td>🔴真冷</td><td>平(edge+3%)</td><td style="color:var(--r)">不碰</td><td>同上</td></tr>
+<tr><td>泰尔斯塔 vs 鹿特丹斯巴达</td><td>荷甲</td><td>✅非冷</td><td>平(edge+3.5%)</td><td style="color:var(--y)">客队不败</td><td>斯巴达荷甲老队客战升班马</td></tr>
+<tr><td>瓦尔韦克 vs 多德雷赫特</td><td>荷乙</td><td>🟡半</td><td>客(edge+6.6%)</td><td style="color:var(--y)">客队不败</td><td>Kelly 1.18%刚过线</td></tr>
+<tr><td>阿讷西 vs 罗德兹</td><td>法乙</td><td>✅非冷</td><td>客(edge+2.6%)</td><td style="color:var(--y)">主队不败</td><td>法乙小球联赛</td></tr>
+<tr><td>兰斯 vs 敦刻尔克</td><td>法乙</td><td>✅非冷</td><td>平(edge+0.3%)</td><td style="color:var(--y)">主队不败</td><td>兰斯降班马首战</td></tr>
+<tr><td>埃尔夫斯堡 vs 韦斯特罗斯</td><td>瑞超</td><td>🟡半</td><td>客(edge+0.3%)</td><td style="color:var(--y)">主队不败</td><td>假冷修复后主队有参数</td></tr>
+<tr><td>利雅得新月 vs 费萨利</td><td>沙职</td><td>🔴真冷</td><td>—(未开售)</td><td style="color:var(--g)">主胜方向</td><td>国王杯3天后轮换风险</td></tr>
+</table>
+<div class="insight good"><b>今日三大定性方向:</b> ①波鸿客胜(非冷+模型edge+10.7%) ②圣埃蒂安场客队不败(模型反市场) ③狼队场主队不败(模型与定性共识)。</div>
+<div class="insight warn"><b>提醒sky3.0:</b> 瓦尔韦克vs多德雷赫特客edge+6.6% Kelly 1.18%——半冷启动(多德雷赫特缺)，按"冷启动永不投注"此场也不应出单。</div>
+</div>
+
+<!-- WEEKEND -->
 <div class="big">
 <h3>📅 周末预告: 西甲首轮回归 (8月15-16日)</h3>
-<div class="insight good">西甲/西乙/英冠/德乙/法乙/荷甲/葡超/瑞超/挪超/社区盾——体彩官方已排16期传统足彩。西甲首轮=揭幕战集群，规律⑥全线适用。</div>
-<div class="insight warn">sky3.0的team_params已覆盖西甲? 当前联赛清单无LALIGA代码——西甲回归后可能出现<b>新的联赛级冷启动</b>，需提前确认数据源。若西甲全冷启动，本周末将是门禁测试日。</div>
+<div class="insight good">西甲/西乙/英冠/德乙/法乙/荷甲/葡超/瑞超/挪超/社区盾——体彩官方已排16期传统足彩。西甲回归后若竞彩纳入，需确认team_params是否有西甲代码(当前清单: J1/BSA/FL1/FL2/BL1/PL/PD/ELC/SA/NO1/GRE/SWE/FIN/NOR/SPL/PPL/TUR等——<b>PD疑似西甲</b>，sky3.0可自查)。</div>
 </div>
 
-<!-- NEXT LEG TRACKING -->
+<!-- TRACKING -->
 <div class="big">
 <h3>🗓️ 8月19-20日 次回合跟踪 (预装弹药)</h3>
-<div class="insight"><b>帕尔梅拉斯 vs 山丘</b>(亚松森 · 山丘主场): 首回合1-1。客场进球取消→山丘平局即点球。佩雷拉直红停赛+帕尔梅拉斯2人黄牌挂账。山丘两客战圣保罗1胜1平。若模型再给帕尔梅拉斯高概率=H2H盲区第三次警报。</div>
-<div class="insight"><b>科金博 vs 普拉滕斯</b>(智利 · 科金博主场): 首回合1-1。科金博平局即点球。普拉滕斯82分钟罚丢点球心理阴影+客场作战。</div>
-<div class="insight"><b>米尔拉斯 vs LDU</b>(基多高原 · 8月20日左右): 首回合1-1。高原2850米+米尔拉斯无客场进球优势→LDU主场全主力时米尔拉斯凶多吉少。胜者对阵帕尔梅拉斯/山丘胜者。</div>
+<div class="insight"><b>帕尔梅拉斯 vs 山丘</b>(亚松森·山丘主场): 首回合1-1，客场进球取消→山丘平局即点球。佩雷拉停赛+帕尔梅拉斯2人黄牌挂账。山丘两客战圣保罗1胜1平=H2H盲区。</div>
+<div class="insight"><b>科金博 vs 普拉滕斯</b>(智利): 首回合1-1，科金博平局即点球。普拉滕斯罚丢点球心理阴影+客场。</div>
+<div class="insight"><b>米尔拉斯 vs LDU</b>(基多高原·8月20日左右): 首回合1-1，米尔拉斯无客场进球优势。胜者对阵帕尔梅拉斯/山丘胜者。</div>
 </div>
 
-<div class="ft">© 克劳德独立分析师 · 8月14日早盘研究 · sky未推送 · 独立预览今晚slate · 已推 GitHub</div>
+<div class="ft">© 克劳德独立分析师 · 8月14日早盘研究 · 17场slate · 3场假冷确诊 · λ反推异常警告 · 已推 GitHub</div>
 </div>
 </body>
 </html>

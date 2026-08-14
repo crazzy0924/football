@@ -22,7 +22,7 @@ def load_env():
                     os.environ.setdefault(key.strip(), val.strip())
 
 
-# Auto-load on import
+# 导入时自动加载
 load_env()
 
 
@@ -32,10 +32,13 @@ def get(key: str, default: str = "") -> str:
 
 
 # API keys
-# the-odds-api.com (v4) — 32-char key, used by odds_fetcher + fetch_pinnacle
+# the-odds-api.com (v4) — 32位密钥，odds_fetcher + fetch_pinnacle 使用
 THE_ODDS_API_KEY = get("ODDS_API_KEY", "")
-# odds-api.io (v3) — 64-char key, legacy; prefer the-odds-api.com
+# odds-api.io (v3) — 64位密钥，旧版；优先用 the-odds-api.com
 ODDS_API_IO_KEY = get("ODDS_API_IO_KEY", "")
-# Backward-compat alias
+# 向后兼容别名
 ODDS_API_KEY = THE_ODDS_API_KEY or ODDS_API_IO_KEY
 ANTHROPIC_API_KEY = get("ANTHROPIC_API_KEY", "")
+# DeepSeek — Phase 4 LLM分析师优先provider (deepseek-harness接入)
+DEEPSEEK_API_KEY = get("DEEPSEEK_API_KEY", "")
+DEEPSEEK_MODEL = get("DEEPSEEK_MODEL", "deepseek-v4-pro")

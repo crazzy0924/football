@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-LLM Qualitative Analyst v3.0 (Phase 4)
+LLM Qualitative Analyst v3.1 (Phase 4)
 
-Claude provides qualitative context only — NEVER generates probabilities.
+DeepSeek-first (deepseek-harness, V4-Pro/V4-Flash), Anthropic fallback.
+LLM provides qualitative context only — NEVER generates probabilities.
 Model handles all quantitative work; LLM adds what the model cannot see.
 
 Design:
 - Evidence packet: structured match data (ELO, DC probs, market odds, league profile)
-- Claude prompt: "2-3 sentences of qualitative context. Do not suggest probabilities."
+- Analyst prompt: "2-3 sentences of qualitative context. Do not suggest probabilities."
 - Rate limiting: sequential, 0.3s delay between requests
 - Cold starts skipped (no data to contextualize)
-- Fallback: API failure → prediction continues without annotation
+- Fallback: DeepSeek失败 → Anthropic → 预测正常运行(无注释)
 """
 from __future__ import annotations
 
@@ -115,24 +116,56 @@ def build_analyst_prompt(evidence: str) -> str:
 def query_analyst(
     evidence: str,
     api_key: str | None = None,
-    model: str = "claude-haiku-4-5-20251001",
+    model: str | None = None,
 ) -> str | None:
-    """Call Claude for qualitative analysis on one match."""
-    if api_key is None:
-        try:
-            from config import ANTHROPIC_API_KEY
-            api_key = ANTHROPIC_API_KEY
-        except Exception:
-            pass
-
-    if not api_key:
-        return "[LLM不可用: 未配置 ANTHROPIC_API_KEY]"
+    """Qualitative analyst: DeepSeek first (harness), Anthropic fallback."""
+    try:
+        from config import DEEPSEEK_API_KEY, DEEPSEEK_MODEL
+        from config import ANTHROPIC_API_KEY as ANTHRO_KEY
+    except Exception:
+        DEEPSEEK_API_KEY, DEEPSEEK_MODEL, ANTHRO_KEY = "", "deepseek-v4-pro", ""
 
     prompt = build_analyst_prompt(evidence)
-    result = _try_sdk(prompt, api_key, model)
+
+    # 1) DeepSeek（deepseek-harness，关闭thinking）
+    ds_key = api_key or DEEPSEEK_API_KEY
+    if ds_key:
+        result = _try_deepseek(prompt, ds_key, model or DEEPSEEK_MODEL)
+        if result:
+            return result
+        print("  [警告] DeepSeek 失败，回退 Anthropic...")
+
+    # 2) Anthropic（旧版回退）
+    if not ANTHRO_KEY:
+        return "[LLM不可用: 未配置 DEEPSEEK_API_KEY 或 ANTHROPIC_API_KEY]"
+
+    a_model = model or "claude-haiku-4-5-20251001"
+    result = _try_sdk(prompt, ANTHRO_KEY, a_model)
     if result is None:
-        result = _try_http(prompt, api_key, model)
+        result = _try_http(prompt, ANTHRO_KEY, a_model)
     return result
+
+
+def _try_deepseek(prompt: str, api_key: str, model: str) -> str | None:
+    """Call DeepSeek via deepseek-harness (OpenAI-compatible, cost-optimized)."""
+    try:
+        from deepseek_harness import DeepSeekHarness
+        client = DeepSeekHarness(api_key=api_key, disable_thinking_by_default=True)
+        resp = client.chat(
+            model=model,
+            messages=[
+                {"role": "system", "content": "你是资深足球分析师。只输出2-3句中文定性评估。不输出概率、不推荐投注。"},
+                {"role": "user", "content": prompt},
+            ],
+            max_tokens=200,
+            temperature=0.7,
+        )
+        msg = resp.get("message") or {}
+        text = msg.get("content") or ""
+        return text.strip() if text else None
+    except Exception as e:
+        print(f"  [警告] DeepSeek harness 失败: {e}")
+        return None
 
 
 def _try_sdk(prompt: str, api_key: str, model: str) -> str | None:
@@ -150,7 +183,7 @@ def _try_sdk(prompt: str, api_key: str, model: str) -> str | None:
         text = message.content[0].text
         return text.strip() if text else None
     except Exception as e:
-        print(f"  [WARN] Anthropic SDK failed: {e}")
+        print(f"  [警告] Anthropic SDK 失败: {e}")
         return None
 
 
@@ -179,14 +212,14 @@ def _try_http(prompt: str, api_key: str, model: str) -> str | None:
             text = data["content"][0]["text"]
             return text.strip() if text else None
     except Exception as e:
-        print(f"  [WARN] Anthropic HTTP failed: {e}")
+        print(f"  [警告] Anthropic HTTP 失败: {e}")
         return None
 
 
 def batch_analyze(
     predictions: list[dict],
     api_key: str | None = None,
-    model: str = "claude-haiku-4-5-20251001",
+    model: str | None = None,
     delay: float = 0.3,
 ) -> dict[str, str]:
     """Run qualitative analysis on all predictions."""
@@ -199,11 +232,11 @@ def batch_analyze(
 
         if pred.get("cold_start"):
             notes[match_key] = "[冷启动 — 跳过LLM分析]"
-            print(f"  [{i+1}/{len(predictions)}] {match_key}: SKIPPED (cold start)")
+            print(f"  [{i+1}/{len(predictions)}] {match_key}: 跳过（冷启动）")
             continue
 
         evidence = build_evidence_packet(pred)
-        print(f"  [{i+1}/{len(predictions)}] {match_key}: analyzing...")
+        print(f"  [{i+1}/{len(predictions)}] {match_key}: 分析中...")
 
         note = query_analyst(evidence, api_key, model)
         if note:

@@ -37,8 +37,33 @@ def _run(cmd: list[str]) -> int:
     return subprocess.run(cmd).returncode
 
 
+def _git_sync() -> None:
+    """CLAUDE.md 纪律: 汉化检查通过才提交推送"""
+    rc = _run([sys.executable, "pre_push_check.py"])
+    if rc != 0:
+        print("[推送] 汉化检查未通过, 跳过自动提交推送 (请人工处理)")
+        return
+    _run(["git", "add", "-A"])
+    today = _today()
+    rc = _run(["git", "commit", "-m", f"每日自动: {today} 预测+复盘产物 (汉化检查通过)"])
+    if rc not in (0, 1):  # 1 = 无变更可提交
+        print("[推送] 提交失败, 跳过推送")
+        return
+    _run(["git", "push", "origin", "master"])
+    print("[推送] 已尝试推送 origin/master")
+
+
 def cmd_predict(args) -> None:
     date_str = args.date or _today()
+
+    # 0) 追补昨日复盘 (凌晨完赛的欧洲场: 增量幂等, 无赛果优雅退出)
+    yest = (datetime.now(BEIJING) - timedelta(days=1)).strftime("%Y-%m-%d")
+    yest_pred = os.path.join("data", "output", f"predictions_{yest}.json")
+    if os.path.exists(yest_pred):
+        print("[追补] 复盘昨日 " + yest + " (凌晨完赛的欧洲场)...")
+        rc_y = _run([sys.executable, "daily_run.py", "review", yest])
+        if rc_y != 0:
+            print("[追补] 昨日复盘未完成 (缺赛果或已处理完), 继续今日预测")
 
     # 1) 拉取今日比赛 (体彩为主, odds-api.io 兜底)
     rc = _run([sys.executable, "fetch_sporttery.py", date_str])
@@ -83,6 +108,7 @@ def cmd_review(args) -> None:
         _run([sys.executable, "h2h.py", "--append", results_path])
     else:
         print("[跳过] 未找到 " + results_path + ", 跳过h2h回灌")
+    _git_sync()
 
 
 def main() -> None:

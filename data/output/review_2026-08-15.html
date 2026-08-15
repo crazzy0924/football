@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复盘报告 — 2026-08-15</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card-bg: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4eb;
+    --text-dim: #8b8fa3;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #3b82f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .header h1 { font-size: 1.5rem; font-weight: 700; }
+  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+
+  /* 指标卡片 */
+  .scorecard {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .sc {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .sc .value { font-size: 1.5rem; font-weight: 700; }
+  .sc .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+  .sc.good .value { color: var(--green); }
+  .sc.bad .value { color: var(--red); }
+  .sc.warn .value { color: var(--yellow); }
+
+  /* 方向分解 */
+  .direction-bar {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0 16px;
+    background: var(--bg);
+  }
+  .direction-bar .seg-home { background: #3b82f6; }
+  .direction-bar .seg-draw { background: #8b8fa3; }
+  .direction-bar .seg-away { background: #f59e0b; }
+
+  /* 比赛行 */
+  .match-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    gap: 12px;
+    font-size: 0.85rem;
+  }
+  .match-row.hit { border-left: 3px solid var(--green); }
+  .match-row.miss { border-left: 3px solid var(--red); }
+  .match-row.push { border-left: 3px solid var(--yellow); }
+
+  .mr-teams { flex: 2; min-width: 0; }
+  .mr-teams .vs { color: var(--text-dim); margin: 0 6px; }
+  .mr-result { flex: 0 0 60px; text-align: center; font-weight: 700; font-size: 1rem; }
+  .mr-pred { flex: 1; text-align: center; font-size: 0.78rem; color: var(--text-dim); }
+  .mr-prob { flex: 0 0 70px; text-align: right; font-weight: 600; }
+  .mr-bet { flex: 0 0 80px; text-align: right; }
+  .mr-bet.won { color: var(--green); }
+  .mr-bet.lost { color: var(--red); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.7rem;
+  }
+  .badge.hit { background: #166534; color: #4ade80; }
+  .badge.miss { background: #451a1a; color: #f87171; }
+  .badge.push { background: #3b2f0e; color: #fbbf24; }
+
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 24px 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dim-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+  }
+
+  .cal-table {
+    width: 100%;
+    font-size: 0.8rem;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  .cal-table th, .cal-table td {
+    padding: 6px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .cal-table th { color: var(--text-dim); font-weight: 600; }
+
+  .footer {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>赛后复盘</h1>
+    <div class="meta">2026-08-15 — 匹配 2/2 场</div>
+  </div>
+
+  <!-- 指标卡片 -->
+  <div class="scorecard">
+    <div class="sc good">
+      <div class="value">0.1668</div>
+      <div class="label">Brier 分数</div>
+    </div>
+    <div class="sc warn">
+      <div class="value">50.0%</div>
+      <div class="label">准确率</div>
+    </div>
+    <div class="sc bad">
+      <div class="value">0.8515</div>
+      <div class="label">对数损失</div>
+    </div>
+    <div class="sc good">
+      <div class="value">+0.01u</div>
+      <div class="label">盈亏 (单位)</div>
+    </div>
+    <div class="sc good">
+      <div class="value">+0.7%</div>
+      <div class="label">回报率</div>
+    </div>
+  </div>
+
+  <!-- 方向准确率 -->
+  <div class="section-title">方向分解</div>
+  <div style="display:flex;gap:20px;font-size:0.82rem;margin-bottom:8px">
+    <span>主胜: 0/0 (N/A)</span>
+    <span>平局: 0/1 (0.0%)</span>
+    <span>客胜: 1/1 (100.0%)</span>
+  </div>
+  <div class="direction-bar">
+    <div class="seg-home" style="width:0%"></div>
+    <div class="seg-draw" style="width:50%"></div>
+    <div class="seg-away" style="width:50%"></div>
+  </div>
+
+  <!-- 多维度复盘 -->
+  
+  <div class="section-title">多维度复盘 (5维度独立计分)</div>
+  <pre class="dim-box">维度复盘 (门禁: 模型Brier < 气候基线):
+--------------------------------------------------------
+  1X2    胜平负 (3-way)              今日无样本
+  OU25   大小球2.5 (2-way)           今日无样本
+  OU35   大小球3.5 (2-way)           今日无样本
+  BTTS   双方进球 (2-way)             今日无样本
+  AH     让球盘 (2-way)              今日无样本</pre>
+  
+
+  <!-- 投注结算 P&L (Phase 5) -->
+  
+  <div class="section-title">投注结算 (P&L 账本)</div>
+  <pre class="dim-box">今日无投注单，P&L 不结算。</pre>
+  
+
+  <!-- 比赛结果 -->
+  <div class="section-title">比赛结果</div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      威廉二世 <span class="vs">vs</span> 奈梅亨
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      1-4
+      
+    </div>
+    <div class="mr-pred">
+      预测: 19.9% / 26.9% / 53.2%
+    </div>
+    <div class="mr-prob">
+      26.9%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.005u
+      
+    </div>
+    <span class="badge push">△ 走水</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      阿尔维卡 <span class="vs">vs</span> 阿马多拉
+      
+      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      
+    </div>
+    <div class="mr-result">
+      
+      2-2
+      
+    </div>
+    <div class="mr-pred">
+      预测: 43.2% / 34.2% / 22.6%
+    </div>
+    <div class="mr-prob">
+      34.2%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.018u
+      
+    </div>
+    <span class="badge hit">✓ 命中</span>
+  </div>
+  
+
+  <!-- ELO更新 -->
+  
+
+  <div class="footer">
+    足球预测模型 v3.0 · 复盘 2026-08-15
+    · 赛果自动更新ELO
+  </div>
+</div>
+</body>
+</html>

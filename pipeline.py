@@ -391,7 +391,33 @@ def cmd_review(args):
         print("未找到匹配的赛果，请检查球队名。")
         sys.exit(1)
 
-    # ---- 更新ELO ----
+    # ---- 增量复盘状态: 赛果分波到达时只处理新增场次 ----
+    def _mkey(m):
+        return f"{m['home_team']}|{m['away_team']}"
+
+    review_state_path = os.path.join(state_dir, "reviewed_dates.json")
+    if os.path.exists(review_state_path):
+        try:
+            with open(review_state_path, "r", encoding="utf-8") as f:
+                review_state = json.load(f)
+        except Exception:
+            review_state = {}
+    else:
+        review_state = {}
+    if isinstance(review_state, list):  # 旧格式迁移: 日期列表=各日已全部处理
+        review_state = {"dates": {d: None for d in review_state}}
+    if not isinstance(review_state.get("dates"), dict):
+        review_state["dates"] = {}
+
+    done = review_state["dates"].get(date_str, [])
+    if done is None:
+        new_matched = []
+    else:
+        done_set = set(done)
+        new_matched = [m for m in matched if _mkey(m) not in done_set]
+    print(f"本次新增 {len(new_matched)}/{len(matched)} 场 (该日已处理 {len(matched) - len(new_matched)} 场)")
+
+    # ---- 更新ELO (只处理新增场次) ----
     elo = None
     elo_changes = []
     try:
@@ -401,23 +427,9 @@ def cmd_review(args):
     except Exception as e:
         print(f"ELO load failed: {e}")
 
-    if elo:
-        # 幂等防护: 同日重复 review 不重复应用 ELO 更新
-        reviewed_path = os.path.join(state_dir, "reviewed_dates.json")
-        reviewed_dates: list = []
-        if os.path.exists(reviewed_path):
-            try:
-                with open(reviewed_path, "r", encoding="utf-8") as f:
-                    reviewed_dates = json.load(f)
-            except Exception:
-                reviewed_dates = []
-
-        if date_str in reviewed_dates:
-            print(f"[跳过] {date_str} 已更新过ELO，不重复应用 (赛果纠正请重跑 train)")
-            elo_changes = []
-        else:
-            from pipeline.reporter import TEAM_CN
-            for m in matched:
+    if elo and new_matched:
+        from pipeline.reporter import TEAM_CN
+        for m in new_matched:
                 home = m["home_team"]
                 away = m["away_team"]
                 gh = m.get("home_goals")
@@ -456,12 +468,9 @@ def cmd_review(args):
                     "reason": f"{ga}-{gh} {'胜' if goal_diff < 0 else '平' if goal_diff == 0 else '负'}",
                 })
 
-            elo.save()
-            n_updated = len(set(c["team"] for c in elo_changes))
-            print(f"[OK] ELO 已更新 {n_updated} 支球队 ({len(elo_changes)} 条记录)")
-            reviewed_dates.append(date_str)
-            with open(reviewed_path, "w", encoding="utf-8") as f:
-                json.dump(reviewed_dates, f, ensure_ascii=False, indent=2)
+        elo.save()
+        n_updated = len(set(c["team"] for c in elo_changes))
+        print(f"[OK] ELO 已更新 {n_updated} 支球队 ({len(elo_changes)} 条记录)")
 
     # ---- 更新跟踪 ----
     from pipeline.reporter import update_tracking_file, TEAM_CN
@@ -477,7 +486,7 @@ def cmd_review(args):
         load_matches_info,
     )
     matches_info = load_matches_info(date_str)
-    day_dims = evaluate_dimensions(matched, matches_info)
+    day_dims = evaluate_dimensions(new_matched, matches_info)
     ledger_path = os.path.join(state_dir, "dimension_ledger.json")
     ledger = update_ledger(day_dims, ledger_path, date_str=date_str)
     dim_summary = print_dimension_summary(day_dims, ledger)
@@ -488,6 +497,14 @@ def cmd_review(args):
     from pipeline.pnl_ledger import settle_bets_for_date, format_pnl_summary
     pnl_result = settle_bets_for_date(date_str, matched, state_dir)
     print("\n" + format_pnl_summary(pnl_result))
+
+    # ---- 记录新增场次键 (增量幂等) ----
+    if new_matched:
+        cur = review_state["dates"].get(date_str) or []
+        review_state["dates"][date_str] = sorted(set(cur) | {_mkey(m) for m in new_matched})
+        with open(review_state_path, "w", encoding="utf-8") as f:
+            json.dump(review_state, f, ensure_ascii=False, indent=2)
+        print(f"[OK] 已记录 {len(review_state['dates'][date_str])} 场处理状态")
 
     # ---- 生成复盘报告 (含维度成绩) ----
     from pipeline.reporter import generate_review_report, update_tracking_file, TEAM_CN

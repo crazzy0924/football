@@ -151,10 +151,16 @@ def settle_bets_for_date(
         json.dump(ledger, f, ensure_ascii=False, indent=2)
 
     # 幂等: 结算后投注单改名, 重跑 review 不会重复结算
-    os.rename(
-        os.path.join(bets_dir, f"bets_{date_str}.json"),
-        os.path.join(bets_dir, f"bets_{date_str}.settled.json"),
-    )
+    # 增量复盘保护: 有注未匹配到赛果时保留投注单, 等后续赛果到达再结算
+    has_unsettled = any(b.get("status") == "unsettled" for b in settled)
+    if has_unsettled:
+        n_pending = sum(1 for b in settled if b.get('status') == 'unsettled')
+        print(f"  [P&L] {n_pending} 注未匹配到赛果, 投注单保留待后续复盘")
+    else:
+        os.rename(
+            os.path.join(bets_dir, f"bets_{date_str}.json"),
+            os.path.join(bets_dir, f"bets_{date_str}.settled.json"),
+        )
 
     return {"settled": settled, "cumulative": C}
 

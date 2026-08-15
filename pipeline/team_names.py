@@ -118,6 +118,7 @@ CN_TO_EN_TEAM = {
     '柏林赫塔': 'Hertha BSC', '海登海姆': 'FC Heidenheim',
     '威廉二世': 'Willem II', '奈梅亨': 'NEC Nijmegen',
     '阿马多拉': 'Estrela da Amadora',
+    '阿尔维卡': 'Alverca',
     '乌德勒支': 'FC Utrecht', '阿尔克马尔': 'AZ Alkmaar',
     '维塞乌': 'Academico Viseu', '圣克拉拉': 'Santa Clara',
     '阿拉维斯': 'Alaves', '赫塔费': 'Getafe',

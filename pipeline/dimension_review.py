@@ -223,7 +223,7 @@ def update_ledger(day_result: dict, ledger_path: str, date_str: str | None = Non
     Args:
         day_result: evaluate_dimensions 的输出
         ledger_path: data/state/dimension_ledger.json
-        date_str: 当日日期 (YYYY-MM-DD); 同日重复调用自动跳过 (幂等)
+        date_str: 当日日期 (YYYY-MM-DD), 仅作元数据记录
 
     Returns:
         更新后的 ledger
@@ -242,9 +242,7 @@ def update_ledger(day_result: dict, ledger_path: str, date_str: str | None = Non
         L = ledger["dimensions"].setdefault(dim, {
             "n": 0, "brier_sum": 0.0, "correct": 0, "samples": [], "dates": [],
         })
-        # 幂等: 同日重复 review 不重复累计
-        if date_str and date_str in L.get("dates", []):
-            continue
+        # 注: 样本已由调用方按场次键过滤 (增量复盘), 此处不再按日期跳过
         L["n"] += d["n"]
         L["brier_sum"] += d["brier"] * d["n"]
         L["correct"] += round((d["accuracy"] or 0) * d["n"])

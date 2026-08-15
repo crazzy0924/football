@@ -110,6 +110,22 @@ def cmd_predict(args):
     else:
         print("平局校准: 不可用(先跑backtest生成)")
 
+    # 近期状态因子 (与回测同口径, Phase 7.5: 回测Brier 0.595依赖此步)
+    form_factors = {}
+    try:
+        from pipeline.data_loader import load_all_matches
+        from config import FOCUS_LEAGUES
+        from models.form_factor import compute_form_factors
+        hist = [m for m in load_all_matches(csv_dir) if m["league_code"] in FOCUS_LEAGUES]
+        form_factors = compute_form_factors(
+            hist, dc.team_attack, dc.team_defense,
+            dc.league_avg_goals, dc.league_home_adv,
+        )
+        n_form = sum(1 for v in form_factors.values() if v.get("n_matches", 0) >= 3)
+        print(f"状态因子: {n_form} 支球队已计算")
+    except Exception as e:
+        print(f"状态因子计算失败(回退无因子): {e}")
+
     # 加载积分榜 (Phase 7, football-data.org 免费档)
     standings = {}
     try:
@@ -187,7 +203,7 @@ def cmd_predict(args):
 
         # ── 市场驱动冷启动: 把市场赔率传给DC ──
         market = m.get("odds") or m.get("market_odds")
-        pred = dc.predict(home, away, league, market_odds=market)
+        pred = dc.predict(home, away, league, form_factors=form_factors, market_odds=market)
 
         # 应用平局校准
         cal_h, cal_d, cal_a = apply_draw_calibration(
@@ -391,11 +407,20 @@ def cmd_review(args):
             print(f"从football-data.org拉取 {len(results)} 条赛果")
 
     # 4) 兜底: 查找默认赛果文件
+    default_results = os.path.join(output_dir, f"results_{date_str}.json")
     if not results:
-        default_results = os.path.join(output_dir, f"results_{date_str}.json")
         if os.path.exists(default_results):
             results = load_results_from_json(default_results)
             print(f"加载 {len(results)} 条赛果，来自 {default_results}")
+
+    # 4.5) 自动拉取的赛果落盘 (供 h2h 回灌与后续复用)
+    if results and not os.path.exists(default_results):
+        try:
+            with open(default_results, "w", encoding="utf-8") as f:
+                json.dump(results, f, ensure_ascii=False, indent=2)
+            print(f"[赛果] 已落盘 {len(results)} 条 → {default_results}")
+        except Exception as e:
+            print(f"[赛果] 落盘失败: {e}")
 
     if not results:
         print(f"\n未找到 {date_str} 的赛果。")

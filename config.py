@@ -44,4 +44,6 @@ DEEPSEEK_API_KEY = get("DEEPSEEK_API_KEY", "")
 DEEPSEEK_MODEL = get("DEEPSEEK_MODEL", "deepseek-v4-pro")
 # API-Football (RapidAPI) — 伤停/首发/xG 数据源
 FOOTBALL_RAPIDAPI_KEY = get("FOOTBALL_RAPIDAPI_KEY", "")
+# football-data.org v4 — 赛果/赛程 (注册即发key, 大陆可直连)
+FOOTBALL_DATA_API_KEY = get("FOOTBALL_DATA_API_KEY", "")
 

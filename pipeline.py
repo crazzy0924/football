@@ -360,6 +360,13 @@ def cmd_review(args):
         if results:
             print(f"从API-Football拉取 {len(results)} 条赛果")
 
+    # 3.6) football-data.org 赛果 (Phase 6b, 注册即用)
+    if not results:
+        from pipeline.result_fetcher import try_fetch_results_footballdata
+        results = try_fetch_results_footballdata(date_str)
+        if results:
+            print(f"从football-data.org拉取 {len(results)} 条赛果")
+
     # 4) 兜底: 查找默认赛果文件
     if not results:
         default_results = os.path.join(output_dir, f"results_{date_str}.json")

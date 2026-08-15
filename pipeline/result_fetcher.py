@@ -181,6 +181,60 @@ def try_fetch_results_apifootball(date_str: str) -> list[dict] | None:
         return None
 
 
+def _parse_footballdata_matches(payload: dict) -> list[dict]:
+    """解析 football-data.org v4 /matches 响应 → 结果列表 (纯函数, 可离线测试)"""
+    results = []
+    for m in (payload or {}).get("matches", []):
+        if m.get("status") != "FINISHED":
+            continue
+        home = (m.get("homeTeam") or {}).get("name", "")
+        away = (m.get("awayTeam") or {}).get("name", "")
+        score = m.get("score") or {}
+        ft = score.get("fullTime") or {}
+        hg = ft.get("home")
+        ag = ft.get("away")
+        if not home or not away or hg is None or ag is None:
+            continue
+        results.append({
+            "home_team": home,
+            "away_team": away,
+            "home_goals": int(hg),
+            "away_goals": int(ag),
+        })
+    return results
+
+
+def try_fetch_results_footballdata(date_str: str) -> list[dict] | None:
+    """从 football-data.org v4 拉取当日赛果 (Phase 6b · 1请求/天)
+
+    覆盖欧洲主流联赛+部分其他地区; 失败返回 None, 调用方回退手动赛果。
+    """
+    try:
+        from config import FOOTBALL_DATA_API_KEY
+        if not FOOTBALL_DATA_API_KEY:
+            return None
+        import httpx
+        headers = {"X-Auth-Token": FOOTBALL_DATA_API_KEY}
+        with httpx.Client(timeout=20) as c:
+            r = c.get(
+                "https://api.football-data.org/v4/matches",
+                params={"dateFrom": date_str, "dateTo": date_str},
+                headers=headers,
+            )
+        if r.status_code == 429:
+            print("  [赛果] football-data.org 触发限流(10请求/分钟), 本次跳过")
+            return None
+        if r.status_code != 200:
+            print(f"  [赛果] football-data.org: HTTP {r.status_code}")
+            return None
+        results = _parse_footballdata_matches(r.json())
+        print(f"  [赛果] football-data.org 拿到 {len(results)} 场完赛")
+        return _normalize_results(results) if results else None
+    except Exception as e:
+        print(f"  [赛果] football-data.org 拉取失败: {e}")
+        return None
+
+
 def _normalize_results(data: list[dict]) -> list[dict]:
     """Normalize and validate results data."""
     results = []
@@ -294,9 +348,23 @@ def match_predictions_to_results(
 
 
 def _teams_match(a: str, b: str) -> bool:
-    """Fuzzy team name matching."""
+    """模糊队名匹配 + 中英文桥接"""
     if not a or not b:
         return False
+    a_orig, b_orig = a, b
     a = a.lower().replace(" ", "").replace(".", "").replace("'", "")
     b = b.lower().replace(" ", "").replace(".", "").replace("'", "")
-    return a == b or a in b or b in a
+    if a == b or a in b or b in a:
+        return True
+    # 中英桥接: 任一方为中文名时, 用映射表翻译成英文再比 (原名大小写查表)
+    try:
+        from pipeline.team_names import CN_TO_EN_TEAM
+        for x, y in ((a_orig, b), (b_orig, a)):
+            en = CN_TO_EN_TEAM.get(x)
+            if en:
+                en = en.lower().replace(" ", "").replace(".", "")
+                if en == y or en in y or y in en:
+                    return True
+    except Exception:
+        pass
+    return False

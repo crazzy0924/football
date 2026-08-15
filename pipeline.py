@@ -67,7 +67,7 @@ def cmd_backtest(args):
     print("加载全部比赛数据...")
     matches = load_all_matches(csv_dir)
 
-    report = run_backtest(matches, state_dir, output_dir)
+    report = run_backtest(matches, state_dir, output_dir, recent_seasons=args.recent_seasons)
 
     if report.get("gate_result") == "FAIL":
         print("\n⚠ 回测门禁未通过 — 模型禁止上线")
@@ -265,9 +265,17 @@ def cmd_predict(args):
         analyst_notes = None
         if args.llm:
             print(f"\n[LLM] 正在对 {len(predictions)} 场比赛运行定性分析...")
+            # 赛前情报注入 (data/intel/YYYY-MM-DD.txt, 用户手写伤停/首发/战意)
+            intel_text = ""
+            intel_path = os.path.join("data", "intel", f"{today_str}.txt")
+            if os.path.exists(intel_path):
+                with open(intel_path, "r", encoding="utf-8") as f:
+                    intel_text = f.read().strip()
+                if intel_text:
+                    print(f"[LLM] 已注入赛前情报 ({intel_path}, {len(intel_text)} 字)")
             try:
                 from pipeline.analyst import batch_analyze
-                analyst_notes = batch_analyze(predictions)
+                analyst_notes = batch_analyze(predictions, intel_text=intel_text)
                 n_notes = sum(1 for v in analyst_notes.values() if v and not v.startswith("["))
                 print(f"[LLM] 已标注 {n_notes}/{len(predictions)} 场")
             except Exception as e:
@@ -629,6 +637,8 @@ Examples:
     add_common(p_backtest)
     p_backtest.add_argument("--force", action="store_true",
                            help="Continue even if backtest gate fails")
+    p_backtest.add_argument("--recent-seasons", type=int, default=0,
+                           help="实验: 训练只用最近N个赛季 (0=全部)")
 
     # predict
     p_predict = subparsers.add_parser("predict", help="Generate live predictions")

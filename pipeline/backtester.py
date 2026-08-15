@@ -31,6 +31,7 @@ def run_backtest(
     state_dir: str = "data/state",
     output_dir: str = "data/output",
     n_folds: int = 2,
+    recent_seasons: int = 0,
 ) -> dict[str, Any]:
     """Run expanding-window backtest with multiple betting strategies.
 
@@ -55,6 +56,8 @@ def run_backtest(
         print(f"{'='*60}")
 
         train_seasons = [s for s in seasons if s < test_season]
+        if recent_seasons > 0:
+            train_seasons = train_seasons[-recent_seasons:]
         train_matches = [m for m in matches if m["season"] in train_seasons]
         test_matches = [m for m in matches if m["season"] == test_season]
 

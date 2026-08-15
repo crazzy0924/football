@@ -28,8 +28,11 @@ LEAGUE_NAMES_CN = {
 }
 
 
-def build_evidence_packet(prediction: dict) -> str:
-    """Build a structured evidence packet for one match."""
+def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
+    """Build a structured evidence packet for one match.
+
+    intel_text: 用户提供的赛前情报 (伤停/首发/战意等), 追加到证据包末尾
+    """
     home = prediction.get("home_team", "?")
     away = prediction.get("away_team", "?")
     league = prediction.get("league_code", "")
@@ -89,6 +92,12 @@ def build_evidence_packet(prediction: dict) -> str:
 
     if cold:
         lines.append("[注意] 冷启动 — 球队参数来自联赛均值，不确定性高")
+
+    if intel_text:
+        lines.append("")
+        lines.append("=== 赛前情报 (用户提供, 请重点参考) ===")
+        lines.append(intel_text)
+
 
     return "\n".join(lines)
 
@@ -221,6 +230,7 @@ def batch_analyze(
     api_key: str | None = None,
     model: str | None = None,
     delay: float = 0.3,
+    intel_text: str = "",
 ) -> dict[str, str]:
     """Run qualitative analysis on all predictions."""
     notes: dict[str, str] = {}
@@ -235,7 +245,7 @@ def batch_analyze(
             print(f"  [{i+1}/{len(predictions)}] {match_key}: 跳过（冷启动）")
             continue
 
-        evidence = build_evidence_packet(pred)
+        evidence = build_evidence_packet(pred, intel_text=intel_text)
         print(f"  [{i+1}/{len(predictions)}] {match_key}: 分析中...")
 
         note = query_analyst(evidence, api_key, model)

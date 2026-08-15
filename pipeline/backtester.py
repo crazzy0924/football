@@ -87,14 +87,17 @@ def run_backtest(
         print("  拟合概率校准(训练折)...")
         train_preds = []
         train_actuals = []
+        train_leagues = []
         for tm in train_matches:
             if tm["result"] not in ("H", "D", "A"):
                 continue
             tp = dc.predict(tm["home_team"], tm["away_team"], tm["league_code"])
             train_preds.append([tp["home_win"], tp["draw"], tp["away_win"]])
             train_actuals.append({"H": 0, "D": 1, "A": 2}[tm["result"]])
-        prob_cal = fit_calibration(train_preds, train_actuals)
-        print(f"  概率校准: 拟合于 {len(train_actuals)} 场训练赛")
+            train_leagues.append(tm["league_code"])
+        prob_cal = fit_calibration(train_preds, train_actuals, leagues=train_leagues)
+        n_lg = len((prob_cal.get("curves_by_league") or {}))
+        print(f"  概率校准: 拟合于 {len(train_actuals)} 场训练赛, {n_lg} 个联赛独立曲线")
 
         league_stats = compute_league_stats(train_matches)
 
@@ -146,8 +149,22 @@ def run_backtest(
             )
             cal_pred = {"home_win": cal_h, "draw": cal_d, "away_win": cal_a}
 
-            # Phase 2: 概率校准 (融合仍用原始, 校准Brier并列报告)
-            cc_h, cc_d, cc_a = apply_prob_cal([cal_h, cal_d, cal_a], prob_cal)
+            # Phase 2: 概率校准 (全局+分联赛, 融合仍用原始, Brier并列报告)
+            cc_h, cc_d, cc_a = apply_prob_cal([cal_h, cal_d, cal_a], prob_cal, m["league_code"])
+
+            # Phase 2b: ELO-DC 混合 (30% ELO 方向概率 + 70% DC)
+            elo_h = elo.get_elo(m["home_team"], m["league_code"])
+            elo_a = elo.get_elo(m["away_team"], m["league_code"])
+            ha_elo = elo._league_home_advantage.get(m["league_code"], 100)
+            diff_h = elo_h + ha_elo - elo_a
+            p_h_elo = 1.0 / (1.0 + 10 ** (-diff_h / 400.0))
+            p_a_elo = 1.0 / (1.0 + 10 ** (-(-diff_h) / 400.0))
+            p_d_elo = max(0.02, 1.0 - p_h_elo - p_a_elo)
+            s_elo = p_h_elo + p_d_elo + p_a_elo
+            W_ELO = 0.30
+            bl_h = W_ELO * p_h_elo / s_elo + (1 - W_ELO) * cal_h
+            bl_d = W_ELO * p_d_elo / s_elo + (1 - W_ELO) * cal_d
+            bl_a = W_ELO * p_a_elo / s_elo + (1 - W_ELO) * cal_a
 
             market_odds = m.get("odds", {})
             best_odds = _get_best_odds(market_odds)
@@ -165,6 +182,9 @@ def run_backtest(
                 "cal_home_win": cc_h,
                 "cal_draw": cc_d,
                 "cal_away_win": cc_a,
+                "bl_home_win": bl_h,
+                "bl_draw": bl_d,
+                "bl_away_win": bl_a,
                 "actual": actual,
                 "home_team": m["home_team"],
                 "away_team": m["away_team"],
@@ -228,7 +248,17 @@ def run_backtest(
                 [p["cal_home_win"], p["cal_draw"], p["cal_away_win"]], av
             ))
         cal_brier /= max(len(predictions), 1)
-        print(f"  校准后Brier: {cal_brier:.4f} (差 {cal_brier - eval_result.brier_score:+.4f})")
+        print(f"  校准后Brier(分联赛): {cal_brier:.4f} (差 {cal_brier - eval_result.brier_score:+.4f})")
+
+        # Phase 2b: ELO混合 Brier
+        bl_brier = 0.0
+        for p in predictions:
+            av = {"H": [1, 0, 0], "D": [0, 1, 0], "A": [0, 0, 1]}[p["actual"]]
+            bl_brier += sum((q - v) ** 2 for q, v in zip(
+                [p["bl_home_win"], p["bl_draw"], p["bl_away_win"]], av
+            ))
+        bl_brier /= max(len(predictions), 1)
+        print(f"  ELO混合Brier(30/70): {bl_brier:.4f} (差 {bl_brier - eval_result.brier_score:+.4f})")
 
         fold_results.append(eval_result)
 

@@ -40,27 +40,12 @@ def _pav(sorted_points: list[tuple[float, float]]) -> list[tuple[float, float]]:
     return [(sx / c, sy / c) for c, sx, sy in groups]
 
 
-def fit_calibration(
-    pred_probs: list[list[float]],
-    actuals: list[int],
-    n_bins: int = 10,
-) -> dict[str, Any]:
-    """拟合 3-way 概率校准 (H/D/A 独立)
-
-    Args:
-        pred_probs: [[p_home, p_draw, p_away], ...]
-        actuals:    [0, 1, 2] (H/D/A 下标)
-
-    Returns:
-        {"bins": [...], "curves": {"H": [[x,y]...], "D": ..., "A": ...}}
-    """
+def _fit_curves(pred_probs: list[list[float]], actuals: list[int], n_bins: int = 10) -> dict[str, list[tuple[float, float]]]:
+    """拟合一组 (pred, actual) 样本的 H/D/A 校准曲线"""
     n = len(pred_probs)
-    if n < 200:
-        return {"bins": [], "curves": {"H": [], "D": [], "A": []}, "n": n}
-
-    bin_edges = [i / n_bins for i in range(n_bins + 1)]
     curves: dict[str, list[tuple[float, float]]] = {"H": [], "D": [], "A": []}
-
+    if n < 200:
+        return curves
     for outcome, key in enumerate(["H", "D", "A"]):
         # 按预测概率分桶, 统计实际频率
         pairs = sorted((pred_probs[i][outcome], 1.0 if actuals[i] == outcome else 0.0) for i in range(n))
@@ -76,8 +61,46 @@ def fit_calibration(
             y = sum(y for _, y in chunk) / len(chunk)
             bin_points.append((x, y))
         curves[key] = _pav(bin_points)
+    return curves
 
-    return {"bins": bin_edges, "curves": curves, "n": n}
+
+def fit_calibration(
+    pred_probs: list[list[float]],
+    actuals: list[int],
+    n_bins: int = 10,
+    leagues: list[str] | None = None,
+) -> dict[str, Any]:
+    """拟合 3-way 概率校准 (H/D/A 独立)
+
+    Args:
+        pred_probs: [[p_home, p_draw, p_away], ...]
+        actuals:    [0, 1, 2] (H/D/A 下标)
+        leagues:    可选, 每场联赛代码 → 分联赛校准 (小样本联赛回退全局)
+
+    Returns:
+        {"bins": [...], "curves": {...}, "curves_by_league": {...}, "n": n}
+    """
+    n = len(pred_probs)
+    base = {"bins": [i / n_bins for i in range(n_bins + 1)], "curves": {}, "n": n}
+    if n < 200:
+        return {**base, "curves": {"H": [], "D": [], "A": []}}
+
+    if leagues is not None and len(leagues) == n:
+        # 全局曲线 + 分联赛曲线
+        global_curves = _fit_curves(pred_probs, actuals, n_bins)
+        by_league: dict[str, dict[str, list[tuple[float, float]]]] = {}
+        from collections import defaultdict
+        groups: dict[str, tuple[list, list]] = defaultdict(lambda: ([], []))
+        for i, lg in enumerate(leagues):
+            groups[lg][0].append(pred_probs[i])
+            groups[lg][1].append(actuals[i])
+        for lg, (ps, acs) in groups.items():
+            curves = _fit_curves(ps, acs, n_bins)
+            if curves["H"]:  # 样本≥200才有效
+                by_league[lg] = curves
+        return {**base, "curves": global_curves, "curves_by_league": by_league}
+
+    return {**base, "curves": _fit_curves(pred_probs, actuals, n_bins)}
 
 
 def _interp(x: float, curve: list[tuple[float, float]]) -> float:
@@ -99,11 +122,15 @@ def _interp(x: float, curve: list[tuple[float, float]]) -> float:
     return x
 
 
-def apply_calibration(probs: list[float], cal: dict[str, Any] | None) -> list[float]:
-    """校准一组 H/D/A 概率"""
+def apply_calibration(probs: list[float], cal: dict[str, Any] | None, league: str = "") -> list[float]:
+    """校准一组 H/D/A 概率; 有分联赛曲线时优先用"""
     if not cal or not cal.get("curves"):
         return probs
     curves = cal["curves"]
+    if league:
+        by_lg = cal.get("curves_by_league") or {}
+        if league in by_lg:
+            curves = by_lg[league]
     out = [
         _interp(probs[0], curves.get("H", [])),
         _interp(probs[1], curves.get("D", [])),

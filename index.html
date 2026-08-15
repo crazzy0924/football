@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>足球大模型 · 每日预测与复盘</title>
+<style>
+  body { font-family: "Microsoft YaHei", sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 24px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; color: #22c55e; }
+  h2 { font-size: 1.1rem; color: #94a3b8; margin-top: 28px; border-bottom: 1px solid #334155; padding-bottom: 6px; }
+  a { color: #38bdf8; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .card { background: #1e293b; border-radius: 10px; padding: 14px 18px; margin: 10px 0; }
+  .tag { display: inline-block; background: #334155; border-radius: 4px; padding: 1px 8px; font-size: .75rem; margin-right: 8px; color: #cbd5e1; }
+  .muted { color: #64748b; font-size: .85rem; }
+  li { margin: 6px 0; }
+  ul { padding-left: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⚽ 足球大模型 · 每日预测与复盘</h1>
+  <p class="muted">Dixon-Coles + ELO + 贝叶斯市场融合 · 每日 09:00 自动预测 / 21:30 自动复盘</p>
+
+  <h2>📅 最近报告 (自动生成链接)</h2>
+  <div class="card">
+    <ul id="days"></ul>
+  </div>
+
+  <h2>📚 常驻页面</h2>
+  <div class="card">
+    <ul>
+      <li><a href="archive.html">📂 全部历史归档 archive.html</a></li>
+      <li><a href="docs/BASELINE_2026-08.md">📊 基线报告</a></li>
+      <li><a href="docs/ROADMAP_v4.md">🗺 升级路线图</a></li>
+      <li><a href="docs/PHASE1_cold_start.md">🧊 冷启动治理规格</a></li>
+      <li><a href="data/bets/README.md">💰 投注单格式说明</a></li>
+      <li><a href="data/intel/README.md">🗞 赛前情报格式说明</a></li>
+    </ul>
+  </div>
+
+  <h2>🔗 源码仓库</h2>
+  <div class="card">
+    <a href="https://github.com/crazzy0924/football">github.com/crazzy0924/football</a>
+  </div>
+
+  <p class="muted">报告每天自动生成并推送，本页链接随日期自动更新，无需人工维护。</p>
+</div>
+<script>
+  // 自动生成最近 10 天的预测/复盘链接
+  const list = document.getElementById('days');
+  const pad = n => String(n).padStart(2, '0');
+  const today = new Date();
+  for (let i = 0; i < 10; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const s = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    const li = document.createElement('li');
+    li.innerHTML =
+      '<span class="tag">' + s + '</span>' +
+      '<a href="data/output/predictions_' + s + '.html">赛前预测</a> · ' +
+      '<a href="data/output/review_' + s + '.html">赛后复盘</a> · ' +
+      '<a href="data/output/predictions_' + s + '.json">预测JSON</a>';
+    list.appendChild(li);
+  }
+</script>
+</body>
+</html>

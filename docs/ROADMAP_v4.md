@@ -42,6 +42,17 @@ deepseek-harness 0.2.0 在 PyPI 存在。
 3. 与 dimension_ledger 打通：只有过门禁维度的信号才允许记账
 **验收**：账本与复盘报告自动同步；ROI 按维度可查
 
+---
+
+## 进度更新 · 2026-08-15
+- ✅ Phase 1 A1: odds-api.io v3 兜底 (配额耗尽自动切换, 实测生效)
+- ✅ Phase 1 A2: 无赔率冷启动标记 no_signal, 退出准确率/维度统计 (5处代码)
+- ✅ review 幂等防护: 台账按日去重 + ELO 不重复应用 (reviewed_dates.json)
+- ✅ Phase 3: predict --llm 端到端验证 (DeepSeek 2/2 场中文分析)
+- ✅ Phase 4: daily_run.py 一键流程 + Windows 计划任务 (09:00 预测 / 21:30 复盘)
+- ✅ Phase 5: P&L 账本 (data/bets 投注单 + 自动结算 + 维度ROI, 幂等)
+- ⏳ 待办: A3 训练库扩充 (h2h全库并入) · A4 ELO分桶先验 · 复盘HTML接入P&L摘要
+
 ## 执行纪律（继承 CLAUDE.md）
 - 每个 Phase 独立验证，通过门禁才进下一个
 - 推送前跑 python pre_push_check.py（汉化检查）

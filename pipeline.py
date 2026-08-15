@@ -454,6 +454,11 @@ def cmd_review(args):
     print(f"\n[OK] 维度成绩已累计 → {ledger_path}")
     print(dim_summary)
 
+    # ---- 投注结算 (Phase 5 P&L 账本) ----
+    from pipeline.pnl_ledger import settle_bets_for_date, format_pnl_summary
+    pnl_result = settle_bets_for_date(date_str, matched, state_dir)
+    print("\n" + format_pnl_summary(pnl_result))
+
     # ---- 生成复盘报告 (含维度成绩) ----
     from pipeline.reporter import generate_review_report, update_tracking_file, TEAM_CN
 

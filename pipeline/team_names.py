@@ -156,3 +156,55 @@ CN_TO_EN_TEAM = {
     '汉坎': 'HamKam', '萨尔普斯堡': 'Sarpsborg 08',
     '桑纳菲尤尔': 'Sandefjord',
 }
+# ═══════════════════════════════════════════════════════
+# 五大联赛完整对照 (2026-08-16 · 从模型训练库导出精确英文名)
+# 体彩中文名 → 模型内部名; update() 后写覆盖前写
+# ═══════════════════════════════════════════════════════
+CN_TO_EN_TEAM.update({
+    # ── 英超 PL ──
+    '阿森纳': 'Arsenal', '维拉': 'Aston Villa', '伯恩茅斯': 'Bournemouth',
+    '布伦特福德': 'Brentford', '布莱顿': 'Brighton',
+    '水晶宫': 'Crystal Palace', '埃弗顿': 'Everton', '富勒姆': 'Fulham',
+    '利兹联': 'Leeds', '曼城': 'Man City', '曼联': 'Man United',
+    '纽卡斯尔': 'Newcastle', '纽卡斯尔联': 'Newcastle',
+    '诺丁汉森林': "Nott'm Forest", '诺丁汉': "Nott'm Forest",
+    '桑德兰': 'Sunderland', '热刺': 'Tottenham',
+    '狼队': 'Wolves',
+    # ── 西甲 PD ──
+    '毕尔巴鄂竞技': 'Ath Bilbao', '毕尔巴鄂': 'Ath Bilbao',
+    '马德里竞技': 'Ath Madrid', '马竞': 'Ath Madrid',
+    '皇家贝蒂斯': 'Betis', '贝蒂斯': 'Betis',
+    '塞尔塔': 'Celta', '维戈塞尔塔': 'Celta',
+    '埃尔切': 'Elche', '赫罗纳': 'Girona',
+    '马洛卡': 'Mallorca', '马略卡': 'Mallorca',
+    '奥萨苏纳': 'Osasuna', '奥维耶多': 'Oviedo',
+    '皇家社会': 'Sociedad', '瓦伦西亚': 'Valencia',
+    '巴列卡诺': 'Vallecano', '皇家马德里': 'Real Madrid', '皇马': 'Real Madrid',
+    # ── 德甲 BL1 ──
+    '奥格斯堡': 'Augsburg', '拜仁慕尼黑': 'Bayern Munich', '拜仁': 'Bayern Munich',
+    '多特蒙德': 'Dortmund', '多特': 'Dortmund',
+    '法兰克福': 'Ein Frankfurt', '科隆': 'FC Koln',
+    '弗赖堡': 'Freiburg', '汉堡': 'Hamburg',
+    '海登海姆': 'Heidenheim', '霍芬海姆': 'Hoffenheim',
+    '勒沃库森': 'Leverkusen', '门兴格拉德巴赫': "M'gladbach", '门兴': "M'gladbach",
+    '美因茨': 'Mainz', '莱比锡红牛': 'RB Leipzig', '莱比锡': 'RB Leipzig',
+    '斯图加特': 'Stuttgart', '柏林联合': 'Union Berlin',
+    '云达不莱梅': 'Werder Bremen', '不莱梅': 'Werder Bremen',
+    '沃尔夫斯堡': 'Wolfsburg',
+    # ── 意甲 SA ──
+    '亚特兰大': 'Atalanta', '博洛尼亚': 'Bologna', '卡利亚里': 'Cagliari',
+    '科莫': 'Como', '克雷莫纳': 'Cremonese', '佛罗伦萨': 'Fiorentina',
+    '热那亚': 'Genoa', '拉齐奥': 'Lazio', '莱切': 'Lecce',
+    'AC米兰': 'Milan', '那不勒斯': 'Napoli', '帕尔马': 'Parma',
+    '比萨': 'Pisa', '罗马': 'Roma', '萨索洛': 'Sassuolo',
+    '都灵': 'Torino', '乌迪内斯': 'Udinese', '维罗纳': 'Verona',
+    # ── 法甲 FL1 ──
+    '昂热': 'Angers', '欧塞尔': 'Auxerre', '波尔多': 'Bordeaux',
+    '布雷斯特': 'Brest', '勒阿弗尔': 'Le Havre', '朗斯': 'Lens',
+    '里尔': 'Lille', '洛里昂': 'Lorient', '里昂': 'Lyon',
+    '马赛': 'Marseille', '梅斯': 'Metz', '摩纳哥': 'Monaco',
+    '南特': 'Nantes', '尼斯': 'Nice', '巴黎FC': 'Paris FC',
+    '巴黎圣日耳曼': 'Paris SG', '雷恩': 'Rennes',
+    '斯特拉斯堡': 'Strasbourg', '图卢兹': 'Toulouse',
+})
+

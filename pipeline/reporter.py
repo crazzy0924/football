@@ -190,6 +190,14 @@ TEAM_CN = {
     "None": "无",
 }
 
+# 自动同步: 从 team_names 的 CN→EN 表反向生成 EN→CN (手工表优先, 缺则回退英文)
+try:
+    from pipeline.team_names import CN_TO_EN_TEAM
+    for _cn_name, _en_name in CN_TO_EN_TEAM.items():
+        TEAM_CN.setdefault(_en_name, _cn_name)
+except Exception:
+    pass
+
 def _cn(home_team: str, away_team: str) -> tuple[str, str]:
     """Return Chinese team names for a match pair."""
     return TEAM_CN.get(home_team, home_team), TEAM_CN.get(away_team, away_team)

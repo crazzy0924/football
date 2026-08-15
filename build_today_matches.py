@@ -164,6 +164,15 @@ for m in all_today:
         entry['odds'] = kambi_data[m['id']]
     today.append(entry)
 
+# 聚焦联赛过滤 (2026-08-16 起: 只关注五大联赛)
+try:
+    from config import FOCUS_LEAGUES
+    before = len(today)
+    today = [m for m in today if m.get('league_code') in FOCUS_LEAGUES]
+    print(f'聚焦联赛过滤: {before} → {len(today)} 场 (保留 {FOCUS_LEAGUES})')
+except Exception as e:
+    print(f'聚焦联赛过滤跳过: {e}')
+
 pathlib.Path('data/today.json').write_text(json.dumps(today, ensure_ascii=False, indent=2), encoding='utf-8')
 print(f'\nSaved {len(today)} matches to data/today.json')
 

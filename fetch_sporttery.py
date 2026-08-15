@@ -210,6 +210,15 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
     if entry.get('ou_line'):
         print(f'  大小(O/U 2.5): 大{entry["over_odds"]:.2f} / 小{entry["under_odds"]:.2f}')
 
+# 聚焦联赛过滤 (2026-08-16 起: 只关注五大联赛)
+try:
+    from config import FOCUS_LEAGUES
+    before = len(today)
+    today = [m for m in today if m.get('league_code') in FOCUS_LEAGUES]
+    print(f'聚焦联赛过滤: {before} → {len(today)} 场 (保留 {FOCUS_LEAGUES})')
+except Exception as e:
+    print(f'聚焦联赛过滤跳过: {e}')
+
 # Save
 pathlib.Path('data/today.json').write_text(json.dumps(today, ensure_ascii=False, indent=2), encoding='utf-8')
 print(f'\n✅ 保存 {len(today)} 场到 data/today.json')

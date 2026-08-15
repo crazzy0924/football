@@ -47,3 +47,7 @@ FOOTBALL_RAPIDAPI_KEY = get("FOOTBALL_RAPIDAPI_KEY", "")
 # football-data.org v4 — 赛果/赛程 (注册即发key, 大陆可直连)
 FOOTBALL_DATA_API_KEY = get("FOOTBALL_DATA_API_KEY", "")
 
+# 聚焦联赛白名单 (2026-08-16 起: 只关注五大联赛)
+# 如需加联赛, 逗号分隔添加代码即可 (如 PL,PD,BL1,SA,FL1,DED)
+FOCUS_LEAGUES = [x.strip() for x in get("FOCUS_LEAGUES", "PL,PD,BL1,SA,FL1").split(",") if x.strip()]
+

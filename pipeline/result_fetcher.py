@@ -224,6 +224,7 @@ def match_predictions_to_results(
                 "bayesian": pred.get("bayesian"),
                 "elo_diff": pred.get("elo_diff", 0),
                 "cold_start": pred.get("cold_start", False),
+                "no_signal": pred.get("no_signal", False),
                 "matched": True,
             })
         else:

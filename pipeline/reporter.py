@@ -679,14 +679,15 @@ def update_tracking_file(
     else:
         tracking = {"days": [], "cumulative": {}}
 
-    # 计算当日指标
-    n = len(matched)
+    # 计算当日指标 (Phase 1 A2: 无信号场次不计入)
+    sig = [m for m in matched if not m.get("no_signal")]
+    n = len(sig)
     if n == 0:
         return tracking
 
     correct = 0
     brier_sum = 0.0
-    for m in matched:
+    for m in sig:
         pred = m["predicted"]
         actual = m["actual"]
         outcomes = {"H": [1, 0, 0], "D": [0, 1, 0], "A": [0, 0, 1]}
@@ -706,9 +707,10 @@ def update_tracking_file(
     day_entry = {
         "date": date_str,
         "matches": n,
+        "no_signal_count": len(matched) - n,
         "brier": round(brier_sum / n, 4),
         "accuracy": round(correct / n, 4),
-        "cold_start_count": sum(1 for m in matched if m.get("cold_start")),
+        "cold_start_count": sum(1 for m in sig if m.get("cold_start")),
     }
 
     if elo_summary:

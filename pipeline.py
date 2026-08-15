@@ -236,6 +236,8 @@ def cmd_predict(args):
             } if value else None,
             "bayesian": bayes,
             "cold_start": pred.get("cold_start", False),
+            # Phase 1 A2: 无赔率且冷启动 → 预测退化为联赛先验，无信息量
+            "no_signal": value is None and pred.get("cold_start", False),
             "ah_handicap": ah_pred,
         })
 
@@ -370,49 +372,66 @@ def cmd_review(args):
         print(f"ELO load failed: {e}")
 
     if elo:
-        from pipeline.reporter import TEAM_CN
-        for m in matched:
-            home = m["home_team"]
-            away = m["away_team"]
-            gh = m.get("home_goals")
-            ga = m.get("away_goals")
-            league = m.get("league_code", "")
-            if not home or not away or gh is None or ga is None:
-                continue
+        # 幂等防护: 同日重复 review 不重复应用 ELO 更新
+        reviewed_path = os.path.join(state_dir, "reviewed_dates.json")
+        reviewed_dates: list = []
+        if os.path.exists(reviewed_path):
+            try:
+                with open(reviewed_path, "r", encoding="utf-8") as f:
+                    reviewed_dates = json.load(f)
+            except Exception:
+                reviewed_dates = []
 
-            ha = elo._league_home_advantage.get(league, 100)
-            old_h = elo.get_elo(home, league)
-            old_a = elo.get_elo(away, league)
+        if date_str in reviewed_dates:
+            print(f"[跳过] {date_str} 已更新过ELO，不重复应用 (赛果纠正请重跑 train)")
+            elo_changes = []
+        else:
+            from pipeline.reporter import TEAM_CN
+            for m in matched:
+                home = m["home_team"]
+                away = m["away_team"]
+                gh = m.get("home_goals")
+                ga = m.get("away_goals")
+                league = m.get("league_code", "")
+                if not home or not away or gh is None or ga is None:
+                    continue
 
-            # 冷启动球队跳过ELO更新
-            if old_h == 1500 and old_a == 1500:
-                continue
+                ha = elo._league_home_advantage.get(league, 100)
+                old_h = elo.get_elo(home, league)
+                old_a = elo.get_elo(away, league)
 
-            new_h, new_a = elo._update_match(old_h, old_a, gh, ga, ha)
-            elo._ratings[home] = new_h
-            elo._ratings[away] = new_a
+                # 冷启动球队跳过ELO更新
+                if old_h == 1500 and old_a == 1500:
+                    continue
 
-            goal_diff = gh - ga
-            elo_changes.append({
-                "team": TEAM_CN.get(home, home),
-                "old": round(old_h, 1),
-                "new": round(new_h, 1),
-                "delta": round(new_h - old_h, 1),
-                "delta_signed": f"{new_h - old_h:+.1f}",
-                "reason": f"{gh}-{ga} {'胜' if goal_diff > 0 else '平' if goal_diff == 0 else '负'}",
-            })
-            elo_changes.append({
-                "team": TEAM_CN.get(away, away),
-                "old": round(old_a, 1),
-                "new": round(new_a, 1),
-                "delta": round(new_a - old_a, 1),
-                "delta_signed": f"{new_a - old_a:+.1f}",
-                "reason": f"{ga}-{gh} {'胜' if goal_diff < 0 else '平' if goal_diff == 0 else '负'}",
-            })
+                new_h, new_a = elo._update_match(old_h, old_a, gh, ga, ha)
+                elo._ratings[home] = new_h
+                elo._ratings[away] = new_a
 
-        elo.save()
-        n_updated = len(set(c["team"] for c in elo_changes))
-        print(f"[OK] ELO 已更新 {n_updated} 支球队 ({len(elo_changes)} 条记录)")
+                goal_diff = gh - ga
+                elo_changes.append({
+                    "team": TEAM_CN.get(home, home),
+                    "old": round(old_h, 1),
+                    "new": round(new_h, 1),
+                    "delta": round(new_h - old_h, 1),
+                    "delta_signed": f"{new_h - old_h:+.1f}",
+                    "reason": f"{gh}-{ga} {'胜' if goal_diff > 0 else '平' if goal_diff == 0 else '负'}",
+                })
+                elo_changes.append({
+                    "team": TEAM_CN.get(away, away),
+                    "old": round(old_a, 1),
+                    "new": round(new_a, 1),
+                    "delta": round(new_a - old_a, 1),
+                    "delta_signed": f"{new_a - old_a:+.1f}",
+                    "reason": f"{ga}-{gh} {'胜' if goal_diff < 0 else '平' if goal_diff == 0 else '负'}",
+                })
+
+            elo.save()
+            n_updated = len(set(c["team"] for c in elo_changes))
+            print(f"[OK] ELO 已更新 {n_updated} 支球队 ({len(elo_changes)} 条记录)")
+            reviewed_dates.append(date_str)
+            with open(reviewed_path, "w", encoding="utf-8") as f:
+                json.dump(reviewed_dates, f, ensure_ascii=False, indent=2)
 
     # ---- 更新跟踪 ----
     from pipeline.reporter import update_tracking_file, TEAM_CN
@@ -430,7 +449,7 @@ def cmd_review(args):
     matches_info = load_matches_info(date_str)
     day_dims = evaluate_dimensions(matched, matches_info)
     ledger_path = os.path.join(state_dir, "dimension_ledger.json")
-    ledger = update_ledger(day_dims, ledger_path)
+    ledger = update_ledger(day_dims, ledger_path, date_str=date_str)
     dim_summary = print_dimension_summary(day_dims, ledger)
     print(f"\n[OK] 维度成绩已累计 → {ledger_path}")
     print(dim_summary)
@@ -446,9 +465,11 @@ def cmd_review(args):
         dimension_summary=dim_summary,
     )
 
-    # ---- 打印总结 ----
-    n = len(matched)
-    correct = sum(1 for m in matched if
+    # ---- 打印总结 (Phase 1 A2: 无信号场次不计入准确率) ----
+    sig = [m for m in matched if not m.get("no_signal")]
+    n = len(sig)
+    n_nosig = len(matched) - n
+    correct = sum(1 for m in sig if
         max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
             ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == m["actual"])
     brier = sum(
@@ -456,25 +477,27 @@ def cmd_review(args):
             [m["predicted"]["home_win"], m["predicted"]["draw"], m["predicted"]["away_win"]],
             {"H": [1, 0, 0], "D": [0, 1, 0], "A": [0, 0, 1]}[m["actual"]]
         )) / 3
-        for m in matched
+        for m in sig
     ) / n if n > 0 else 1.0
 
-    hh = sum(1 for m in matched if m["actual"] == "H" and
+    hh = sum(1 for m in sig if m["actual"] == "H" and
              max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
                  ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == "H")
-    dd = sum(1 for m in matched if m["actual"] == "D" and
+    dd = sum(1 for m in sig if m["actual"] == "D" and
              max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
                  ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == "D")
-    aa = sum(1 for m in matched if m["actual"] == "A" and
+    aa = sum(1 for m in sig if m["actual"] == "A" and
              max(("H", m["predicted"]["home_win"]), ("D", m["predicted"]["draw"]),
                  ("A", m["predicted"]["away_win"]), key=lambda x: x[1])[0] == "A")
 
     print(f"\n{'='*60}")
     print(f"复盘总结 — {date_str}")
     print(f"{'='*60}")
-    print(f"  场次:      {n}")
+    if n_nosig > 0:
+        print(f"  无信号场次: {n_nosig} 场 (无赔率冷启动, 不计入以下指标)")
+    print(f"  有效场次:  {n}")
     print(f"  Brier:     {brier:.4f}")
-    print(f"  准确率:    {correct}/{n} ({correct/n:.1%})")
+    print(f"  准确率:    {correct}/{n} ({correct/n:.1%})" if n > 0 else "  准确率:    n/a")
     print(f"  方向:     主={hh} 平={dd} 客={aa}")
     if tracking.get("cumulative"):
         c = tracking["cumulative"]

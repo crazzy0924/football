@@ -99,6 +99,9 @@ def evaluate_dimensions(
         ga = m.get("away_goals")
         if gh is None or ga is None:
             continue
+        # Phase 1 A2: 无赔率冷启动场次不计入维度台账(预测无信息量)
+        if m.get("no_signal"):
+            continue
         total = gh + ga
 
         # ---- 1X2 ----
@@ -214,12 +217,13 @@ def evaluate_dimensions(
     return result
 
 
-def update_ledger(day_result: dict, ledger_path: str) -> dict:
+def update_ledger(day_result: dict, ledger_path: str, date_str: str | None = None) -> dict:
     """累计维度成绩到 ledger 文件
 
     Args:
         day_result: evaluate_dimensions 的输出
         ledger_path: data/state/dimension_ledger.json
+        date_str: 当日日期 (YYYY-MM-DD); 同日重复调用自动跳过 (幂等)
 
     Returns:
         更新后的 ledger
@@ -236,8 +240,11 @@ def update_ledger(day_result: dict, ledger_path: str) -> dict:
         if d["n"] == 0:
             continue
         L = ledger["dimensions"].setdefault(dim, {
-            "n": 0, "brier_sum": 0.0, "correct": 0, "samples": [],
+            "n": 0, "brier_sum": 0.0, "correct": 0, "samples": [], "dates": [],
         })
+        # 幂等: 同日重复 review 不重复累计
+        if date_str and date_str in L.get("dates", []):
+            continue
         L["n"] += d["n"]
         L["brier_sum"] += d["brier"] * d["n"]
         L["correct"] += round((d["accuracy"] or 0) * d["n"])
@@ -245,6 +252,8 @@ def update_ledger(day_result: dict, ledger_path: str) -> dict:
         L["accuracy"] = round(L["correct"] / L["n"], 4)
         # 保留最近30条明细
         L["samples"] = (L["samples"] + d["details"])[-30:]
+        if date_str:
+            L["dates"] = (L.get("dates", []) + [date_str])[-30:]
 
     os.makedirs(os.path.dirname(ledger_path), exist_ok=True)
     with open(ledger_path, "w", encoding="utf-8") as f:

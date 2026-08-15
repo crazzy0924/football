@@ -446,6 +446,7 @@ def generate_review_report(
     date_str: str | None = None,
     elo_changes: list[dict] | None = None,
     dimension_summary: str = "",
+    pnl_text: str = "",
 ) -> str:
     """Generate review HTML report from matched predictions and results.
 
@@ -630,6 +631,7 @@ def generate_review_report(
         "matches": match_rows,
         "elo_changes": elo_changes or [],
         "dimension_summary": dimension_summary,
+        "pnl_text": pnl_text,
     }
 
     # Render

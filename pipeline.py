@@ -468,6 +468,7 @@ def cmd_review(args):
         date_str=date_str,
         elo_changes=elo_changes,
         dimension_summary=dim_summary,
+        pnl_text=format_pnl_summary(pnl_result),
     )
 
     # ---- 打印总结 (Phase 1 A2: 无信号场次不计入准确率) ----

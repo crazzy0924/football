@@ -153,15 +153,85 @@ def load_openfootball_matches(json_path: str = "data/openfootball_matches.json")
     return matches
 
 
-def load_all_matches(csv_dir: str = "data/historical_odds",
-                     openfootball_json: str = "data/openfootball_matches.json") -> list[dict]:
-    """Load ALL match data: CSV files + openfootball leagues.
+def load_local_db_matches(json_path: str = "data/local_match_db.json") -> list[dict]:
+    """加载 h2h 全库中训练集未覆盖的场次 (Phase 1 A3).
 
-    Combined dataset for full model training.
+    local_match_db.json 由 h2h.py --rebuild 构建, 含 4 个来源:
+      - football_data_csv  (已在 CSV 训练集中)
+      - openfootball_json (已在 openfootball_matches.json 中)
+      - openfootball_txt  (巴西杯/挪威杯/瑞典低级别等, 训练集未覆盖 → 本次并入)
+      - 首轮回补/复盘回灌 (实盘赛果回灌)
+    """
+    import json as _json
+    from pathlib import Path as _Path
+
+    json_path = _Path(json_path)
+    if not json_path.exists():
+        return []
+
+    with open(json_path, "r", encoding="utf-8") as f:
+        db = _json.load(f)
+
+    matches = []
+    for m in db.get("matches", []):
+        src = m.get("source", "")
+        if src in ("football_data_csv", "openfootball_json"):
+            continue
+        hg = m.get("home_goals")
+        ag = m.get("away_goals")
+        if hg is None or ag is None:
+            continue
+        # 联赛代码缺失/未知的杂项不入训练
+        lg = m.get("league_code") or ""
+        if not lg or lg == "UNK":
+            continue
+        # 赛季归一: 年份制(如2023) → 欧赛季制(22-23), 与CSV标签对齐
+        season = str(m.get("season") or "")
+        if len(season) == 4 and season.isdigit():
+            y = int(season)
+            season = f"{y - 1:04d}"[2:] + "-" + f"{y:04d}"[2:]
+        if not season or season == "unknown":
+            continue
+        date = m.get("date") or ""
+        if not date:
+            continue
+        matches.append({
+            "league_code": lg,
+            "season": season,
+            "date": date,
+            "home_team": normalize_team_name(m.get("home_team", "")),
+            "away_team": normalize_team_name(m.get("away_team", "")),
+            "home_goals": int(hg),
+            "away_goals": int(ag),
+            "result": m.get("result", ""),
+            "odds": {},
+        })
+    return matches
+
+
+def load_all_matches(csv_dir: str = "data/historical_odds",
+                     openfootball_json: str = "data/openfootball_matches.json",
+                     local_db_json: str = "data/local_match_db.json") -> list[dict]:
+    """Load ALL match data: CSV + openfootball JSON + h2h全库增量 (Phase 1 A3).
+
+    按 (date, league_code, home_team, away_team) 去重后按时间排序。
     """
     matches = load_all_csvs(csv_dir)
     of_matches = load_openfootball_matches(openfootball_json)
     matches.extend(of_matches)
+    db_matches = load_local_db_matches(local_db_json)
+
+    # 去重: 同日同联赛同对决不重复计入
+    seen = {(m["date"], m["league_code"], m["home_team"], m["away_team"]) for m in matches}
+    added = 0
+    for m in db_matches:
+        key = (m["date"], m["league_code"], m["home_team"], m["away_team"])
+        if key in seen:
+            continue
+        seen.add(key)
+        matches.append(m)
+        added += 1
+
     matches.sort(key=lambda m: m["date"])
     return matches
 

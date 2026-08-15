@@ -46,7 +46,16 @@ def cmd_predict(args) -> None:
         print("[警告] 体彩拉取失败, 尝试 odds-api.io 构建...")
         _run([sys.executable, "build_today_matches.py", date_str])
 
-    # 2) 预测 (可选 LLM 分析)
+    # 2) 伤停情报自动采集 (API-Football, 需 FOOTBALL_RAPIDAPI_KEY; 无key自动跳过)
+    try:
+        from config import FOOTBALL_RAPIDAPI_KEY
+        if FOOTBALL_RAPIDAPI_KEY:
+            print("[情报] API-Football 伤停采集...")
+            _run([sys.executable, "pipeline/intel_fetcher.py", date_str])
+    except Exception as e:
+        print("[警告] 情报采集跳过: " + str(e))
+
+    # 3) 预测 (可选 LLM 分析)
     cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json"]
     if not args.no_llm:
         cmd.append("--llm")

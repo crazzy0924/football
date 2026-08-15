@@ -91,9 +91,10 @@
 
   .m-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .m-league {
-    font-size: .72rem; color: #a9c6ff; background: rgba(94,168,255,.10);
-    border: 1px solid rgba(94,168,255,.28); padding: 3px 10px; border-radius: 999px;
-    letter-spacing: .5px;
+    font-size: .78rem; font-weight: 700; color: #a9c6ff;
+    background: rgba(94,168,255,.12);
+    border: 1px solid rgba(94,168,255,.32); padding: 4px 12px; border-radius: 999px;
+    letter-spacing: 1px; margin-right: 4px; vertical-align: 2px;
   }
   .m-teams { display: flex; align-items: center; gap: 14px; font-size: 1.18rem; font-weight: 700; }
   .m-teams .tvs { font-size: .7rem; color: var(--dim); border: 1px solid var(--line); padding: 2px 8px; border-radius: 6px; letter-spacing: 2px; }
@@ -186,8 +187,8 @@
   {% for m in matches %}
   <article class="match {{ m.recommendation }}">
     <header class="m-head">
-      <span class="m-league">{{ m.league }}</span>
       <div class="m-teams">
+        <span class="m-league">{{ m.league }}</span>
         <span>{{ m.home_team }}</span>
         <span class="tvs">VS</span>
         <span>{{ m.away_team }}</span>

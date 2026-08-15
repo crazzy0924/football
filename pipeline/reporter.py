@@ -297,7 +297,7 @@ def _build_match_card(
     away_team_en = p.get("away_team", "?")
     home_team, away_team = _cn(home_team_en, away_team_en)
     league_code = p.get("league_code", "")
-    league_name = LEAGUE_NAMES.get(league_code, league_code)
+    league_name = LEAGUE_NAMES_CN.get(league_code, league_code)
     cold_start = p.get("cold_start", False)
 
     # 概率 — 优先贝叶斯后验, 否则用模型

@@ -6,143 +6,101 @@
 <title>复盘报告 — 2026-08-15</title>
 <style>
   :root {
-    --bg: #0f1117;
-    --card-bg: #1a1d27;
-    --border: #2a2d3a;
-    --text: #e1e4eb;
-    --text-dim: #8b8fa3;
-    --green: #22c55e;
-    --red: #ef4444;
-    --yellow: #f59e0b;
-    --blue: #3b82f6;
+    --bg: #0b0f1a; --bg2: #0e1424; --card: #121a2c; --line: #1e2a42;
+    --txt: #e9eef8; --dim: #8d99b0;
+    --green: #34d399; --amber: #fbbf24; --blue: #5ea8ff;
+    --violet: #a78bfa; --pink: #f472b6; --red: #f87171;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 20px;
-    line-height: 1.5;
+    background:
+      radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%),
+      radial-gradient(800px 400px at 90% -20%, rgba(167,139,250,.10), transparent 60%),
+      var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+    padding: 28px 16px 40px;
+    line-height: 1.55;
   }
-  .container { max-width: 900px; margin: 0 auto; }
+  .container { max-width: 860px; margin: 0 auto; }
 
-  .header {
-    text-align: center;
-    padding: 32px 0 24px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
+  .header { text-align: center; padding: 30px 10px 22px; }
+  .header h1 {
+    font-size: 2rem; font-weight: 800;
+    background: linear-gradient(90deg, #e9eef8, #9ec4ff 60%, #c4b5fd);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
-  .header h1 { font-size: 1.5rem; font-weight: 700; }
-  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
+  .header .meta { color: var(--dim); font-size: .85rem; margin-top: 8px; }
 
-  /* 指标卡片 */
-  .scorecard {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
+  .scorecard { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 4px 0 24px; }
   .sc {
-    flex: 1;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
+    background: linear-gradient(180deg, var(--card), #101725);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 6px; text-align: center;
+    transition: transform .15s;
   }
-  .sc .value { font-size: 1.5rem; font-weight: 700; }
-  .sc .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+  .sc:hover { transform: translateY(-2px); }
+  .sc .value { font-size: 1.35rem; font-weight: 800; }
+  .sc .label { font-size: .72rem; color: var(--dim); margin-top: 3px; }
   .sc.good .value { color: var(--green); }
   .sc.bad .value { color: var(--red); }
-  .sc.warn .value { color: var(--yellow); }
+  .sc.warn .value { color: var(--amber); }
 
-  /* 方向分解 */
-  .direction-bar {
-    display: flex;
-    height: 8px;
-    border-radius: 4px;
-    overflow: hidden;
-    margin: 8px 0 16px;
-    background: var(--bg);
-  }
-  .direction-bar .seg-home { background: #3b82f6; }
-  .direction-bar .seg-draw { background: #8b8fa3; }
-  .direction-bar .seg-away { background: #f59e0b; }
+  .direction-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 10px 0 18px; background: #0a0f1c; }
+  .seg-home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .seg-draw { background: linear-gradient(90deg, #47506a, #7c86a3); }
+  .seg-away { background: linear-gradient(90deg, #d97706, #fbbf24); }
 
-  /* 比赛行 */
   .match-row {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 6px;
-    gap: 12px;
-    font-size: 0.85rem;
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px; margin-bottom: 8px;
+    background: linear-gradient(180deg, var(--card), #0f1727);
+    border: 1px solid var(--line); border-radius: 12px;
+    font-size: .85rem;
+    transition: transform .15s;
   }
+  .match-row:hover { transform: translateX(3px); border-color: #2c3d63; }
   .match-row.hit { border-left: 3px solid var(--green); }
   .match-row.miss { border-left: 3px solid var(--red); }
-  .match-row.push { border-left: 3px solid var(--yellow); }
+  .match-row.push { border-left: 3px solid var(--amber); }
 
-  .mr-teams { flex: 2; min-width: 0; }
-  .mr-teams .vs { color: var(--text-dim); margin: 0 6px; }
-  .mr-result { flex: 0 0 60px; text-align: center; font-weight: 700; font-size: 1rem; }
-  .mr-pred { flex: 1; text-align: center; font-size: 0.78rem; color: var(--text-dim); }
-  .mr-prob { flex: 0 0 70px; text-align: right; font-weight: 600; }
-  .mr-bet { flex: 0 0 80px; text-align: right; }
+  .mr-teams { flex: 2; min-width: 0; font-weight: 600; }
+  .mr-teams .vs { color: var(--dim); margin: 0 6px; font-weight: 400; }
+  .mr-result { flex: 0 0 56px; text-align: center; font-weight: 800; font-size: 1.05rem; }
+  .mr-pred { flex: 1; text-align: center; font-size: .76rem; color: var(--dim); }
+  .mr-prob { flex: 0 0 66px; text-align: right; font-weight: 600; }
+  .mr-bet { flex: 0 0 76px; text-align: right; font-weight: 700; }
   .mr-bet.won { color: var(--green); }
   .mr-bet.lost { color: var(--red); }
 
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.7rem;
-  }
-  .badge.hit { background: #166534; color: #4ade80; }
-  .badge.miss { background: #451a1a; color: #f87171; }
-  .badge.push { background: #3b2f0e; color: #fbbf24; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: .7rem; }
+  .badge.hit { background: rgba(52,211,153,.15); color: #6ee7b7; }
+  .badge.miss { background: rgba(248,113,113,.15); color: #fca5a5; }
+  .badge.push { background: rgba(251,191,36,.15); color: #fcd34d; }
 
   .section-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    margin: 24px 0 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
+    font-size: .95rem; font-weight: 800; letter-spacing: .5px;
+    margin: 26px 0 10px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    color: #b8cdf5;
   }
 
   .dim-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    font-size: 0.78rem;
-    line-height: 1.7;
-    white-space: pre-wrap;
-    font-family: 'JetBrains Mono', Consolas, monospace;
+    background: #0e1524; border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; font-size: .78rem; line-height: 1.8;
+    white-space: pre-wrap; font-family: 'JetBrains Mono', Consolas, monospace;
+    color: #cbd5e8;
   }
 
-  .cal-table {
-    width: 100%;
-    font-size: 0.8rem;
-    border-collapse: collapse;
-    margin-bottom: 16px;
-  }
-  .cal-table th, .cal-table td {
-    padding: 6px 10px;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-  }
-  .cal-table th { color: var(--text-dim); font-weight: 600; }
+  .cal-table { width: 100%; font-size: .8rem; border-collapse: collapse; margin-bottom: 16px; }
+  .cal-table th, .cal-table td { padding: 7px 10px; text-align: center; border-bottom: 1px solid var(--line); }
+  .cal-table th { color: var(--dim); font-weight: 600; }
 
-  .footer {
-    text-align: center;
-    padding: 32px 0;
-    color: var(--text-dim);
-    font-size: 0.75rem;
-    border-top: 1px solid var(--border);
-    margin-top: 32px;
+  .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
+
+  @media (max-width: 640px) {
+    .scorecard { grid-template-columns: repeat(3, 1fr); }
   }
 </style>
 </head>

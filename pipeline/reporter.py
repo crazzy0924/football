@@ -371,7 +371,7 @@ def _build_match_card(
         bet_class = "skip"
     elif cold_start:
         bet_pick = "冷启动不碰"
-        bet_class = "skip"
+        bet_class = "cold"
     elif best_edge_val >= 0.05 and kelly_val >= 0.01:
         dir_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}.get(best_edge_dir, "观望")
         dir_odds = odds_data.get(best_edge_dir) if odds_data else None

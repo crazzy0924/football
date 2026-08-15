@@ -6,287 +6,233 @@
 <title>足球预测报告 — {{ date }}</title>
 <style>
   :root {
-    --bg: #0f1117;
-    --card-bg: #1a1d27;
-    --border: #2a2d3a;
-    --text: #e1e4eb;
-    --text-dim: #8b8fa3;
-    --green: #22c55e;
-    --red: #ef4444;
-    --yellow: #f59e0b;
-    --blue: #3b82f6;
-    --home: #3b82f6;
-    --draw: #8b8fa3;
-    --away: #f59e0b;
+    --bg: #0b0f1a;
+    --bg2: #0e1424;
+    --card: #121a2c;
+    --line: #1e2a42;
+    --txt: #e9eef8;
+    --dim: #8d99b0;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --blue: #5ea8ff;
+    --violet: #a78bfa;
+    --pink: #f472b6;
+    --red: #f87171;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 20px;
-    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background:
+      radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%),
+      radial-gradient(800px 400px at 90% -20%, rgba(167,139,250,.10), transparent 60%),
+      var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+    padding: 28px 16px 40px;
+    line-height: 1.55;
   }
-  .container { max-width: 900px; margin: 0 auto; }
+  .container { max-width: 860px; margin: 0 auto; }
 
-  /* Header */
-  .header {
-    text-align: center;
-    padding: 32px 0 24px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 24px;
+  /* ── 主视觉 ── */
+  .hero { text-align: center; padding: 34px 10px 26px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: .78rem; color: #bfd7ff;
+    background: linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+    border: 1px solid rgba(94,168,255,.35);
+    padding: 5px 16px; border-radius: 999px; letter-spacing: .5px;
   }
-  .header h1 { font-size: 1.5rem; font-weight: 700; }
-  .header .meta { color: var(--text-dim); font-size: 0.85rem; margin-top: 6px; }
-  .model-badge {
-    display: inline-block;
-    background: var(--blue);
-    color: white;
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-left: 8px;
-    vertical-align: middle;
+  .hero h1 {
+    font-size: 2rem; font-weight: 800; margin-top: 14px;
+    background: linear-gradient(90deg, #e9eef8, #9ec4ff 60%, #c4b5fd);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
   }
+  .hero-sub { color: var(--dim); font-size: .85rem; margin-top: 8px; }
 
-  /* Summary */
-  .summary {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
+  /* ── 统计 ── */
+  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 6px 0 26px; }
   .stat {
-    flex: 1;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
+    background: linear-gradient(180deg, var(--card), #101725);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 6px; text-align: center;
+    transition: transform .15s, border-color .15s;
   }
-  .stat .value { font-size: 1.5rem; font-weight: 700; }
-  .stat .label { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; }
+  .stat:hover { transform: translateY(-2px); border-color: #33486f; }
+  .stat .v { font-size: 1.5rem; font-weight: 800; }
+  .stat .l { font-size: .72rem; color: var(--dim); margin-top: 3px; }
+  .stat:nth-child(1) .v { color: var(--blue); }
+  .stat:nth-child(2) .v { color: var(--green); }
+  .stat:nth-child(3) .v { color: var(--amber); }
+  .stat:nth-child(4) .v { color: var(--pink); }
+  .stat:nth-child(5) .v { color: var(--violet); font-size: 1.15rem; padding-top: 5px; }
 
-  /* Match card */
-  .match-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 14px;
+  /* ── 比赛卡片 ── */
+  .match {
+    background: linear-gradient(180deg, var(--card), #0f1727);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+    position: relative; overflow: hidden;
   }
-  .match-card.recommended { border-left: 3px solid var(--green); }
-  .match-card.reference { border-left: 3px solid var(--text-dim); }
-  .match-card.skip { opacity: 0.55; }
-
-  .match-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
+  .match::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: var(--line);
   }
-  .teams { font-size: 1.1rem; font-weight: 600; }
-  .teams .vs { color: var(--text-dim); margin: 0 10px; }
-  .league-tag {
-    font-size: 0.7rem;
-    background: var(--border);
-    padding: 3px 8px;
-    border-radius: 4px;
-    color: var(--text-dim);
+  .match.recommended::before { background: linear-gradient(180deg, var(--green), #0d9488); }
+  .match.reference::before { background: linear-gradient(180deg, var(--amber), #d97706); }
+  .match.skip { opacity: .72; }
+  .match:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 34px rgba(2, 8, 23, .55);
+    border-color: #2c3d63;
   }
 
-  /* Probability bars */
-  .probs { margin-bottom: 14px; }
-  .prob-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 6px;
-    font-size: 0.85rem;
+  .m-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .m-league {
+    font-size: .72rem; color: #a9c6ff; background: rgba(94,168,255,.10);
+    border: 1px solid rgba(94,168,255,.28); padding: 3px 10px; border-radius: 999px;
+    letter-spacing: .5px;
   }
-  .prob-label { width: 50px; text-align: right; margin-right: 10px; flex-shrink: 0; }
-  .prob-bar-wrap { flex: 1; height: 20px; background: var(--bg); border-radius: 4px; overflow: hidden; }
-  .prob-bar { height: 100%; border-radius: 4px; transition: width 0.3s; }
-  .prob-bar.home { background: var(--home); }
-  .prob-bar.draw { background: var(--draw); }
-  .prob-bar.away { background: var(--away); }
-  .prob-pct { width: 55px; margin-left: 10px; text-align: right; font-weight: 600; font-size: 0.85rem; }
+  .m-teams { display: flex; align-items: center; gap: 14px; font-size: 1.18rem; font-weight: 700; }
+  .m-teams .tvs { font-size: .7rem; color: var(--dim); border: 1px solid var(--line); padding: 2px 8px; border-radius: 6px; letter-spacing: 2px; }
 
-  /* Details grid */
-  .details {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 8px;
-    margin-bottom: 10px;
-    font-size: 0.8rem;
+  /* 看好推荐 */
+  .m-pick {
+    font-size: .95rem; font-weight: 800; padding: 8px 16px; border-radius: 12px;
+    white-space: nowrap;
   }
-  .detail { color: var(--text-dim); }
-  .detail span { color: var(--text); font-weight: 500; }
+  .m-pick.bet {
+    color: #06281c;
+    background: linear-gradient(135deg, #34d399, #6ee7b7);
+    box-shadow: 0 4px 18px rgba(52, 211, 153, .35);
+  }
+  .m-pick.skip { color: var(--dim); background: rgba(141,153,176,.10); border: 1px solid var(--line); }
+  .m-pick.cold { color: var(--pink); background: rgba(244,114,182,.10); border: 1px solid rgba(244,114,182,.3); }
 
-  /* Signal */
-  .signal {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-    font-size: 0.82rem;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
+  /* 概率堆叠条 */
+  .prob { margin: 16px 0 14px; }
+  .prob-track {
+    display: flex; height: 14px; border-radius: 999px; overflow: hidden;
+    background: #0a0f1c; box-shadow: inset 0 1px 4px rgba(0,0,0,.5);
   }
-  .badge {
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.75rem;
-  }
-  .badge.bet { background: #166534; color: #4ade80; }
-  .badge.watch { background: #3b2f0e; color: #fbbf24; }
-  .badge.skip { background: #1a1d27; color: var(--text-dim); }
-  .badge.cold { background: #3b1136; color: #e879f9; }
-  .kelly { font-weight: 600; }
-  .kelly.pos { color: var(--green); }
-  .kelly.neg { color: var(--red); }
-  .bet-pick { font-weight: 700; font-size: 1.05rem; }
-  .bet-pick.bet { color: var(--green); }
-  .bet-pick.skip { color: var(--muted, #94a3b8); }
+  .seg { height: 100%; transition: width .4s ease; }
+  .seg.home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .seg.draw { background: linear-gradient(90deg, #47506a, #7c86a3); }
+  .seg.away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .prob-legends { display: flex; gap: 18px; margin-top: 9px; font-size: .8rem; color: var(--dim); flex-wrap: wrap; }
+  .prob-legends b { color: var(--txt); font-size: .88rem; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+  .dot.home { background: var(--blue); }
+  .dot.draw { background: #7c86a3; }
+  .dot.away { background: var(--amber); }
 
-  /* Analyst note */
-  .analyst-note {
-    margin-top: 10px;
-    padding: 10px 14px;
-    background: #1e2430;
-    border-radius: 6px;
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    font-style: italic;
-    border-left: 3px solid #6366f1;
+  /* 指标胶囊 */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-size: .76rem; color: #c3cce0; background: rgba(141,153,176,.08);
+    border: 1px solid var(--line); padding: 4px 11px; border-radius: 999px;
   }
-  .analyst-note strong { color: #a5b4fc; font-style: normal; }
+  .chip b { color: var(--txt); }
+  .chip.kelly { border-color: rgba(52,211,153,.4); }
+  .chip.kelly.neg { border-color: rgba(248,113,113,.4); }
+  .chip.kelly.neg b { color: var(--red); }
+  .chip.kelly.pos b { color: var(--green); }
 
-  /* Footer */
-  .footer {
-    text-align: center;
-    padding: 32px 0;
-    color: var(--text-dim);
-    font-size: 0.75rem;
-    border-top: 1px solid var(--border);
-    margin-top: 32px;
+  .m-cold {
+    margin-top: 12px; font-size: .78rem; color: var(--pink);
+    background: rgba(244,114,182,.08); border: 1px dashed rgba(244,114,182,.35);
+    padding: 6px 12px; border-radius: 10px; display: inline-block;
+  }
+  .m-note {
+    margin-top: 12px; font-size: .83rem; color: #cbd5e8;
+    background: linear-gradient(135deg, rgba(167,139,250,.10), rgba(94,168,255,.06));
+    border-left: 3px solid var(--violet);
+    border-radius: 0 12px 12px 0; padding: 10px 14px; line-height: 1.6;
+  }
+  .m-note .nt { font-size: .7rem; color: var(--violet); font-weight: 700; letter-spacing: 1px; margin-right: 6px; }
+
+  /* ── 页脚 ── */
+  .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    .m-teams { font-size: 1.02rem; gap: 8px; }
+    .hero h1 { font-size: 1.5rem; }
   }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- Header -->
-  <div class="header">
-    <h1>足球预测 <span class="model-badge">v3.0</span></h1>
-    <div class="meta">
-      {{ date }} — Dixon-Coles + 贝叶斯市场融合
-      {% if backtest_brier %}
-      &middot; 回测Brier: {{ backtest_brier }}
-      {% endif %}
+  <div class="hero">
+    <div class="hero-badge">⚽ 每日足球智能预测</div>
+    <h1>{{ date }}</h1>
+    <div class="hero-sub">
+      Dixon-Coles + ELO + 贝叶斯市场融合
+      {% if backtest_brier %}· 回测 Brier {{ backtest_brier }}{% endif %}
     </div>
   </div>
 
-  <!-- Summary stats -->
-  <div class="summary">
-    <div class="stat">
-      <div class="value">{{ total_matches }}</div>
-      <div class="label">场次</div>
-    </div>
-    <div class="stat">
-      <div class="value">{{ recommended }}</div>
-      <div class="label">推荐</div>
-    </div>
-    <div class="stat">
-      <div class="value">{{ reference }}</div>
-      <div class="label">参考</div>
-    </div>
-    <div class="stat">
-      <div class="value">{{ cold_start }}</div>
-      <div class="label">冷启动</div>
-    </div>
-    <div class="stat">
-      <div class="value">{{ direction_dist }}</div>
-      <div class="label">胜/平/负 推荐</div>
-    </div>
+  <div class="stats">
+    <div class="stat"><div class="v">{{ total_matches }}</div><div class="l">今日场次</div></div>
+    <div class="stat"><div class="v">{{ recommended }}</div><div class="l">推荐下注</div></div>
+    <div class="stat"><div class="v">{{ reference }}</div><div class="l">仅供参考</div></div>
+    <div class="stat"><div class="v">{{ cold_start }}</div><div class="l">冷启动</div></div>
+    <div class="stat"><div class="v">{{ direction_dist }}</div><div class="l">胜/平/负</div></div>
   </div>
 
-  <!-- Match cards -->
   {% for m in matches %}
-  <div class="match-card {{ m.recommendation }}">
-    <div class="match-header">
-      <div class="teams">
-        {{ m.home_team }} <span class="vs">vs</span> {{ m.away_team }}
+  <article class="match {{ m.recommendation }}">
+    <header class="m-head">
+      <span class="m-league">{{ m.league }}</span>
+      <div class="m-teams">
+        <span>{{ m.home_team }}</span>
+        <span class="tvs">VS</span>
+        <span>{{ m.away_team }}</span>
       </div>
-      <div class="league-tag">{{ m.league }}</div>
-    </div>
+      <span class="m-pick {{ m.bet_class }}">
+        {% if m.bet_class == 'bet' %}★ 看好{% elif m.bet_class == 'cold' %}❄{% else %}·{% endif %} {{ m.bet_pick }}
+      </span>
+    </header>
 
-    <!-- Probabilities -->
-    <div class="probs">
-      <div class="prob-row">
-        <span class="prob-label">主胜</span>
-        <div class="prob-bar-wrap">
-          <div class="prob-bar home" style="width: {{ m.p_home_pct }}%"></div>
-        </div>
-        <span class="prob-pct">{{ m.p_home }}</span>
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: {{ m.p_home_pct }}%"></div>
+        <div class="seg draw" style="width: {{ m.p_draw_pct }}%"></div>
+        <div class="seg away" style="width: {{ m.p_away_pct }}%"></div>
       </div>
-      <div class="prob-row">
-        <span class="prob-label">平局</span>
-        <div class="prob-bar-wrap">
-          <div class="prob-bar draw" style="width: {{ m.p_draw_pct }}%"></div>
-        </div>
-        <span class="prob-pct">{{ m.p_draw }}</span>
-      </div>
-      <div class="prob-row">
-        <span class="prob-label">客胜</span>
-        <div class="prob-bar-wrap">
-          <div class="prob-bar away" style="width: {{ m.p_away_pct }}%"></div>
-        </div>
-        <span class="prob-pct">{{ m.p_away }}</span>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>{{ m.p_home }}</b></span>
+        <span><i class="dot draw"></i>平局 <b>{{ m.p_draw }}</b></span>
+        <span><i class="dot away"></i>客胜 <b>{{ m.p_away }}</b></span>
+        <span>最可能比分 <b>{{ m.top_score }}</b></span>
+        <span>ELO差 <b>{{ m.elo_diff }}</b></span>
       </div>
     </div>
 
-    <!-- Details -->
-    <div class="details">
-      <div class="detail">大2.5球: <span>{{ m.over25 }}</span></div>
-      <div class="detail">BTTS: <span>{{ m.btts }}</span></div>
-      <div class="detail">预期进球: <span>{{ m.eg }}</span></div>
-      <div class="detail">最可能比分: <span>{{ m.top_score }}</span></div>
-      <div class="detail">ELO差: <span>{{ m.elo_diff }}</span></div>
-      {% if m.market_odds %}
-      <div class="detail">市场赔率: <span>{{ m.market_odds }}</span></div>
-      {% endif %}
+    <div class="chips">
+      <span class="chip">大2.5球 <b>{{ m.over25 }}</b></span>
+      <span class="chip">BTTS <b>{{ m.btts }}</b></span>
+      <span class="chip">预期进球 <b>{{ m.eg }}</b></span>
+      {% if m.market_odds %}<span class="chip">市场赔率 <b>{{ m.market_odds }}</b></span>{% endif %}
+      {% if m.kelly_fraction %}<span class="chip kelly {{ m.kelly_class }}">凯利 <b>{{ m.kelly_fraction }}</b></span>{% endif %}
+      {% if m.edge_direction %}<span class="chip">优势 {{ m.edge_direction }} <b>+{{ m.edge_pct }}</b></span>{% endif %}
     </div>
 
-    <!-- Signal -->
-    <div class="signal">
-      <span class="badge {{ m.signal_class }}">{{ m.signal_text }}</span>
-      <span>推荐: <strong>{{ m.pick }}</strong></span>
-      <span class="bet-pick {{ m.bet_class }}">看好: {{ m.bet_pick }}</span>
-      {% if m.kelly_fraction %}
-      <span>凯利: <strong class="kelly {{ m.kelly_class }}">{{ m.kelly_fraction }}</strong></span>
-      {% endif %}
-      {% if m.edge_direction %}
-      <span>优势: {{ m.edge_direction }} (+{{ m.edge_pct }})</span>
-      {% endif %}
-      {% if m.cold_start_flag %}
-      <span class="badge cold">冷启动</span>
-      {% endif %}
-    </div>
+    {% if m.cold_start_flag %}
+    <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
+    {% endif %}
 
     {% if m.analyst_note %}
-    <div class="analyst-note">
-      <strong>Analyst:</strong> {{ m.analyst_note }}
-    </div>
+    <div class="m-note"><span class="nt">分析师</span>{{ m.analyst_note }}</div>
     {% endif %}
-  </div>
+  </article>
   {% endfor %}
 
-  <!-- Footer -->
   <div class="footer">
-    足球预测模型 v3.0 · Dixon-Coles + 贝叶斯市场融合
-    &middot; Generated {{ date }}
-    <br>
-    仅供参考。历史表现不代表未来结果。
+    足球预测模型 v3.0 · 生成于 {{ date }} · 仅供参考，历史表现不代表未来结果
   </div>
 </div>
 </body>

@@ -181,11 +181,16 @@ def try_fetch_results_apifootball(date_str: str) -> list[dict] | None:
         return None
 
 
-def _parse_footballdata_matches(payload: dict) -> list[dict]:
-    """解析 football-data.org v4 /matches 响应 → 结果列表 (纯函数, 可离线测试)"""
+def _parse_footballdata_matches(payload: dict, date_str: str = "") -> list[dict]:
+    """解析 football-data.org v4 /matches 响应 → 结果列表 (纯函数, 可离线测试)
+
+    date_str: 只保留该 UTC 日期的场次 (接口要求 dateFrom<dateTo, 拉取窗口+1天)
+    """
     results = []
     for m in (payload or {}).get("matches", []):
         if m.get("status") != "FINISHED":
+            continue
+        if date_str and (m.get("utcDate") or "")[:10] != date_str:
             continue
         home = (m.get("homeTeam") or {}).get("name", "")
         away = (m.get("awayTeam") or {}).get("name", "")
@@ -214,11 +219,14 @@ def try_fetch_results_footballdata(date_str: str) -> list[dict] | None:
         if not FOOTBALL_DATA_API_KEY:
             return None
         import httpx
+        from datetime import datetime as _dt, timedelta as _td
+        # v4 要求 dateFrom < dateTo (同日返回空), 拉取窗口+1天再按UTC日期过滤
+        end_str = (_dt.strptime(date_str, "%Y-%m-%d") + _td(days=1)).strftime("%Y-%m-%d")
         headers = {"X-Auth-Token": FOOTBALL_DATA_API_KEY}
         with httpx.Client(timeout=20) as c:
             r = c.get(
                 "https://api.football-data.org/v4/matches",
-                params={"dateFrom": date_str, "dateTo": date_str},
+                params={"dateFrom": date_str, "dateTo": end_str},
                 headers=headers,
             )
         if r.status_code == 429:
@@ -227,7 +235,7 @@ def try_fetch_results_footballdata(date_str: str) -> list[dict] | None:
         if r.status_code != 200:
             print(f"  [赛果] football-data.org: HTTP {r.status_code}")
             return None
-        results = _parse_footballdata_matches(r.json())
+        results = _parse_footballdata_matches(r.json(), date_str)
         print(f"  [赛果] football-data.org 拿到 {len(results)} 场完赛")
         return _normalize_results(results) if results else None
     except Exception as e:

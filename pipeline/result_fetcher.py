@@ -2,7 +2,7 @@
 Result Fetcher v3.0
 
 Fetches post-match results for review and ELO update.
-Supports: manual JSON, odds-api.io results, auto-derivation from scores.
+Supports: manual JSON, odds-api.io results, API-Football fixtures (Phase 6).
 """
 from __future__ import annotations
 
@@ -121,6 +121,63 @@ def try_fetch_results(date_str: str) -> list[dict] | None:
                 })
         return _normalize_results(results) if results else None
     except Exception:
+        return None
+
+
+def _parse_apifootball_fixtures(payload: dict) -> list[dict]:
+    """解析 API-Football /v3/fixtures 响应 → 结果列表 (纯函数, 可离线测试)"""
+    results = []
+    for fx in (payload or {}).get("response", []):
+        teams = fx.get("teams") or {}
+        goals = fx.get("goals") or {}
+        home = (teams.get("home") or {}).get("name", "")
+        away = (teams.get("away") or {}).get("name", "")
+        hg = goals.get("home")
+        ag = goals.get("away")
+        status = (fx.get("fixture") or {}).get("status") or {}
+        short = status.get("short", "")
+        if not home or not away or hg is None or ag is None:
+            continue
+        # 只取完赛/加时/点球场次 (点球取全场比分可能为平, 以常规时间入账)
+        if short not in ("FT", "AET", "PEN"):
+            continue
+        results.append({
+            "home_team": home,
+            "away_team": away,
+            "home_goals": int(hg),
+            "away_goals": int(ag),
+        })
+    return results
+
+
+def try_fetch_results_apifootball(date_str: str) -> list[dict] | None:
+    """从 API-Football 拉取当日赛果 (Phase 6 · 1请求/天)
+
+    失败(未订阅/无key/网络)返回 None, 调用方回退手动赛果。
+    """
+    try:
+        from config import FOOTBALL_RAPIDAPI_KEY
+        if not FOOTBALL_RAPIDAPI_KEY:
+            return None
+        import httpx
+        headers = {
+            "x-rapidapi-key": FOOTBALL_RAPIDAPI_KEY,
+            "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+        }
+        with httpx.Client(timeout=20) as c:
+            r = c.get(
+                "https://api-football-v1.p.rapidapi.com/v3/fixtures",
+                params={"date": date_str, "timezone": "Asia/Shanghai"},
+                headers=headers,
+            )
+        if r.status_code != 200:
+            print(f"  [赛果] API-Football fixtures: HTTP {r.status_code}")
+            return None
+        results = _parse_apifootball_fixtures(r.json())
+        print(f"  [赛果] API-Football 拿到 {len(results)} 场完赛")
+        return _normalize_results(results) if results else None
+    except Exception as e:
+        print(f"  [赛果] API-Football 拉取失败: {e}")
         return None
 
 

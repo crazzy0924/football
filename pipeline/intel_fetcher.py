@@ -152,9 +152,46 @@ def build_auto_intel(matches: list[dict], max_matches: int = 20) -> str:
     return "\n".join(lines).strip()
 
 
+def _check_key() -> bool:
+    """预检密钥: 1个请求, 失败时给出明确提示 (避免403刷屏)"""
+    try:
+        import httpx
+        headers = {
+            "x-rapidapi-key": FOOTBALL_RAPIDAPI_KEY,
+            "x-rapidapi-host": RAPID_HOST,
+        }
+        with httpx.Client(timeout=15) as c:
+            r = c.get(f"https://{RAPID_HOST}/v3/status", headers=headers)
+        if r.status_code == 200:
+            j = r.json()
+            acc = (j.get("account") or {}).get("firstname", "?")
+            sub = (j.get("subscription") or {}).get("plan", "?")
+            req = j.get("requests") or {}
+            print(f"[OK] API-Football 可用: 账户{acc}, 套餐{sub}, 今日剩余 {req.get('remaining', '?')}/{req.get('limit_day', '?')}")
+            return True
+        if r.status_code == 403:
+            print("[密钥预检失败] HTTP 403 — RapidAPI 提示: " + r.text[:120])
+            print("请确认: 1) 在 https://rapidapi.com/api-sports/api/api-football 已点订阅")
+            print("        2) key 与订阅属于同一个账号 (从该页面的 Code Snippets 复制 key)")
+            return False
+        print(f"[密钥预检失败] HTTP {r.status_code} — {r.text[:120]}")
+        return False
+    except Exception as e:
+        print(f"[密钥预检失败] 网络异常: {e}")
+        return False
+
+
 def main() -> None:
     if not FOOTBALL_RAPIDAPI_KEY:
         print("未配置 FOOTBALL_RAPIDAPI_KEY, 跳过情报采集。")
+        return
+
+    if "--check" in sys.argv:
+        _check_key()
+        return
+
+    if not _check_key():
+        print("跳过情报采集 (密钥不可用)。")
         return
 
     date_str = sys.argv[1] if len(sys.argv) > 1 else datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")

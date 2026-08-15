@@ -220,7 +220,15 @@
       {% if m.market_odds %}<span class="chip">市场赔率 <b>{{ m.market_odds }}</b></span>{% endif %}
       {% if m.kelly_fraction %}<span class="chip kelly {{ m.kelly_class }}">凯利 <b>{{ m.kelly_fraction }}</b></span>{% endif %}
       {% if m.edge_direction %}<span class="chip">优势 {{ m.edge_direction }} <b>+{{ m.edge_pct }}</b></span>{% endif %}
+      {% if m.ah_text %}<span class="chip">盘口 <b>{{ m.ah_text }}</b></span>{% endif %}
+      {% if m.ah_pick %}<span class="chip" style="border-color: rgba(52,211,153,.5)">🏆 {{ m.ah_pick }}</span>{% endif %}
     </div>
+    {% if m.std_text %}
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>{{ m.std_text }}</b></span>
+      {% if m.std_form %}<span class="chip">{{ m.std_form }}</span>{% endif %}
+    </div>
+    {% endif %}
 
     {% if m.cold_start_flag %}
     <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>

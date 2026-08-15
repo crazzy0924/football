@@ -90,6 +90,17 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
         if edge_dir != "none":
             lines.append(f"最强信号: {edge_dir} (Kelly {value.get('kelly', 0):.2%})")
 
+    std = prediction.get("standings") or {}
+    sh = std.get("home")
+    sa = std.get("away")
+    if sh or sa:
+        parts = []
+        if sh:
+            parts.append(f"{home} #{sh.get('pos', '?')} ({sh.get('points', '?')}分, 近况{sh.get('form', '?')})")
+        if sa:
+            parts.append(f"{away} #{sa.get('pos', '?')} ({sa.get('points', '?')}分, 近况{sa.get('form', '?')})")
+        lines.append("联赛积分榜: " + "; ".join(parts))
+
     if cold:
         lines.append("[注意] 冷启动 — 球队参数来自联赛均值，不确定性高")
 

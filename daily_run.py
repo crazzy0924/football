@@ -71,7 +71,16 @@ def cmd_predict(args) -> None:
         print("[警告] 体彩拉取失败, 尝试 odds-api.io 构建...")
         _run([sys.executable, "build_today_matches.py", date_str])
 
-    # 2) 伤停情报自动采集 (API-Football, 需 FOOTBALL_RAPIDAPI_KEY; 无key自动跳过)
+    # 2) 积分榜采集 (football-data.org, 免费档)
+    try:
+        from config import FOOTBALL_DATA_API_KEY
+        if FOOTBALL_DATA_API_KEY:
+            print("[积分榜] football-data.org 采集...")
+            _run([sys.executable, "pipeline/standings_fetcher.py"])
+    except Exception as e:
+        print("[警告] 积分榜采集跳过: " + str(e))
+
+    # 3) 伤停情报自动采集 (API-Football, 需 FOOTBALL_RAPIDAPI_KEY; 无key自动跳过)
     try:
         from config import FOOTBALL_RAPIDAPI_KEY
         if FOOTBALL_RAPIDAPI_KEY:
@@ -80,7 +89,7 @@ def cmd_predict(args) -> None:
     except Exception as e:
         print("[警告] 情报采集跳过: " + str(e))
 
-    # 3) 预测 (可选 LLM 分析)
+    # 4) 预测 (可选 LLM 分析)
     cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json"]
     if not args.no_llm:
         cmd.append("--llm")

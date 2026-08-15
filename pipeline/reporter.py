@@ -384,6 +384,27 @@ def _build_match_card(
         bet_pick = "观望"
         bet_class = "skip"
 
+    # 让球盘 (AH) 参考与备选方向 (维度台账 AH 已过门: Brier 0.1535 vs 0.233)
+    ah = p.get("ah_handicap")
+    ah_text = None
+    ah_pick = None
+    if ah:
+        line = ah.get("goal_line")
+        hc = ah.get("home_cover", 0)
+        pu = ah.get("push", 0)
+        ac = ah.get("away_cover", 0)
+        edge = ah.get("edge") or {}
+        bp = edge.get("best_pick", "skip")
+        ev = edge.get("edge", 0)
+        if line is not None:
+            ah_text = f"让球(主{line:+.1f}): 主{hc:.0%}/走{pu:.0%}/客{ac:.0%}"
+        if bp in ("home", "away") and ev >= 0.05:
+            dir_cn = "主队" if bp == "home" else "客队"
+            ah_pick = f"让球看好{dir_cn} (+{ev:.1%})"
+            if bet_class != "bet":
+                bet_pick = ah_pick
+                bet_class = "bet"
+
     # Market odds
     market_odds_str = None
     if odds_data:
@@ -404,6 +425,22 @@ def _build_match_card(
 
     # ELO
     elo_diff = p.get("elo_diff", 0)
+
+    # 积分榜快照 (Phase 7)
+    std = p.get("standings") or {}
+    std_text = None
+    sh = std.get("home")
+    sa = std.get("away")
+    if sh or sa:
+        parts = []
+        if sh:
+            parts.append(f"主队#{sh.get('pos', '?')}({sh.get('points', '?')}分)")
+        if sa:
+            parts.append(f"客队#{sa.get('pos', '?')}({sa.get('points', '?')}分)")
+        std_text = " · ".join(parts) if parts else None
+    std_form = None
+    if sh and sh.get("form"):
+        std_form = f"近况 主[{sh['form']}] 客[{sa.get('form', '')}]" if sa else None
 
     # 分析师注释 — 按英文名查(键为英文)
     match_key = f"{home_team_en} vs {away_team_en}"
@@ -433,6 +470,10 @@ def _build_match_card(
         "kelly_class": kelly_class,
         "bet_pick": bet_pick,
         "bet_class": bet_class,
+        "ah_text": ah_text,
+        "ah_pick": ah_pick,
+        "std_text": std_text,
+        "std_form": std_form,
         "edge_direction": best_edge_dir.title() if best_edge_val > 0 else None,
         "edge_pct": edge_pct,
         "cold_start_flag": cold_start,

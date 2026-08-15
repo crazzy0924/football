@@ -42,8 +42,10 @@ def cmd_train(args):
 
     print("加载全部比赛数据...")
     matches = load_all_matches(csv_dir)
-    print(f"已加载 {len(matches)} 场比赛, 来自 {len(set(m['season'] for m in matches))} 个赛季")
-    print(f"联赛: {set(m['league_code'] for m in matches)}")
+    # 聚焦联赛过滤 (2026-08-16: 只训练五大联赛, 聚焦回测Brier 0.595 vs 全量0.626)
+    from config import FOCUS_LEAGUES
+    matches = [m for m in matches if m["league_code"] in FOCUS_LEAGUES]
+    print(f"聚焦后 {len(matches)} 场比赛 ({FOCUS_LEAGUES}), 来自 {len(set(m['season'] for m in matches))} 个赛季")
 
     summary = train_all(matches, state_dir, use_mle=args.mle)
 
@@ -66,6 +68,10 @@ def cmd_backtest(args):
 
     print("加载全部比赛数据...")
     matches = load_all_matches(csv_dir)
+    # 聚焦联赛过滤 (与训练同口径)
+    from config import FOCUS_LEAGUES
+    matches = [m for m in matches if m["league_code"] in FOCUS_LEAGUES]
+    print(f"聚焦后 {len(matches)} 场比赛 ({FOCUS_LEAGUES})")
 
     report = run_backtest(matches, state_dir, output_dir, recent_seasons=args.recent_seasons)
 
@@ -103,6 +109,17 @@ def cmd_predict(args):
         print(f"平局校准: {n_cal} 个联赛, {boosted} 个平局加成")
     else:
         print("平局校准: 不可用(先跑backtest生成)")
+
+    # 加载积分榜 (Phase 7, football-data.org 免费档)
+    standings = {}
+    try:
+        sp = os.path.join(state_dir, "standings.json")
+        if os.path.exists(sp):
+            with open(sp, "r", encoding="utf-8") as f:
+                standings = json.load(f)
+            print(f"积分榜: {sum(len(t) for t in standings.values())} 队已加载")
+    except Exception as e:
+        print(f"积分榜加载失败: {e}")
 
     # 概率校准 (Phase 2): 回测实测无增益 (两折均 +0.002), 实盘默认不启用
     prob_cal = None
@@ -248,6 +265,11 @@ def cmd_predict(args):
             # Phase 1 A2: 无赔率且冷启动 → 预测退化为联赛先验，无信息量
             "no_signal": value is None and pred.get("cold_start", False),
             "ah_handicap": ah_pred,
+            # Phase 7: 积分榜快照 (排名/积分/近况)
+            "standings": {
+                "home": _standings_lookup(standings.get(league), home),
+                "away": _standings_lookup(standings.get(league), away),
+            },
         })
 
     # 保存JSON
@@ -624,6 +646,14 @@ def cmd_full(args):
 def _today_str() -> str:
     from datetime import date
     return date.today().isoformat()
+
+
+def _standings_lookup(table, team: str):
+    """按队名查积分榜条目 (Phase 7)"""
+    if not table or not team:
+        return None
+    from pipeline.standings_fetcher import lookup
+    return lookup(table, team)
 
 
 def main():

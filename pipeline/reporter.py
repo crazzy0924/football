@@ -356,6 +356,26 @@ def _build_match_card(
     best_edge_val = edges[best_edge_dir]
     edge_pct = f"{best_edge_val:.1%}" if best_edge_val > 0 else None
 
+    # 看好方向 (下注栏, CLAUDE.md 纪律): edge≥5% + Kelly≥1% + 非冷启动 + 非无信号
+    no_signal = p.get("no_signal", False)
+    if no_signal:
+        bet_pick = "无信号"
+        bet_class = "skip"
+    elif cold_start:
+        bet_pick = "冷启动不碰"
+        bet_class = "skip"
+    elif best_edge_val >= 0.05 and kelly_val >= 0.01:
+        dir_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}.get(best_edge_dir, "观望")
+        dir_odds = odds_data.get(best_edge_dir) if odds_data else None
+        if dir_odds:
+            bet_pick = f"{dir_cn} @{dir_odds:.2f} (凯利{kelly_val:.0%})"
+        else:
+            bet_pick = f"{dir_cn} (凯利{kelly_val:.0%})"
+        bet_class = "bet"
+    else:
+        bet_pick = "观望"
+        bet_class = "skip"
+
     # Market odds
     market_odds_str = None
     if odds_data:
@@ -403,6 +423,8 @@ def _build_match_card(
         "recommendation": recommendation,
         "kelly_fraction": kelly_text,
         "kelly_class": kelly_class,
+        "bet_pick": bet_pick,
+        "bet_class": bet_class,
         "edge_direction": best_edge_dir.title() if best_edge_val > 0 else None,
         "edge_pct": edge_pct,
         "cold_start_flag": cold_start,

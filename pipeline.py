@@ -230,6 +230,7 @@ def cmd_predict(args):
             "home_team": home,
             "away_team": away,
             "league_code": league,
+            "odds": market,
             "elo_home": elo_h,
             "elo_away": elo_a,
             "elo_diff": round(elo_h - elo_a, 1),

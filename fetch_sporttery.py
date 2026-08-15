@@ -67,7 +67,15 @@ print(f'体彩 {date_str} 比赛: {len(all_matches)}场')
 
 # 第2步: 组装 today.json 数据项
 # Map 体彩 league names to internal codes
+# 注意: 短名必须放在全名之前 (子串匹配先命中者胜, 如"西甲"会被"巴西甲级联赛"误吞)
 LEAGUE_CN_TO_CODE = {
+    '西甲': 'PD', '西甲联赛': 'PD',
+    '英超': 'PL', '英冠': 'ELC',
+    '德乙': 'BL2', '德甲': 'BL1',
+    '荷甲': 'DED', '荷乙': 'DED2',
+    '葡超': 'PPL', '法乙': 'FL2',
+    '芬超': 'FIN', '瑞超': 'SWE', '挪超': 'NOR',
+    '日职': 'J1', '韩职': 'KLEAGUE',
     '英格兰超级联赛': 'PL',
     '西班牙甲级联赛': 'PD',
     '德国甲级联赛': 'BL1',

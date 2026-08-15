@@ -144,6 +144,9 @@
   .kelly { font-weight: 600; }
   .kelly.pos { color: var(--green); }
   .kelly.neg { color: var(--red); }
+  .bet-pick { font-weight: 700; font-size: 1.05rem; }
+  .bet-pick.bet { color: var(--green); }
+  .bet-pick.skip { color: var(--muted, #94a3b8); }
 
   /* Analyst note */
   .analyst-note {
@@ -258,6 +261,7 @@
     <div class="signal">
       <span class="badge {{ m.signal_class }}">{{ m.signal_text }}</span>
       <span>推荐: <strong>{{ m.pick }}</strong></span>
+      <span class="bet-pick {{ m.bet_class }}">看好: {{ m.bet_pick }}</span>
       {% if m.kelly_fraction %}
       <span>凯利: <strong class="kelly {{ m.kelly_class }}">{{ m.kelly_fraction }}</strong></span>
       {% endif %}

@@ -90,6 +90,7 @@ def cmd_predict(args):
 
     state_dir = args.state_dir or "data/state"
     output_dir = args.output_dir or "data/output"
+    csv_dir = args.csv_dir or "data/historical_odds"
 
     # 加载训练好的模型
     try:
@@ -116,7 +117,7 @@ def cmd_predict(args):
         from pipeline.data_loader import load_all_matches
         from config import FOCUS_LEAGUES
         from models.form_factor import compute_form_factors
-        hist = [m for m in load_all_matches(csv_dir) if m["league_code"] in FOCUS_LEAGUES]
+        hist = [m for m in load_all_matches(csv_dir or "data/historical_odds") if m["league_code"] in FOCUS_LEAGUES]
         form_factors = compute_form_factors(
             hist, dc.team_attack, dc.team_defense,
             dc.league_avg_goals, dc.league_home_adv,

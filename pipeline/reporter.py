@@ -375,10 +375,17 @@ def _build_match_card(
     elif best_edge_val >= 0.05 and kelly_val >= 0.01:
         dir_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}.get(best_edge_dir, "观望")
         dir_odds = odds_data.get(best_edge_dir) if odds_data else None
+        stake = None
+        try:
+            from config import BANKROLL
+            stake = BANKROLL * kelly_val / 4.0  # 1/4 凯利
+        except Exception:
+            pass
+        stake_txt = f" 建议¥{stake:.0f}" if stake and stake >= 1 else ""
         if dir_odds:
-            bet_pick = f"{dir_cn} @{dir_odds:.2f} (凯利{kelly_val:.0%})"
+            bet_pick = f"{dir_cn} @{dir_odds:.2f} (凯利{kelly_val:.0%}){stake_txt}"
         else:
-            bet_pick = f"{dir_cn} (凯利{kelly_val:.0%})"
+            bet_pick = f"{dir_cn} (凯利{kelly_val:.0%}){stake_txt}"
         bet_class = "bet"
     else:
         bet_pick = "观望"

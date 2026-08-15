@@ -51,3 +51,6 @@ FOOTBALL_DATA_API_KEY = get("FOOTBALL_DATA_API_KEY", "")
 # 如需加联赛, 逗号分隔添加代码即可 (如 PL,PD,BL1,SA,FL1,DED)
 FOCUS_LEAGUES = [x.strip() for x in get("FOCUS_LEAGUES", "PL,PD,BL1,SA,FL1").split(",") if x.strip()]
 
+# 投注资金池 (元) — 看好栏建议注额 = 资金池 × 凯利 ÷ 4
+BANKROLL = float(get("BANKROLL", "1000"))
+

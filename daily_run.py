@@ -90,6 +90,7 @@ def cmd_predict(args) -> None:
         sys.exit(rc)
 
     print("\n[完成] 预测报告: data/output/predictions_" + date_str + ".html")
+    _git_sync()
 
 
 def cmd_review(args) -> None:

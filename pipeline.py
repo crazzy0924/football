@@ -104,6 +104,9 @@ def cmd_predict(args):
     else:
         print("平局校准: 不可用(先跑backtest生成)")
 
+    # 概率校准 (Phase 2): 回测实测无增益 (两折均 +0.002), 实盘默认不启用
+    prob_cal = None
+
     # 尝试拉取实时赔率
     api_matches = None
     try:
@@ -177,6 +180,11 @@ def cmd_predict(args):
         pred["home_win"] = cal_h
         pred["draw"] = cal_d
         pred["away_win"] = cal_a
+
+        # 实验位: 概率校准(PAV) — 实测无增益, 保持关闭
+        # if prob_cal:  # 实验开关
+        #     pc_h, pc_d, pc_a = apply_prob_cal(...)  # 校准调用占位
+        #     pred["home_win"], pred["draw"], pred["away_win"] = pc_h, pc_d, pc_a  # 占位
 
         elo_h = elo.get_elo(home, league)
         elo_a = elo.get_elo(away, league)

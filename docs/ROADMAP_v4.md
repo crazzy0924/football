@@ -64,6 +64,14 @@ deepseek-harness 0.2.0 在 PyPI 存在。
     新增数据不进回测折, 价值在实盘冷启动面缩小 (巴西/北欧杯赛不再盲猜)
 - ✅ 复盘HTML接入P&L结算摘要 (templates/review.html + reporter.py)
 
+---
+
+## 进度更新 · 2026-08-15 (第三轮)
+- ✅ Phase 2 概率校准实验 (models/calibration.py, PAV保序回归):
+  - 回测两折实测: 校准后Brier vs 原始 → 24-25折 0.6378 vs 0.6354 (+0.0024); 25-26折 0.6189 vs 0.6174 (+0.0015)
+  - 结论: 模型已接近校准最优, 全局PAV校准无增益 → 实盘默认不启用, 保留实验基础设施 (trainer Pass 4 + backtester测量)
+  - 注: 早期误读的"大幅改善"系口径错误 (除3 vs 不除3), 已修正并诚实记录
+
 ## 执行纪律（继承 CLAUDE.md）
 - 每个 Phase 独立验证，通过门禁才进下一个
 - 推送前跑 python pre_push_check.py（汉化检查）

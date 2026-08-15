@@ -37,14 +37,14 @@ def train_all(
     os.makedirs(state_dir, exist_ok=True)
 
     # ================================================================
-    # Pass 1: ELO Calibration
+    # 第1步: ELO校准
     # ================================================================
-    print(f"Pass 1: Calibrating ELO from {len(matches)} matches...")
+    print(f"第1步: 从 {len(matches)} 场校准ELO...")
 
-    # Compute league profiles from actual data (overrides hardcoded values)
+    # 从实际数据计算联赛画像 (覆盖硬编码值)
     data_profiles = compute_league_profiles_from_matches(matches)
 
-    # Merge: use data-derived where available, fall back to hardcoded
+    # 合并: 有数据用数据, 无数据回退硬编码
     profiles_for_elo = {}
     for code in set(m["league_code"] for m in matches):
         if code in data_profiles:
@@ -55,12 +55,12 @@ def train_all(
     elo = EloSystem(state_path=os.path.join(state_dir, "elo_ratings.json"))
     elo.initialize_from_matches(matches, profiles_for_elo)
     elo.save()
-    print(f"  → {elo.team_count} teams with ELO ratings")
+    print(f"  → {elo.team_count} 支球队获得ELO评分")
 
     # ================================================================
-    # Pass 2: Dixon-Coles Fitting
+    # 第2步: Dixon-Coles拟合
     # ================================================================
-    print("Pass 2: Fitting Dixon-Coles parameters...")
+    print("第2步: 拟合Dixon-Coles参数...")
 
     dc = DixonColesModel()
 
@@ -72,19 +72,19 @@ def train_all(
         method = "Analytical (moment-based)"
 
     dc.save(state_dir)
-    print(f"  → {dc.team_count} teams with attack/defense params")
+    print(f"  → {dc.team_count} 支球队获得攻防参数")
     print(f"  → Method: {method}")
 
     # ================================================================
-    # Pass 3: Draw Calibration
+    # 第3步: 平局校准
     # ================================================================
-    print("Pass 3: Fitting per-league draw calibration...")
+    print("第3步: 拟合联赛级平局校准...")
     from models.draw_calibration import fit_draw_calibration, save_calibration
     draw_cal = fit_draw_calibration(matches, dc)
     cal_path = os.path.join(state_dir, "draw_calibration.json")
     save_calibration(draw_cal, cal_path)
     boosted = sum(1 for v in draw_cal.values() if v.get("draw_factor", 1.0) > 1.01)
-    print(f"  → {len(draw_cal)} leagues, {boosted} draw-boosted")
+    print(f"  → {len(draw_cal)} 个联赛, {boosted} 个平局加成")
 
     # ================================================================
     # Summary
@@ -104,6 +104,24 @@ def train_all(
         },
         "fit_method": method,
     }
+
+    # ================================================================
+    # Pass 4: 概率校准 (Phase 2 · 拟合于最新赛季之前的数据)
+    # ================================================================
+    from models.calibration import fit_calibration, save_calibration
+    seasons = sorted(set(m["season"] for m in matches))
+    cal_matches = [m for m in matches if m["season"] != seasons[-1]] if seasons else matches
+    cal_preds = []
+    cal_actuals = []
+    for m in cal_matches:
+        if m["result"] not in ("H", "D", "A"):
+            continue
+        tp = dc.predict(m["home_team"], m["away_team"], m["league_code"])
+        cal_preds.append([tp["home_win"], tp["draw"], tp["away_win"]])
+        cal_actuals.append({"H": 0, "D": 1, "A": 2}[m["result"]])
+    prob_cal = fit_calibration(cal_preds, cal_actuals)
+    save_calibration(prob_cal, os.path.join(state_dir, "calibration.json"))
+    print(f"  → 概率校准拟合于 {len(cal_actuals)} 场 (不含最新赛季 {seasons[-1] if seasons else '?'})")
 
     # Save summary
     summary_path = os.path.join(state_dir, "training_summary.json")

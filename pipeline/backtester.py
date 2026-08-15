@@ -21,7 +21,7 @@ from models.evaluation import EvalResult, lockbox_evaluate, backtest_summary
 from pipeline.data_loader import compute_league_stats
 
 
-# Betting strategy parameters
+# 投注策略参数
 EDGE_THRESHOLDS = [0.05, 0.08, 0.10, 0.12, 0.15]
 KELLY_FRACTION = 0.25  # quarter-Kelly (conservative)
 
@@ -40,7 +40,7 @@ def run_backtest(
 
     seasons = sorted(set(m["season"] for m in matches))
     print(f"Seasons: {seasons}")
-    print(f"Testing edge thresholds: {[f'{t:.0%}' for t in EDGE_THRESHOLDS]}")
+    print(f"测试边缘阈值: {[f'{t:.0%}' for t in EDGE_THRESHOLDS]}")
 
     if len(seasons) < 3:
         return {"error": f"Need at least 3 seasons, got {len(seasons)}"}
@@ -51,20 +51,20 @@ def run_backtest(
 
     for test_season in test_seasons:
         print(f"\n{'='*60}")
-        print(f"Fold: Test on {test_season}")
+        print(f"折: 测试 {test_season}")
         print(f"{'='*60}")
 
         train_seasons = [s for s in seasons if s < test_season]
         train_matches = [m for m in matches if m["season"] in train_seasons]
         test_matches = [m for m in matches if m["season"] == test_season]
 
-        print(f"Train: {len(train_matches)} matches from {train_seasons}")
-        print(f"Test:  {len(test_matches)} matches from {test_season}")
+        print(f"训练: {len(train_matches)} 场 来自 {train_seasons}")
+        print(f"测试: {len(test_matches)} 场 来自 {test_season}")
 
         if len(train_matches) < 100 or len(test_matches) < 50:
             continue
 
-        # Train on historical data only
+        # 仅用历史数据训练
         elo = EloSystem()
         elo.initialize_from_matches(train_matches)
 
@@ -72,42 +72,56 @@ def run_backtest(
         try:
             dc.fit_mle(train_matches)
         except Exception as e:
-            print(f"  MLE failed ({e}), falling back to fit_simple")
+            print(f"  MLE失败 ({e}), 回退到 fit_simple")
             dc.fit_simple(train_matches)
 
-        # ── Draw calibration: per-league post-hoc correction ──
+        # ── 平局校准: 联赛级事后修正 ──
         from models.draw_calibration import fit_draw_calibration, apply_draw_calibration
         draw_cal = fit_draw_calibration(train_matches, dc)
         n_cal_leagues = len(draw_cal)
         boosted = sum(1 for v in draw_cal.values() if v["draw_factor"] > 1.01)
-        print(f"  Draw cal: {n_cal_leagues} leagues, {boosted} draw-boosted")
+        print(f"  平局校准: {n_cal_leagues} 个联赛, {boosted} 个平局加成")
+
+        # ── Phase 2: 概率校准 (训练折拟合, 测试折应用) ──
+        from models.calibration import fit_calibration, apply_calibration as apply_prob_cal
+        print("  拟合概率校准(训练折)...")
+        train_preds = []
+        train_actuals = []
+        for tm in train_matches:
+            if tm["result"] not in ("H", "D", "A"):
+                continue
+            tp = dc.predict(tm["home_team"], tm["away_team"], tm["league_code"])
+            train_preds.append([tp["home_win"], tp["draw"], tp["away_win"]])
+            train_actuals.append({"H": 0, "D": 1, "A": 2}[tm["result"]])
+        prob_cal = fit_calibration(train_preds, train_actuals)
+        print(f"  概率校准: 拟合于 {len(train_actuals)} 场训练赛")
 
         league_stats = compute_league_stats(train_matches)
 
-        # ── Recent form: chronological processing within test season ──
-        # We maintain a pool of completed matches (training + already-seen test)
-        # and recompute form factors before each test match.
-        # This ensures form only uses data available BEFORE the match.
+        # ── 近期状态: 测试赛季内按时间顺序处理 ──
+        # 维护已完赛池 (训练 + 已见过的测试赛)
+        # 每场测试赛前重算状态因子。
+        # 确保状态只用赛前已有数据。
         from models.form_factor import compute_form_factors
         completed_matches = list(train_matches)  # start with all training data (prev seasons)
 
-        # Sort test matches chronologically (they should already be sorted, but ensure)
+        # 按时间排序测试赛 (本已有序, 双保险)
         test_matches_sorted = sorted(test_matches, key=lambda m: (
             m.get("date", ""), m.get("kickoff", ""), m.get("commence_time", "")
         ))
 
-        # Predict all test matches
+        # 预测全部测试赛
         predictions = []
         bet_candidates = []
         ah_predictions = []
 
-        # Track how many times we recompute form (every 50 matches for efficiency)
+        # 记录状态重算次数 (每50场重算一次, 省时)
         form_cache = None
         form_cache_matches = -1
         form_recompute_interval = 50  # recompute after every N new matches
 
         for idx, m in enumerate(test_matches_sorted):
-            # Recompute form factors periodically or if cache is stale
+            # 定期重算状态因子, 或缓存过期时
             if idx == 0 or len(completed_matches) - form_cache_matches >= form_recompute_interval:
                 form_factors = compute_form_factors(
                     completed_matches,
@@ -125,17 +139,20 @@ def run_backtest(
             )
             actual = m["result"]
 
-            # Apply draw calibration to raw DC probabilities
+            # 对原始DC概率应用平局校准
             cal_h, cal_d, cal_a = apply_draw_calibration(
                 {"home_win": pred["home_win"], "draw": pred["draw"], "away_win": pred["away_win"]},
                 m["league_code"], draw_cal,
             )
             cal_pred = {"home_win": cal_h, "draw": cal_d, "away_win": cal_a}
 
+            # Phase 2: 概率校准 (融合仍用原始, 校准Brier并列报告)
+            cc_h, cc_d, cc_a = apply_prob_cal([cal_h, cal_d, cal_a], prob_cal)
+
             market_odds = m.get("odds", {})
             best_odds = _get_best_odds(market_odds)
 
-            # Bayesian fusion with CALIBRATED model probabilities
+            # 用校准后的模型概率做贝叶斯融合
             if best_odds:
                 bayes_result = _bayesian_fuse(cal_pred, best_odds, cold_start=pred.get("cold_start", False))
             else:
@@ -145,6 +162,9 @@ def run_backtest(
                 "home_win": cal_h,
                 "draw": cal_d,
                 "away_win": cal_a,
+                "cal_home_win": cc_h,
+                "cal_draw": cc_d,
+                "cal_away_win": cc_a,
                 "actual": actual,
                 "home_team": m["home_team"],
                 "away_team": m["away_team"],
@@ -162,7 +182,7 @@ def run_backtest(
                     "raw_edge": bayes_result["raw_edges"],
                 })
 
-            # ── Asian Handicap prediction ──
+            # ── 让球盘预测 ──
             ah_line = m.get("ah_line")
             ah_odds = m.get("ah_odds")
             if ah_line is not None and ah_odds:
@@ -181,7 +201,7 @@ def run_backtest(
                     "league_code": m["league_code"],
                 })
 
-            # Feed actual result back into form pool (chronological — only past matches used)
+            # 赛果回灌状态池 (时间序 — 只用已完赛数据)
             completed_matches.append({
                 "home_team": m["home_team"],
                 "away_team": m["away_team"],
@@ -197,12 +217,22 @@ def run_backtest(
             "away_win_rate": sum(s.get("away_win_rate", 0.30) for s in league_stats.values()) / max(len(league_stats), 1),
         }
         eval_result = lockbox_evaluate(predictions, combined_ls)
-        print(f"  Brier: {eval_result.brier_score} (baseline: {eval_result.baseline_brier})")
-        print(f"  Accuracy: {eval_result.accuracy:.1%}")
+        print(f"  Brier: {eval_result.brier_score} (基线: {eval_result.baseline_brier})")
+        print(f"  准确率: {eval_result.accuracy:.1%}")
+
+        # Phase 2: 校准后 Brier 并列报告 (与 brier_score 同口径: 三结果平方误差和)
+        cal_brier = 0.0
+        for p in predictions:
+            av = {"H": [1, 0, 0], "D": [0, 1, 0], "A": [0, 0, 1]}[p["actual"]]
+            cal_brier += sum((q - v) ** 2 for q, v in zip(
+                [p["cal_home_win"], p["cal_draw"], p["cal_away_win"]], av
+            ))
+        cal_brier /= max(len(predictions), 1)
+        print(f"  校准后Brier: {cal_brier:.4f} (差 {cal_brier - eval_result.brier_score:+.4f})")
 
         fold_results.append(eval_result)
 
-        # Test each edge threshold
+        # 测试各边缘阈值
         print(f"  {'Threshold':<10} {'Bets':>6} {'HitRate':>8} {'P&L':>8} {'ROI':>8}")
         print(f"  {'-'*42}")
 
@@ -220,18 +250,18 @@ def run_backtest(
             hits = sum(1 for b in bets if b["pl"] > 0)
             hit_rate = hits / n
 
-            print(f"  {threshold:<10.0%} {n:>6} {hit_rate:>7.1%} {total_pl:>+7.2f} {roi:>+7.1%}")
+            print(f"  阈值{threshold:<6.0%} {n:>6}注 {hit_rate:>6.1%} {total_pl:>+7.2f} {roi:>+7.1%}")
             threshold_results[threshold] = {
                 "bets": n, "pl": round(total_pl, 2),
                 "roi": round(roi, 4), "hit_rate": round(hit_rate, 4),
             }
 
-        # ── Asian Handicap evaluation ──
+        # ── 让球盘评估 ──
         if ah_predictions:
             ah_eval = _evaluate_ah(ah_predictions)
             print(f"  AH Brier: {ah_eval['brier']:.4f} (baseline: 0.2500)")
-            print(f"  AH Accuracy: {ah_eval['accuracy']:.1%}")
-            print(f"  AH Push rate: {ah_eval['push_rate']:.1%}")
+            print(f"  让球准确率: {ah_eval['accuracy']:.1%}")
+            print(f"  让球走盘率: {ah_eval['push_rate']:.1%}")
             print(f"  {'AH Edge':<10} {'Bets':>6} {'Hit%':>7} {'P&L':>8} {'ROI':>8}")
             print(f"  {'-'*42}")
             ah_thresholds = {}
@@ -246,7 +276,7 @@ def run_backtest(
                     roi = total_pl / n
                     hits = sum(1 for b in ah_bets if b["pl"] > 0)
                     hit_rate = hits / n
-                    print(f"  {threshold:<10.0%} {n:>6} {hit_rate:>7.1%} {total_pl:>+7.2f} {roi:>+7.1%}")
+                    print(f"  阈值{threshold:<6.0%} {n:>6}注 {hit_rate:>6.1%} {total_pl:>+7.2f} {roi:>+7.1%}")
                     ah_thresholds[threshold] = {
                         "bets": n, "pl": round(total_pl, 2),
                         "roi": round(roi, 4), "hit_rate": round(hit_rate, 4),
@@ -269,7 +299,7 @@ def run_backtest(
         })
 
     # ================================================================
-    # Find best threshold
+    # 寻找最佳阈值
     # ================================================================
     best_threshold = None
     best_avg_roi = float("-inf")
@@ -303,14 +333,14 @@ def run_backtest(
         json.dump(report, f, ensure_ascii=False, indent=2)
 
     print(f"\n{'='*60}")
-    print(f"BACKTEST GATE: {report['gate_result']}")
+    print(f"回测门禁: {report['gate_result']}")
     print(f"{'='*60}")
     print(f"Avg Brier: {summary['avg_brier']}")
-    print(f"Best threshold: {report['best_threshold']} (avg ROI: {report['best_avg_roi']:+.1%})")
-    print(f"Report saved to {report_path}")
+    print(f"最佳阈值: {report['best_threshold']} (平均ROI: {report['best_avg_roi']:+.1%})")
+    print(f"报告已保存至 {report_path}")
 
     if not summary["all_folds_beat_baseline"]:
-        print("\n[FAIL] Model does not consistently beat baseline.")
+        print("\n[未通过] 模型未能稳定击败基线。")
         print("DO NOT DEPLOY.")
 
     return report
@@ -328,15 +358,15 @@ def _bayesian_fuse(pred: dict, odds: dict, cold_start: bool = False) -> dict:
     market_probs = [imp["home"], imp["draw"], imp["away"]]
     model_probs = [pred["home_win"], pred["draw"], pred["away_win"]]
 
-    # Raw model-market edge
+    # 原始模型-市场边缘
     raw_edges = {
         "home": round(model_probs[0] - market_probs[0], 4),
         "draw": round(model_probs[1] - market_probs[1], 4),
         "away": round(model_probs[2] - market_probs[2], 4),
     }
 
-    # Bayesian fusion — fixed model_confidence (v3.1: was based on max_prob,
-    # which amplified overconfidence. Now uses cold-start as the only discount.)
+    # 贝叶斯融合 — 固定模型置信度 (v3.1: 曾基于max_prob,
+    # 曾放大过度自信。现在仅以冷启动作为折价。)
     model_conf = 0.35 if cold_start else 0.50
 
     update = bayesian_update(
@@ -377,7 +407,7 @@ def _simulate_bets(candidates: list[dict], edge_threshold: float) -> list[dict]:
         imp = implied_probability(best_odds["home"], best_odds["draw"], best_odds["away"])
         market_probs = [imp["home"], imp["draw"], imp["away"]]
 
-        # Find best posterior edge
+        # 寻找最佳后验边缘
         edges = {
             "home": posterior["home"] - market_probs[0],
             "draw": posterior["draw"] - market_probs[1],
@@ -476,7 +506,7 @@ def _simulate_ah_bets(ah_predictions: list[dict], edge_threshold: float) -> list
 
     bets = []
     for p in ah_predictions:
-        # Push = no bet resolution (stake returned)
+        # 走盘 = 不结算输赢 (退还本金)
         adj = p["home_goals"] - p["away_goals"] + p["goal_line"]
         if adj == 0:
             continue
@@ -484,7 +514,7 @@ def _simulate_ah_bets(ah_predictions: list[dict], edge_threshold: float) -> list
         actual_covered = adj > 0
         ah_odds = p["ah_odds"]
 
-        # Shin de-vig market odds → fair probability
+        # Shin去水市场赔率 → 公平概率
         odds_h, odds_a = ah_odds["home"], ah_odds["away"]
         o = [1.0 / odds_h, 1.0 / odds_a]
         z0 = sum(o)
@@ -502,14 +532,14 @@ def _simulate_ah_bets(ah_predictions: list[dict], edge_threshold: float) -> list
                 c = c_new
             market_h_prob = probs[0]
 
-        # Model edge on home cover
+        # 模型在主队覆盖上的边缘
         model_h_prob = p["model_cover"]
         edge = model_h_prob - market_h_prob
 
         if abs(edge) < edge_threshold:
             continue
 
-        # Determine bet direction
+        # 确定投注方向
         if edge > 0:
             bet_on = "home"
             fair_prob = model_h_prob
@@ -519,7 +549,7 @@ def _simulate_ah_bets(ah_predictions: list[dict], edge_threshold: float) -> list
             fair_prob = 1.0 - model_h_prob
             odds_used = odds_a
 
-        # Kelly sizing: f* = (p*b - q) / b, where b = odds - 1
+        # Kelly仓位: f* = (p*b - q) / b, 其中 b = 赔率 - 1
         b = odds_used - 1.0  # decimal odds → fractional
         if b <= 0:
             continue

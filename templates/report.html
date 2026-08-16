@@ -154,6 +154,55 @@
   }
   .m-note .nt { font-size: .7rem; color: var(--violet); font-weight: 700; letter-spacing: 1px; margin-right: 6px; }
 
+  /* ── 今日看好速览 ── */
+  .picks-strip {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
+    padding: 14px 16px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(52,211,153,.10), rgba(94,168,255,.06));
+    border: 1px solid rgba(52,211,153,.35);
+  }
+  .picks-title { width: 100%; font-size: .85rem; font-weight: 800; color: #6ee7b7; letter-spacing: 1px; }
+  .pick-card {
+    background: #0f1a28; border: 1px solid rgba(52,211,153,.4); border-radius: 12px;
+    padding: 8px 14px; min-width: 200px; flex: 1;
+  }
+  .pc-teams { font-size: .82rem; font-weight: 700; color: var(--txt); }
+  .pc-bet { font-size: .78rem; color: var(--green); font-weight: 700; margin-top: 3px; }
+
+  /* ── 近况形态徽章 ── */
+  .form-row { display: flex; gap: 16px; font-size: .75rem; color: var(--dim); align-items: center; margin-top: 2px; }
+  .f-letters { display: inline-flex; gap: 3px; margin-left: 4px; }
+  .f-letters span {
+    display: inline-flex; width: 17px; height: 17px; align-items: center; justify-content: center;
+    border-radius: 5px; font-size: .62rem; font-weight: 800;
+  }
+  .f-letters span.f-W { background: rgba(52,211,153,.18); color: #6ee7b7; }
+  .f-letters span.f-D { background: rgba(141,153,176,.15); color: #a5b0c5; }
+  .f-letters span.f-L { background: rgba(248,113,113,.18); color: #fca5a5; }
+
+  /* ── 比分概率迷你图 ── */
+  .viz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0 6px; }
+  .score-bars { display: flex; gap: 8px; align-items: flex-end; height: 64px; }
+  .sb { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 3px; }
+  .sb-bar {
+    width: 70%; background: linear-gradient(180deg, #5ea8ff, #2f6fd8);
+    border-radius: 4px 4px 2px 2px; min-height: 3px;
+    transition: height .4s ease;
+  }
+  .sb-label { font-size: .66rem; color: var(--dim); }
+  .sb-pct { font-size: .6rem; color: var(--txt); font-weight: 600; }
+
+  /* ── ELO 力量条 ── */
+  .elo-row { display: flex; align-items: center; gap: 8px; font-size: .72rem; color: var(--dim); }
+  .elo-track { flex: 1; height: 8px; border-radius: 999px; background: #0a0f1c; overflow: hidden; display: flex; }
+  .elo-home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .elo-away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .elo-row b { color: var(--txt); }
+
+  /* ── 入场动效 ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .match { animation: fadeUp .45s ease both; }
+
   /* ── 页脚 ── */
   .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
 
@@ -184,8 +233,21 @@
     <div class="stat"><div class="v">{{ direction_dist }}</div><div class="l">胜/平/负</div></div>
   </div>
 
+  <!-- 今日看好速览 -->
+  {% if picks %}
+  <div class="picks-strip">
+    <div class="picks-title">★ 今日看好 (共 {{ picks|length }} 个方向)</div>
+    {% for m in picks %}
+    <div class="pick-card">
+      <div class="pc-teams">{{ m.home_team }} vs {{ m.away_team }}</div>
+      <div class="pc-bet">{{ m.bet_pick }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {% for m in matches %}
-  <article class="match {{ m.recommendation }}">
+  <article class="match {{ m.recommendation }}" style="animation-delay: {{ loop.index0 * 60 }}ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">{{ m.league }}</span>
@@ -208,8 +270,33 @@
         <span><i class="dot home"></i>主胜 <b>{{ m.p_home }}</b></span>
         <span><i class="dot draw"></i>平局 <b>{{ m.p_draw }}</b></span>
         <span><i class="dot away"></i>客胜 <b>{{ m.p_away }}</b></span>
-        <span>最可能比分 <b>{{ m.top_score }}</b></span>
         <span>ELO差 <b>{{ m.elo_diff }}</b></span>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        {% for s in m.score_bars %}
+        <div class="sb">
+          <div class="sb-pct">{{ s.pct }}%</div>
+          <div class="sb-bar" style="height: {{ s.pct * 3 }}%"></div>
+          <div class="sb-label">{{ s.score }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>{{ m.elo_h }}</b>
+          <div class="elo-track"><div class="elo-home" style="width: {{ m.elo_h_share }}%"></div><div class="elo-away" style="width: {{ 100 - m.elo_h_share }}%"></div></div>
+          <b>{{ m.elo_a }}</b>
+        </div>
+        {% if m.form_h or m.form_a %}
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters">{% for c in m.form_h %}<span class="f-{{ c }}">{{ c }}</span>{% endfor %}</span></span>
+          <span>客近况<span class="f-letters">{% for c in m.form_a %}<span class="f-{{ c }}">{{ c }}</span>{% endfor %}</span></span>
+        </div>
+        {% endif %}
       </div>
     </div>
 

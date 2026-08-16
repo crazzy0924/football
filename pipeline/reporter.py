@@ -262,6 +262,9 @@ def generate_report(
     a_picks = sum(1 for m in match_cards if m["pick"] == "客胜")
     direction_dist = f"{h_picks}/{d_picks}/{a_picks}"
 
+    # 今日看好速览 (下注卡片)
+    picks = [m for m in match_cards if m["bet_class"] == "bet"]
+
     context = {
         "date": today,
         "backtest_brier": f"{backtest_brier:.4f}" if backtest_brier else None,
@@ -271,6 +274,7 @@ def generate_report(
         "cold_start": cold,
         "direction_dist": direction_dist,
         "matches": match_cards,
+        "picks": picks,
     }
 
     # Render template
@@ -448,6 +452,19 @@ def _build_match_card(
     std_form = None
     if sh and sh.get("form"):
         std_form = f"近况 主[{sh['form']}] 客[{sa.get('form', '')}]" if sa else None
+    form_h = (sh or {}).get("form", "")
+    form_a = (sa or {}).get("form", "")
+
+    # 比分概率迷你图 (前5比分)
+    score_bars = []
+    for s, pr in top_scores[:5]:
+        score_bars.append({"score": s, "pct": round(pr * 100, 1)})
+
+    # ELO 力量对比
+    elo_h = p.get("elo_home") or 0
+    elo_a = p.get("elo_away") or 0
+    elo_total = elo_h + elo_a
+    elo_h_share = round(elo_h / elo_total * 100) if elo_total > 0 else 50
 
     # 分析师注释 — 按英文名查(键为英文)
     match_key = f"{home_team_en} vs {away_team_en}"
@@ -481,6 +498,12 @@ def _build_match_card(
         "ah_pick": ah_pick,
         "std_text": std_text,
         "std_form": std_form,
+        "form_h": form_h,
+        "form_a": form_a,
+        "score_bars": score_bars,
+        "elo_h": round(elo_h),
+        "elo_a": round(elo_a),
+        "elo_h_share": elo_h_share,
         "edge_direction": best_edge_dir.title() if best_edge_val > 0 else None,
         "edge_pct": edge_pct,
         "cold_start_flag": cold_start,

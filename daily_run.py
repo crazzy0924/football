@@ -7,10 +7,12 @@
   python daily_run.py predict --no-llm            # 同上, 跳过LLM分析(省token)
   python daily_run.py review 2026-08-15            # 赛后: 复盘 + 投注结算 + h2h回灌
   python daily_run.py review 2026-08-15 --results-text "A 2-1 B"   # 手输赛果复盘
+  (review 不带日期参数默认复盘昨日 — 欧洲场凌晨完赛, 早上10点赛果已齐)
 
 计划任务 (见 register_schedule.ps1):
   09:00  足球模型-每日预测  → daily_task_predict.cmd
-  21:30  足球模型-每日复盘  → daily_task_review.cmd
+  10:00  足球模型-每日复盘  → daily_task_review.cmd (复盘昨日)
+  18:00  足球模型-午盘快照  → midday_snapshot.cmd
 """
 from __future__ import annotations
 
@@ -73,15 +75,6 @@ def _git_sync() -> None:
 def cmd_predict(args) -> None:
     date_str = args.date or _today()
 
-    # 0) 追补昨日复盘 (凌晨完赛的欧洲场: 增量幂等, 无赛果优雅退出)
-    yest = (datetime.now(BEIJING) - timedelta(days=1)).strftime("%Y-%m-%d")
-    yest_pred = os.path.join("data", "output", f"predictions_{yest}.json")
-    if os.path.exists(yest_pred):
-        print("[追补] 复盘昨日 " + yest + " (凌晨完赛的欧洲场)...")
-        rc_y = _run([sys.executable, "daily_run.py", "review", yest])
-        if rc_y != 0:
-            print("[追补] 昨日复盘未完成 (缺赛果或已处理完), 继续今日预测")
-
     # 1) 拉取今日比赛 (体彩为主, odds-api.io 兜底)
     rc = _run([sys.executable, "fetch_sporttery.py", date_str])
     if rc != 0:
@@ -121,7 +114,8 @@ def cmd_predict(args) -> None:
 
 
 def cmd_review(args) -> None:
-    date_str = args.date or _today()
+    # 默认复盘昨日 (欧洲场凌晨完赛, 早上10点赛果已齐)
+    date_str = args.date or (datetime.now(BEIJING) - timedelta(days=1)).strftime("%Y-%m-%d")
     cmd = [sys.executable, "pipeline.py", "review", date_str]
     if args.results_text:
         cmd += ["--results-text", args.results_text]
@@ -149,7 +143,7 @@ def main() -> None:
     p_predict.add_argument("--no-llm", action="store_true", help="跳过LLM定性分析")
 
     p_review = sub.add_parser("review", help="赛后: 复盘 + 投注结算 + h2h回灌")
-    p_review.add_argument("date", nargs="?", default=None, help="日期 YYYY-MM-DD (默认今天北京时间)")
+    p_review.add_argument("date", nargs="?", default=None, help="日期 YYYY-MM-DD (默认昨日)")
     p_review.add_argument("--results-text", help="赛果文本 (例: 'A 2-1 B\\nC 0-0 D')")
 
     args = parser.parse_args()

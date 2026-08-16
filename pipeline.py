@@ -187,6 +187,77 @@ def cmd_predict(args):
         print("无比赛可预测。")
         return
 
+    # Phase 8: 赛程密度 + 近2季交锋 预计算 (h2h 全库)
+    sched_cache: dict = {}
+    h2h_cache: dict = {}
+
+    def _team_recent(name: str, days: int = 7, db=None) -> int:
+        if name in sched_cache:
+            return sched_cache[name]
+        if not db:
+            sched_cache[name] = 0
+            return 0
+        cutoff = datetime.now() - timedelta(days=days)
+        n = 0
+        for mm in db.get("matches", []):
+            if mm.get("home_team") == name or mm.get("away_team") == name:
+                try:
+                    if datetime.strptime(str(mm.get("date", "")), "%Y-%m-%d") >= cutoff:
+                        n += 1
+                except Exception:
+                    pass
+        sched_cache[name] = n
+        return n
+
+    def _recent_h2h(home: str, away: str, db=None) -> dict | None:
+        key = f"{home}|{away}"
+        if key in h2h_cache:
+            return h2h_cache[key]
+        if not db:
+            h2h_cache[key] = None
+            return None
+        seasons = sorted({str(mm.get("season", "")) for mm in db.get("matches", [])})
+        recent_seasons = set(seasons[-2:])  # 只看近2个赛季
+        w = d = l = 0
+        gf = ga = 0
+        for mm in db.get("matches", []):
+            if str(mm.get("season", "")) not in recent_seasons:
+                continue
+            h = mm.get("home_team")
+            a = mm.get("away_team")
+            if (h == home and a == away) or (h == away and a == home):
+                gh = mm.get("home_goals")
+                ga2 = mm.get("away_goals")
+                if gh is None or ga2 is None:
+                    continue
+                if h == home:
+                    hf, af = gh, ga2
+                else:
+                    hf, af = ga2, gh
+                gf += hf
+                ga += af
+                if hf > af:
+                    w += 1
+                elif hf == af:
+                    d += 1
+                else:
+                    l += 1
+        if w + d + l == 0:
+            h2h_cache[key] = None
+            return None
+        h2h_cache[key] = {"w": w, "d": d, "l": l, "gf": gf, "ga": ga}
+        return h2h_cache[key]
+
+    _db = None
+    try:
+        if os.path.exists("data/local_match_db.json"):
+            with open("data/local_match_db.json", "r", encoding="utf-8") as f:
+                _db = json.load(f)
+    except Exception:
+        _db = None
+
+    from datetime import datetime, timedelta
+
     # 逐场预测
     predictions = []
     for m in matches:
@@ -287,6 +358,12 @@ def cmd_predict(args):
                 "home": _standings_lookup(standings.get(league), home),
                 "away": _standings_lookup(standings.get(league), away),
             },
+            # Phase 8: 赛程密度 (7天内) + 近2季交锋
+            "schedule": {
+                "home_7d": _team_recent(home, 7, _db),
+                "away_7d": _team_recent(away, 7, _db),
+            },
+            "h2h_recent": _recent_h2h(home, away, _db),
         })
 
     # 保存JSON

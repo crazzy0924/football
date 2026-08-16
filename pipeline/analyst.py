@@ -96,10 +96,38 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
     if sh or sa:
         parts = []
         if sh:
-            parts.append(f"{home} #{sh.get('pos', '?')} ({sh.get('points', '?')}分, 近况{sh.get('form', '?')})")
+            zone = _zone_label(sh.get("pos"))
+            z = f" ({zone})" if zone else ""
+            parts.append(f"{home} #{sh.get('pos', '?')}{z} ({sh.get('points', '?')}分, 近况{sh.get('form', '?')})")
         if sa:
-            parts.append(f"{away} #{sa.get('pos', '?')} ({sa.get('points', '?')}分, 近况{sa.get('form', '?')})")
+            zone = _zone_label(sa.get("pos"))
+            z = f" ({zone})" if zone else ""
+            parts.append(f"{away} #{sa.get('pos', '?')}{z} ({sa.get('points', '?')}分, 近况{sa.get('form', '?')})")
         lines.append("联赛积分榜: " + "; ".join(parts))
+
+    # Phase 8: 赛程密度 + 近2季交锋
+    sched = prediction.get("schedule") or {}
+    if sched:
+        lines.append(f"赛程密度: 主队7天{sched.get('home_7d', 0)}场 / 客队7天{sched.get('away_7d', 0)}场")
+    h2h = prediction.get("h2h_recent")
+    if h2h:
+        lines.append(
+            f"近2季交锋: 主队视角 {h2h.get('w', 0)}胜{h2h.get('d', 0)}平{h2h.get('l', 0)}负 "
+            f"(总进球{h2h.get('gf', 0)}-{h2h.get('ga', 0)})"
+        )
+
+    # 市场视角: 让球盘 + 欧赔
+    ah = prediction.get("ah_handicap")
+    if ah:
+        line_ = ah.get("goal_line")
+        hc = ah.get("home_cover", 0)
+        ac = ah.get("away_cover", 0)
+        if line_ is not None:
+            lines.append(f"亚盘(主{line_:+.1f}): 模型主覆盖{hc:.0%}/客覆盖{ac:.0%}")
+    if prediction.get("odds"):
+        o = prediction["odds"]
+        if o.get("home") and o.get("draw") and o.get("away"):
+            lines.append(f"欧赔: 主{o['home']:.2f}/平{o['draw']:.2f}/客{o['away']:.2f}")
 
     if cold:
         lines.append("[注意] 冷启动 — 球队参数来自联赛均值，不确定性高")
@@ -109,28 +137,41 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
         lines.append("=== 赛前情报 (用户提供, 请重点参考) ===")
         lines.append(intel_text)
 
-
     return "\n".join(lines)
 
 
+def _zone_label(pos) -> str | None:
+    """积分榜分区 (战意/动机参考)"""
+    if pos is None:
+        return None
+    if pos <= 3:
+        return "争冠区"
+    if pos <= 6:
+        return "欧战区"
+    if pos >= 15:
+        return "保级区"
+    return "中游"
+
+
 def build_analyst_prompt(evidence: str) -> str:
-    """Build the Claude prompt for qualitative analysis."""
-    return f"""你是资深足球分析师。以下是统计模型对一场比赛的结构化预测。模型无法看到以下因素：伤病、战意、赛程密集度、杯赛重要性、战术匹配度、天气等。
+    """Build the analyst prompt (七维分析框架)."""
+    return f"""你是资深足球分析师。以下是统计模型对一场比赛的结构化预测。请按七维框架做定性评估：
 
-请用2-3句中文提供定性评估。你可以：
-- 指出模型可能高估或低估主队的原因（例如：客队轮换主力、主队杯赛分心）
-- 提及联赛风格倾向（例如：法甲低进球率、德甲大球倾向）
-- 标注关键不确定性（例如：揭幕战、新帅首秀、德比战心理因素）
+1. 市场视角: 亚盘/欧赔/大小球反映资金流向, 比个人模型更可信; 模型与市场分歧大时警惕模型盲区
+2. 赛程与体能: 双线作战、周中补赛、7天场次密度对体能的影响; 主力轮换概率
+3. 伤停与停赛: 必须区分核心主力与替补——核心中场/射手缺阵对体系影响远大于替补; 情报未提及伤停时明确说明
+4. 战意/动机: 结合积分榜分区评估双方战意 (保级/争冠/欧战/无欲无求/杯赛留力)
+5. 天气与场地: 若情报含天气, 评估雨雪对技术流球队的影响
+6. 历史交锋: 仅参考证据中"近2季交锋", 更早的历史数据易误导
+7. 反向验证: 必须输出——"如果本场预测错了, 最可能错在哪里"
 
-严格要求：
-- 不要输出概率数字
-- 不要建议投注金额
-- 简洁，2-3句即可
-- 纯中文
+输出格式 (纯中文, 不要概率数字, 不要建议投注金额):
+定性评估: (2-3句, 覆盖上述维度中最关键的2-3点)
+反向验证: (1句)
 
 {evidence}
 
-分析师注释（2-3句中文）:"""
+分析师输出:"""
 
 
 def query_analyst(

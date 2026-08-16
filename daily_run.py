@@ -81,7 +81,14 @@ def cmd_predict(args) -> None:
         print("[警告] 体彩拉取失败, 尝试 odds-api.io 构建...")
         _run([sys.executable, "build_today_matches.py", date_str])
 
-    # 2) 积分榜采集 (football-data.org, 免费档)
+    # 2) 伤停自动侦察 (Bing公开搜索, 零注册零订阅)
+    try:
+        print("[伤停] 公开搜索侦察...")
+        _run([sys.executable, "pipeline/injury_recon.py", date_str])
+    except Exception as e:
+        print("[警告] 伤停侦察跳过: " + str(e))
+
+    # 3) 积分榜采集 (football-data.org, 免费档)
     try:
         from config import FOOTBALL_DATA_API_KEY
         if FOOTBALL_DATA_API_KEY:

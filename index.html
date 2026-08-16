@@ -49,21 +49,29 @@
   <p class="muted">报告每天自动生成并推送，本页链接随日期自动更新，无需人工维护。</p>
 </div>
 <script>
-  // 自动生成最近 10 天的预测/复盘链接
+  // 自动生成最近 10 天的预测/复盘链接 (只渲染 files.js 清单里存在的报告, 避免404)
   const list = document.getElementById('days');
   const pad = n => String(n).padStart(2, '0');
+  const F = (window.FOOT_FILES) || { predictions: [], reviews: [] };
   const today = new Date();
+  let shown = 0;
   for (let i = 0; i < 10; i++) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
     const s = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    const hasP = F.predictions.indexOf(s) >= 0;
+    const hasR = F.reviews.indexOf(s) >= 0;
+    if (!hasP && !hasR) continue;
+    shown++;
     const li = document.createElement('li');
-    li.innerHTML =
-      '<span class="tag">' + s + '</span>' +
-      '<a href="data/output/predictions_' + s + '.html">赛前预测</a> · ' +
-      '<a href="data/output/review_' + s + '.html">赛后复盘</a>';
+    let html = '<span class="tag">' + s + '</span>';
+    html += hasP ? '<a href="data/output/predictions_' + s + '.html">赛前预测</a>' : '<span class="muted">赛前预测(无)</span>';
+    html += ' · ';
+    html += hasR ? '<a href="data/output/review_' + s + '.html">赛后复盘</a>' : '<span class="muted">赛后复盘(无)</span>';
+    li.innerHTML = html;
     list.appendChild(li);
   }
+  if (shown === 0) document.getElementById('no-files-hint').style.display = 'block';
 </script>
 </body>
 </html>

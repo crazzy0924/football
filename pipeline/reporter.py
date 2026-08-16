@@ -287,6 +287,44 @@ def generate_report(
     return out_path
 
 
+# 赔率快照缓存 (同进程内只加载一次)
+_odds_movement_cache: dict = {}
+
+
+def _load_odds_movement(date_str: str) -> dict:
+    """加载当日赔率快照, 计算每场主胜赔率变动 (早盘→最新快照)"""
+    import glob as _glob
+    if _odds_movement_cache.get("date") == date_str:
+        return _odds_movement_cache.get("data", {})
+    import os as _os
+    import json as _json
+    snaps = sorted(_glob.glob(os.path.join("data", "state", "odds_snapshots", f"snapshot_{date_str}_*.json")))
+    data: dict = {}
+    if len(snaps) >= 2:
+        first = snaps[0]
+        last = snaps[-1]
+        try:
+            with open(first, "r", encoding="utf-8") as f:
+                a_list = _json.load(f)
+            with open(last, "r", encoding="utf-8") as f:
+                b_list = _json.load(f)
+        except Exception:
+            a_list, b_list = [], []
+        b_map = {(m.get("home_team"), m.get("away_team")): m for m in b_list}
+        for m in a_list:
+            key = (m.get("home_team"), m.get("away_team"))
+            bm = b_map.get(key)
+            if not bm:
+                continue
+            oa = (m.get("odds") or {}).get("home")
+            ob = (bm.get("odds") or {}).get("home")
+            if oa and ob:
+                data[key] = {"from": oa, "to": ob, "delta": round(ob - oa, 3)}
+    _odds_movement_cache["date"] = date_str
+    _odds_movement_cache["data"] = data
+    return data
+
+
 def _build_match_card(
     p: dict,
     analyst_notes: dict[str, str] | None = None,
@@ -394,6 +432,22 @@ def _build_match_card(
     else:
         bet_pick = "观望"
         bet_class = "skip"
+
+    # 赔率变动 (早盘→最新快照, 资金流向参考)
+    try:
+        from datetime import date as _date
+        move_map = _load_odds_movement(_date.today().isoformat())
+        move = move_map.get((home_team_en, away_team_en))
+        odds_move = None
+        if move:
+            if move["delta"] < -0.05:
+                odds_move = f"主胜赔率↓ {move['from']:.2f}→{move['to']:.2f} (资金流主)"
+            elif move["delta"] > 0.05:
+                odds_move = f"主胜赔率↑ {move['from']:.2f}→{move['to']:.2f} (资金流客)"
+            else:
+                odds_move = f"主胜赔率稳定 {move['to']:.2f}"
+    except Exception:
+        odds_move = None
 
     # 让球盘 (AH) 参考与备选方向 (维度台账 AH 已过门: Brier 0.1535 vs 0.233)
     ah = p.get("ah_handicap")
@@ -503,6 +557,7 @@ def _build_match_card(
         "bet_class": bet_class,
         "ah_text": ah_text,
         "ah_pick": ah_pick,
+        "odds_move": odds_move,
         "std_text": std_text,
         "std_form": std_form,
         "form_h": form_h,

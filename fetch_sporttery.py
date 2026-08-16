@@ -223,6 +223,22 @@ except Exception as e:
 pathlib.Path('data/today.json').write_text(json.dumps(today, ensure_ascii=False, indent=2), encoding='utf-8')
 print(f'\n✅ 保存 {len(today)} 场到 data/today.json')
 
+# 赔率快照 (早/午/终盘纪律: 记录每次拉取的时间点快照, 供赔率变动对比)
+try:
+    from datetime import datetime as _dt
+    snap_dir = pathlib.Path('data/state/odds_snapshots')
+    snap_dir.mkdir(parents=True, exist_ok=True)
+    snap_name = f'snapshot_{date_str}_{_dt.now().strftime("%H%M")}.json'
+    snap_path = snap_dir / snap_name
+    # 同一天同时间的快照覆盖, 避免重复堆积
+    for old in snap_dir.glob(f'snapshot_{date_str}_*.json'):
+        if old.name == snap_name:
+            old.unlink()
+    snap_path.write_text(json.dumps(today, ensure_ascii=False, indent=2), encoding='utf-8')
+    print(f'📸 赔率快照已存 → {snap_path.name}')
+except Exception as e:
+    print(f'快照保存跳过: {e}')
+
 # 另存pinnacle兼容格式供 run_pinnacle_bets.py 使用
 pinnacle_format = []
 for m in today:

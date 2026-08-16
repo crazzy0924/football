@@ -126,8 +126,21 @@
   })();
 </script>
 <script>
+  // 注册离线组件, 并把结果显示在安装卡片里(方便排查装不上的原因)
+  function installStatus(msg) {
+    var g = document.getElementById('install-guide');
+    if (g) g.innerHTML += msg;
+  }
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').then(function () {
+        installStatus('<br>✅ 离线组件已加载，本页可以安装到桌面');
+      }).catch(function () {
+        installStatus('<br>⚠️ 离线组件加载失败（网络没连上服务器），多刷新几次再试');
+      });
+    });
+  } else {
+    installStatus('<br>⚠️ 当前浏览器不支持安装');
   }
 </script>
 </body>

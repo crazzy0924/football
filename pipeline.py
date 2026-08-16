@@ -49,14 +49,17 @@ def cmd_train(args):
 
     summary = train_all(matches, state_dir, use_mle=args.mle)
 
+    # Phase 9: 分联赛自适应模型 (每联赛独立DC+平局校准, 预测时按联赛选择)
+    from pipeline.trainer import train_per_league_models
+    per_league = train_per_league_models(matches, state_dir)
+
     print("\n[OK] 训练完成")
     print(f"  ELO球队数: {summary['elo']['teams']}")
     print(f"  攻防参数球队数: {summary['dc_teams']}")
     print(f"  训练联赛: {summary['leagues']}")
     print(f"  拟合方法: {summary['fit_method']}")
+    print(f"  分联赛模型: {list(per_league.keys())}")
     print(f"  状态已保存至 {state_dir}/")
-
-
 def cmd_backtest(args):
     """Run time-series cross-validation backtest."""
     from pipeline.data_loader import load_all_matches
@@ -101,7 +104,7 @@ def cmd_predict(args):
 
     print(f"已加载: {elo.team_count} 支ELO球队, {dc.team_count} 组DC参数")
 
-    # 加载平局校准
+    # 加载平局校准 (统一模型, 兜底)
     from models.draw_calibration import load_calibration, apply_draw_calibration
     draw_cal = load_calibration(os.path.join(state_dir, "draw_calibration.json"))
     if draw_cal:
@@ -110,6 +113,17 @@ def cmd_predict(args):
         print(f"平局校准: {n_cal} 个联赛, {boosted} 个平局加成")
     else:
         print("平局校准: 不可用(先跑backtest生成)")
+
+    # Phase 9: 分联赛自适应模型 (每联赛独立DC+独立平局校准, 按比赛联赛选择)
+    from pipeline.trainer import load_per_league_models
+    league_models = load_per_league_models(state_dir)
+    league_draw_cals: dict = {}
+    for lg, lg_dc in league_models.items():
+        c = load_calibration(os.path.join(state_dir, "models", lg, "draw_calibration.json"))
+        if c:
+            league_draw_cals[lg] = c
+    if league_models:
+        print(f"分联赛模型: {list(league_models.keys())} (预测时按联赛选择, 兜底统一模型)")
 
     # 近期状态因子 (与回测同口径, Phase 7.5: 回测Brier 0.595依赖此步)
     form_factors = {}
@@ -275,12 +289,15 @@ def cmd_predict(args):
 
         # ── 市场驱动冷启动: 把市场赔率传给DC ──
         market = m.get("odds") or m.get("market_odds")
-        pred = dc.predict(home, away, league, form_factors=form_factors, market_odds=market)
+        # Phase 9: 按联赛选择独立模型 (缺则回退统一模型)
+        dc_use = league_models.get(league, dc)
+        pred = dc_use.predict(home, away, league, form_factors=form_factors, market_odds=market)
 
-        # 应用平局校准
+        # 应用平局校准 (联赛独立校准优先, 统一校准兜底)
+        draw_cal_use = league_draw_cals.get(league, draw_cal)
         cal_h, cal_d, cal_a = apply_draw_calibration(
             {"home_win": pred["home_win"], "draw": pred["draw"], "away_win": pred["away_win"]},
-            league, draw_cal,
+            league, draw_cal_use,
         )
         pred["home_win"] = cal_h
         pred["draw"] = cal_d

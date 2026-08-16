@@ -131,6 +131,70 @@ def train_all(
     return summary
 
 
+def train_per_league_models(
+    matches: list[dict],
+    state_dir: str = "data/state",
+) -> dict[str, dict]:
+    """分联赛自适应模型 (Phase 9): 每个联赛独立拟合一套 DC 参数 + 平局校准
+
+    保存至 data/state/models/{联赛代码}/, 预测时按比赛联赛选择对应模型。
+    """
+    from collections import defaultdict
+    os.makedirs(os.path.join(state_dir, "models"), exist_ok=True)
+
+    by_league: dict[str, list[dict]] = defaultdict(list)
+    for m in matches:
+        by_league[m["league_code"]].append(m)
+
+    result: dict[str, dict] = {}
+    for code, lg_matches in sorted(by_league.items()):
+        if len(lg_matches) < 100:
+            print(f"  [{code}] 样本不足({len(lg_matches)}), 跳过独立模型")
+            continue
+        dc = DixonColesModel()
+        try:
+            dc.fit_mle(lg_matches)
+        except Exception:
+            dc.fit_simple(lg_matches)
+        model_dir = os.path.join(state_dir, "models", code)
+        dc.save(model_dir)
+
+        # 联赛独立平局校准
+        from models.draw_calibration import fit_draw_calibration, save_calibration
+        draw_cal = fit_draw_calibration(lg_matches, dc)
+        save_calibration(draw_cal, os.path.join(model_dir, "draw_calibration.json"))
+
+        result[code] = {
+            "matches": len(lg_matches),
+            "teams": dc.team_count,
+            "leagues": list(dc.league_rho.keys()),
+        }
+        print(f"  [{code}] 独立模型: {len(lg_matches)}场/{dc.team_count}队")
+
+    # 保存清单
+    with open(os.path.join(state_dir, "models", "_manifest.json"), "w", encoding="utf-8") as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+    return result
+
+
+def load_per_league_models(
+    state_dir: str = "data/state",
+) -> dict[str, DixonColesModel]:
+    """加载全部分联赛模型 → {联赛代码: DixonColesModel}"""
+    models: dict[str, DixonColesModel] = {}
+    root = os.path.join(state_dir, "models")
+    if not os.path.isdir(root):
+        return models
+    for name in sorted(os.listdir(root)):
+        d = os.path.join(root, name)
+        if not os.path.isdir(d):
+            continue
+        dc = DixonColesModel()
+        if dc.load(d):
+            models[name] = dc
+    return models
+
+
 def load_models(
     state_dir: str = "data/state",
 ) -> tuple[EloSystem, DixonColesModel]:

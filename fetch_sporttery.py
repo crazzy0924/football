@@ -1,5 +1,5 @@
 """从体彩官网拉取今日三线赔率 (SPF + 让球 + 总进球) → 写入 today.json"""
-import sys, io, json, urllib.request, ssl, time, pathlib
+import sys, io, json, re, urllib.request, ssl, time, pathlib
 from datetime import datetime, timezone, timedelta
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
@@ -35,7 +35,7 @@ def _get_json(url, retries=4):
 # 第1步: 拉取三个彩池(HAD胜平负/HHAD让球/TTG总进球)
 all_matches = {}
 
-for pool in ['HAD', 'HHAD', 'TTG']:
+for pool in ['HAD', 'HHAD', 'TTG', 'CRS', 'HAFU']:
     url = f'https://webapi.sporttery.cn/gateway/uniform/football/getMatchCalculatorV1.qry?poolCode={pool}&channelId=500'
     data = _get_json(url)
     mlist = data['value']['matchInfoList']
@@ -60,8 +60,12 @@ for pool in ['HAD', 'HHAD', 'TTG']:
                 all_matches[mid]['had'] = m.get('had', {})
             elif pool == 'HHAD':
                 all_matches[mid]['hhad'] = m.get('hhad', {})
-            else:
+            elif pool == 'TTG':
                 all_matches[mid]['ttg'] = m.get('ttg', {})
+            elif pool == 'CRS':
+                all_matches[mid]['crs'] = m.get('crs', {})
+            else:
+                all_matches[mid]['hafu'] = m.get('hafu', {})
 
 print(f'体彩 {date_str} 比赛: {len(all_matches)}场')
 
@@ -193,6 +197,36 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
                 entry['ou_line'] = 2.5
                 entry['over_odds'] = round(1.0 / fair_over_prob, 2)
                 entry['under_odds'] = round(1.0 / fair_under_prob, 2) if fair_under_prob > 0 else 99.0
+
+    # 波胆 (比分) 赔率
+    crs = m.get('crs', {})
+    if crs:
+        cs_odds = {}
+        for k, v in crs.items():
+            mm = re.match(r's(\d+)s(\d+)$', k)
+            if mm and v:
+                try:
+                    cs_odds[f"{int(mm.group(1))}-{int(mm.group(2))}"] = float(v)
+                except (ValueError, TypeError):
+                    pass
+        if cs_odds:
+            entry['correct_score_odds'] = cs_odds
+
+    # 半全场赔率
+    hafu = m.get('hafu', {})
+    if hafu:
+        names = {'hh': '主/主', 'hd': '主/平', 'ha': '主/客',
+                 'dh': '平/主', 'dd': '平/平', 'da': '平/客',
+                 'ah': '客/主', 'ad': '客/平', 'aa': '客/客'}
+        ht_ft = {}
+        for k, v in hafu.items():
+            if k in names and v:
+                try:
+                    ht_ft[names[k]] = float(v)
+                except (ValueError, TypeError):
+                    pass
+        if ht_ft:
+            entry['ht_ft_odds'] = ht_ft
 
     today.append(entry)
 

@@ -370,6 +370,10 @@ def cmd_predict(args):
             # Phase 1 A2: 无赔率且冷启动 → 预测退化为联赛先验，无信息量
             "no_signal": value is None and pred.get("cold_start", False),
             "ah_handicap": ah_pred,
+            # Phase 10: 波胆价值 + 大小球价值 (模型 vs 市场多维度 edge)
+            "cs_value": _cs_value(pred, m),
+            "ou_value": _ou_value(pred, m),
+            "ht_ft_odds": m.get("ht_ft_odds") or {},
             # Phase 7: 积分榜快照 (排名/积分/近况)
             "standings": {
                 "home": _standings_lookup(standings.get(league), home),
@@ -774,6 +778,63 @@ def _standings_lookup(table, team: str):
         return None
     from pipeline.standings_fetcher import lookup
     return lookup(table, team)
+
+
+def _cs_value(pred: dict, m: dict):
+    """波胆价值检测: 模型比分概率 vs 市场波胆赔率 (Phase 10)"""
+    cs_odds = m.get("correct_score_odds") or {}
+    if not cs_odds:
+        return None
+    sd = pred.get("score_distribution") or {}
+    # 市场隐含概率去水
+    implied = {}
+    total = 0.0
+    for score, odds in cs_odds.items():
+        if odds and odds > 1.0:
+            ip = 1.0 / odds
+            implied[score] = ip
+            total += ip
+    if total <= 0:
+        return None
+    values = []
+    for score, ip in implied.items():
+        fair = ip / total
+        mp = sd.get(score, 0.0)
+        edge = mp - fair
+        if edge >= 0.015 and mp >= 0.02:
+            values.append({
+                "score": score,
+                "model": round(mp, 4),
+                "market": round(fair, 4),
+                "edge": round(edge, 4),
+            })
+    values.sort(key=lambda x: -x["edge"])
+    return values[:2] if values else None
+
+
+def _ou_value(pred: dict, m: dict):
+    """大小球价值检测: 模型 over25 vs 市场大小球赔率 (Phase 10)"""
+    over_odds = m.get("over_odds")
+    under_odds = m.get("under_odds")
+    if not over_odds or not under_odds:
+        return None
+    over_imp = 1.0 / over_odds
+    under_imp = 1.0 / under_odds
+    total = over_imp + under_imp
+    if total <= 0:
+        return None
+    fair_over = over_imp / total
+    model_over = pred.get("over_25", 0.0)
+    edge = model_over - fair_over
+    if abs(edge) < 0.05:
+        return None
+    side = "大2.5" if edge > 0 else "小2.5"
+    return {
+        "side": side,
+        "model": round(model_over, 4),
+        "market": round(fair_over, 4),
+        "edge": round(edge, 4),
+    }
 
 
 def main():

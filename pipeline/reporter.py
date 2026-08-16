@@ -491,6 +491,18 @@ def _build_match_card(
     # ELO
     elo_diff = p.get("elo_diff", 0)
 
+    # 波胆/大小球价值 (Phase 10)
+    cs_values = p.get("cs_value") or []
+    cs_text = None
+    if cs_values:
+        cs_text = " · ".join(
+            f"{v['score']}(模型{v['model']:.1%}vs市场{v['market']:.1%})" for v in cs_values
+        )
+    ou_v = p.get("ou_value")
+    ou_text = None
+    if ou_v:
+        ou_text = f"{ou_v['side']} 模型{ou_v['model']:.0%} vs 市场{ou_v['market']:.0%} ({ou_v['edge']:+.0%})"
+
     # 积分榜快照 (Phase 7)
     std = p.get("standings") or {}
     std_text = None
@@ -558,6 +570,8 @@ def _build_match_card(
         "ah_text": ah_text,
         "ah_pick": ah_pick,
         "odds_move": odds_move,
+        "cs_text": cs_text,
+        "ou_text": ou_text,
         "std_text": std_text,
         "std_form": std_form,
         "form_h": form_h,

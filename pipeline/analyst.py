@@ -116,7 +116,7 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
             f"(总进球{h2h.get('gf', 0)}-{h2h.get('ga', 0)})"
         )
 
-    # 市场视角: 让球盘 + 欧赔
+    # 市场视角: 让球盘 + 欧赔 + 波胆 + 半全场 + 大小球
     ah = prediction.get("ah_handicap")
     if ah:
         line_ = ah.get("goal_line")
@@ -128,6 +128,18 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
         o = prediction["odds"]
         if o.get("home") and o.get("draw") and o.get("away"):
             lines.append(f"欧赔: 主{o['home']:.2f}/平{o['draw']:.2f}/客{o['away']:.2f}")
+    cs_v = prediction.get("cs_value") or []
+    if cs_v:
+        lines.append("波胆价值(模型vs市场): " + " · ".join(
+            f"{v['score']} {v['model']:.1%}vs{v['market']:.1%}" for v in cs_v
+        ))
+    ou_v = prediction.get("ou_value")
+    if ou_v:
+        lines.append(f"大小球价值: {ou_v['side']} 模型{ou_v['model']:.0%} vs 市场{ou_v['market']:.0%}")
+    htft = prediction.get("ht_ft_odds") or {}
+    if htft:
+        top_htft = sorted(htft.items(), key=lambda x: x[1])[:3]
+        lines.append("半全场市场: " + " ".join(f"{k}@{v:.2f}" for k, v in top_htft))
 
     if cold:
         lines.append("[注意] 冷启动 — 球队参数来自联赛均值，不确定性高")

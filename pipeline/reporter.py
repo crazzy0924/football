@@ -444,10 +444,17 @@ def _build_match_card(
     sa = std.get("away")
     if sh or sa:
         parts = []
+        pts_h = sh.get('points') if sh else None
+        pts_a = sa.get('points') if sa else None
         if sh:
-            parts.append(f"主队#{sh.get('pos', '?')}({sh.get('points', '?')}分)")
+            p_show = f"({pts_h}分)" if pts_h else ""
+            parts.append(f"主队#{sh.get('pos', '?')}{p_show}")
         if sa:
-            parts.append(f"客队#{sa.get('pos', '?')}({sa.get('points', '?')}分)")
+            p_show = f"({pts_a}分)" if pts_a else ""
+            parts.append(f"客队#{sa.get('pos', '?')}{p_show}")
+        # 新赛季 (两队积分都为0): 标注新赛季, 不显示无意义的0分
+        if (pts_h is None or pts_h == 0) and (pts_a is None or pts_a == 0) and (sh or sa):
+            parts.append("新赛季首轮")
         std_text = " · ".join(parts) if parts else None
     std_form = None
     if sh and sh.get("form"):

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import io
+import json
 import os
 import subprocess
 import sys
@@ -35,6 +36,22 @@ def _today() -> str:
 def _run(cmd: list[str]) -> int:
     print(">>> " + " ".join(cmd))
     return subprocess.run(cmd).returncode
+
+
+def _write_files_manifest() -> None:
+    """生成 data/output/files.js (网页首页据此渲染有报告的日期, 避免404)"""
+    import glob
+    preds = sorted(glob.glob(os.path.join("data", "output", "predictions_*.html")))
+    revs = sorted(glob.glob(os.path.join("data", "output", "review_*.html")))
+    pred_dates = [os.path.basename(p)[len("predictions_"):-len(".html")] for p in preds]
+    rev_dates = [os.path.basename(r)[len("review_"):-len(".html")] for r in revs]
+    path = os.path.join("data", "output", "files.js")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("window.FOOT_FILES = {\n")
+        f.write("  predictions: " + json.dumps(pred_dates) + ",\n")
+        f.write("  reviews: " + json.dumps(rev_dates) + ",\n")
+        f.write("};\n")
+    print("[清单] 已更新 " + path + " (" + str(len(pred_dates)) + "预测/" + str(len(rev_dates)) + "复盘)")
 
 
 def _git_sync() -> None:
@@ -99,6 +116,7 @@ def cmd_predict(args) -> None:
         sys.exit(rc)
 
     print("\n[完成] 预测报告: data/output/predictions_" + date_str + ".html")
+    _write_files_manifest()
     _git_sync()
 
 
@@ -118,6 +136,7 @@ def cmd_review(args) -> None:
         _run([sys.executable, "h2h.py", "--append", results_path])
     else:
         print("[跳过] 未找到 " + results_path + ", 跳过h2h回灌")
+    _write_files_manifest()
     _git_sync()
 
 

@@ -1,10 +1,13 @@
 // 足球大模型 PWA Service Worker
 // 策略: 页面外壳缓存优先; 报告数据网络优先(每天更新, 失败时回退缓存)
-const CACHE = "football-pwa-v1";
-const SHELL = ["./", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./archive.html", "./系统说明.md"];
+const CACHE = "football-pwa-v2";
+const SHELL = ["./", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./archive.html"];
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // 逐文件缓存, 单个失败不影响安装成功(否则安卓会装不上)
+  e.waitUntil(
+    caches.open(CACHE).then((c) => Promise.all(SHELL.map((u) => c.add(u).catch(() => null)))).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener("activate", (e) => {

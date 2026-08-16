@@ -31,6 +31,12 @@
   <h1>⚽ 足球大模型 · 每日预测与复盘</h1>
   <p class="muted">Dixon-Coles + ELO + 贝叶斯市场融合 · 每日 09:00 自动预测 / 21:30 自动复盘</p>
 
+  <div class="card" style="border:1px solid #22c55e;">
+    <b style="color:#22c55e;">📱 把本站装到手机桌面</b>
+    <p id="install-guide" class="muted" style="margin:8px 0;">正在检测手机环境...</p>
+    <button id="install-btn" style="display:none; background:#22c55e; color:#052e12; border:none; border-radius:8px; padding:10px 18px; font-size:1rem; font-weight:bold; width:100%; cursor:pointer;">🚀 一键安装到桌面</button>
+  </div>
+
   <h2>📅 最近报告 (自动生成链接)</h2>
   <div class="card">
     <ul id="days"></ul>
@@ -81,6 +87,43 @@
     list.appendChild(li);
   }
   if (shown === 0) document.getElementById('no-files-hint').style.display = 'block';
+</script>
+<script>
+  // 手机安装引导: 按设备显示对应步骤; Chrome/Edge 安卓支持一键安装
+  (function () {
+    var ua = navigator.userAgent;
+    var guide = document.getElementById('install-guide');
+    var isIOS = /iPhone|iPad|iPod/i.test(ua);
+    var isAndroid = /Android/i.test(ua);
+    var steps;
+    if (isIOS) {
+      steps = '① 用 <b>Safari</b> 打开本页 → ② 点底部 <b>分享</b> 按钮 → ③ 选「<b>添加到主屏幕</b>」→ 完成，桌面出现 ⚽ 图标。';
+    } else if (isAndroid) {
+      steps = '安卓要看用什么浏览器：<b>Chrome / Edge</b> → 点下方绿色按钮（或右上 ⋮ → 「安装应用」）；<b>华为/小米自带、UC、夸克</b> 等浏览器不支持安装，选「添加到主屏幕/桌面」做成快捷方式，点开同样看最新内容。微信里打开的，先点右上「···」→「在浏览器打开」。';
+    } else {
+      steps = '电脑端无需安装；用手机打开本页，按提示即可装到桌面。';
+    }
+    guide.innerHTML = steps;
+    var deferred = null;
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferred = e;
+      var btn = document.getElementById('install-btn');
+      btn.style.display = 'block';
+      btn.onclick = function () {
+        if (!deferred) return;
+        deferred.prompt();
+        deferred.userChoice.then(function (c) {
+          if (c.outcome === 'accepted') btn.textContent = '✅ 已安装到桌面';
+          deferred = null;
+        });
+      };
+    });
+    window.addEventListener('appinstalled', function () {
+      var btn = document.getElementById('install-btn');
+      if (btn) { btn.textContent = '✅ 已安装到桌面'; btn.style.display = 'block'; }
+    });
+  })();
 </script>
 <script>
   if ('serviceWorker' in navigator) {

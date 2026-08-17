@@ -78,6 +78,8 @@ def _esc(s) -> str:
 _URL_RE = _re.compile(r"https?://\S+")
 # 连续2个以上纯英文单词 (域名/俱乐部英文名等, 汉化纪律会拦)
 _LATIN_RUN_RE = _re.compile(r"[A-Za-z][A-Za-z0-9\-]*(?:\s+[A-Za-z][A-Za-z0-9\-]*)+")
+# 单个域名残留 (sohu.com 之类, 清理干净)
+_DOMAIN_TOKEN_RE = _re.compile(r"\b[a-zA-Z0-9\-]+\.(?:com|cn|net|org|io|co|tv|cc|me|xyz|top)\b", _re.IGNORECASE)
 
 
 def _sanitize_intel(text: str) -> str:
@@ -86,6 +88,7 @@ def _sanitize_intel(text: str) -> str:
     for line in (text or "").splitlines():
         line = _URL_RE.sub("", line)
         line = _LATIN_RUN_RE.sub("", line)
+        line = _DOMAIN_TOKEN_RE.sub("", line)
         line = line.replace("&ensp;", " ").replace("&nbsp;", " ").replace("&amp;", "&")
         line = _re.sub(r"\s{2,}", " ", line).strip(" -·\t")
         if line.strip():

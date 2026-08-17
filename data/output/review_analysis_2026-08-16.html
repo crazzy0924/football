@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复盘分析 — 2026-08-16</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.6; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .summary { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0 24px; }
+  .s-box { background:linear-gradient(180deg,var(--card),#101725); border:1px solid var(--line);
+           border-radius:12px; padding:12px 6px; text-align:center; }
+  .s-box .v { font-size:1.3rem; font-weight:800; }
+  .s-box .l { font-size:.72rem; color:var(--dim); }
+  .hit { color:var(--green); } .miss { color:var(--red); }
+  .match { background:linear-gradient(180deg,var(--card),#101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.2rem; font-weight:800; }
+  .m-score { font-size:1.3rem; font-weight:800; color:var(--blue); }
+  table { width:100%; border-collapse:collapse; margin-top:12px; font-size:.88rem; }
+  th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; }
+  th { color:#a8c7f0; background:#0e1526; font-size:.78rem; }
+  td.hit { } td.miss { color:#fca5a5; }
+  .drift { margin-top:10px; background:#0e1526; border:1px solid var(--line); border-radius:10px;
+           padding:10px 14px; font-size:.82rem; color:var(--dim); white-space:pre-wrap; }
+  .ai { margin-top:10px; background:#0a1120; border:1px solid rgba(94,168,255,.35); border-radius:10px;
+        padding:12px 16px; font-size:.9rem; white-space:pre-wrap; }
+  .ai b { color:var(--blue); }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">📋 复盘分析 · 预测vs结果 + 错因归因</div>
+    <h1>2026-08-16</h1>
+    <div class="hero-sub">每条预测逐一对账 · 错在哪、为什么错 · 数据台账见 <a href="review_2026-08-16.html">review_2026-08-16.html</a></div>
+  </div>
+  
+  <div class="summary">
+    <div class="s-box"><div class="v">2</div><div class="l">复盘场次</div></div>
+    <div class="s-box"><div class="v hit">3/6</div><div class="l">预测命中</div></div>
+    <div class="s-box"><div class="v miss">3</div><div class="l">未命中</div></div>
+    <div class="s-box"><div class="v">50%</div><div class="l">命中率</div></div>
+  </div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">Santander <span class="tvs" style="color:#8d99b0;">VS</span> Villarreal</div>
+    <div class="m-score">2 - 2</div>
+  </header>
+  <table>
+    <tr><th style="width:36px;"></th><th>预测对照</th></tr>
+    <tr><td class="miss">❌</td><td>胜平负: 预测客胜 → 实际平局</td></tr><tr><td class="miss">❌</td><td>大小球: 模型倾向小2.5 → 实际大球</td></tr><tr><td class="hit">✅</td><td>让球盘: 模型倾向home → 实际主赢盘</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>半全场: 最低赔 客/客 @ 3.15 (无半场比分数据, 无法验证)</td></tr>
+  </table>
+  <div class="drift">📈 全天赔率变动
+SPF: 主3.25→3.25 平3.48→3.48 客1.87→1.87
+大小球: 大1.72→1.67 小2.38→2.50</div>
+  <div class="ai">🤖 赛后归因 (LLM)
+<b>结果对照:</b> 胜平负预测客胜方向错误，实际打成平局，冷启动下市场定价的客队优势未能兑现。让球盘倾向主队受让方向命中，主队不仅守住还逼平对手。大小球预测小2.5错误，实际打出四球大球，波胆0-1和0-2全部落空。
+<b>错因归因:</b> 核心问题在于冷启动状态下过度依赖市场赔率，缺少对双方实际战意和防守质量的独立判断。大小球赔率全天从小2.38升到2.50，市场已经在向大球方向修正，但模型仍固守小2.5的初始倾向。客队作为强势方在客场未能控制比赛节奏，说明模型对客队客场执行力的评估存在盲区。
+<b>教训:</b> 冷启动比赛应降低对市场定价的信任权重，优先收集双方近期实际阵容和战意信息。当大小球赔率出现持续单向调整时，需要重新审视初始模型判断，而不是机械沿用。让球盘与胜平负出现矛盾信号时，应优先尊重让球盘反映的真实实力差。</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">Espanol <span class="tvs" style="color:#8d99b0;">VS</span> Levante</div>
+    <div class="m-score">3 - 0</div>
+  </header>
+  <table>
+    <tr><th style="width:36px;"></th><th>预测对照</th></tr>
+    <tr><td class="hit">✅</td><td>胜平负: 预测主胜 → 实际主胜</td></tr><tr><td class="hit">✅</td><td>大小球: 模型倾向大2.5 → 实际大球</td></tr><tr><td class="miss">❌</td><td>让球盘: 模型倾向away → 实际主赢盘</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>半全场: 最低赔 主/主 @ 3.55 (无半场比分数据, 无法验证)</td></tr>
+  </table>
+  <div class="drift">📈 全天赔率变动
+SPF: 主1.90→1.97 平3.12→2.99 客3.55→3.48
+大小球: 大2.22→2.32 小1.82→1.76</div>
+  <div class="ai">🤖 赛后归因 (LLM)
+<b>结果对照:</b> 胜平负方向命中，主胜预测与赛果一致；大小球大2.5命中，总进球达到三球。让球盘预测失误，模型倾向客队受让，但主队净胜三球打穿；波胆3-1未中，实际为3-0；半全场主/主命中。
+<b>错因归因:</b> 让球盘错误主要来自对主队净胜幅度的低估，模型把价值放在客队受让一侧，说明对主队压制力评估不足。赔率变动中主胜从1.90回升到1.97、客胜从3.55下调到3.48，市场对客队有一定防备，但赛果未体现，属于模型对让球深度的盲区而非伤停或战意问题。
+<b>教训:</b> 当主胜概率与大小球同时明显倾向主队且大球时，让球盘不宜轻易反向选择受让方。后续遇到类似结构，应优先尊重胜平负与大球的一致信号，对让球盘降低反向价值权重。</div>
+</article>
+  <div class="footer">自动生成 · 复盘分析 → 数据台账 双页存档 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

@@ -67,7 +67,7 @@
   // 自动生成最近 10 天的预测/复盘链接 (只渲染 files.js 清单里存在的报告, 避免404)
   const list = document.getElementById('days');
   const pad = n => String(n).padStart(2, '0');
-  const F = (window.FOOT_FILES) || { predictions: [], reviews: [], early: [], midday: [] };
+  const F = (window.FOOT_FILES) || { predictions: [], reviews: [], review_analysis: [], early: [], midday: [] };
   const today = new Date();
   let shown = 0;
   for (let i = 0; i < 10; i++) {
@@ -78,7 +78,8 @@
     const hasR = F.reviews.indexOf(s) >= 0;
     const hasE = (F.early || []).indexOf(s) >= 0;
     const hasM = (F.midday || []).indexOf(s) >= 0;
-    if (!hasP && !hasR && !hasE && !hasM) continue;
+    const hasRA = (F.review_analysis || []).indexOf(s) >= 0;
+    if (!hasP && !hasR && !hasE && !hasM && !hasRA) continue;
     shown++;
     const li = document.createElement('li');
     let html = '<span class="tag">' + s + '</span>';
@@ -88,7 +89,7 @@
     html += ' · ';
     html += hasP ? '<a href="data/output/predictions_' + s + '.html">终盘预测</a>' : '<span class="muted">终盘预测(无)</span>';
     html += ' · ';
-    html += hasR ? '<a href="data/output/review_' + s + '.html">赛后复盘</a>' : '<span class="muted">赛后复盘(无)</span>';
+    html += hasRA ? '<a href="data/output/review_analysis_' + s + '.html">复盘分析</a>' : (hasR ? '<a href="data/output/review_' + s + '.html">赛后复盘</a>' : '<span class="muted">赛后复盘(无)</span>');
     li.innerHTML = html;
     list.appendChild(li);
   }

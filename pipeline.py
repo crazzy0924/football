@@ -689,6 +689,14 @@ def cmd_review(args):
         pnl_text=format_pnl_summary(pnl_result),
     )
 
+    # ---- 复盘分析页 (预测vs结果逐条对账 + LLM错因归因) ----
+    try:
+        from pipeline.review_analyst import generate_review_analysis
+        ra_path = generate_review_analysis(date_str, matched, output_dir=output_dir)
+        print(f"[复盘分析] {ra_path}")
+    except Exception as e:
+        print(f"[复盘分析] 生成失败: {e}")
+
     # ---- 打印总结 (Phase 1 A2: 无信号场次不计入准确率) ----
     sig = [m for m in matched if not m.get("no_signal")]
     n = len(sig)

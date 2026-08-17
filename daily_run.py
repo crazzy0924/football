@@ -57,6 +57,7 @@ def _write_files_manifest() -> None:
 
     pred_dates = _dates("predictions_*.html", "predictions_")
     rev_dates = _dates("review_*.html", "review_")
+    ra_dates = _dates("review_analysis_*.html", "review_analysis_")
     early_dates = _dates("analysis_morning_*.html", "analysis_morning_")
     midday_dates = _dates("analysis_midday_*.html", "analysis_midday_")
     path = os.path.join("data", "output", "files.js")
@@ -64,6 +65,7 @@ def _write_files_manifest() -> None:
         f.write("window.FOOT_FILES = {\n")
         f.write("  predictions: " + json.dumps(pred_dates) + ",\n")
         f.write("  reviews: " + json.dumps(rev_dates) + ",\n")
+        f.write("  review_analysis: " + json.dumps(ra_dates) + ",\n")
         f.write("  early: " + json.dumps(early_dates) + ",\n")
         f.write("  midday: " + json.dumps(midday_dates) + ",\n")
         f.write("};\n")

@@ -367,6 +367,9 @@ TEAM_NAME_ALIASES = {
     "Rayo Vallecano": "Vallecano",
     "Real Valladolid": "Valladolid",
     "Espanyol": "Espanol",
+    # football-data.org 全名 → CSV 规范名 (复盘匹配桥接)
+    "RCD Espanyol de Barcelona": "Espanol",
+    "RCD Espanyol": "Espanol",
     "Almería": "Almeria",
     "Cádiz": "Cadiz",
     "Girona FC": "Girona",

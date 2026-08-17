@@ -58,6 +58,9 @@ _CSS = """
               font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
   .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
   .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
   .dims { margin-top:12px; display:grid; gap:8px; }
   .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
   .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
@@ -290,6 +293,22 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
                 f"市场融合权重: 模型 {mw:.0%} / 市场 {bayes.get('market_weight', 1 - mw):.0%}"
             )
 
+    # 最可能结果标记 (用户要求: 分析页也要把最可能预测标出来, 供参考)
+    if bayes.get("posterior"):
+        post = bayes["posterior"]
+        prob_triple = (post.get("home", 0), post.get("draw", 0), post.get("away", 0))
+    else:
+        prob_triple = (m.get("home_win", 0), m.get("draw", 0), m.get("away_win", 0))
+    labels = ("主胜", "平局", "客胜")
+    best_i = max(range(3), key=lambda i: prob_triple[i])
+    top_score_txt = ""
+    sd = m.get("score_distribution") or {}
+    if sd:
+        best_score = max(sd.items(), key=lambda kv: kv[1])
+        top_score_txt = f" · 最可能比分 {best_score[0]} ({best_score[1]:.0%})"
+    pick_html = (f'<div class="pick-line">🎯 最可能: <b>{_esc(labels[best_i])}</b> '
+                 f'({prob_triple[best_i]:.1%}){_esc(top_score_txt)}</div>')
+
     market_txt = _build_market_dim(p, market, move)
     intel_html = ""
     if intel_text:
@@ -304,6 +323,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     </div>
     <span class="m-meta">开球 {_esc(kick) or '时间未定'}{cold_html}</span>
   </header>
+  {pick_html}
   <div class="dims">
     <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">{_esc(market_txt)}</div></div>
     <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">{_esc(_build_schedule_dim(p))}</div></div>

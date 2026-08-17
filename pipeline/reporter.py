@@ -356,7 +356,9 @@ def _build_match_card(
         if league_code not in FOCUS_LEAGUES:
             league_name = league_name + " · 非五大"
     except Exception:
-        pass
+        # 直接跑脚本时 config 不在路径, 按已知五大联赛兜底
+        if league_code not in ("PL", "PD", "BL1", "SA", "FL1"):
+            league_name = league_name + " · 非五大"
     cold_start = p.get("cold_start", False)
 
     # 概率 — 优先贝叶斯后验, 否则用模型

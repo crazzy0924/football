@@ -21,6 +21,15 @@ import os
 import re as _re
 import sys
 
+# 直接以脚本方式运行时 (python pipeline/analysis_page.py) 也能找到项目根目录
+if __package__ in (None, ""):
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+try:
+    from config import FOCUS_LEAGUES
+except Exception:
+    FOCUS_LEAGUES = {"PL", "PD", "BL1", "SA", "FL1"}
+
 STAGE_CN = {"morning": "早盘", "midday": "午盘"}
 
 _CSS = """
@@ -250,12 +259,8 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     kick = (market or {}).get("kickoff_time", "")
     league = (market or {}).get("league_name", "") or p.get("league_code", "")
     # 非五大联赛标记 (模型覆盖弱, 市场定价为主)
-    try:
-        from config import FOCUS_LEAGUES
-        if p.get("league_code") not in FOCUS_LEAGUES:
-            league = league + " · 非五大"
-    except Exception:
-        pass
+    if p.get("league_code") not in FOCUS_LEAGUES:
+        league = league + " · 非五大"
 
     cold = p.get("cold_start", False)
     cold_html = '<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span>' if cold else ""

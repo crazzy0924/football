@@ -43,14 +43,22 @@ def _run(cmd: list[str]) -> int:
 def _write_files_manifest() -> None:
     """生成 data/output/files.js (网页首页据此渲染有报告的日期, 避免404)"""
     import glob
-    preds = sorted(glob.glob(os.path.join("data", "output", "predictions_*.html")))
-    revs = sorted(glob.glob(os.path.join("data", "output", "review_*.html")))
-    earlys = sorted(glob.glob(os.path.join("data", "output", "analysis_morning_*.html")))
-    middays = sorted(glob.glob(os.path.join("data", "output", "analysis_midday_*.html")))
-    pred_dates = [os.path.basename(p)[len("predictions_"):-len(".html")] for p in preds]
-    rev_dates = [os.path.basename(r)[len("review_"):-len(".html")] for r in revs]
-    early_dates = [os.path.basename(p)[len("analysis_morning_"):-len(".html")] for p in earlys]
-    midday_dates = [os.path.basename(p)[len("analysis_midday_"):-len(".html")] for p in middays]
+    import re
+
+    def _dates(pattern: str, prefix: str):
+        # 只匹配标准日期文件名 (防止 review_analysis_*.html 之类混入)
+        pat = re.compile("^" + re.escape(prefix) + r"\d{4}-\d{2}-\d{2}\.html$")
+        out = []
+        for p in sorted(glob.glob(os.path.join("data", "output", pattern))):
+            base = os.path.basename(p)
+            if pat.match(base):
+                out.append(base[len(prefix):-len(".html")])
+        return out
+
+    pred_dates = _dates("predictions_*.html", "predictions_")
+    rev_dates = _dates("review_*.html", "review_")
+    early_dates = _dates("analysis_morning_*.html", "analysis_morning_")
+    midday_dates = _dates("analysis_midday_*.html", "analysis_midday_")
     path = os.path.join("data", "output", "files.js")
     with open(path, "w", encoding="utf-8") as f:
         f.write("window.FOOT_FILES = {\n")

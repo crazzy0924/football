@@ -89,8 +89,11 @@ def _git_sync() -> None:
 def cmd_predict(args) -> None:
     date_str = args.date or _today()
 
-    # 1) 拉取今日比赛 (体彩为主, odds-api.io 兜底)
-    rc = _run([sys.executable, "fetch_sporttery.py", date_str])
+    # 1) 拉取今日比赛 (体彩为主, odds-api.io 兜底; --all-leagues 时纳入体彩开盘全部比赛)
+    fetch_cmd = [sys.executable, "fetch_sporttery.py", date_str]
+    if args.all_leagues:
+        fetch_cmd.append("--all")
+    rc = _run(fetch_cmd)
     if rc != 0:
         print("[警告] 体彩拉取失败, 尝试 odds-api.io 构建...")
         _run([sys.executable, "build_today_matches.py", date_str])
@@ -168,6 +171,8 @@ def main() -> None:
     p_predict.add_argument("--no-llm", action="store_true", help="跳过LLM定性分析")
     p_predict.add_argument("--stage", choices=["morning", "midday", "final"], default="final",
                           help="早盘/午盘只出七维分析存档页, 终盘出预测页")
+    p_predict.add_argument("--all-leagues", action="store_true",
+                          help="纳入体彩开盘的全部比赛(含非五大联赛, 分析为主)")
 
     p_review = sub.add_parser("review", help="赛后: 复盘 + 投注结算 + h2h回灌")
     p_review.add_argument("date", nargs="?", default=None, help="日期 YYYY-MM-DD (默认昨日)")

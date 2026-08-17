@@ -18,6 +18,7 @@ from __future__ import annotations
 import html as _html
 import json
 import os
+import re as _re
 import sys
 
 STAGE_CN = {"morning": "早盘", "midday": "午盘"}
@@ -72,6 +73,24 @@ _CSS = """
 
 def _esc(s) -> str:
     return _html.escape(str(s if s is not None else ""))
+
+
+_URL_RE = _re.compile(r"https?://\S+")
+# 连续2个以上纯英文单词 (域名/俱乐部英文名等, 汉化纪律会拦)
+_LATIN_RUN_RE = _re.compile(r"[A-Za-z][A-Za-z0-9\-]*(?:\s+[A-Za-z][A-Za-z0-9\-]*)+")
+
+
+def _sanitize_intel(text: str) -> str:
+    """清洗情报文本: 去网址/英文词组, 保留中文内容 (汉化纪律 + 页面整洁)"""
+    out = []
+    for line in (text or "").splitlines():
+        line = _URL_RE.sub("", line)
+        line = _LATIN_RUN_RE.sub("", line)
+        line = line.replace("&ensp;", " ").replace("&nbsp;", " ").replace("&amp;", "&")
+        line = _re.sub(r"\s{2,}", " ", line).strip(" -·\t")
+        if line.strip():
+            out.append(line)
+    return "\n".join(out)
 
 
 def _cn(name: str) -> str:
@@ -227,6 +246,13 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     away_cn = _cn(away_en)
     kick = (market or {}).get("kickoff_time", "")
     league = (market or {}).get("league_name", "") or p.get("league_code", "")
+    # 非五大联赛标记 (模型覆盖弱, 市场定价为主)
+    try:
+        from config import FOCUS_LEAGUES
+        if p.get("league_code") not in FOCUS_LEAGUES:
+            league = league + " · 非五大"
+    except Exception:
+        pass
 
     cold = p.get("cold_start", False)
     cold_html = '<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span>' if cold else ""
@@ -250,8 +276,11 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
         model_lines.append(
             f"贝叶斯后验: 主{post.get('home', 0):.1%} 平{post.get('draw', 0):.1%} 客{post.get('away', 0):.1%}"
         )
-        if bayes.get("interpretation"):
-            model_lines.append(f"市场融合: {bayes['interpretation']}")
+        mw = bayes.get("model_weight")
+        if mw is not None:
+            model_lines.append(
+                f"市场融合权重: 模型 {mw:.0%} / 市场 {bayes.get('market_weight', 1 - mw):.0%}"
+            )
 
     market_txt = _build_market_dim(p, market, move)
     intel_html = ""
@@ -293,6 +322,7 @@ def generate_analysis_page(
     market_map = _load_market_map(date_str)
     movement = _load_odds_movement(date_str)
     notes = analyst_notes or {}
+    intel_text = _sanitize_intel(intel_text)
 
     cards = []
     for p in predictions:

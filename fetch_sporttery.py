@@ -3,7 +3,8 @@ import sys, io, json, re, urllib.request, ssl, time, pathlib
 from datetime import datetime, timezone, timedelta
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-date_str = sys.argv[1] if len(sys.argv) > 1 else datetime.now().strftime('%Y-%m-%d')
+date_str = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else datetime.now().strftime('%Y-%m-%d')
+include_all = "--all" in sys.argv  # 全量模式: 体彩开盘的所有比赛(含非五大联赛)
 beijing_tz = timezone(timedelta(hours=8))
 
 headers = {
@@ -244,12 +245,15 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
     if entry.get('ou_line'):
         print(f'  大小(O/U 2.5): 大{entry["over_odds"]:.2f} / 小{entry["under_odds"]:.2f}')
 
-# 聚焦联赛过滤 (2026-08-16 起: 只关注五大联赛)
+# 聚焦联赛过滤 (默认只关注五大联赛; --all 时纳入体彩开盘全部比赛)
 try:
     from config import FOCUS_LEAGUES
     before = len(today)
-    today = [m for m in today if m.get('league_code') in FOCUS_LEAGUES]
-    print(f'聚焦联赛过滤: {before} → {len(today)} 场 (保留 {FOCUS_LEAGUES})')
+    if not include_all:
+        today = [m for m in today if m.get('league_code') in FOCUS_LEAGUES]
+        print(f'聚焦联赛过滤: {before} → {len(today)} 场 (保留 {FOCUS_LEAGUES})')
+    else:
+        print(f'全量模式: 保留体彩开盘全部 {before} 场 (含非五大联赛, 分析为主)')
 except Exception as e:
     print(f'聚焦联赛过滤跳过: {e}')
 

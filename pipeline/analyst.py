@@ -25,6 +25,12 @@ LEAGUE_NAMES_CN = {
     "BL1": "德甲",
     "SA": "意甲",
     "FL1": "法甲",
+    # 非五大联赛 (体彩开盘, 分析为主)
+    "ELC": "英冠", "BL2": "德乙", "FL2": "法乙",
+    "DED": "荷甲", "DED2": "荷乙", "PPL": "葡超",
+    "FIN": "芬超", "SWE": "瑞超", "NOR": "挪超", "NO1": "挪超",
+    "J1": "日职", "KLEAGUE": "韩职", "BSA": "巴甲", "MLS": "美职", "SPL": "沙职",
+    "UCL": "欧冠", "UEL": "欧联", "CLB": "解放者杯",
 }
 
 
@@ -309,10 +315,15 @@ def batch_analyze(
         away = pred.get("away_team", "?")
         match_key = f"{home} vs {away}"
 
-        if pred.get("cold_start"):
-            notes[match_key] = "[冷启动 — 跳过LLM分析]"
-            print(f"  [{i+1}/{len(predictions)}] {match_key}: 跳过（冷启动）")
+        # 冷启动但有市场赔率 → 仍做七维分析 (市场视角是第一维度, 非五大联赛场次也靠它);
+        # 完全无赔率的冷启动 → 跳过 (无任何可分析证据)
+        odds_now = pred.get("odds") or {}
+        if pred.get("cold_start") and not odds_now.get("home"):
+            notes[match_key] = "[无赔率且冷启动 — 跳过LLM分析]"
+            print(f"  [{i+1}/{len(predictions)}] {match_key}: 跳过（冷启动且无赔率）")
             continue
+        if pred.get("cold_start"):
+            print(f"  [{i+1}/{len(predictions)}] {match_key}: 冷启动(市场定价为主), 仍做七维分析")
 
         evidence = build_evidence_packet(pred, intel_text=intel_text)
         if prior_notes.get(match_key):

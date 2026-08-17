@@ -33,6 +33,12 @@ LEAGUE_NAMES_CN = {
     "BL1": "德甲",
     "SA": "意甲",
     "FL1": "法甲",
+    # 非五大联赛 (体彩开盘, 分析为主)
+    "ELC": "英冠", "BL2": "德乙", "FL2": "法乙",
+    "DED": "荷甲", "DED2": "荷乙", "PPL": "葡超",
+    "FIN": "芬超", "SWE": "瑞超", "NOR": "挪超", "NO1": "挪超",
+    "J1": "日职", "KLEAGUE": "韩职", "BSA": "巴甲", "MLS": "美职", "SPL": "沙职",
+    "UCL": "欧冠", "UEL": "欧联", "CLB": "解放者杯",
 }
 
 # English → 中文 team name mapping
@@ -344,6 +350,13 @@ def _build_match_card(
     home_team, away_team = _cn(home_team_en, away_team_en)
     league_code = p.get("league_code", "")
     league_name = LEAGUE_NAMES_CN.get(league_code, league_code)
+    # 非五大联赛场次: 打标提示 (模型覆盖弱, 市场定价为主)
+    try:
+        from config import FOCUS_LEAGUES
+        if league_code not in FOCUS_LEAGUES:
+            league_name = league_name + " · 非五大"
+    except Exception:
+        pass
     cold_start = p.get("cold_start", False)
 
     # 概率 — 优先贝叶斯后验, 否则用模型

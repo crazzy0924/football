@@ -482,7 +482,8 @@ def _build_match_card(
         ev = edge.get("edge", 0)
         if line is not None:
             ah_text = f"让球(主{line:+.1f}): 主{hc:.0%}/走{pu:.0%}/客{ac:.0%}"
-        if bp in ("home", "away") and ev >= 0.05:
+        # 冷启动纪律: 冷启动场次让球盘也不出"看好", 只展示盘口覆盖
+        if bp in ("home", "away") and ev >= 0.05 and not cold_start:
             dir_cn = "主队" if bp == "home" else "客队"
             ah_pick = f"让球看好{dir_cn} (+{ev:.1%})"
             if bet_class != "bet":

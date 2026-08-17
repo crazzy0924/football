@@ -395,31 +395,55 @@ def cmd_predict(args):
         json.dump(predictions, f, ensure_ascii=False, indent=2)
     print(f"已保存 {len(predictions)} 条预测至 {out_path}")
 
-    # 生成HTML报告
+    # 生成HTML (早盘/午盘=七维分析存档页, 终盘=预测页)
+    stage = getattr(args, "stage", "final")
     try:
         from pipeline.reporter import generate_report
 
         # 可选LLM定性分析
         analyst_notes = None
+        intel_text = ""
         if args.llm:
             print(f"\n[LLM] 正在对 {len(predictions)} 场比赛运行定性分析...")
             # 赛前情报注入 (data/intel/YYYY-MM-DD.txt, 用户手写伤停/首发/战意)
-            intel_text = ""
             intel_path = os.path.join("data", "intel", f"{today_str}.txt")
             if os.path.exists(intel_path):
                 with open(intel_path, "r", encoding="utf-8") as f:
                     intel_text = f.read().strip()
                 if intel_text:
                     print(f"[LLM] 已注入赛前情报 ({intel_path}, {len(intel_text)} 字)")
+            # 终盘: 注入早盘/午盘七维分析存档 (可追溯, 防终盘出错)
+            prior_notes: dict = {}
+            if stage == "final":
+                for st in ("morning", "midday"):
+                    prior_path = os.path.join(output_dir, f"analysis_notes_{st}_{today_str}.json")
+                    if os.path.exists(prior_path):
+                        try:
+                            with open(prior_path, "r", encoding="utf-8") as f:
+                                prior_notes.update(json.load(f))
+                        except Exception:
+                            pass
+                if prior_notes:
+                    print(f"[LLM] 已注入早盘/午盘分析存档 {len(prior_notes)} 场")
             try:
                 from pipeline.analyst import batch_analyze
-                analyst_notes = batch_analyze(predictions, intel_text=intel_text)
+                analyst_notes = batch_analyze(predictions, intel_text=intel_text, prior_notes=prior_notes)
                 n_notes = sum(1 for v in analyst_notes.values() if v and not v.startswith("["))
                 print(f"[LLM] 已标注 {n_notes}/{len(predictions)} 场")
+                # 存档本次分析笔记 (供后续阶段注入/重渲染)
+                notes_path = os.path.join(output_dir, f"analysis_notes_{stage}_{today_str}.json")
+                with open(notes_path, "w", encoding="utf-8") as f:
+                    json.dump(analyst_notes or {}, f, ensure_ascii=False, indent=2)
+                print(f"[LLM] 分析笔记已存档 → {notes_path}")
             except Exception as e:
                 print(f"[LLM] 分析失败: {e}")
 
-        html_path = generate_report(predictions, output_dir, analyst_notes=analyst_notes)
+        if stage in ("morning", "midday"):
+            # 早盘/午盘: 只出七维分析存档页, 不出预测
+            from pipeline.analysis_page import generate_analysis_page
+            html_path = generate_analysis_page(today_str, stage, predictions, analyst_notes, intel_text)
+        else:
+            html_path = generate_report(predictions, output_dir, analyst_notes=analyst_notes)
         print(f"HTML报告: {html_path}")
     except Exception as e:
         print(f"HTML报告生成失败: {e}")
@@ -889,6 +913,8 @@ Examples:
     p_predict.add_argument("--matches-json", help="Path to match list JSON")
     p_predict.add_argument("--llm", action="store_true",
                           help="Add LLM qualitative analysis")
+    p_predict.add_argument("--stage", choices=["morning", "midday", "final"], default="final",
+                          help="早盘/午盘只出七维分析存档页, 终盘出预测页并注入存档")
 
     # review
     p_review = subparsers.add_parser("review", help="Evaluate predictions vs results")

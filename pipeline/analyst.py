@@ -295,9 +295,14 @@ def batch_analyze(
     model: str | None = None,
     delay: float = 0.3,
     intel_text: str = "",
+    prior_notes: dict[str, str] | None = None,
 ) -> dict[str, str]:
-    """Run qualitative analysis on all predictions."""
+    """Run qualitative analysis on all predictions.
+
+    prior_notes: 早盘/午盘七维分析存档 (key=场次名), 终盘时注入供追溯对比
+    """
     notes: dict[str, str] = {}
+    prior_notes = prior_notes or {}
 
     for i, pred in enumerate(predictions):
         home = pred.get("home_team", "?")
@@ -310,6 +315,9 @@ def batch_analyze(
             continue
 
         evidence = build_evidence_packet(pred, intel_text=intel_text)
+        if prior_notes.get(match_key):
+            evidence += ("\n\n=== 早盘/午盘七维分析存档 (请对照: 注意赔率与信息自存档以来的变化) ===\n"
+                         + prior_notes[match_key])
         print(f"  [{i+1}/{len(predictions)}] {match_key}: 分析中...")
 
         note = query_analyst(evidence, api_key, model)

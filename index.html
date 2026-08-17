@@ -29,7 +29,7 @@
 <body>
 <div class="wrap">
   <h1>⚽ 足球大模型 · 每日预测与复盘</h1>
-  <p class="muted">Dixon-Coles + ELO + 贝叶斯市场融合 · 每日 09:00 自动预测 / 21:30 自动复盘</p>
+  <p class="muted">Dixon-Coles + ELO + 贝叶斯市场融合 · 每日 09:00 早盘分析 / 10:00 复盘 / 18:00 午盘分析 / 22:00 终盘预测</p>
 
   <div class="card" style="border:1px solid #22c55e;">
     <b style="color:#22c55e;">📱 把本站装到手机桌面</b>
@@ -67,7 +67,7 @@
   // 自动生成最近 10 天的预测/复盘链接 (只渲染 files.js 清单里存在的报告, 避免404)
   const list = document.getElementById('days');
   const pad = n => String(n).padStart(2, '0');
-  const F = (window.FOOT_FILES) || { predictions: [], reviews: [] };
+  const F = (window.FOOT_FILES) || { predictions: [], reviews: [], early: [], midday: [] };
   const today = new Date();
   let shown = 0;
   for (let i = 0; i < 10; i++) {
@@ -76,11 +76,17 @@
     const s = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
     const hasP = F.predictions.indexOf(s) >= 0;
     const hasR = F.reviews.indexOf(s) >= 0;
-    if (!hasP && !hasR) continue;
+    const hasE = (F.early || []).indexOf(s) >= 0;
+    const hasM = (F.midday || []).indexOf(s) >= 0;
+    if (!hasP && !hasR && !hasE && !hasM) continue;
     shown++;
     const li = document.createElement('li');
     let html = '<span class="tag">' + s + '</span>';
-    html += hasP ? '<a href="data/output/predictions_' + s + '.html">赛前预测</a>' : '<span class="muted">赛前预测(无)</span>';
+    html += hasE ? '<a href="data/output/analysis_morning_' + s + '.html">早盘分析</a>' : '<span class="muted">早盘分析(无)</span>';
+    html += ' · ';
+    html += hasM ? '<a href="data/output/analysis_midday_' + s + '.html">午盘分析</a>' : '<span class="muted">午盘分析(无)</span>';
+    html += ' · ';
+    html += hasP ? '<a href="data/output/predictions_' + s + '.html">终盘预测</a>' : '<span class="muted">终盘预测(无)</span>';
     html += ' · ';
     html += hasR ? '<a href="data/output/review_' + s + '.html">赛后复盘</a>' : '<span class="muted">赛后复盘(无)</span>';
     li.innerHTML = html;

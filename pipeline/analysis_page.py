@@ -1,0 +1,361 @@
+# -*- coding: utf-8 -*-
+"""
+七维分析存档页生成器 (2026-08-16 新增)
+
+目的: 早盘/午盘把 LLM 七维分析单独存档到网页, 与终盘预测分离:
+  - 早盘 09:00 → analysis_morning_YYYY-MM-DD.html (只做七维分析, 不出下注建议)
+  - 午盘 18:00 → analysis_midday_YYYY-MM-DD.html (最新赔率重跑七维分析)
+  - 终盘 22:00 → predictions_YYYY-MM-DD.html (唯一出预测的页面, 引用早午盘存档)
+终盘 LLM 会把早午盘存档注入上下文 (见 analyst.batch_analyze prior_notes),
+保证"早盘分析 → 午盘分析 → 终盘预测"全程可追溯。
+
+用法:
+  python pipeline/analysis_page.py <日期YYYY-MM-DD> <morning|midday>
+  (读取 predictions_<日期>.json + analysis_notes_<阶段>_<日期>.json 重渲染)
+"""
+from __future__ import annotations
+
+import html as _html
+import json
+import os
+import sys
+
+STAGE_CN = {"morning": "早盘", "midday": "午盘"}
+
+_CSS = """
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+"""
+
+
+def _esc(s) -> str:
+    return _html.escape(str(s if s is not None else ""))
+
+
+def _cn(name: str) -> str:
+    """英文队名转中文 (与 reporter 同源)"""
+    try:
+        from pipeline.reporter import TEAM_CN
+        return TEAM_CN.get(name, name)
+    except Exception:
+        return name
+
+
+def _zone_label(pos) -> str:
+    """积分榜分区 → 战意参考"""
+    if pos is None:
+        return ""
+    if pos <= 3:
+        return "争冠区"
+    if pos <= 6:
+        return "欧战区"
+    if pos >= 15:
+        return "保级区"
+    return "中游"
+
+
+def _load_market_map(date_str: str) -> dict:
+    """加载 data/today.json 的市场盘口 (亚盘/大小/波胆等原始赔率)"""
+    try:
+        with open(os.path.join("data", "today.json"), "r", encoding="utf-8") as f:
+            matches = json.load(f)
+    except Exception:
+        return {}
+    out = {}
+    for m in matches:
+        key = (m.get("home_team"), m.get("away_team"))
+        out[key] = m
+    return out
+
+
+def _load_odds_movement(date_str: str) -> dict:
+    """当日赔率快照 → 主胜赔率变动 (早盘→最新)"""
+    try:
+        from pipeline.reporter import _load_odds_movement as _mov
+        return _mov(date_str)
+    except Exception:
+        return {}
+
+
+def _build_market_dim(p, market, move) -> str:
+    lines = []
+    odds = market.get("odds") or {}
+    if odds:
+        lines.append(
+            f"欧赔: 主{odds.get('home'):.2f} / 平{odds.get('draw'):.2f} / 客{odds.get('away'):.2f}"
+        )
+    if move:
+        lines.append(
+            f"主胜赔率变动: {move['from']:.2f} → {move['to']:.2f} ({move['delta']:+.2f})"
+        )
+    ah = market.get("ah_odds") or {}
+    if ah and market.get("handicap") is not None:
+        lines.append(
+            f"亚盘(主{'让' if market['handicap'] >= 0 else '受'}{abs(market['handicap'])}球): "
+            f"主{ah.get('home')} / 平{ah.get('draw')} / 客{ah.get('away')}"
+        )
+    ou = market.get("ou_line")
+    if ou and market.get("over_odds") and market.get("under_odds"):
+        lines.append(
+            f"大小球 {ou} 球: 大{market['over_odds']} / 小{market['under_odds']}"
+        )
+    cs = market.get("correct_score_odds") or {}
+    if cs:
+        top = sorted(cs.items(), key=lambda x: x[1])[:3]
+        lines.append("波胆最低赔: " + " / ".join(f"{k}@{v}" for k, v in top))
+    ah_v = p.get("ah_handicap") or {}
+    if ah_v and ah_v.get("edge") and ah_v["edge"].get("best_pick"):
+        e = ah_v["edge"]
+        lines.append(
+            f"模型亚盘倾向: {e['best_pick']} (价值 {e['edge']:+.1%}, 信心 {e.get('confidence', '-')})"
+        )
+    ou_v = p.get("ou_value")
+    if ou_v:
+        lines.append(
+            f"模型大小球倾向: {ou_v['side']} (模型{ou_v['model']:.0%} vs 市场{ou_v['market']:.0%})"
+        )
+    return "\n".join(lines) if lines else "无市场数据"
+
+
+def _build_schedule_dim(p) -> str:
+    s = p.get("schedule") or {}
+    h7 = s.get("home_7d", 0)
+    a7 = s.get("away_7d", 0)
+    if not h7 and not a7:
+        return "近7天双方均无比赛记录 (新赛季开局/数据未覆盖)"
+    return f"近7天场次 — 主队 {h7} 场 / 客队 {a7} 场"
+
+
+def _build_motivation_dim(p) -> str:
+    std = p.get("standings") or {}
+    sh = std.get("home")
+    sa = std.get("away")
+    parts = []
+    if sh:
+        z = _zone_label(sh.get("pos"))
+        parts.append(f"主队: 第{sh.get('pos')}名 ({z})")
+    if sa:
+        z = _zone_label(sa.get("pos"))
+        parts.append(f"客队: 第{sa.get('pos')}名 ({z})")
+    return " · ".join(parts) if parts else "积分榜暂无数据 (赛季初)"
+
+
+def _build_weather_dim(intel_text: str) -> str:
+    if not intel_text:
+        return "情报未提及天气, 默认正常"
+    kws = ["天气", "降雨", "雨", "雪", "大风", "风", "高温", "低温", "湿度"]
+    for kw in kws:
+        idx = intel_text.find(kw)
+        if idx >= 0:
+            seg = intel_text[max(0, idx - 15): idx + 40].strip()
+            return "情报片段: " + seg.replace("\n", " ")
+    return "情报未提及天气, 默认正常"
+
+
+def _build_h2h_dim(p) -> str:
+    h = p.get("h2h_recent")
+    if not h:
+        return "近2季无交锋记录"
+    return (f"近2季交锋: 主队 {h.get('w', 0)}胜 {h.get('d', 0)}平 {h.get('l', 0)}负, "
+            f"进球 {h.get('gf', 0)}:{h.get('ga', 0)}")
+
+
+def _split_note(note: str) -> tuple[str, str]:
+    """把 LLM 输出拆成 (定性评估, 反向验证)"""
+    qual, reverse = "", ""
+    if not note:
+        return qual, reverse
+    for line in note.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith("反向验证"):
+            reverse = line
+        elif line.startswith("定性评估"):
+            qual = line
+        else:
+            qual = (qual + "\n" + line).strip() if qual else line
+    return qual, reverse
+
+
+def _build_match_card(p, market, move, note, intel_text) -> str:
+    home_en = p.get("home_team", "?")
+    away_en = p.get("away_team", "?")
+    home_cn = _cn(home_en)
+    away_cn = _cn(away_en)
+    kick = (market or {}).get("kickoff_time", "")
+    league = (market or {}).get("league_name", "") or p.get("league_code", "")
+
+    cold = p.get("cold_start", False)
+    cold_html = '<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span>' if cold else ""
+
+    qual, reverse = _split_note(note or "")
+    if not qual:
+        qual = note or "暂无定性评估"
+    if not reverse:
+        reverse = "暂无"
+
+    # 模型参考块 (只作存档对比, 非投注建议)
+    m = p.get("model", {})
+    bayes = p.get("bayesian") or {}
+    model_lines = [
+        f"模型概率: 主{m.get('home_win', 0):.1%} 平{m.get('draw', 0):.1%} 客{m.get('away_win', 0):.1%}",
+        f"预期进球: {m.get('lambda_home', 0):.2f} - {m.get('lambda_away', 0):.2f}",
+        f"大2.5: {m.get('over_25', 0):.1%} | BTTS: {m.get('btts', 0):.1%}",
+    ]
+    if bayes.get("posterior"):
+        post = bayes["posterior"]
+        model_lines.append(
+            f"贝叶斯后验: 主{post.get('home', 0):.1%} 平{post.get('draw', 0):.1%} 客{post.get('away', 0):.1%}"
+        )
+        if bayes.get("interpretation"):
+            model_lines.append(f"市场融合: {bayes['interpretation']}")
+
+    market_txt = _build_market_dim(p, market, move)
+    intel_html = ""
+    if intel_text:
+        intel_html = (f'<div class="intel-box"><b style="color:#8d99b0;">赛前情报原始存档</b>\n{_esc(intel_text)}</div>')
+
+    return f"""
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">{_esc(league)}</span>{_esc(home_cn)}<span class="tvs">VS</span>{_esc(away_cn)}
+      <span style="font-size:.75rem;color:#8d99b0;">({_esc(home_en)} vs {_esc(away_en)})</span>
+    </div>
+    <span class="m-meta">开球 {_esc(kick) or '时间未定'}{cold_html}</span>
+  </header>
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">{_esc(market_txt)}</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">{_esc(_build_schedule_dim(p))}</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">{_esc(_build_motivation_dim(p))}</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">{_esc(_build_weather_dim(intel_text))}</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">{_esc(_build_h2h_dim(p))}</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 定性评估 + 反向验证</div><div class="dim-body">定性评估: {_esc(qual)}<br><br>反向验证: {_esc(reverse)}</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>{_esc('<br>'.join(model_lines))}</div>
+  {intel_html}
+</article>"""
+
+
+def generate_analysis_page(
+    date_str: str,
+    stage: str,
+    predictions: list[dict],
+    analyst_notes: dict[str, str] | None,
+    intel_text: str = "",
+) -> str:
+    """生成七维分析存档页, 返回文件路径"""
+    stage_cn = STAGE_CN.get(stage, stage)
+    market_map = _load_market_map(date_str)
+    movement = _load_odds_movement(date_str)
+    notes = analyst_notes or {}
+
+    cards = []
+    for p in predictions:
+        key = (p.get("home_team"), p.get("away_team"))
+        market = market_map.get(key, {})
+        move = movement.get(key)
+        note = notes.get(f"{p.get('home_team')} vs {p.get('away_team')}", "")
+        cards.append(_build_match_card(p, market, move, note, intel_text))
+
+    stage_banner = "早盘" if stage == "morning" else "午盘"
+    html = f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{stage_banner}七维分析存档 — {date_str}</title>
+<style>{_CSS}</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 {stage_banner}七维分析存档 · 非预测页</div>
+    <h1>{date_str}</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_{date_str}.html">predictions_{date_str}.html</a> (22:00 生成)</div>
+  {''.join(cards)}
+  <div class="footer">自动生成于 {date_str} · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>"""
+    os.makedirs(os.path.join("data", "output"), exist_ok=True)
+    out_path = os.path.join("data", "output", f"analysis_{stage}_{date_str}.html")
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(html)
+    print(f"[分析存档] {stage_banner}七维分析已保存 → {out_path}")
+    return out_path
+
+
+def main() -> None:
+    if len(sys.argv) < 3:
+        print("用法: python pipeline/analysis_page.py <日期YYYY-MM-DD> <morning|midday>")
+        sys.exit(1)
+    date_str, stage = sys.argv[1], sys.argv[2]
+    pred_path = os.path.join("data", "output", f"predictions_{date_str}.json")
+    notes_path = os.path.join("data", "output", f"analysis_notes_{stage}_{date_str}.json")
+    if not os.path.exists(pred_path):
+        print(f"未找到预测JSON: {pred_path}")
+        sys.exit(1)
+    with open(pred_path, "r", encoding="utf-8") as f:
+        predictions = json.load(f)
+    notes = {}
+    if os.path.exists(notes_path):
+        with open(notes_path, "r", encoding="utf-8") as f:
+            notes = json.load(f)
+    intel_text = ""
+    intel_path = os.path.join("data", "intel", f"{date_str}.txt")
+    if os.path.exists(intel_path):
+        with open(intel_path, "r", encoding="utf-8") as f:
+            intel_text = f.read().strip()
+    generate_analysis_page(date_str, stage, predictions, notes, intel_text)
+
+
+if __name__ == "__main__":
+    main()

@@ -265,6 +265,9 @@ def generate_report(
     # 今日看好速览 (下注卡片)
     picks = [m for m in match_cards if m["bet_class"] == "bet"]
 
+    # 同日早盘/午盘七维分析存档链接 (终盘页引用, 数据可追溯)
+    analysis_links = _build_analysis_links(today, output_dir)
+
     context = {
         "date": today,
         "backtest_brier": f"{backtest_brier:.4f}" if backtest_brier else None,
@@ -275,6 +278,7 @@ def generate_report(
         "direction_dist": direction_dist,
         "matches": match_cards,
         "picks": picks,
+        "analysis_links": analysis_links,
     }
 
     # Render template
@@ -585,6 +589,16 @@ def _build_match_card(
         "cold_start_flag": cold_start,
         "analyst_note": analyst_note,
     }
+
+
+def _build_analysis_links(date_str: str, output_dir: str) -> str:
+    """构建终盘页引用的同日早盘/午盘七维分析存档链接"""
+    links = []
+    for st, label in (("morning", "早盘七维分析存档"), ("midday", "午盘七维分析存档")):
+        p = os.path.join(output_dir, f"analysis_{st}_{date_str}.html")
+        if os.path.exists(p):
+            links.append(f'<a href="analysis_{st}_{date_str}.html">📋 {label}</a>')
+    return " · ".join(links)
 
 
 def _render_template(context: dict) -> str:

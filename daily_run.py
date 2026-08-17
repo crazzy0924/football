@@ -45,15 +45,21 @@ def _write_files_manifest() -> None:
     import glob
     preds = sorted(glob.glob(os.path.join("data", "output", "predictions_*.html")))
     revs = sorted(glob.glob(os.path.join("data", "output", "review_*.html")))
+    earlys = sorted(glob.glob(os.path.join("data", "output", "analysis_morning_*.html")))
+    middays = sorted(glob.glob(os.path.join("data", "output", "analysis_midday_*.html")))
     pred_dates = [os.path.basename(p)[len("predictions_"):-len(".html")] for p in preds]
     rev_dates = [os.path.basename(r)[len("review_"):-len(".html")] for r in revs]
+    early_dates = [os.path.basename(p)[len("analysis_morning_"):-len(".html")] for p in earlys]
+    midday_dates = [os.path.basename(p)[len("analysis_midday_"):-len(".html")] for p in middays]
     path = os.path.join("data", "output", "files.js")
     with open(path, "w", encoding="utf-8") as f:
         f.write("window.FOOT_FILES = {\n")
         f.write("  predictions: " + json.dumps(pred_dates) + ",\n")
         f.write("  reviews: " + json.dumps(rev_dates) + ",\n")
+        f.write("  early: " + json.dumps(early_dates) + ",\n")
+        f.write("  midday: " + json.dumps(midday_dates) + ",\n")
         f.write("};\n")
-    print("[清单] 已更新 " + path + " (" + str(len(pred_dates)) + "预测/" + str(len(rev_dates)) + "复盘)")
+    print("[清单] 已更新 " + path + " (" + str(len(pred_dates)) + "预测/" + str(len(rev_dates)) + "复盘/" + str(len(early_dates)) + "早盘/" + str(len(midday_dates)) + "午盘)")
 
 
 def _git_sync() -> None:
@@ -106,8 +112,8 @@ def cmd_predict(args) -> None:
     except Exception as e:
         print("[警告] 情报采集跳过: " + str(e))
 
-    # 4) 预测 (可选 LLM 分析)
-    cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json"]
+    # 4) 预测 (可选 LLM 分析; 早盘/午盘只出七维分析存档页, 终盘出预测页)
+    cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json", "--stage", args.stage]
     if not args.no_llm:
         cmd.append("--llm")
     rc = _run(cmd)
@@ -115,7 +121,11 @@ def cmd_predict(args) -> None:
         print("[失败] 预测流程退出码 " + str(rc))
         sys.exit(rc)
 
-    print("\n[完成] 预测报告: data/output/predictions_" + date_str + ".html")
+    stage_cn = {"morning": "早盘", "midday": "午盘", "final": "终盘"}.get(args.stage, args.stage)
+    if args.stage == "final":
+        print("\n[完成] 终盘预测报告: data/output/predictions_" + date_str + ".html")
+    else:
+        print("\n[完成] " + stage_cn + "七维分析存档: data/output/analysis_" + args.stage + "_" + date_str + ".html")
     _write_files_manifest()
     _git_sync()
 
@@ -148,6 +158,8 @@ def main() -> None:
     p_predict = sub.add_parser("predict", help="赛前: 拉取赔率 + 预测 + LLM分析")
     p_predict.add_argument("--date", help="日期 YYYY-MM-DD (默认今天北京时间)")
     p_predict.add_argument("--no-llm", action="store_true", help="跳过LLM定性分析")
+    p_predict.add_argument("--stage", choices=["morning", "midday", "final"], default="final",
+                          help="早盘/午盘只出七维分析存档页, 终盘出预测页")
 
     p_review = sub.add_parser("review", help="赛后: 复盘 + 投注结算 + h2h回灌")
     p_review.add_argument("date", nargs="?", default=None, help="日期 YYYY-MM-DD (默认昨日)")

@@ -1,4 +1,4 @@
 @echo off
-rem 午盘赔率快照任务入口 (18:00 触发)
+rem 午盘任务入口 (18:00 触发: 最新赔率重跑七维分析 → 午盘存档, 不出预测)
 cd /d %~dp0
-python fetch_sporttery.py >> data\log\midday_snapshot.log 2>&1
+python daily_run.py predict --stage midday >> data\log\midday_snapshot.log 2>&1

@@ -370,6 +370,15 @@ TEAM_NAME_ALIASES = {
     # football-data.org 全名 → CSV 规范名 (复盘匹配桥接)
     "RCD Espanyol de Barcelona": "Espanol",
     "RCD Espanyol": "Espanol",
+    # 2026-08-17 复盘补录 (football-data.org 全名 → 规范名)
+    "RC Deportivo La Coruña": "Deportivo La Coruna",
+    "Elche CF": "Elche",
+    "Cardiff City FC": "Cardiff",
+    "Wrexham AFC": "Wrexham",
+    "Casa Pia AC": "Casa Pia",
+    "Sport Lisboa e Benfica": "Benfica",
+    "SC Internacional": "Internacional",
+    "Clube do Remo": "Remo",
     "Almería": "Almeria",
     "Cádiz": "Cadiz",
     "Girona FC": "Girona",

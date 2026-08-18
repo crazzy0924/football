@@ -146,6 +146,11 @@ CN_TO_EN_TEAM = {
     '伯恩利': 'Burnley', '西汉姆联': 'West Ham',
     '桑坦德竞技': 'Santander', '比利亚雷亚尔': 'Villarreal',
     '西班牙人': 'Espanol', '莱万特': 'Levante',
+    # 2026-08-17 复盘补录 (体彩中文名 ↔ 外文规范名)
+    '拉科鲁尼亚': 'Deportivo La Coruna', '加的夫城': 'Cardiff', '加的夫': 'Cardiff',
+    '雷克斯汉姆': 'Wrexham', '巴西国际': 'Internacional', '里莫': 'Remo',
+    '卡萨皮亚': 'Casa Pia', '赫根': 'Hacken', '哈尔姆斯塔德': 'Halmstad',
+    '赫尔辛基火花': 'Gnistan', '坦佩雷山猫': 'Ilves',
     '阿罗卡': 'Arouca', '摩雷伦斯': 'Moreirense',
     '腓特烈斯塔': 'Fredrikstad FK', '克里斯蒂安松': 'Kristiansund',
     '瓦斯科达伽马': 'Vasco da Gama', '法马利康': 'Famalicao',

@@ -356,12 +356,19 @@ def match_predictions_to_results(
 
 
 def _teams_match(a: str, b: str) -> bool:
-    """模糊队名匹配 + 中英文桥接"""
+    """模糊队名匹配 + 中英文桥接 + 重音符折叠"""
     if not a or not b:
         return False
+    import unicodedata
+
+    def _fold(s: str) -> str:
+        s = unicodedata.normalize("NFKD", s)  # ñ→n, ú→u, é→e ...
+        s = "".join(c for c in s if not unicodedata.combining(c))
+        return s.lower().replace(" ", "").replace(".", "").replace("'", "")
+
     a_orig, b_orig = a, b
-    a = a.lower().replace(" ", "").replace(".", "").replace("'", "")
-    b = b.lower().replace(" ", "").replace(".", "").replace("'", "")
+    a = _fold(a)
+    b = _fold(b)
     if a == b or a in b or b in a:
         return True
     # 中英桥接: 任一方为中文名时, 用映射表翻译成英文再比 (原名大小写查表)
@@ -370,7 +377,7 @@ def _teams_match(a: str, b: str) -> bool:
         for x, y in ((a_orig, b), (b_orig, a)):
             en = CN_TO_EN_TEAM.get(x)
             if en:
-                en = en.lower().replace(" ", "").replace(".", "")
+                en = _fold(en)
                 if en == y or en in y or y in en:
                     return True
     except Exception:

@@ -47,8 +47,11 @@ def _cn_source(text: str) -> str:
     return "来源:网络 " + text.strip()
 
 
-def _search_bing(query: str) -> list[str]:
-    """cn.bing.com 搜索 → 摘要列表 (adlt=strict 过滤垃圾)"""
+def _search_bing(query: str, filter_kw: bool = True) -> list[str]:
+    """cn.bing.com 搜索 → 摘要列表 (adlt=strict 过滤垃圾)
+
+    filter_kw=False 时不按伤停关键词过滤 (用于天气/裁判等侦察)
+    """
     import httpx
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",
@@ -68,7 +71,7 @@ def _search_bing(query: str) -> list[str]:
                 continue
             if DROP_RE.search(text):
                 continue
-            if not KEEP_RE.search(text):
+            if filter_kw and not KEEP_RE.search(text):
                 continue
             out.append(text[:200])
         return out[:4]
@@ -141,6 +144,22 @@ def main() -> None:
         time.sleep(3)
     if ref_lines:
         intel = intel + "\n\n=== 裁判信息侦察 (未经官方确认, 仅供参考) ===\n" + "\n".join(ref_lines)
+
+    # 天气侦察 (八维之六: 无逐小时预报时按低置信处理)
+    wx_lines = []
+    for m in matches:
+        h = _cn_name(m.get("home_team", ""))
+        a = _cn_name(m.get("away_team", ""))
+        if not h or not a:
+            continue
+        got = _search_bing(f"{h} {a} 比赛 天气 预报", filter_kw=False)
+        if got:
+            wx_lines.append(f"[天气] {h} vs {a}")
+            for s in got[:2]:
+                wx_lines.append(f"  - {_cn_source(s)}")
+        time.sleep(3)
+    if wx_lines:
+        intel = intel + "\n\n=== 天气侦察 (未经核实, 仅供参考) ===\n" + "\n".join(wx_lines)
     if not intel:
         print("未获取到有效摘要。")
         return

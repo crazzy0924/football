@@ -238,11 +238,11 @@ def _build_h2h_dim(p) -> str:
 
 def _split_note(note: str) -> dict:
     """把 LLM 输出拆成结构段 (八维新版5行格式 + 自检, 兼容旧版定性评估格式)"""
-    parts = {"方向分": "", "结论": "", "关键维度": "", "反向验证": "", "触发器": "", "自检": ""}
+    parts = {"方向分": "", "结论": "", "关键维度": "", "三条路径": "", "反向验证": "", "触发器": "", "自检": ""}
     if not note:
         return parts
     cur = "结论"
-    labels = ["方向分", "结论", "关键维度", "反向验证", "触发器", "自检"]
+    labels = ["方向分", "结论", "关键维度", "三条路径", "反向验证", "触发器", "自检"]
     for line in note.splitlines():
         line = line.strip()
         if not line:
@@ -287,6 +287,8 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     dim7_lines.append("结论: " + (segs["结论"] or "暂无"))
     if segs["关键维度"]:
         dim7_lines.append("关键维度: " + segs["关键维度"])
+    if segs["三条路径"]:
+        dim7_lines.append("三条路径: " + segs["三条路径"])
     dim7_lines.append("反向验证: " + (segs["反向验证"] or "暂无"))
     if segs["触发器"]:
         dim7_lines.append("触发器: " + segs["触发器"])

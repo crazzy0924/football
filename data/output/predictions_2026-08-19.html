@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足球预测报告 — 2026-08-19</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --bg2: #0e1424;
+    --card: #121a2c;
+    --line: #1e2a42;
+    --txt: #e9eef8;
+    --dim: #8d99b0;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --blue: #5ea8ff;
+    --violet: #a78bfa;
+    --pink: #f472b6;
+    --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background:
+      radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%),
+      radial-gradient(800px 400px at 90% -20%, rgba(167,139,250,.10), transparent 60%),
+      var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+    padding: 28px 16px 40px;
+    line-height: 1.55;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* ── 主视觉 ── */
+  .hero { text-align: center; padding: 34px 10px 26px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: .78rem; color: #bfd7ff;
+    background: linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+    border: 1px solid rgba(94,168,255,.35);
+    padding: 5px 16px; border-radius: 999px; letter-spacing: .5px;
+  }
+  .hero h1 {
+    font-size: 2rem; font-weight: 800; margin-top: 14px;
+    background: linear-gradient(90deg, #e9eef8, #9ec4ff 60%, #c4b5fd);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { color: var(--dim); font-size: .85rem; margin-top: 8px; }
+
+  /* ── 统计 ── */
+  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 6px 0 26px; }
+  .stat {
+    background: linear-gradient(180deg, var(--card), #101725);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 6px; text-align: center;
+    transition: transform .15s, border-color .15s;
+  }
+  .stat:hover { transform: translateY(-2px); border-color: #33486f; }
+  .stat .v { font-size: 1.5rem; font-weight: 800; }
+  .stat .l { font-size: .72rem; color: var(--dim); margin-top: 3px; }
+  .stat:nth-child(1) .v { color: var(--blue); }
+  .stat:nth-child(2) .v { color: var(--green); }
+  .stat:nth-child(3) .v { color: var(--amber); }
+  .stat:nth-child(4) .v { color: var(--pink); }
+  .stat:nth-child(5) .v { color: var(--violet); font-size: 1.15rem; padding-top: 5px; }
+
+  /* ── 比赛卡片 ── */
+  .match {
+    background: linear-gradient(180deg, var(--card), #0f1727);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+    position: relative; overflow: hidden;
+  }
+  .match::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: var(--line);
+  }
+  .match.recommended::before { background: linear-gradient(180deg, var(--green), #0d9488); }
+  .match.reference::before { background: linear-gradient(180deg, var(--amber), #d97706); }
+  .match.skip { opacity: .72; }
+  .match:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 34px rgba(2, 8, 23, .55);
+    border-color: #2c3d63;
+  }
+
+  .m-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .m-league {
+    font-size: .78rem; font-weight: 700; color: #a9c6ff;
+    background: rgba(94,168,255,.12);
+    border: 1px solid rgba(94,168,255,.32); padding: 4px 12px; border-radius: 999px;
+    letter-spacing: 1px; margin-right: 4px; vertical-align: 2px;
+  }
+  .m-teams { display: flex; align-items: center; gap: 14px; font-size: 1.18rem; font-weight: 700; }
+  .m-teams .tvs { font-size: .7rem; color: var(--dim); border: 1px solid var(--line); padding: 2px 8px; border-radius: 6px; letter-spacing: 2px; }
+
+  /* 看好推荐 */
+  .m-pick {
+    font-size: .95rem; font-weight: 800; padding: 8px 16px; border-radius: 12px;
+    white-space: nowrap;
+  }
+  .m-pick.bet {
+    color: #06281c;
+    background: linear-gradient(135deg, #34d399, #6ee7b7);
+    box-shadow: 0 4px 18px rgba(52, 211, 153, .35);
+  }
+  .m-pick.skip { color: var(--dim); background: rgba(141,153,176,.10); border: 1px solid var(--line); }
+  .m-pick.cold { color: var(--pink); background: rgba(244,114,182,.10); border: 1px solid rgba(244,114,182,.3); }
+
+  /* 概率堆叠条 */
+  .prob { margin: 16px 0 14px; }
+  .prob-track {
+    display: flex; height: 14px; border-radius: 999px; overflow: hidden;
+    background: #0a0f1c; box-shadow: inset 0 1px 4px rgba(0,0,0,.5);
+  }
+  .seg { height: 100%; transition: width .4s ease; }
+  .seg.home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .seg.draw { background: linear-gradient(90deg, #47506a, #7c86a3); }
+  .seg.away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .prob-legends { display: flex; gap: 18px; margin-top: 9px; font-size: .8rem; color: var(--dim); flex-wrap: wrap; }
+  .prob-legends b { color: var(--txt); font-size: .88rem; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+  .dot.home { background: var(--blue); }
+  .dot.draw { background: #7c86a3; }
+  .dot.away { background: var(--amber); }
+
+  /* 指标胶囊 */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-size: .76rem; color: #c3cce0; background: rgba(141,153,176,.08);
+    border: 1px solid var(--line); padding: 4px 11px; border-radius: 999px;
+  }
+  .chip b { color: var(--txt); }
+  .chip.kelly { border-color: rgba(52,211,153,.4); }
+  .chip.kelly.neg { border-color: rgba(248,113,113,.4); }
+  .chip.kelly.neg b { color: var(--red); }
+  .chip.kelly.pos b { color: var(--green); }
+
+  .m-cold {
+    margin-top: 12px; font-size: .78rem; color: var(--pink);
+    background: rgba(244,114,182,.08); border: 1px dashed rgba(244,114,182,.35);
+    padding: 6px 12px; border-radius: 10px; display: inline-block;
+  }
+  .m-note {
+    margin-top: 12px; font-size: .83rem; color: #cbd5e8;
+    background: linear-gradient(135deg, rgba(167,139,250,.10), rgba(94,168,255,.06));
+    border-left: 3px solid var(--violet);
+    border-radius: 0 12px 12px 0; padding: 10px 14px; line-height: 1.6;
+  }
+  .m-note .nt { font-size: .7rem; color: var(--violet); font-weight: 700; letter-spacing: 1px; margin-right: 6px; }
+
+  /* ── 今日看好速览 ── */
+  .picks-strip {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
+    padding: 14px 16px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(52,211,153,.10), rgba(94,168,255,.06));
+    border: 1px solid rgba(52,211,153,.35);
+  }
+  .picks-title { width: 100%; font-size: .85rem; font-weight: 800; color: #6ee7b7; letter-spacing: 1px; }
+  .pick-card {
+    background: #0f1a28; border: 1px solid rgba(52,211,153,.4); border-radius: 12px;
+    padding: 8px 14px; min-width: 200px; flex: 1;
+  }
+  .pc-teams { font-size: .82rem; font-weight: 700; color: var(--txt); }
+  .pc-bet { font-size: .78rem; color: var(--green); font-weight: 700; margin-top: 3px; }
+
+  /* ── 近况形态徽章 ── */
+  .form-row { display: flex; gap: 16px; font-size: .75rem; color: var(--dim); align-items: center; margin-top: 2px; }
+  .f-letters { display: inline-flex; gap: 3px; margin-left: 4px; }
+  .f-letters span {
+    display: inline-flex; width: 17px; height: 17px; align-items: center; justify-content: center;
+    border-radius: 5px; font-size: .62rem; font-weight: 800;
+  }
+  .f-letters span.f-W { background: rgba(52,211,153,.18); color: #6ee7b7; }
+  .f-letters span.f-D { background: rgba(141,153,176,.15); color: #a5b0c5; }
+  .f-letters span.f-L { background: rgba(248,113,113,.18); color: #fca5a5; }
+
+  /* ── 比分概率迷你图 ── */
+  .viz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0 6px; }
+  .score-bars { display: flex; gap: 8px; align-items: flex-end; height: 64px; }
+  .sb { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 3px; }
+  .sb-bar {
+    width: 70%; background: linear-gradient(180deg, #5ea8ff, #2f6fd8);
+    border-radius: 4px 4px 2px 2px; min-height: 3px;
+    transition: height .4s ease;
+  }
+  .sb-label { font-size: .66rem; color: var(--dim); }
+  .sb-pct { font-size: .6rem; color: var(--txt); font-weight: 600; }
+
+  /* ── ELO 力量条 ── */
+  .elo-row { display: flex; align-items: center; gap: 8px; font-size: .72rem; color: var(--dim); }
+  .elo-track { flex: 1; height: 8px; border-radius: 999px; background: #0a0f1c; overflow: hidden; display: flex; }
+  .elo-home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .elo-away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .elo-row b { color: var(--txt); }
+
+  /* ── 入场动效 ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .match { animation: fadeUp .45s ease both; }
+
+  /* ── 页脚 ── */
+  .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    .m-teams { font-size: 1.02rem; gap: 8px; }
+    .hero h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-badge">⚽ 每日足球智能预测</div>
+    <h1>2026-08-19</h1>
+    <div class="hero-sub">
+      Dixon-Coles + ELO + 贝叶斯市场融合
+      · 回测 Brier 0.5950
+    </div>
+    
+    <div class="hero-sub" style="margin-top:10px;">本日七维分析存档: <a href="analysis_morning_2026-08-19.html">📋 早盘七维分析存档</a></div>
+    
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="v">6</div><div class="l">今日场次</div></div>
+    <div class="stat"><div class="v">0</div><div class="l">推荐下注</div></div>
+    <div class="stat"><div class="v">6</div><div class="l">仅供参考</div></div>
+    <div class="stat"><div class="v">6</div><div class="l">冷启动</div></div>
+    <div class="stat"><div class="v">2/3/1</div><div class="l">胜/平/负</div></div>
+  </div>
+
+  <!-- 今日看好速览 -->
+  
+
+  
+  <article class="match reference" style="animation-delay: 0ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">UNK · 非五大</span>
+        <span>安养FC</span>
+        <span class="tvs">VS</span>
+        <span>济州SK</span>
+      </div>
+      <span class="m-pick cold">
+        ❄ 冷启动不碰
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 33.4%"></div>
+        <div class="seg draw" style="width: 29.6%"></div>
+        <div class="seg away" style="width: 36.9%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>33.4%</b></span>
+        <span><i class="dot draw"></i>平局 <b>29.6%</b></span>
+        <span><i class="dot away"></i>客胜 <b>36.9%</b></span>
+        <span>ELO差 <b>0</b></span>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        
+        <div class="sb">
+          <div class="sb-pct">14.2%</div>
+          <div class="sb-bar" style="height: 42.599999999999994%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.7%</div>
+          <div class="sb-bar" style="height: 29.099999999999998%"></div>
+          <div class="sb-label">0-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.3%</div>
+          <div class="sb-bar" style="height: 27.900000000000002%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.8%</div>
+          <div class="sb-bar" style="height: 26.400000000000002%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.2%</div>
+          <div class="sb-bar" style="height: 24.599999999999998%"></div>
+          <div class="sb-label">1-2</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1500</b>
+          <div class="elo-track"><div class="elo-home" style="width: 50%"></div><div class="elo-away" style="width: 50%"></div></div>
+          <b>1500</b>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>45.1%</b></span>
+      <span class="chip">BTTS <b>51.7%</b></span>
+      <span class="chip">预期进球 <b>1.20 - 1.28</b></span>
+      <span class="chip">市场赔率 <b>2.63/3.00/2.41</b></span>
+      
+      <span class="chip">优势 Away <b>+0.2%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 2.63</span>
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-0(模型9.7%vs市场8.0%)</span>
+      <span class="chip">盘口 <b>让球(主+1.0): 主63%/走20%/客17%</b></span>
+      
+    </div>
+    
+
+    
+    <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
+    
+
+    
+    <div class="m-note"><span class="nt">分析师</span>方向分: -0.4  
+结论: 最可能方向为平局或客队小胜，核心理由是市场与模型均未形成主胜信号，预期进球接近且冷启动不确定性高。  
+关键维度: 市场视角偏客但幅度微弱（权重20）；状态攻防显示ELO持平、预期进球1.20-1.28（权重18）；战意轮换因联赛积分背景缺失降权（权重16）。  
+三条路径: 常规路径为客队小幅占优或平局，触发条件是客队保持常规首发且中场控制不落下风；平局路径为双方低效进攻互交白卷或1-1，触发条件是前30分钟无进球且对抗胶着；冷门路径为主队反击或定位球先得分后收缩，触发条件是主队率先破门且客队阵地战缺乏支点。  
+反向验证: 如果这场预测错了，最可能错在冷启动参数掩盖了主队真实主场优势或客队客场疲软。  
+触发器: 赛前若出现主队核心首发伤停、客队大幅轮换或天气导致场地条件恶化，会推翻当前偏平局与客队方向。
+自检: 发现P1问题 (结论方向与最可能比分/概率方向不一致：概率显示客队最高且最可能比分含0-1，但结论称“最可能方向为平局或客队小胜”且方向分为负，未明确客队为第一方向；同时证据包中伤停/天气/裁判信息为无关或错误匹配，未在结论中说明不可用)</div>
+    
+  </article>
+  
+  <article class="match reference" style="animation-delay: 60ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">西甲</span>
+        <span>马德里竞技</span>
+        <span class="tvs">VS</span>
+        <span>马拉加</span>
+      </div>
+      <span class="m-pick cold">
+        ❄ 冷启动不碰
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 73.2%"></div>
+        <div class="seg draw" style="width: 18.4%"></div>
+        <div class="seg away" style="width: 8.4%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>73.2%</b></span>
+        <span><i class="dot draw"></i>平局 <b>18.4%</b></span>
+        <span><i class="dot away"></i>客胜 <b>8.4%</b></span>
+        <span>ELO差 <b>+136</b></span>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        
+        <div class="sb">
+          <div class="sb-pct">17.2%</div>
+          <div class="sb-bar" style="height: 51.599999999999994%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">15.6%</div>
+          <div class="sb-bar" style="height: 46.8%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.8%</div>
+          <div class="sb-bar" style="height: 32.400000000000006%"></div>
+          <div class="sb-label">3-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.4%</div>
+          <div class="sb-bar" style="height: 25.200000000000003%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.5%</div>
+          <div class="sb-bar" style="height: 22.5%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1636</b>
+          <div class="elo-track"><div class="elo-home" style="width: 52%"></div><div class="elo-away" style="width: 48%"></div></div>
+          <b>1500</b>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>47.9%</b></span>
+      <span class="chip">BTTS <b>35.4%</b></span>
+      <span class="chip">预期进球 <b>2.08 - 0.54</b></span>
+      <span class="chip">市场赔率 <b>1.20/5.10/10.00</b></span>
+      
+      <span class="chip">优势 Draw <b>+1.5%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 1.20</span>
+      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型48% vs 市场60% (-12%)</span>
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 1-0(模型17.2%vs市场10.8%) · 2-0(模型15.6%vs市场12.5%)</span>
+      <span class="chip">盘口 <b>让球(主-1.0): 主48%/走27%/客25%</b></span>
+      
+    </div>
+    
+
+    
+    <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
+    
+
+    
+    <div class="m-note"><span class="nt">分析师</span>方向分: +3.4  
+结论: 马竞最可能主场小胜，核心是实力差与主场压制明确，但深盘与冷启动不确定性限制大胜预期。  
+关键维度: 状态与攻防（ELO差+136、预期进球2.08-0.54，权重18）；市场视角（主胜共识强、小比分价值偏主队，权重20）；战意与轮换（情报不足已降权，权重16）。  
+三条路径: 常规路径为马竞控场后由定位球或边路传中打破僵局，1-0或2-0小胜；平局路径为马拉加低位防守奏效且马竞终结效率不足，0-0或1-1；冷门路径为马拉加利用反击或定位球先偷一球，马竞久攻不下暴露防线身后。  
+反向验证: 如果这场预测错了，最可能错在冷启动参数高估马竞实际终结能力，导致平局或仅一球小胜的方向被低估。  
+触发器: 赛前若马竞首发轮换核心中前场球员，或确认主力射手缺阵，则小胜方向需下调。
+自检: 发现P2问题 (赛前情报/伤停/裁判/天气侦察内容与比赛无关，且“最强信号: draw (Kelly 0.00%)”与方向分+3.4及结论小胜存在轻微矛盾)</div>
+    
+  </article>
+  
+  <article class="match reference" style="animation-delay: 120ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">解放者杯 · 非五大</span>
+        <span>波特诺山丘</span>
+        <span class="tvs">VS</span>
+        <span>帕尔梅拉斯</span>
+      </div>
+      <span class="m-pick cold">
+        ❄ 冷启动不碰
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 17.7%"></div>
+        <div class="seg draw" style="width: 29.0%"></div>
+        <div class="seg away" style="width: 53.3%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>17.7%</b></span>
+        <span><i class="dot draw"></i>平局 <b>29.0%</b></span>
+        <span><i class="dot away"></i>客胜 <b>53.3%</b></span>
+        <span>ELO差 <b>0</b></span>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        
+        <div class="sb">
+          <div class="sb-pct">14.1%</div>
+          <div class="sb-bar" style="height: 42.3%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">13.1%</div>
+          <div class="sb-bar" style="height: 39.3%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">12.3%</div>
+          <div class="sb-bar" style="height: 36.900000000000006%"></div>
+          <div class="sb-label">0-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">12.2%</div>
+          <div class="sb-bar" style="height: 36.599999999999994%"></div>
+          <div class="sb-label">0-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.8%</div>
+          <div class="sb-bar" style="height: 26.400000000000002%"></div>
+          <div class="sb-label">1-2</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1500</b>
+          <div class="elo-track"><div class="elo-home" style="width: 50%"></div><div class="elo-away" style="width: 50%"></div></div>
+          <b>1500</b>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>38.0%</b></span>
+      <span class="chip">BTTS <b>41.1%</b></span>
+      <span class="chip">预期进球 <b>0.72 - 1.48</b></span>
+      <span class="chip">市场赔率 <b>5.05/3.05/1.66</b></span>
+      
+      <span class="chip">优势 Home <b>+0.1%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 5.05</span>
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-0(模型12.3%vs市场10.5%)</span>
+      <span class="chip">盘口 <b>让球(主+1.0): 主47%/走25%/客29%</b></span>
+      
+    </div>
+    
+
+    
+    <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
+    
+
+    
+    <div class="m-note"><span class="nt">分析师</span>方向分: -2.4  
+结论: 最可能方向为帕尔梅拉斯客场小胜，市场与模型一致指向客队实力占优，主队冷启动下缺乏可靠支撑。  
+关键维度: 市场视角权重调至24%，客胜方向明确且模型无实质分歧；状态与攻防权重调至22%，预期进球差0.76明显利客；战意与轮换权重调至20%，客队争出线动力更足而主队无明确战意加分。  
+三条路径: 常规路径为客队控场后由边路或定位球打破僵局，0-1或0-2收场；平局路径为主队低位防守成功且客队终结效率下降，0-0或1-1；冷门路径为主队通过反击或前场定位球先得分后全线退守，触发条件需主队门将高接抵挡且客队轮换幅度大于预期。  
+反向验证: 如果这场预测错了，最可能错在冷启动参数失真，主队主场实际攻防水准被联赛均值低估。  
+触发器: 赛前若帕尔梅拉斯首发出现大幅轮换或主队核心中前场确认首发增强，客胜方向需下调。
+自检: 发现P1问题 (证据包中自动伤停、裁判、天气侦察内容均为其他球队或无关信息，分析结论却未剔除且未说明，属于引用无效证据)</div>
+    
+  </article>
+  
+  <article class="match reference" style="animation-delay: 180ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">UNK · 非五大</span>
+        <span>凯尔特人</span>
+        <span class="tvs">VS</span>
+        <span>LASK林茨</span>
+      </div>
+      <span class="m-pick cold">
+        ❄ 冷启动不碰
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 56.5%"></div>
+        <div class="seg draw" style="width: 23.7%"></div>
+        <div class="seg away" style="width: 19.8%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>56.5%</b></span>
+        <span><i class="dot draw"></i>平局 <b>23.7%</b></span>
+        <span><i class="dot away"></i>客胜 <b>19.8%</b></span>
+        <span>ELO差 <b>0</b></span>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        
+        <div class="sb">
+          <div class="sb-pct">11.1%</div>
+          <div class="sb-bar" style="height: 33.3%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.0%</div>
+          <div class="sb-bar" style="height: 30.0%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.2%</div>
+          <div class="sb-bar" style="height: 27.599999999999998%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.5%</div>
+          <div class="sb-bar" style="height: 22.5%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">6.6%</div>
+          <div class="sb-bar" style="height: 19.799999999999997%"></div>
+          <div class="sb-label">3-1</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1500</b>
+          <div class="elo-track"><div class="elo-home" style="width: 50%"></div><div class="elo-away" style="width: 50%"></div></div>
+          <b>1500</b>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>59.2%</b></span>
+      <span class="chip">BTTS <b>58.1%</b></span>
+      <span class="chip">预期进球 <b>1.98 - 1.08</b></span>
+      <span class="chip">市场赔率 <b>1.58/3.70/4.45</b></span>
+      
+      <span class="chip">优势 Home <b>+0.5%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 1.58</span>
+      
+      
+      <span class="chip">盘口 <b>让球(主-1.0): 主35%/走22%/客43%</b></span>
+      
+    </div>
+    
+
+    
+    <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
+    
+
+    
+    <div class="m-note"><span class="nt">分析师</span>方向分: +0.5  
+结论: 凯尔特人略占主场与实力优势，但模型冷启动、市场主导且情报严重不足，最可能小胜或平局，方向偏主但信心有限。  
+关键维度: 市场视角权重由20%上调至24%，赔率与模型一致但低置信度、高margin削弱信号；状态攻防权重由18%上调至21%，预期进球差支持主队但ELO持平；战意轮换权重由16%上调至19%，情报未提及双方战意与轮换，数据不足已降权。  
+三条路径: 常规路径为凯尔特人凭主场控场与边路传中取得2-1小胜，触发条件是上半场早进球；平局路径为LASK林茨低位防守有效且定位球扳平，触发条件是客队先守后攻且主队效率下降；冷门路径为客队反击或定位球得手后全线退守，触发条件是凯尔特人久攻不下且门将失误。  
+反向验证: 如果这场预测错了，最可能错在冷启动参数失真，主队实际战力低于联赛均值，无法兑现主场优势。  
+触发器: 赛前若凯尔特人核心中前场首发缺阵或出现大规模轮换，主胜方向将被推翻。
+自检: 发现P2问题 (证据包中伤停/天气/裁判信息均为无关赛事或无效摘要，分析结论却称“情报严重不足”而非指出证据错配，且未据此修正结论)</div>
+    
+  </article>
+  
+  <article class="match reference" style="animation-delay: 240ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">UNK · 非五大</span>
+        <span>奈梅亨</span>
+        <span class="tvs">VS</span>
+        <span>博德闪耀</span>
+      </div>
+      <span class="m-pick cold">
+        ❄ 冷启动不碰
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 37.7%"></div>
+        <div class="seg draw" style="width: 25.4%"></div>
+        <div class="seg away" style="width: 36.9%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>37.7%</b></span>
+        <span><i class="dot draw"></i>平局 <b>25.4%</b></span>
+        <span><i class="dot away"></i>客胜 <b>36.9%</b></span>
+        <span>ELO差 <b>0</b></span>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        
+        <div class="sb">
+          <div class="sb-pct">11.4%</div>
+          <div class="sb-bar" style="height: 34.2%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.4%</div>
+          <div class="sb-bar" style="height: 25.200000000000003%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.3%</div>
+          <div class="sb-bar" style="height: 24.900000000000002%"></div>
+          <div class="sb-label">1-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">6.7%</div>
+          <div class="sb-bar" style="height: 20.1%"></div>
+          <div class="sb-label">2-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">5.4%</div>
+          <div class="sb-bar" style="height: 16.200000000000003%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1500</b>
+          <div class="elo-track"><div class="elo-home" style="width: 50%"></div><div class="elo-away" style="width: 50%"></div></div>
+          <b>1500</b>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>62.4%</b></span>
+      <span class="chip">BTTS <b>65.0%</b></span>
+      <span class="chip">预期进球 <b>1.62 - 1.60</b></span>
+      <span class="chip">市场赔率 <b>2.35/3.50/2.40</b></span>
+      
+      <span class="chip">优势 Draw <b>+0.1%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 2.35</span>
+      
+      
+      <span class="chip">盘口 <b>让球(主-1.0): 主19%/走18%/客62%</b></span>
+      
+    </div>
+    
+
+    
+    <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
+    
+
+    
+    <div class="m-note"><span class="nt">分析师</span>方向分: +0.1  
+结论: 最可能平局或小比分互交白卷方向，因模型与市场均显示双方接近均势且预期进球不高。  
+关键维度: 市场视角权重高，模型与赔率几乎无分歧；状态与攻防显示预期进球接近、BTTS偏高但缺乏决定性信号；阵容伤停情报不足已降权，权重重新分配给市场与战意。  
+三条路径: 常规路径为双方各进一球的小比分平局，触发条件是两队均无核心缺阵且节奏偏慢；平局路径为0-0或1-1闷平，触发条件是双方锋线效率低且中场绞杀；冷门路径为客队反击或定位球制胜，触发条件是博德闪耀边路速度优势显现或奈梅亨防线高位失误。  
+反向验证: 如果这场预测错了，最可能错在冷启动参数失真，两队真实实力差被联赛均值掩盖。  
+触发器: 赛前若出现核心攻击手首发或防线主力伤停，平局倾向将被打破。
+自检: 发现P1问题 (结论方向与最可能比分/概率方向不一致：最可能比分为1-1且平局概率仅25.4%，但结论称“最可能平局”，且方向分+0.1与“最强信号draw Kelly 0.00%”矛盾)</div>
+    
+  </article>
+  
+  <article class="match reference" style="animation-delay: 300ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">UNK · 非五大</span>
+        <span>布拉迪斯拉发</span>
+        <span class="tvs">VS</span>
+        <span>采列</span>
+      </div>
+      <span class="m-pick cold">
+        ❄ 冷启动不碰
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 52.9%"></div>
+        <div class="seg draw" style="width: 25.5%"></div>
+        <div class="seg away" style="width: 21.6%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>52.9%</b></span>
+        <span><i class="dot draw"></i>平局 <b>25.5%</b></span>
+        <span><i class="dot away"></i>客胜 <b>21.6%</b></span>
+        <span>ELO差 <b>0</b></span>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        
+        <div class="sb">
+          <div class="sb-pct">12.2%</div>
+          <div class="sb-bar" style="height: 36.599999999999994%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.9%</div>
+          <div class="sb-bar" style="height: 29.700000000000003%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.5%</div>
+          <div class="sb-bar" style="height: 28.5%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.8%</div>
+          <div class="sb-bar" style="height: 26.400000000000002%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.1%</div>
+          <div class="sb-bar" style="height: 21.299999999999997%"></div>
+          <div class="sb-label">0-0</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1500</b>
+          <div class="elo-track"><div class="elo-home" style="width: 50%"></div><div class="elo-away" style="width: 50%"></div></div>
+          <b>1500</b>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>53.7%</b></span>
+      <span class="chip">BTTS <b>55.0%</b></span>
+      <span class="chip">预期进球 <b>1.78 - 1.04</b></span>
+      <span class="chip">市场赔率 <b>1.68/3.50/4.05</b></span>
+      
+      <span class="chip">优势 Draw <b>+0.2%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 1.68</span>
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-0(模型7.1%vs市场5.1%) · 1-1(模型12.2%vs市场10.6%)</span>
+      <span class="chip">盘口 <b>让球(主-1.0): 主31%/走22%/客47%</b></span>
+      
+    </div>
+    
+
+    
+    <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
+    
+
+    
+    <div class="m-note"><span class="nt">分析师</span>方向分: +0.3  
+结论: 主队微弱占优但冷启动下不宜高看，最可能小胜或平局，平局风险与主胜接近。  
+关键维度: 市场视角主胜赔率偏低但模型优势几乎为零，市场主导下需警惕模型盲区（权重调至23%）；状态与攻防预期进球主队占优但ELO持平，优势有限（权重调至20%）；阵容与伤停情报不足已降权（权重降至8%）。  
+三条路径: 常规路径为主队靠主场与预期进球优势小胜，触发条件为早段取得进球且采列反击效率一般；平局路径为双方僵持且采列低位防守奏效，触发条件为上半场0-0或1-1；冷门路径为采列通过定位球或门将高接低挡偷分，触发条件为采列率先破门或主队久攻不下。  
+反向验证: 如果这场预测错了，最可能错在冷启动参数失真，主队实际战力被高估且采列防守韧性被低估。  
+触发器: 赛前若出现主队核心轮换、客队主力回归或临场主胜赔率大幅上调，主胜方向将被推翻。
+自检: 发现P2问题 (证据包内伤停/天气/裁判信息均与布拉迪斯拉发 vs 采列无关，且分析结论中“阵容与伤停情报不足已降权”与“自动伤停侦察”部分实际内容错配，存在引用无效情报的瑕疵)</div>
+    
+  </article>
+  
+
+  <div class="footer">
+    足球预测模型 v3.0 · 生成于 2026-08-19 · 仅供参考，历史表现不代表未来结果
+  </div>
+</div>
+</body>
+</html>

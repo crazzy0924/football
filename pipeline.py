@@ -201,6 +201,28 @@ def cmd_predict(args):
         print("无比赛可预测。")
         return
 
+    # 停止条件 (参考开源框架): 终盘跳过已开球的比赛, 不预测开球后的场次
+    stage_guard = getattr(args, "stage", "final")
+    if stage_guard == "final":
+        from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+        now_bj = _dt.now(_tz(_td(hours=8)))
+        kept = []
+        for m in matches:
+            kt = (m.get("kickoff_time") or "").strip()
+            try:
+                kt_dt = now_bj.replace(hour=int(kt[:2]), minute=int(kt[3:5]), second=0, microsecond=0)
+                if kt_dt <= now_bj:
+                    print(f"[跳过] {m.get('home_team')} vs {m.get('away_team')} 已开球 ({kt}), 终盘不再预测")
+                    continue
+            except Exception:
+                pass
+            kept.append(m)
+        if kept:
+            matches = kept
+        if not matches:
+            print("全部比赛已开球, 终盘无场次可预测。")
+            return
+
     # Phase 8: 赛程密度 + 近2季交锋 预计算 (h2h 全库)
     sched_cache: dict = {}
     h2h_cache: dict = {}

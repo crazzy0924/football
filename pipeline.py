@@ -435,6 +435,29 @@ def cmd_predict(args):
                 with open(notes_path, "w", encoding="utf-8") as f:
                     json.dump(analyst_notes or {}, f, ensure_ascii=False, indent=2)
                 print(f"[LLM] 分析笔记已存档 → {notes_path}")
+
+                # 终盘独立自检 (防终盘出错: 审计结论一致性/编造/矛盾)
+                if stage == "final" and analyst_notes:
+                    from pipeline.analyst import build_evidence_packet, audit_analysis
+                    n_aud = 0
+                    for pred in predictions:
+                        key = f"{pred.get('home_team', '')} vs {pred.get('away_team', '')}"
+                        note = analyst_notes.get(key)
+                        if not note or note.startswith("["):
+                            continue
+                        try:
+                            ev = build_evidence_packet(pred, intel_text=intel_text)
+                            aud = audit_analysis(ev, note, prior_notes.get(key, ""))
+                            if aud:
+                                analyst_notes[key] = note + "\n" + aud
+                                n_aud += 1
+                                print(f"  [自检] {key}: {aud[:60]}")
+                        except Exception as e2:
+                            print(f"  [自检] {key} 失败: {e2}")
+                    if n_aud:
+                        with open(notes_path, "w", encoding="utf-8") as f:
+                            json.dump(analyst_notes, f, ensure_ascii=False, indent=2)
+                        print(f"[自检] 完成 {n_aud} 场审计, 笔记已更新")
             except Exception as e:
                 print(f"[LLM] 分析失败: {e}")
 

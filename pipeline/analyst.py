@@ -172,20 +172,29 @@ def _zone_label(pos) -> str | None:
 
 
 def build_analyst_prompt(evidence: str) -> str:
-    """Build the analyst prompt (七维分析框架)."""
-    return f"""你是资深足球分析师。以下是统计模型对一场比赛的结构化预测。请按七维框架做定性评估：
+    """Build the analyst prompt (八维评分框架, 参考 ajunai-football 开源框架改造)."""
+    return f"""你是资深足球赛前分析师。以下是统计模型对一场比赛的结构化预测。请按八维框架做定性评估并输出方向分:
 
-1. 市场视角: 亚盘/欧赔/大小球反映资金流向, 比个人模型更可信; 模型与市场分歧大时警惕模型盲区
-2. 赛程与体能: 双线作战、周中补赛、7天场次密度对体能的影响; 主力轮换概率
-3. 伤停与停赛: 必须区分核心主力与替补——核心中场/射手缺阵对体系影响远大于替补; 情报未提及伤停时明确说明
-4. 战意/动机: 结合积分榜分区评估双方战意 (保级/争冠/欧战/无欲无求/杯赛留力)
-5. 天气与场地: 若情报含天气, 评估雨雪对技术流球队的影响
-6. 历史交锋: 仅参考证据中"近2季交锋", 更早的历史数据易误导
-7. 反向验证: 必须输出——"如果本场预测错了, 最可能错在哪里"
+1. 市场视角: 亚盘/欧赔/大小球反映资金流向; 模型与市场分歧大时警惕模型盲区
+2. 状态与攻防: 模型概率/预期进球/ELO差 反映实力与近期状态
+3. 阵容与伤停: 必须区分核心主力与替补; 情报未提及伤停时明确说明, 不得编造
+4. 交锋与克制: 仅参考"近2季交锋", 更早交锋易误导
+5. 赛程与体能: 7天场次密度、双线作战、轮换概率
+6. 天气与场地: 情报含天气才评; 没有就写"情报未提及, 权重记0"
+7. 裁判: 情报含裁判任命才评; 未公布写"裁判未公布, 权重记0", 不猜测
+8. 战意与轮换: 结合积分榜分区 (争冠/欧战/保级/中游), 不滥用"必须赢"
 
-输出格式 (纯中文, 不要概率数字, 不要建议投注金额):
-定性评估: (2-3句, 覆盖上述维度中最关键的2-3点)
-反向验证: (1句)
+硬校准规则:
+- 你的结论方向必须与最可能比分方向一致
+- 情报不足就明确写"数据不足已降权", 禁止编造伤停/天气/裁判/数字
+- 概率数字只用证据中给出的, 不自己造
+
+输出格式 (纯中文, 共5行, 不要概率数字, 不要投注建议):
+方向分: (加权 -5 至 +5, 正值利主队)
+结论: (1句, 最可能方向+核心理由)
+关键维度: (最强的2-3个维度, 各半句)
+反向验证: (1句: 如果这场预测错了, 最可能错在哪里)
+触发器: (1句: 赛前什么变化会推翻结论, 如首发/伤停/天气)
 
 {evidence}
 
@@ -233,10 +242,10 @@ def _try_deepseek(prompt: str, api_key: str, model: str) -> str | None:
         resp = client.chat(
             model=model,
             messages=[
-                {"role": "system", "content": "你是资深足球分析师。只输出2-3句中文定性评估。不输出概率、不推荐投注。"},
+                {"role": "system", "content": "你是资深足球赛前分析师。按用户要求的5行格式输出中文分析。不输出概率、不推荐投注、不编造。"},
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=200,
+            max_tokens=500,
             temperature=0.7,
         )
         msg = resp.get("message") or {}
@@ -292,6 +301,39 @@ def _try_http(prompt: str, api_key: str, model: str) -> str | None:
             return text.strip() if text else None
     except Exception as e:
         print(f"  [警告] Anthropic HTTP 失败: {e}")
+        return None
+
+
+def audit_analysis(evidence: str, note: str, prior_note: str = "") -> str | None:
+    """终盘独立自检 (参考 ajunai-football 开源框架的独立审计环节).
+
+    审计项: 结论与概率/比分方向一致 / 未编造伤停天气裁判数字 / 维度间无矛盾 / 与早午盘存档变化有依据
+    """
+    prompt = (f"你是足球赛前报告独立审计员。请审计以下分析 (不要因为是你或同类模型生成就默认正确):\n\n"
+              f"证据包:\n{evidence}\n\n分析结论:\n{note}\n")
+    if prior_note:
+        prompt += f"\n早盘/午盘存档 (对比结论变化是否有依据):\n{prior_note}\n"
+    prompt += ("\n审计项: ① 结论方向与最可能比分/概率方向是否一致 ② 是否编造了证据里没有的伤停/天气/裁判/数字 "
+               "③ 维度结论之间是否矛盾 ④ 与早午盘存档相比结论变化是否有依据。\n\n"
+               "输出 (纯中文, 1行):\n自检: 通过 (1句说明) 或 自检: 发现P1/P2问题 (具体是什么, 1句)")
+    try:
+        from config import DEEPSEEK_API_KEY, DEEPSEEK_MODEL
+        from deepseek_harness import DeepSeekHarness
+        client = DeepSeekHarness(api_key=DEEPSEEK_API_KEY, disable_thinking_by_default=True)
+        resp = client.chat(
+            model=DEEPSEEK_MODEL,
+            messages=[
+                {"role": "system", "content": "你是足球报告独立审计员。只输出一行: 自检: 通过(...) 或 自检: 发现P1/P2(...)。"},
+                {"role": "user", "content": prompt},
+            ],
+            max_tokens=140,
+            temperature=0.3,
+        )
+        msg = resp.get("message") or {}
+        text = (msg.get("content") or "").strip()
+        return text if text else None
+    except Exception as e:
+        print(f"  [自检] 失败: {e}")
         return None
 
 

@@ -25,6 +25,27 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 KEEP_RE = re.compile(r"伤停|伤病|伤缺|缺席|缺阵|无缘|受伤|停赛|禁赛|injur|out of|doubt|susp")
 DROP_RE = re.compile(r"字典|汉典|王国|旅游|部首|拼音|康熙|国家|首都|海风|步行导览")
 
+# 来源域名 → 中文标签 (证据账本: 保留来源可追溯, 且通过汉化纪律)
+DOMAIN_CN = [
+    ("sporttery.cn", "体彩官网"), ("premierleague.com", "英超官网"), ("laliga.com", "西甲官网"),
+    ("sohu.com", "搜狐"), ("sina.com.cn", "新浪"), ("sina.cn", "新浪"), ("qq.com", "腾讯"),
+    ("163.com", "网易"), ("toutiao.com", "今日头条"), ("zhihu.com", "知乎"),
+    ("dongqiudi.com", "懂球帝"), ("hupu.com", "虎扑"), ("7m.com.cn", "7M体育"), ("7m.hk", "7M体育"),
+    ("okooo.com", "澳客"), ("zhibo8", "直播吧"), ("baidu.com", "百度"), ("bilibili.com", "哔哩哔哩"),
+    ("ifeng.com", "凤凰网"), ("thepaper.cn", "澎湃"), ("cctv.com", "央视"), ("xinhuanet.com", "新华社"),
+    ("people.com.cn", "人民网"), ("news.qq.com", "腾讯"), ("goal.com", "进球网"), ("transfermarkt", "转会市场"),
+]
+
+
+def _cn_source(text: str) -> str:
+    """把搜索摘要里的英文域名换成中文来源标签 (保留可追溯)"""
+    for dom, label in DOMAIN_CN:
+        if dom in text:
+            text = re.sub(r"https?://\S+|\b" + re.escape(dom.split('.')[0]) + r"\S*", "", text)
+            return "来源:" + label + " " + text.strip()
+    text = re.sub(r"https?://\S+", "", text)
+    return "来源:网络 " + text.strip()
+
 
 def _search_bing(query: str) -> list[str]:
     """cn.bing.com 搜索 → 摘要列表 (adlt=strict 过滤垃圾)"""
@@ -80,7 +101,7 @@ def build_injury_intel(teams: list[str]) -> str:
             continue
         lines.append(f"[{team} / {cn}]")
         for s in got:
-            lines.append(f"  - {s}")
+            lines.append(f"  - {_cn_source(s)}")
         lines.append("")
         time.sleep(5)  # 限速友好
     return "\n".join(lines).strip()
@@ -104,6 +125,22 @@ def main() -> None:
                 teams.append(t)
     print(f"伤停侦察: {len(teams)} 支球队...")
     intel = build_injury_intel(teams)
+
+    # 裁判侦察 (八维之一: 官方任命未公布时明确写未公布, 不猜测)
+    ref_lines = []
+    for m in matches:
+        h = _cn_name(m.get("home_team", ""))
+        a = _cn_name(m.get("away_team", ""))
+        if not h or not a:
+            continue
+        got = _search_bing(f"{h} {a} 主裁判 2026")
+        if got:
+            ref_lines.append(f"[裁判] {h} vs {a}")
+            for s in got[:2]:
+                ref_lines.append(f"  - {_cn_source(s)}")
+        time.sleep(3)
+    if ref_lines:
+        intel = intel + "\n\n=== 裁判信息侦察 (未经官方确认, 仅供参考) ===\n" + "\n".join(ref_lines)
     if not intel:
         print("未获取到有效摘要。")
         return

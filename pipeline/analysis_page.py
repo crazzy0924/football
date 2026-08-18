@@ -236,22 +236,32 @@ def _build_h2h_dim(p) -> str:
             f"进球 {h.get('gf', 0)}:{h.get('ga', 0)}")
 
 
-def _split_note(note: str) -> tuple[str, str]:
-    """把 LLM 输出拆成 (定性评估, 反向验证)"""
-    qual, reverse = "", ""
+def _split_note(note: str) -> dict:
+    """把 LLM 输出拆成结构段 (八维新版5行格式 + 自检, 兼容旧版定性评估格式)"""
+    parts = {"方向分": "", "结论": "", "关键维度": "", "反向验证": "", "触发器": "", "自检": ""}
     if not note:
-        return qual, reverse
+        return parts
+    cur = "结论"
+    labels = ["方向分", "结论", "关键维度", "反向验证", "触发器", "自检"]
     for line in note.splitlines():
         line = line.strip()
         if not line:
             continue
-        if line.startswith("反向验证"):
-            reverse = line
-        elif line.startswith("定性评估"):
-            qual = line
+        if line.startswith("定性评估"):  # 旧版格式兼容
+            cur = "结论"
+            rest = line[len("定性评估"):].lstrip(":： ").strip()
         else:
-            qual = (qual + "\n" + line).strip() if qual else line
-    return qual, reverse
+            rest = None
+            for lab in labels:
+                if line.startswith(lab):
+                    cur = lab
+                    rest = line[len(lab):].lstrip(":： ").strip()
+                    break
+            if rest is None:
+                rest = line
+        if rest:
+            parts[cur] = (parts[cur] + "\n" + rest).strip() if parts[cur] else rest
+    return parts
 
 
 def _build_match_card(p, market, move, note, intel_text) -> str:
@@ -268,11 +278,21 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     cold = p.get("cold_start", False)
     cold_html = '<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span>' if cold else ""
 
-    qual, reverse = _split_note(note or "")
-    if not qual:
-        qual = note or "暂无定性评估"
-    if not reverse:
-        reverse = "暂无"
+    segs = _split_note(note or "")
+    if not segs["结论"] and not segs["方向分"] and not segs["关键维度"]:
+        segs["结论"] = note or "暂无定性评估"
+    dim7_lines = []
+    if segs["方向分"]:
+        dim7_lines.append("方向分: " + segs["方向分"])
+    dim7_lines.append("结论: " + (segs["结论"] or "暂无"))
+    if segs["关键维度"]:
+        dim7_lines.append("关键维度: " + segs["关键维度"])
+    dim7_lines.append("反向验证: " + (segs["反向验证"] or "暂无"))
+    if segs["触发器"]:
+        dim7_lines.append("触发器: " + segs["触发器"])
+    if segs["自检"]:
+        dim7_lines.append("自检: " + segs["自检"])
+    dim7_txt = "<br><br>".join(_esc(x) for x in dim7_lines)
 
     # 模型参考块 (只作存档对比, 非投注建议)
     m = p.get("model", {})
@@ -337,7 +357,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">{_esc(_build_motivation_dim(p))}</div></div>
     <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">{_esc(_build_weather_dim(intel_text))}</div></div>
     <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">{_esc(_build_h2h_dim(p))}</div></div>
-    <div class="dim dim-7"><div class="dim-label">⑦ 定性评估 + 反向验证</div><div class="dim-body">定性评估: {_esc(qual)}<br><br>反向验证: {_esc(reverse)}</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">{dim7_txt}</div></div>
   </div>
   <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>{_esc('<br>'.join(model_lines))}</div>
   {intel_html}

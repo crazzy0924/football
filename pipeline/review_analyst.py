@@ -297,17 +297,21 @@ def generate_review_analysis(date_str: str, matched: list[dict], output_dir: str
         rows = []
         hit_count = 0
         # 逐条对照 (有数据才列)
-        chk1 = _check_1x2(pred or m, m.get("actual", ""))
-        rows.append((chk1[0], chk1[1]))
-        chk_ou = _check_ou(pred or {}, (m.get("home_goals") or 0) + (m.get("away_goals") or 0))
-        if chk_ou:
-            rows.append(chk_ou)
-        chk_ah = _check_ah(pred or {}, result)
-        if chk_ah:
-            rows.append(chk_ah)
-        chk_ht = _check_htft(pred or {}, result)
-        if chk_ht:
-            rows.append(chk_ht)
+        # 无信号场次 (无赔率冷启动): 不预测不打分
+        if pred and pred.get("no_signal"):
+            rows.append(("胜平负: 无信号场次 (无赔率冷启动), 未预测", None))
+        else:
+            chk1 = _check_1x2(pred or m, m.get("actual", ""))
+            rows.append((chk1[0], chk1[1]))
+            chk_ou = _check_ou(pred or {}, (m.get("home_goals") or 0) + (m.get("away_goals") or 0))
+            if chk_ou:
+                rows.append(chk_ou)
+            chk_ah = _check_ah(pred or {}, result)
+            if chk_ah:
+                rows.append(chk_ah)
+            chk_ht = _check_htft(pred or {}, result)
+            if chk_ht:
+                rows.append(chk_ht)
         hit_count = sum(1 for _, ok in rows if ok is True)
         n_hit += hit_count
         n_total += sum(1 for _, ok in rows if ok is not None)

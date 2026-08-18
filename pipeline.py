@@ -536,12 +536,34 @@ def cmd_review(args):
             results = load_results_from_json(default_results)
             print(f"加载 {len(results)} 条赛果，来自 {default_results}")
 
-    # 4.5) 自动拉取的赛果落盘 (供 h2h 回灌与后续复用)
-    if results and not os.path.exists(default_results):
+    # 4.5) 赛果落盘: 与已有文件按场次合并 (增量, 防止定时任务重跑覆盖手输赛果)
+    if results:
         try:
+            merged: dict = {}
+            existing: list = []
+            if os.path.exists(default_results):
+                try:
+                    with open(default_results, "r", encoding="utf-8") as f:
+                        existing = json.load(f)
+                except Exception:
+                    existing = []
+            from pipeline.result_fetcher import _teams_match
+            for r in list(existing) + list(results):
+                # 队名模糊去重: 同一场次(中英文不同写法)保留最新赛果
+                replaced = False
+                for k, old in list(merged.items()):
+                    if (_teams_match(old.get("home_team", ""), r.get("home_team", ""))
+                            and _teams_match(old.get("away_team", ""), r.get("away_team", ""))):
+                        merged[k] = r
+                        replaced = True
+                        break
+                if not replaced:
+                    key = f"{r.get('home_team', '')}|{r.get('away_team', '')}"
+                    merged[key] = r
+            results = [merged[k] for k in merged]
             with open(default_results, "w", encoding="utf-8") as f:
                 json.dump(results, f, ensure_ascii=False, indent=2)
-            print(f"[赛果] 已落盘 {len(results)} 条 → {default_results}")
+            print(f"[赛果] 已合并落盘 {len(results)} 条 → {default_results}")
         except Exception as e:
             print(f"[赛果] 落盘失败: {e}")
 

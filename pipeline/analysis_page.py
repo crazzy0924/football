@@ -294,20 +294,26 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
             )
 
     # 最可能结果标记 (用户要求: 分析页也要把最可能预测标出来, 供参考)
-    if bayes.get("posterior"):
-        post = bayes["posterior"]
-        prob_triple = (post.get("home", 0), post.get("draw", 0), post.get("away", 0))
+    # 无胜平负赔率的场次: 模型没有市场锚点, 不给方向
+    odds_here = p.get("odds") or {}
+    if not odds_here.get("home"):
+        pick_html = '<div class="pick-line">🎯 最可能: <b>无法预测</b> (体彩未开胜平负盘)</div>'
     else:
-        prob_triple = (m.get("home_win", 0), m.get("draw", 0), m.get("away_win", 0))
-    labels = ("主胜", "平局", "客胜")
-    best_i = max(range(3), key=lambda i: prob_triple[i])
-    top_score_txt = ""
-    sd = m.get("score_distribution") or {}
-    if sd:
-        best_score = max(sd.items(), key=lambda kv: kv[1])
-        top_score_txt = f" · 最可能比分 {best_score[0]} ({best_score[1]:.0%})"
-    pick_html = (f'<div class="pick-line">🎯 最可能: <b>{_esc(labels[best_i])}</b> '
-                 f'({prob_triple[best_i]:.1%}){_esc(top_score_txt)}</div>')
+        if bayes.get("posterior"):
+            post = bayes["posterior"]
+            prob_triple = (post.get("home", 0), post.get("draw", 0), post.get("away", 0))
+        else:
+            prob_triple = (m.get("home_win", 0), m.get("draw", 0), m.get("away_win", 0))
+        labels = ("主胜", "平局", "客胜")
+        best_i = max(range(3), key=lambda i: prob_triple[i])
+        top_score_txt = ""
+        sd = m.get("score_distribution") or {}
+        if sd:
+            best_score = max(sd.items(), key=lambda kv: kv[1])
+            top_score_txt = f" · 最可能比分 {best_score[0]} ({best_score[1]:.0%})"
+        cold_tag = " (冷启动·参考)" if p.get("cold_start") else ""
+        pick_html = (f'<div class="pick-line">🎯 最可能: <b>{_esc(labels[best_i])}</b> '
+                     f'({prob_triple[best_i]:.1%}){_esc(top_score_txt)}{_esc(cold_tag)}</div>')
 
     market_txt = _build_market_dim(p, market, move)
     intel_html = ""

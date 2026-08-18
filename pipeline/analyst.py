@@ -365,7 +365,7 @@ def batch_analyze(
             print(f"  [{i+1}/{len(predictions)}] {match_key}: 跳过（冷启动且无赔率）")
             continue
         if pred.get("cold_start"):
-            print(f"  [{i+1}/{len(predictions)}] {match_key}: 冷启动(市场定价为主), 仍做七维分析")
+            print(f"  [{i+1}/{len(predictions)}] {match_key}: 冷启动(市场定价为主), 仍做八维分析")
 
         evidence = build_evidence_packet(pred, intel_text=intel_text)
         if prior_notes.get(match_key):

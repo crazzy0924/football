@@ -47,10 +47,11 @@ def _cn_source(text: str) -> str:
     return "来源:网络 " + text.strip()
 
 
-def _search_bing(query: str, filter_kw: bool = True) -> list[str]:
+def _search_bing(query: str, filter_kw: bool = True, require: list[str] | None = None) -> list[str]:
     """cn.bing.com 搜索 → 摘要列表 (adlt=strict 过滤垃圾)
 
     filter_kw=False 时不按伤停关键词过滤 (用于天气/裁判等侦察)
+    require: 结果必须包含这些词 (队名相关性过滤, 防情报错配)
     """
     import httpx
     headers = {
@@ -73,7 +74,19 @@ def _search_bing(query: str, filter_kw: bool = True) -> list[str]:
                 continue
             if filter_kw and not KEEP_RE.search(text):
                 continue
+            if require and not all(t in text for t in require):
+                continue
             out.append(text[:200])
+        # 严格要求下无结果时放宽重试一次 (队名写法差异兜底)
+        if not out and require:
+            for b in blocks:
+                text = re.sub(r"<[^>]+>", " ", b)
+                text = re.sub(r"\s+", " ", text).strip()
+                if len(text) < 30 or DROP_RE.search(text):
+                    continue
+                if filter_kw and not KEEP_RE.search(text):
+                    continue
+                out.append(text[:200])
         return out[:4]
     except Exception:
         return []
@@ -93,10 +106,16 @@ def build_injury_intel(teams: list[str]) -> str:
     lines = ["=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ==="]
     for team in teams:
         cn = _cn_name(team)
-        queries = [f"{cn}队 伤停 2026", f"{cn} 伤停名单 2026", f"{cn} 伤停"]
+        # 专业足球站点优先 (懂球帝/直播吧), 再放宽到全网; 结果必须含队名防错配
+        queries = [
+            f"{cn}队 伤停 2026 site:dongqiudi.com",
+            f"{cn} 伤停名单 2026 site:zhibo8",
+            f"{cn}队 伤停 2026",
+            f"{cn} 伤停",
+        ]
         got = []
         for q in queries:
-            got = _search_bing(q)
+            got = _search_bing(q, require=[cn])
             if got:
                 break
             time.sleep(3)
@@ -136,7 +155,7 @@ def main() -> None:
         a = _cn_name(m.get("away_team", ""))
         if not h or not a:
             continue
-        got = _search_bing(f"{h} {a} 主裁判 2026")
+        got = _search_bing(f"{h} {a} 主裁判 2026", filter_kw=False, require=[h, a])
         if got:
             ref_lines.append(f"[裁判] {h} vs {a}")
             for s in got[:2]:
@@ -152,7 +171,7 @@ def main() -> None:
         a = _cn_name(m.get("away_team", ""))
         if not h or not a:
             continue
-        got = _search_bing(f"{h} {a} 比赛 天气 预报", filter_kw=False)
+        got = _search_bing(f"{h} {a} 比赛 天气 预报", filter_kw=False, require=[h, a])
         if got:
             wx_lines.append(f"[天气] {h} vs {a}")
             for s in got[:2]:

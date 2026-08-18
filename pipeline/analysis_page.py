@@ -61,6 +61,11 @@ _CSS = """
   .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
                border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
   .pick-line b { font-size:1.05rem; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
   .dims { margin-top:12px; display:grid; gap:8px; }
   .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
   .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
@@ -238,11 +243,11 @@ def _build_h2h_dim(p) -> str:
 
 def _split_note(note: str) -> dict:
     """把 LLM 输出拆成结构段 (八维新版5行格式 + 自检, 兼容旧版定性评估格式)"""
-    parts = {"方向分": "", "结论": "", "关键维度": "", "三条路径": "", "反向验证": "", "触发器": "", "自检": ""}
+    parts = {"方向分": "", "维度分": "", "结论": "", "关键维度": "", "三条路径": "", "反向验证": "", "触发器": "", "自检": ""}
     if not note:
         return parts
     cur = "结论"
-    labels = ["方向分", "结论", "关键维度", "三条路径", "反向验证", "触发器", "自检"]
+    labels = ["方向分", "维度分", "结论", "关键维度", "三条路径", "反向验证", "触发器", "自检"]
     for line in note.splitlines():
         line = line.strip()
         if not line:
@@ -262,6 +267,22 @@ def _split_note(note: str) -> dict:
         if rest:
             parts[cur] = (parts[cur] + "\n" + rest).strip() if parts[cur] else rest
     return parts
+
+
+def _dim_strip_html(txt: str) -> str:
+    """把 维度分: 市场+1/状态+2/... 渲染成可视化胶囊条 (借鉴八维评分总表)"""
+    if not txt:
+        return ""
+    cells = []
+    for lab in ("市场", "状态", "阵容", "交锋", "赛程", "天气", "裁判", "战意"):
+        m = _re.search(lab + r"\s*([+-]?\d+(?:\.\d+)?)", txt)
+        if not m:
+            continue
+        val = float(m.group(1))
+        cls = "pos" if val > 0 else ("neg" if val < 0 else "zero")
+        sign = ("+" if val > 0 else "") + f"{val:g}"
+        cells.append(f'<span class="ds {cls}">{_esc(lab)} {sign}</span>')
+    return '<div class="ds-strip">' + "".join(cells) + "</div>" if cells else ""
 
 
 def _build_match_card(p, market, move, note, intel_text) -> str:
@@ -290,6 +311,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     if segs["三条路径"]:
         dim7_lines.append("三条路径: " + segs["三条路径"])
     dim7_lines.append("反向验证: " + (segs["反向验证"] or "暂无"))
+    dim_strip = _dim_strip_html(segs.get("维度分", ""))
     if segs["触发器"]:
         dim7_lines.append("触发器: " + segs["触发器"])
     if segs["自检"]:
@@ -340,7 +362,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     market_txt = _build_market_dim(p, market, move)
     intel_html = ""
     if intel_text:
-        intel_html = (f'<div class="intel-box"><b style="color:#8d99b0;">赛前情报原始存档</b>\n{_esc(intel_text)}</div>')
+        intel_html = (f'<div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>\n{_esc(intel_text)}</div>')
 
     return f"""
 <article class="match">
@@ -352,6 +374,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     <span class="m-meta">开球 {_esc(kick) or '时间未定'}{cold_html}</span>
   </header>
   {pick_html}
+  {dim_strip}
   <div class="dims">
     <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">{_esc(market_txt)}</div></div>
     <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">{_esc(_build_schedule_dim(p))}</div></div>

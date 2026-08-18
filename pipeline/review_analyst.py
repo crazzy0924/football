@@ -258,8 +258,11 @@ def _check_ah(pred: dict, result: dict) -> tuple[str, bool] | None:
     else:
         cover = "away"
     pick = e["best_pick"]
-    ok = (pick == cover) or (cover == "push")
-    txt = f"让球盘: 模型倾向{pick} → 实际{'走盘' if cover == 'push' else ('主赢盘' if cover == 'home' else '客赢盘')}"
+    if cover == "push":
+        # 走盘 = 退款, 不算命中也不算错 (中性)
+        return f"让球盘: 模型倾向{pick} → 实际走盘(退款)", None
+    ok = pick == cover
+    txt = f"让球盘: 模型倾向{pick} → 实际{'主赢盘' if cover == 'home' else '客赢盘'}"
     return txt, ok
 
 

@@ -225,7 +225,7 @@ def _try_deepseek(prompt: str, api_key: str, model: str) -> str | None:
                 {"role": "system", "content": "你是资深足球赛前分析师。按用户要求的5行格式输出中文分析。不输出概率、不推荐投注、不编造。"},
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=900,
+            max_tokens=1600,
             temperature=0.7,
         )
         msg = resp.get("message") or {}

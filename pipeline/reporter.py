@@ -336,6 +336,26 @@ def _load_odds_movement(date_str: str) -> dict:
     return data
 
 
+# 北京时间 → 当地时间的粗略时差 (供比赛核验参考, 标注"约")
+_TZ_OFFSET = {"PL": -7, "ELC": -7, "PD": -6, "BL1": -6, "SA": -6, "FL1": -6,
+              "DED": -6, "PPL": -7, "CLB": -12, "BSA": -11, "MLS": -12, "SPL": -7}
+
+
+def _local_time(p: dict, league_code: str) -> str:
+    """开球当地时间估算 (北京时间+时差, 约值)"""
+    kt = (p.get("kickoff_time") or "").strip()
+    if not kt or len(kt) < 5:
+        return "—"
+    off = _TZ_OFFSET.get(league_code)
+    if off is None:
+        return "—"
+    try:
+        hh = (int(kt[:2]) + off) % 24
+        return f"约{hh:02d}:{kt[3:5]}"
+    except Exception:
+        return "—"
+
+
 def _build_match_card(
     p: dict,
     analyst_notes: dict[str, str] | None = None,
@@ -578,10 +598,18 @@ def _build_match_card(
     summary_txt = None
     dir_score = None
     reverse_txt = None
+    conf_txt = None
+    second_score = None
+    tactics = {}
+    extended = {}
     if struct:
         summary_txt = struct.get("摘要")
         dir_score = struct.get("方向分")
         reverse_txt = struct.get("反向验证")
+        conf_txt = struct.get("置信度")
+        second_score = struct.get("次选比分")
+        tactics = struct.get("战术") or {}
+        extended = struct.get("扩展") or {}
         for d in struct.get("八维") or []:
             dims_rows.append({
                 "label": d.get("维度", ""),
@@ -666,6 +694,20 @@ def _build_match_card(
         "kickoff": (p.get("kickoff_time") or ""),
         "venue": (p.get("venue") or "") or "—",
         "audit_txt": audit_txt,
+        "conf_txt": conf_txt,
+        "second_score": second_score,
+        "tactics_have_ball": tactics.get("有球") or "",
+        "tactics_no_ball": tactics.get("无球") or "",
+        "tactics_key_var": tactics.get("最大变量") or "",
+        "ext_goals": extended.get("总进球") or "",
+        "ext_margin": extended.get("净胜球") or "",
+        "ext_first_half": extended.get("上半场") or "",
+        "research_time": date.today().isoformat() + " · 终盘",
+        "local_time": _local_time(p, league_code),
+        "missing_dims": "、".join(
+            d.get("label", "") for d in dims_rows
+            if ("无数据" in str(d.get("evidence", ""))) or ("未公布" in str(d.get("evidence", "")))
+        ),
     }
 
 

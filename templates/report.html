@@ -170,6 +170,10 @@
   .a-triggers .trg { display: inline-block; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3); border-radius: 6px; padding: 2px 8px; margin: 2px 4px 2px 0; }
   .a-reverse { font-size: .8rem; color: #fca5a5; margin-top: 8px; }
   .a-audit { font-size: .8rem; color: #a78bfa; margin-top: 8px; background: rgba(167,139,250,.08); border-radius: 8px; padding: 6px 10px; }
+  .a-tactics { font-size: .82rem; color: #b9c7e2; margin-top: 8px; background: rgba(94,168,255,.06); border-radius: 8px; padding: 8px 12px; }
+  .a-tactics b { color: #9ec4ff; }
+  .a-ext { font-size: .82rem; color: #a8c7f0; margin-top: 8px; background: rgba(52,211,153,.06); border-radius: 8px; padding: 8px 12px; }
+  .a-missing { font-size: .75rem; color: #8d99b0; margin-top: 8px; }
 
   /* ── 今日看好速览 ── */
   .picks-strip {
@@ -346,9 +350,9 @@
 
     {% if m.summary_txt or m.dims_rows %}
     <div class="report-a">
-      {% if m.kickoff or m.venue != '—' %}<div class="a-meta">🕗 开球 {{ m.kickoff }} · 📍 球场 {{ m.venue }}</div>{% endif %}
-      {% if m.dir_score is not none %}<div class="a-dir">🧭 加权方向分: <b class="{% if m.dir_score > 0 %}dir-h{% elif m.dir_score < 0 %}dir-a{% else %}dir-z{% endif %}">{{ m.dir_score }}</b> (正值利主队)</div>{% endif %}
-      {% if m.summary_txt %}<div class="a-summary">📌 {{ m.summary_txt }}</div>{% endif %}
+      {% if m.kickoff or m.venue != '—' %}<div class="a-meta">🕗 开球 北京时间 {{ m.kickoff }}{% if m.local_time != '—' %} (当地{{ m.local_time }}){% endif %} · 📍 球场 {{ m.venue }} · 🧪 研究时点 {{ m.research_time }}</div>{% endif %}
+      {% if m.dir_score is not none %}<div class="a-dir">🧭 加权方向分: <b class="{% if m.dir_score > 0 %}dir-h{% elif m.dir_score < 0 %}dir-a{% else %}dir-z{% endif %}">{{ m.dir_score }}</b> (正值利主队){% if m.conf_txt %} · 整体置信度: <b class="dir-h">{{ m.conf_txt }}</b>{% endif %}</div>{% endif %}
+      {% if m.summary_txt %}<div class="a-summary">📌 {{ m.summary_txt }}{% if m.second_score %} <span style="color:#8d99b0;">次选比分 {{ m.second_score }}</span>{% endif %}</div>{% endif %}
       {% if m.dims_rows %}
       <div class="tb-wrap"><table class="dims-table">
         <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
@@ -372,11 +376,20 @@
         {% endfor %}
       </table></div>
       {% endif %}
+      {% if m.tactics_have_ball %}
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> {{ m.tactics_have_ball }} <b>无球:</b> {{ m.tactics_no_ball }} <b>最大变量:</b> {{ m.tactics_key_var }}</div>
+      {% endif %}
+      {% if m.ext_goals %}
+      <div class="a-ext">📐 扩展情景: 总进球 {{ m.ext_goals }} · 净胜球 {{ m.ext_margin }} · 上半场 {{ m.ext_first_half }}</div>
+      {% endif %}
       {% if m.triggers_list %}
       <div class="a-triggers">⚡ 临场触发器: {% for t in m.triggers_list %}<span class="trg">{{ t }}</span>{% endfor %}</div>
       {% endif %}
       {% if m.reverse_txt %}<div class="a-reverse">🔄 反向验证: {{ m.reverse_txt }}</div>{% endif %}
       {% if m.audit_txt %}<div class="a-audit">🤖 自检: {{ m.audit_txt }}</div>{% endif %}
+      {% if m.missing_dims %}
+      <div class="a-missing">📋 数据缺失声明: {{ m.missing_dims }} 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      {% endif %}
     </div>
     {% elif m.analyst_note %}
     <div class="m-note"><span class="nt">分析师</span>{{ m.analyst_note }}</div>

@@ -210,9 +210,14 @@ def cmd_predict(args):
         for m in matches:
             kt = (m.get("kickoff_time") or "").strip()
             try:
-                kt_dt = now_bj.replace(hour=int(kt[:2]), minute=int(kt[3:5]), second=0, microsecond=0)
+                hh = int(kt[:2])
+                mm = int(kt[3:5])
+                # 北京时间凌晨场次 (欧洲/美洲晚上) 属于次日, 不是当天已开球
+                kt_dt = now_bj.replace(hour=hh, minute=mm, second=0, microsecond=0)
+                if hh < 12:
+                    kt_dt = kt_dt + _td(days=1)
                 if kt_dt <= now_bj:
-                    print(f"[跳过] {m.get('home_team')} vs {m.get('away_team')} 已开球 ({kt}), 终盘不再预测")
+                    print(f"[跳过] {m.get('home_team')} vs {m.get('away_team')} 已开球 ({kt} 北京时间), 终盘不再预测")
                     continue
             except Exception:
                 pass
@@ -496,6 +501,12 @@ def cmd_predict(args):
                             ev = build_evidence_packet(pred, intel_text=intel_text)
                             aud = audit_analysis(ev, note, prior_notes.get(key, ""))
                             if aud:
+                                # 自检文本清洗 (英文队名连续词组, 汉化纪律)
+                                try:
+                                    from pipeline.analysis_page import _sanitize_intel
+                                    aud = _sanitize_intel(aud)
+                                except Exception:
+                                    pass
                                 analyst_notes[key] = note + "\n" + aud
                                 n_aud += 1
                                 print(f"  [自检] {key}: {aud[:60]}")

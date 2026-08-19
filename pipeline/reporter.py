@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -607,6 +608,13 @@ def _build_match_card(
             })
         triggers_list = struct.get("触发器") or []
 
+    # 自检结论 (审计行在JSON之外, 单独提取显示)
+    audit_txt = None
+    if analyst_note:
+        m2 = re.search(r"自检[:：]\s*(.+)", analyst_note)
+        if m2:
+            audit_txt = m2.group(1).strip()
+
     return {
         "home_team": home_team,
         "away_team": away_team,
@@ -657,6 +665,7 @@ def _build_match_card(
         "triggers_list": triggers_list,
         "kickoff": (p.get("kickoff_time") or ""),
         "venue": (p.get("venue") or "") or "—",
+        "audit_txt": audit_txt,
     }
 
 

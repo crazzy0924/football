@@ -169,6 +169,7 @@
   .a-triggers { font-size: .8rem; color: #fcd34d; margin-top: 8px; }
   .a-triggers .trg { display: inline-block; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3); border-radius: 6px; padding: 2px 8px; margin: 2px 4px 2px 0; }
   .a-reverse { font-size: .8rem; color: #fca5a5; margin-top: 8px; }
+  .a-audit { font-size: .8rem; color: #a78bfa; margin-top: 8px; background: rgba(167,139,250,.08); border-radius: 8px; padding: 6px 10px; }
 
   /* ── 今日看好速览 ── */
   .picks-strip {
@@ -375,6 +376,7 @@
       <div class="a-triggers">⚡ 临场触发器: {% for t in m.triggers_list %}<span class="trg">{{ t }}</span>{% endfor %}</div>
       {% endif %}
       {% if m.reverse_txt %}<div class="a-reverse">🔄 反向验证: {{ m.reverse_txt }}</div>{% endif %}
+      {% if m.audit_txt %}<div class="a-audit">🤖 自检: {{ m.audit_txt }}</div>{% endif %}
     </div>
     {% elif m.analyst_note %}
     <div class="m-note"><span class="nt">分析师</span>{{ m.analyst_note }}</div>

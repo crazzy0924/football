@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>午盘七维分析存档 — 2026-08-19</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 午盘七维分析存档 · 非预测页</div>
+    <h1>2026-08-19</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-08-19.html">predictions_2026-08-19.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">韩国杯 · 非五大</span>安养FC<span class="tvs">VS</span>济州SK
+      <span style="font-size:.75rem;color:#8d99b0;">(安养FC vs 济州SK)</span>
+    </div>
+    <span class="m-meta">开球 18:30:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (38.8%) · 最可能比分 1-1 (14%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.70 / 平3.10 / 客2.29
+主胜赔率变动: 2.63 → 2.70 (+0.07)
+亚盘(主让1.0球): 主1.48 / 平3.85 / 客5.15
+大小球 2.5 球: 大1.87 / 小2.15
+波胆最低赔: 1-1@6.0 / 1-2@8.25 / 0-1@9.0
+模型亚盘倾向: home (价值 +27.8%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 核心赛果推演：布 … === 天气侦察 (未经核实, 仅供参考) === [天气] 安养 济州SK 来源:百度</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.4,
+&quot;摘要&quot;: &quot;最可能方向为客队小胜或平局，济州SK略占优。核心依据是模型与市场均指向客队，但冷启动下不确定性高，且无有效伤停信息。最大风险是主队主场因素与数据盲区。&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主2.70/平3.10/客2.29；亚盘主+1.0下模型主覆盖61%&quot;, &quot;优势分&quot;:-1, &quot;权重&quot;:24, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场资金略偏向客队，但亚盘深盘下主队受让有拉力，市场与模型分歧不大，客队优势有限。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;模型概率主32.7%/平28.4%/客38.9%；预期进球1.26-1.40；ELO差0&quot;, &quot;优势分&quot;:-1, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;模型概率客队最高，预期进球略偏客队，但ELO无差距，冷启动参数不确定性高，仅能给出轻微客队倾向。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报中无安养FC与济州SK的有效伤停信息，无法评估核心主力缺阵影响，权重已重新分配。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;未提供近2季交锋记录，无法判断克制关系，权重已重新分配。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;赛程密度：主队7天0场/客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方均无密集赛程或双线作战压力，体能条件对等，不构成明显优势。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及有效天气信息，权重记0并重新分配。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判任命未公布，不猜测，权重记0并重新分配。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;联赛UNK，无积分榜分区信息&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:28, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;缺少联赛背景与积分榜信息，无法判断争冠/欧战/保级/中游战意，双方战意不明，不滥用必须赢。&quot;}
+],
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;客队保持正常攻防节奏，主队受让下未能守住平局&quot;, &quot;比分&quot;:[&quot;1-2&quot;,&quot;0-1&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;双方预期进球接近，主队受让+1下守住盘口&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;主队借助主场与受让拉力，打出超预期反击效率&quot;, &quot;比分&quot;:[&quot;2-0&quot;,&quot;1-0&quot;]}
+},
+&quot;触发器&quot;: [&quot;赛前出现安养FC核心主力伤停或济州SK轮换消息&quot;, &quot;临场亚盘从主+1.0调整为主+0.75或更低&quot;, &quot;官方公布裁判且风格明显利于主队&quot;, &quot;出现近2季交锋显示主队克制客队的记录&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在冷启动模型参数不可靠，且缺少伤停与战意信息，主队实际主场战力被低估。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主32.7% 平28.4% 客38.9%&lt;br&gt;预期进球: 1.26 - 1.40&lt;br&gt;大2.5: 49.7% | BTTS: 55.2%&lt;br&gt;贝叶斯后验: 主32.7% 平28.5% 客38.8%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 奈梅亨]
+来源:网络 .cn › detail 欧冠资格赛：奥林匹亚科斯迎战 奈梅亨 ，客队后防五人缺阵 ... 北京时间8月5日凌晨2点，2026-27赛季欧冠资格赛第三轮首回合将在比雷埃夫斯的卡拉伊斯卡基斯球场打响，希腊豪门奥林匹亚科斯 …
+[博德闪耀 / 博德闪耀]
+来源:网络 › zh-cn › news › other › 伤病追踪... 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 博德闪耀方面 米克尔森主要承担前场机动和冲击任务，更多在边路或攻击线活动。相比奈梅亨，博德闪耀的伤停对主框架 …
+来源:网易 › dy › article 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 伤病追踪：奈梅亨vs博德闪耀，主队四人伤停，客队仅一人受伤,四人,奈梅亨,圣博德,新赛季,博德闪耀,伤病追踪 奈梅亨与 …
+来源:网络 2026年8月19日 周三007 奈梅亨 vs 博德闪耀 赛前分析：防线 ... 10 小时之前 &amp;#0183; 2026年8月19日 周三007 奈梅亨 vs 博德闪耀赛前分析：防线伤停遇上挪超火力，主胜期待值是否被高估？ 2026-08-19 …
+来源:凤凰网 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 10 小时之前 &amp;#0183; 综合来看，这组伤停信息对奈梅亨的影响明显更大，尤其会压缩球队的阵容深度和临场调整空间； 奈梅亨与博德闪耀的 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[裁判] 马德里竞技 vs 马拉加
+来源:网络 nankai. › ... 金融学院 2027年接收优秀应届本科毕业生免试攻读研究生 ... 2025年12月29日 &amp;#0183; 金融学院2027年接收优秀应届本科毕业生免试攻读研究生预报名的通知 发布时间：2026-08-10 附件1：网上报名重 …
+来源:网络 nankai. › ... 南开大学 接收2026年 推荐 免试（含直博）生招生工作办法 2025年9月14日 &amp;#0183; Copyright 2014 &amp;#169; . .
+[裁判] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[裁判] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[裁判] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 um.edu.mo 首頁 - 澳門大學社會科學學院 公共行政博士學位課程 1 天前 &amp;#0183; 公共行政博士是一個培養應用型人才的專業博士學位課程，其主要目標是為本澳以及大中華地區（尤其是粵港澳大灣區）培養 …
+来源:网络 um.edu.mo › - , , … 2026年8月9日 &amp;#0183; (DPA)
+[裁判] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[裁判] 奈梅亨 vs 博德闪耀
+来源:网络 › test-machine › gtr.html 灼热丝试验仪 厂家_供应商_自主研发_广州市智力通机电有限公司 广州市智力通机电有限公司是一家灼热丝试验仪厂家及供应商，主要提供灼热丝试验仪批发，价格优惠，产品销往广东广州、深圳、北 …
+来源:网络 › gongsi 灼热丝试验仪 厂家- 灼热丝试验仪 厂家、公司、企业 - 阿里巴巴 阿里巴巴为您找到212条关于灼热丝试验仪生产商的工商注册年份、员工人数、年营业额、信用记录、主营产品、相关灼热丝试验仪产 …
+[裁判] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[天气] 马德里竞技 vs 马拉加
+来源:百度 › question 什么叫阴离子表面活性剂？什么叫阳离子表面活性剂？十二 ... 2010年8月12日 &amp;#0183; 是属于阴离子表面活性剂 阴离子表面活性剂 英文化学术语: . 表面活性剂的一类。在水中解离后， …
+来源:百度 › question 食品上用的表面活性剂有哪些 - 百度知道 2008年6月10日 &amp;#0183; 食品上用的表面活性剂有哪些表面活性剂是分子里含有固定的亲水亲油基团，能集中在溶液表面、两种不相混溶液体 …
+[天气] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[天气] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[天气] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 theguesthousehotel.’ (!
+来源:网络 › , whic
+[天气] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[天气] 奈梅亨 vs 博德闪耀
+来源:网络 poki. - ! , the #1 . , , …
+来源:网络 poki.to › explore › | ! , ,
+[天气] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>马德里竞技<span class="tvs">VS</span>马拉加
+      <span style="font-size:.75rem;color:#8d99b0;">(Ath Madrid vs 马拉加)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (73.7%) · 最可能比分 1-0 (18%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.21 / 平4.81 / 客10.50
+主胜赔率变动: 1.20 → 1.21 (+0.01)
+亚盘(主受1.0球): 主1.74 / 平3.7 / 客3.51
+大小球 2.5 球: 大1.69 / 小2.44
+波胆最低赔: 2-0@6.0 / 1-0@7.0 / 2-1@7.5
+模型亚盘倾向: home (价值 +15.0%, 信心 high)
+模型大小球倾向: 小2.5 (模型47% vs 市场59%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 核心赛果推演：布 … === 天气侦察 (未经核实, 仅供参考) === [天气] 安养 济州SK 来源:百度</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: ```json
+{
+&quot;方向分&quot;: 1.8,
+&quot;摘要&quot;: &quot;最可能方向为主胜小胜。马竞实力与主场优势明显，但市场对深盘信心不足且模型冷启动，最大风险是主队攻坚效率不足导致平局。&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主1.21/平4.81/客10.50；亚盘主-1.0模型主覆盖48%&quot;, &quot;优势分&quot;:2, &quot;权重&quot;:24, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场深盘低水反映资金流向主队，但模型对-1.0盘口覆盖不足，显示市场对马竞大胜存疑，主队优势被部分高估。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差+136；预期进球2.08-0.50；模型主胜74.0%&quot;, &quot;优势分&quot;:4, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;实力与攻防数据全面倾向主队，但模型冷启动提示参数不确定性高，需谨慎对待高概率。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及双方伤停，无法评估核心主力缺阵影响，该维度不贡献方向分。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;近2季交锋记录缺失，无法判断克制关系，该维度不贡献方向分。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场/客队7天0场&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:16, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方均无密集赛程压力，体能对等，主队主场以逸待劳略占优。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气，权重记0。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判任命未公布，不猜测，权重记0。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:30, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;积分榜分区情报缺失，无法判断战意与轮换倾向；仅凭主场因素给予轻微正向分。&quot;}
+],
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;马竞正常发挥，锋线抓住机会&quot;, &quot;比分&quot;:[&quot;2-0&quot;,&quot;1-0&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;马竞攻坚效率低，马拉加密集防守成功&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;马竞轮换主力且防线失误，马拉加反击得手&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;触发器&quot;: [&quot;赛前公布马竞核心主力轮换或伤停&quot;, &quot;亚盘从主-1.0退至主-0.75&quot;, &quot;马拉加近2季交锋对马竞保持不败&quot;, &quot;天气转为大雨或场地条件恶劣&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在低估了马竞因冷启动导致模型概率虚高，实际比赛陷入阵地战僵局，最终以平局收场。&quot;
+}
+```<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主74.0% 平18.6% 客7.5%&lt;br&gt;预期进球: 2.08 - 0.50&lt;br&gt;大2.5: 46.9% | BTTS: 33.3%&lt;br&gt;贝叶斯后验: 主73.7% 平18.5% 客7.8%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 奈梅亨]
+来源:网络 .cn › detail 欧冠资格赛：奥林匹亚科斯迎战 奈梅亨 ，客队后防五人缺阵 ... 北京时间8月5日凌晨2点，2026-27赛季欧冠资格赛第三轮首回合将在比雷埃夫斯的卡拉伊斯卡基斯球场打响，希腊豪门奥林匹亚科斯 …
+[博德闪耀 / 博德闪耀]
+来源:网络 › zh-cn › news › other › 伤病追踪... 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 博德闪耀方面 米克尔森主要承担前场机动和冲击任务，更多在边路或攻击线活动。相比奈梅亨，博德闪耀的伤停对主框架 …
+来源:网易 › dy › article 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 伤病追踪：奈梅亨vs博德闪耀，主队四人伤停，客队仅一人受伤,四人,奈梅亨,圣博德,新赛季,博德闪耀,伤病追踪 奈梅亨与 …
+来源:网络 2026年8月19日 周三007 奈梅亨 vs 博德闪耀 赛前分析：防线 ... 10 小时之前 &amp;#0183; 2026年8月19日 周三007 奈梅亨 vs 博德闪耀赛前分析：防线伤停遇上挪超火力，主胜期待值是否被高估？ 2026-08-19 …
+来源:凤凰网 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 10 小时之前 &amp;#0183; 综合来看，这组伤停信息对奈梅亨的影响明显更大，尤其会压缩球队的阵容深度和临场调整空间； 奈梅亨与博德闪耀的 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[裁判] 马德里竞技 vs 马拉加
+来源:网络 nankai. › ... 金融学院 2027年接收优秀应届本科毕业生免试攻读研究生 ... 2025年12月29日 &amp;#0183; 金融学院2027年接收优秀应届本科毕业生免试攻读研究生预报名的通知 发布时间：2026-08-10 附件1：网上报名重 …
+来源:网络 nankai. › ... 南开大学 接收2026年 推荐 免试（含直博）生招生工作办法 2025年9月14日 &amp;#0183; Copyright 2014 &amp;#169; . .
+[裁判] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[裁判] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[裁判] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 um.edu.mo 首頁 - 澳門大學社會科學學院 公共行政博士學位課程 1 天前 &amp;#0183; 公共行政博士是一個培養應用型人才的專業博士學位課程，其主要目標是為本澳以及大中華地區（尤其是粵港澳大灣區）培養 …
+来源:网络 um.edu.mo › - , , … 2026年8月9日 &amp;#0183; (DPA)
+[裁判] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[裁判] 奈梅亨 vs 博德闪耀
+来源:网络 › test-machine › gtr.html 灼热丝试验仪 厂家_供应商_自主研发_广州市智力通机电有限公司 广州市智力通机电有限公司是一家灼热丝试验仪厂家及供应商，主要提供灼热丝试验仪批发，价格优惠，产品销往广东广州、深圳、北 …
+来源:网络 › gongsi 灼热丝试验仪 厂家- 灼热丝试验仪 厂家、公司、企业 - 阿里巴巴 阿里巴巴为您找到212条关于灼热丝试验仪生产商的工商注册年份、员工人数、年营业额、信用记录、主营产品、相关灼热丝试验仪产 …
+[裁判] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[天气] 马德里竞技 vs 马拉加
+来源:百度 › question 什么叫阴离子表面活性剂？什么叫阳离子表面活性剂？十二 ... 2010年8月12日 &amp;#0183; 是属于阴离子表面活性剂 阴离子表面活性剂 英文化学术语: . 表面活性剂的一类。在水中解离后， …
+来源:百度 › question 食品上用的表面活性剂有哪些 - 百度知道 2008年6月10日 &amp;#0183; 食品上用的表面活性剂有哪些表面活性剂是分子里含有固定的亲水亲油基团，能集中在溶液表面、两种不相混溶液体 …
+[天气] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[天气] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[天气] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 theguesthousehotel.’ (!
+来源:网络 › , whic
+[天气] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[天气] 奈梅亨 vs 博德闪耀
+来源:网络 poki. - ! , the #1 . , , …
+来源:网络 poki.to › explore › | ! , ,
+[天气] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">解放者杯 · 非五大</span>波特诺山丘<span class="tvs">VS</span>帕尔梅拉斯
+      <span style="font-size:.75rem;color:#8d99b0;">(Cerro Porteno vs Palmeiras)</span>
+    </div>
+    <span class="m-meta">开球 06:00:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (53.3%) · 最可能比分 0-1 (15%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主5.15 / 平3.00 / 客1.66
+主胜赔率变动: 5.05 → 5.15 (+0.10)
+亚盘(主让1.0球): 主1.96 / 平3.16 / 客3.3
+大小球 2.5 球: 大2.56 / 小1.64
+波胆最低赔: 0-1@5.3 / 1-1@6.0 / 0-2@6.9
+模型亚盘倾向: home (价值 +13.4%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 核心赛果推演：布 … === 天气侦察 (未经核实, 仅供参考) === [天气] 安养 济州SK 来源:百度</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季交锋: 主队 0胜 1平 0负, 进球 1:1</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: ```json
+{
+&quot;方向分&quot;: -0.7,
+&quot;摘要&quot;: &quot;最可能方向为客队小胜或平局，帕尔梅拉斯实力与市场定位占优。核心风险是冷启动模型不确定性高、主队主场因素与交锋平局样本少。&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔5.15/3.00/1.66，亚盘主+1.0，市场融合Model 71%/Market 29%&quot;, &quot;优势分&quot;:-2, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;市场明显倾向客队，但模型对客队信心不足，分歧主要来自冷启动数据，需警惕模型盲区但市场资金流向更可靠。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;预期进球0.66-1.42，模型概率主16.9%平29.8%客53.3%&quot;, &quot;优势分&quot;:-2, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;客队预期进球显著占优，攻防数据指向客队控制比赛，但冷启动ELO差为0，实力差未完全体现。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:10, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;未提供两队伤停情报，无法评估核心主力缺阵影响，权重下调避免主观臆断。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;近2季交锋：主队0胜1平0负，总进球1-1&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;仅1场平局样本，无法形成克制判断，且进球数持平显示主队并非完全被动。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场，客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;双方均无密集赛程，体能恢复充分，该维度无倾向性。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气与场地，权重记0，不影响方向判断。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无官方裁判任命信息，不猜测，权重重新分配至市场与赛程维度。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;解放者杯，无积分榜分区情报&quot;, &quot;优势分&quot;:-1, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;杯赛战意通常较高，但缺乏具体积分榜背景，客队实力更强且市场定位占优，略倾向客队。&quot;}
+],
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;帕尔梅拉斯正常发挥，中场控制并限制主队反击&quot;, &quot;比分&quot;:[&quot;0-1&quot;,&quot;0-2&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;主队主场防守紧凑，客队攻坚效率低&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;主队利用主场气势先进球并收缩防线&quot;, &quot;比分&quot;:[&quot;1-0&quot;]}
+},
+&quot;触发器&quot;: [&quot;赛前主队核心后卫或门将伤停则客胜概率进一步上升&quot;, &quot;若帕尔梅拉斯轮换主力则平局概率增加&quot;, &quot;若主队主场天气恶劣影响客队传控则冷门风险上升&quot;, &quot;若临场赔率主胜大幅下调则需重新评估市场信号&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在低估主队主场战斗力与交锋平局的心理优势，或冷启动模型对客队真实实力高估。&quot;
+}
+```<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主16.9% 平29.8% 客53.3%&lt;br&gt;预期进球: 0.66 - 1.42&lt;br&gt;大2.5: 34.8% | BTTS: 38.1%&lt;br&gt;贝叶斯后验: 主17.0% 平29.7% 客53.3%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 奈梅亨]
+来源:网络 .cn › detail 欧冠资格赛：奥林匹亚科斯迎战 奈梅亨 ，客队后防五人缺阵 ... 北京时间8月5日凌晨2点，2026-27赛季欧冠资格赛第三轮首回合将在比雷埃夫斯的卡拉伊斯卡基斯球场打响，希腊豪门奥林匹亚科斯 …
+[博德闪耀 / 博德闪耀]
+来源:网络 › zh-cn › news › other › 伤病追踪... 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 博德闪耀方面 米克尔森主要承担前场机动和冲击任务，更多在边路或攻击线活动。相比奈梅亨，博德闪耀的伤停对主框架 …
+来源:网易 › dy › article 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 伤病追踪：奈梅亨vs博德闪耀，主队四人伤停，客队仅一人受伤,四人,奈梅亨,圣博德,新赛季,博德闪耀,伤病追踪 奈梅亨与 …
+来源:网络 2026年8月19日 周三007 奈梅亨 vs 博德闪耀 赛前分析：防线 ... 10 小时之前 &amp;#0183; 2026年8月19日 周三007 奈梅亨 vs 博德闪耀赛前分析：防线伤停遇上挪超火力，主胜期待值是否被高估？ 2026-08-19 …
+来源:凤凰网 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 10 小时之前 &amp;#0183; 综合来看，这组伤停信息对奈梅亨的影响明显更大，尤其会压缩球队的阵容深度和临场调整空间； 奈梅亨与博德闪耀的 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[裁判] 马德里竞技 vs 马拉加
+来源:网络 nankai. › ... 金融学院 2027年接收优秀应届本科毕业生免试攻读研究生 ... 2025年12月29日 &amp;#0183; 金融学院2027年接收优秀应届本科毕业生免试攻读研究生预报名的通知 发布时间：2026-08-10 附件1：网上报名重 …
+来源:网络 nankai. › ... 南开大学 接收2026年 推荐 免试（含直博）生招生工作办法 2025年9月14日 &amp;#0183; Copyright 2014 &amp;#169; . .
+[裁判] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[裁判] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[裁判] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 um.edu.mo 首頁 - 澳門大學社會科學學院 公共行政博士學位課程 1 天前 &amp;#0183; 公共行政博士是一個培養應用型人才的專業博士學位課程，其主要目標是為本澳以及大中華地區（尤其是粵港澳大灣區）培養 …
+来源:网络 um.edu.mo › - , , … 2026年8月9日 &amp;#0183; (DPA)
+[裁判] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[裁判] 奈梅亨 vs 博德闪耀
+来源:网络 › test-machine › gtr.html 灼热丝试验仪 厂家_供应商_自主研发_广州市智力通机电有限公司 广州市智力通机电有限公司是一家灼热丝试验仪厂家及供应商，主要提供灼热丝试验仪批发，价格优惠，产品销往广东广州、深圳、北 …
+来源:网络 › gongsi 灼热丝试验仪 厂家- 灼热丝试验仪 厂家、公司、企业 - 阿里巴巴 阿里巴巴为您找到212条关于灼热丝试验仪生产商的工商注册年份、员工人数、年营业额、信用记录、主营产品、相关灼热丝试验仪产 …
+[裁判] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[天气] 马德里竞技 vs 马拉加
+来源:百度 › question 什么叫阴离子表面活性剂？什么叫阳离子表面活性剂？十二 ... 2010年8月12日 &amp;#0183; 是属于阴离子表面活性剂 阴离子表面活性剂 英文化学术语: . 表面活性剂的一类。在水中解离后， …
+来源:百度 › question 食品上用的表面活性剂有哪些 - 百度知道 2008年6月10日 &amp;#0183; 食品上用的表面活性剂有哪些表面活性剂是分子里含有固定的亲水亲油基团，能集中在溶液表面、两种不相混溶液体 …
+[天气] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[天气] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[天气] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 theguesthousehotel.’ (!
+来源:网络 › , whic
+[天气] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[天气] 奈梅亨 vs 博德闪耀
+来源:网络 poki. - ! , the #1 . , , …
+来源:网络 poki.to › explore › | ! , ,
+[天气] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">美职 · 非五大</span>纽约红牛<span class="tvs">VS</span>纳什维尔
+      <span style="font-size:.75rem;color:#8d99b0;">(纽约红牛 vs 纳什维尔)</span>
+    </div>
+    <span class="m-meta">开球 07:30:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (41.9%) · 最可能比分 1-1 (12%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.78 / 平3.38 / 客2.11
+亚盘(主让1.0球): 主1.57 / 平4.0 / 客4.12
+大小球 2.5 球: 大1.52 / 小2.91
+波胆最低赔: 1-2@8.0 / 1-1@8.5 / 2-1@8.5
+模型亚盘倾向: home (价值 +24.8%, 信心 high)
+模型大小球倾向: 小2.5 (模型58% vs 市场66%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 核心赛果推演：布 … === 天气侦察 (未经核实, 仅供参考) === [天气] 安养 济州SK 来源:百度</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.6,
+&quot;摘要&quot;: &quot;平局偏客队方向。模型与市场均指向客队略优，但冷启动数据不可靠，且伤停情报为其他球队，需降权。最大风险是主队主场因素被低估。&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔客2.11最低，亚盘主+1.0客覆盖22%，市场融合低置信度&quot;, &quot;优势分&quot;:-1, &quot;权重&quot;:24, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场资金略倾向客队，但模型置信度低，市场主导权重有限&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差0，预期进球1.38-1.62，客队预期进球略高&quot;, &quot;优势分&quot;:-1, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;冷启动数据来自联赛均值，不确定性高，仅微弱支持客队&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无本场伤停数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:10, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报中的伤停均为奈梅亨vs博德闪耀等无关场次，本场无有效信息&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无近2季交锋记录，不予参考&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场，客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:16, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;双方体能均无劣势，权重中性&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无本场有效天气情报，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;天气信息为无关场次，权重归零并重新分配&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判信息缺失，不猜测，权重重新分配&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;联赛UNK，无积分榜分区信息&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;战意不明，不滥用必须赢，权重中性&quot;}
+],
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;客队预期进球优势兑现，中场控制有效&quot;, &quot;比分&quot;:[&quot;1-2&quot;,&quot;0-1&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;双方均无有效突破，防守均势&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;主队主场气势压制，客队防守失误&quot;, &quot;比分&quot;:[&quot;2-1&quot;,&quot;1-0&quot;]}
+},
+&quot;触发器&quot;: [&quot;若赛前公布主队核心伤停，方向分进一步向客队偏移&quot;, &quot;若客队出现双线作战或轮换迹象，平局概率上升&quot;, &quot;若赛前市场赔率大幅向主队收缩，需重新评估&quot;, &quot;若出现本场有效天气情报（如大风或雨战），需调整大小球方向&quot;],
+&quot;反向验证&quot;: &quot;最可能错在过度依赖冷启动模型概率，实际主队主场优势可能被低估，导致客队方向判断失误。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主31.7% 平26.4% 客41.9%&lt;br&gt;预期进球: 1.38 - 1.62&lt;br&gt;大2.5: 57.7% | BTTS: 61.2%&lt;br&gt;贝叶斯后验: 主31.8% 平26.3% 客41.9%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 奈梅亨]
+来源:网络 .cn › detail 欧冠资格赛：奥林匹亚科斯迎战 奈梅亨 ，客队后防五人缺阵 ... 北京时间8月5日凌晨2点，2026-27赛季欧冠资格赛第三轮首回合将在比雷埃夫斯的卡拉伊斯卡基斯球场打响，希腊豪门奥林匹亚科斯 …
+[博德闪耀 / 博德闪耀]
+来源:网络 › zh-cn › news › other › 伤病追踪... 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 博德闪耀方面 米克尔森主要承担前场机动和冲击任务，更多在边路或攻击线活动。相比奈梅亨，博德闪耀的伤停对主框架 …
+来源:网易 › dy › article 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 伤病追踪：奈梅亨vs博德闪耀，主队四人伤停，客队仅一人受伤,四人,奈梅亨,圣博德,新赛季,博德闪耀,伤病追踪 奈梅亨与 …
+来源:网络 2026年8月19日 周三007 奈梅亨 vs 博德闪耀 赛前分析：防线 ... 10 小时之前 &amp;#0183; 2026年8月19日 周三007 奈梅亨 vs 博德闪耀赛前分析：防线伤停遇上挪超火力，主胜期待值是否被高估？ 2026-08-19 …
+来源:凤凰网 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 10 小时之前 &amp;#0183; 综合来看，这组伤停信息对奈梅亨的影响明显更大，尤其会压缩球队的阵容深度和临场调整空间； 奈梅亨与博德闪耀的 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[裁判] 马德里竞技 vs 马拉加
+来源:网络 nankai. › ... 金融学院 2027年接收优秀应届本科毕业生免试攻读研究生 ... 2025年12月29日 &amp;#0183; 金融学院2027年接收优秀应届本科毕业生免试攻读研究生预报名的通知 发布时间：2026-08-10 附件1：网上报名重 …
+来源:网络 nankai. › ... 南开大学 接收2026年 推荐 免试（含直博）生招生工作办法 2025年9月14日 &amp;#0183; Copyright 2014 &amp;#169; . .
+[裁判] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[裁判] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[裁判] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 um.edu.mo 首頁 - 澳門大學社會科學學院 公共行政博士學位課程 1 天前 &amp;#0183; 公共行政博士是一個培養應用型人才的專業博士學位課程，其主要目標是為本澳以及大中華地區（尤其是粵港澳大灣區）培養 …
+来源:网络 um.edu.mo › - , , … 2026年8月9日 &amp;#0183; (DPA)
+[裁判] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[裁判] 奈梅亨 vs 博德闪耀
+来源:网络 › test-machine › gtr.html 灼热丝试验仪 厂家_供应商_自主研发_广州市智力通机电有限公司 广州市智力通机电有限公司是一家灼热丝试验仪厂家及供应商，主要提供灼热丝试验仪批发，价格优惠，产品销往广东广州、深圳、北 …
+来源:网络 › gongsi 灼热丝试验仪 厂家- 灼热丝试验仪 厂家、公司、企业 - 阿里巴巴 阿里巴巴为您找到212条关于灼热丝试验仪生产商的工商注册年份、员工人数、年营业额、信用记录、主营产品、相关灼热丝试验仪产 …
+[裁判] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[天气] 马德里竞技 vs 马拉加
+来源:百度 › question 什么叫阴离子表面活性剂？什么叫阳离子表面活性剂？十二 ... 2010年8月12日 &amp;#0183; 是属于阴离子表面活性剂 阴离子表面活性剂 英文化学术语: . 表面活性剂的一类。在水中解离后， …
+来源:百度 › question 食品上用的表面活性剂有哪些 - 百度知道 2008年6月10日 &amp;#0183; 食品上用的表面活性剂有哪些表面活性剂是分子里含有固定的亲水亲油基团，能集中在溶液表面、两种不相混溶液体 …
+[天气] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[天气] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[天气] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 theguesthousehotel.’ (!
+来源:网络 › , whic
+[天气] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[天气] 奈梅亨 vs 博德闪耀
+来源:网络 poki. - ! , the #1 . , , …
+来源:网络 poki.to › explore › | ! , ,
+[天气] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">美职 · 非五大</span>科罗拉多急流<span class="tvs">VS</span>洛杉矶FC
+      <span style="font-size:.75rem;color:#8d99b0;">(科罗拉多急流 vs 洛杉矶FC)</span>
+    </div>
+    <span class="m-meta">开球 09:30:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (37.7%) · 最可能比分 1-1 (13%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.50 / 平3.30 / 客2.35
+亚盘(主让1.0球): 主1.45 / 平4.1 / 客5.1
+大小球 2.5 球: 大1.67 / 小2.5
+波胆最低赔: 1-1@7.0 / 1-2@8.0 / 2-1@8.5
+模型亚盘倾向: home (价值 +28.9%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 核心赛果推演：布 … === 天气侦察 (未经核实, 仅供参考) === [天气] 安养 济州SK 来源:百度</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.2,
+&quot;摘要&quot;: &quot;最可能方向为平局或客队小胜，模型与市场均显示双方接近均势。核心风险是冷启动参数不确定性高，且赛前情报缺失严重，无法验证伤停与战意。&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔2.50/3.30/2.35，亚盘主+1.0，模型主覆盖62%/客覆盖19%&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场略倾向客队，但亚盘主+1.0显示主队受让保护，资金未形成单边，方向中性。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;预期进球1.42-1.48，BTTS 59.7%，ELO差0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;攻防数据接近，进球预期低，双方实力无显著差异，冷启动令状态判断不可靠。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:6, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;自动伤停侦察未返回本场有效信息，无法评估核心缺阵影响，降权处理。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;近2季交锋数据缺失，不参考更早记录，降权。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主客队7天均0场（来源：赛程密度）&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方均无密集赛程，体能恢复充分，无轮换压力差异。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:2, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;天气情报未提及，权重记0-2，不影响方向。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判任命未公布，不猜测，权重重新分配至市场/状态/赛程/战意。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;联赛UNK，积分榜分区未知&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;积分榜信息缺失，无法判断争冠/保级/中游战意，不滥用必须赢，中性处理。&quot;}
+],
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;洛杉矶FC客场效率略高且主队防线失误&quot;, &quot;比分&quot;:[&quot;1-2&quot;,&quot;1-1&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;双方均势且进球效率低，互交白卷或对攻后僵持&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;主队利用主场定位球或反击先下一城后收缩&quot;, &quot;比分&quot;:[&quot;2-1&quot;,&quot;1-0&quot;]}
+},
+&quot;触发器&quot;: [&quot;赛前公布双方核心伤停或轮换名单&quot;, &quot;亚盘从主+1.0调整至主+0.5或更浅&quot;, &quot;市场赔率客胜降至2.20以下&quot;, &quot;出现强烈战意信号如保级或争冠背景&quot;],
+&quot;反向验证&quot;: &quot;冷启动参数来自联赛均值，实际球队实力可能显著偏离；若洛杉矶FC客场进攻效率高于模型预期，则平局或主队小胜判断失效。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主35.2% 平27.1% 客37.8%&lt;br&gt;预期进球: 1.42 - 1.48&lt;br&gt;大2.5: 55.4% | BTTS: 59.7%&lt;br&gt;贝叶斯后验: 主35.2% 平27.0% 客37.7%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 奈梅亨]
+来源:网络 .cn › detail 欧冠资格赛：奥林匹亚科斯迎战 奈梅亨 ，客队后防五人缺阵 ... 北京时间8月5日凌晨2点，2026-27赛季欧冠资格赛第三轮首回合将在比雷埃夫斯的卡拉伊斯卡基斯球场打响，希腊豪门奥林匹亚科斯 …
+[博德闪耀 / 博德闪耀]
+来源:网络 › zh-cn › news › other › 伤病追踪... 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 博德闪耀方面 米克尔森主要承担前场机动和冲击任务，更多在边路或攻击线活动。相比奈梅亨，博德闪耀的伤停对主框架 …
+来源:网易 › dy › article 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 伤病追踪：奈梅亨vs博德闪耀，主队四人伤停，客队仅一人受伤,四人,奈梅亨,圣博德,新赛季,博德闪耀,伤病追踪 奈梅亨与 …
+来源:网络 2026年8月19日 周三007 奈梅亨 vs 博德闪耀 赛前分析：防线 ... 10 小时之前 &amp;#0183; 2026年8月19日 周三007 奈梅亨 vs 博德闪耀赛前分析：防线伤停遇上挪超火力，主胜期待值是否被高估？ 2026-08-19 …
+来源:凤凰网 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 10 小时之前 &amp;#0183; 综合来看，这组伤停信息对奈梅亨的影响明显更大，尤其会压缩球队的阵容深度和临场调整空间； 奈梅亨与博德闪耀的 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[裁判] 马德里竞技 vs 马拉加
+来源:网络 nankai. › ... 金融学院 2027年接收优秀应届本科毕业生免试攻读研究生 ... 2025年12月29日 &amp;#0183; 金融学院2027年接收优秀应届本科毕业生免试攻读研究生预报名的通知 发布时间：2026-08-10 附件1：网上报名重 …
+来源:网络 nankai. › ... 南开大学 接收2026年 推荐 免试（含直博）生招生工作办法 2025年9月14日 &amp;#0183; Copyright 2014 &amp;#169; . .
+[裁判] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[裁判] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[裁判] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 um.edu.mo 首頁 - 澳門大學社會科學學院 公共行政博士學位課程 1 天前 &amp;#0183; 公共行政博士是一個培養應用型人才的專業博士學位課程，其主要目標是為本澳以及大中華地區（尤其是粵港澳大灣區）培養 …
+来源:网络 um.edu.mo › - , , … 2026年8月9日 &amp;#0183; (DPA)
+[裁判] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[裁判] 奈梅亨 vs 博德闪耀
+来源:网络 › test-machine › gtr.html 灼热丝试验仪 厂家_供应商_自主研发_广州市智力通机电有限公司 广州市智力通机电有限公司是一家灼热丝试验仪厂家及供应商，主要提供灼热丝试验仪批发，价格优惠，产品销往广东广州、深圳、北 …
+来源:网络 › gongsi 灼热丝试验仪 厂家- 灼热丝试验仪 厂家、公司、企业 - 阿里巴巴 阿里巴巴为您找到212条关于灼热丝试验仪生产商的工商注册年份、员工人数、年营业额、信用记录、主营产品、相关灼热丝试验仪产 …
+[裁判] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[天气] 马德里竞技 vs 马拉加
+来源:百度 › question 什么叫阴离子表面活性剂？什么叫阳离子表面活性剂？十二 ... 2010年8月12日 &amp;#0183; 是属于阴离子表面活性剂 阴离子表面活性剂 英文化学术语: . 表面活性剂的一类。在水中解离后， …
+来源:百度 › question 食品上用的表面活性剂有哪些 - 百度知道 2008年6月10日 &amp;#0183; 食品上用的表面活性剂有哪些表面活性剂是分子里含有固定的亲水亲油基团，能集中在溶液表面、两种不相混溶液体 …
+[天气] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[天气] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[天气] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 theguesthousehotel.’ (!
+来源:网络 › , whic
+[天气] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[天气] 奈梅亨 vs 博德闪耀
+来源:网络 poki. - ! , the #1 . , , …
+来源:网络 poki.to › explore › | ! , ,
+[天气] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>凯尔特人<span class="tvs">VS</span>LASK林茨
+      <span style="font-size:.75rem;color:#8d99b0;">(凯尔特人 vs LASK林茨)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (56.5%) · 最可能比分 1-1 (11%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.58 / 平3.70 / 客4.45
+主胜赔率变动: 1.58 → 1.58 (+0.00)
+亚盘(主受1.0球): 主2.82 / 平3.4 / 客2.08
+大小球 2.5 球: 大1.72 / 小2.39
+波胆最低赔: 2-1@7.0 / 1-1@7.5 / 1-0@8.25
+模型亚盘倾向: away (价值 +10.1%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 核心赛果推演：布 … === 天气侦察 (未经核实, 仅供参考) === [天气] 安养 济州SK 来源:百度</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.4,
+&quot;摘要&quot;: &quot;最可能方向为主队小胜或平局，模型与市场一致但置信度低；核心风险是冷启动数据不可靠，伤停与裁判信息缺失。&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主1.58/平3.70/客4.45；亚盘主-1.0下模型主覆盖35%客覆盖43%&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:24, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;赔率明显偏向主队，但亚盘主-1.0覆盖不足，市场对主队大胜存疑；低模型置信度下市场主导，主队优势有限。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;模型概率主56.6%/平23.6%/客19.8%；预期进球1.98-1.08；ELO差0&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;模型给主队较高胜率，但ELO无差距且冷启动，预期进球差反映主队攻击占优，状态面偏主但不确定性高。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;伤停情报完全缺失，无法评估核心缺阵影响，按规则降权并保持中性。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;近2季交锋无记录，无法判断克制关系，权重降低。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场/客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方赛程均轻松，无显著体能差异，不构成主客偏向。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;情报未提及, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无有效天气或场地情报，不纳入评估。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判任命未公布，不猜测尺度倾向，权重记0。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;联赛UNK，无积分榜分区信息&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:24, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;缺乏积分榜与战意证据，无法判断轮换或必胜压力，保持中性。&quot;}
+],
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;主队利用主场与预期进球优势控制比赛，且无重大伤停利空&quot;, &quot;比分&quot;:[&quot;2-1&quot;,&quot;2-0&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;主队进攻效率不足或客队防守紧凑，比赛陷入僵持&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;冷启动数据失真，客队实际战力高于联赛均值样本&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;触发器&quot;: [&quot;赛前公布主队核心伤停&quot;, &quot;亚盘主-1.0水位大幅上调&quot;, &quot;客队首发出现明显轮换以外的主力&quot;, &quot;赛前出现客队战意更强的权威信息&quot;],
+&quot;反向验证&quot;: &quot;最可能错在冷启动导致模型高估主队，实际双方实力接近，平局或客队小胜更合理。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主56.6% 平23.6% 客19.8%&lt;br&gt;预期进球: 1.98 - 1.08&lt;br&gt;大2.5: 59.2% | BTTS: 58.1%&lt;br&gt;贝叶斯后验: 主56.5% 平23.7% 客19.8%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 奈梅亨]
+来源:网络 .cn › detail 欧冠资格赛：奥林匹亚科斯迎战 奈梅亨 ，客队后防五人缺阵 ... 北京时间8月5日凌晨2点，2026-27赛季欧冠资格赛第三轮首回合将在比雷埃夫斯的卡拉伊斯卡基斯球场打响，希腊豪门奥林匹亚科斯 …
+[博德闪耀 / 博德闪耀]
+来源:网络 › zh-cn › news › other › 伤病追踪... 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 博德闪耀方面 米克尔森主要承担前场机动和冲击任务，更多在边路或攻击线活动。相比奈梅亨，博德闪耀的伤停对主框架 …
+来源:网易 › dy › article 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 伤病追踪：奈梅亨vs博德闪耀，主队四人伤停，客队仅一人受伤,四人,奈梅亨,圣博德,新赛季,博德闪耀,伤病追踪 奈梅亨与 …
+来源:网络 2026年8月19日 周三007 奈梅亨 vs 博德闪耀 赛前分析：防线 ... 10 小时之前 &amp;#0183; 2026年8月19日 周三007 奈梅亨 vs 博德闪耀赛前分析：防线伤停遇上挪超火力，主胜期待值是否被高估？ 2026-08-19 …
+来源:凤凰网 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 10 小时之前 &amp;#0183; 综合来看，这组伤停信息对奈梅亨的影响明显更大，尤其会压缩球队的阵容深度和临场调整空间； 奈梅亨与博德闪耀的 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[裁判] 马德里竞技 vs 马拉加
+来源:网络 nankai. › ... 金融学院 2027年接收优秀应届本科毕业生免试攻读研究生 ... 2025年12月29日 &amp;#0183; 金融学院2027年接收优秀应届本科毕业生免试攻读研究生预报名的通知 发布时间：2026-08-10 附件1：网上报名重 …
+来源:网络 nankai. › ... 南开大学 接收2026年 推荐 免试（含直博）生招生工作办法 2025年9月14日 &amp;#0183; Copyright 2014 &amp;#169; . .
+[裁判] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[裁判] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[裁判] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 um.edu.mo 首頁 - 澳門大學社會科學學院 公共行政博士學位課程 1 天前 &amp;#0183; 公共行政博士是一個培養應用型人才的專業博士學位課程，其主要目標是為本澳以及大中華地區（尤其是粵港澳大灣區）培養 …
+来源:网络 um.edu.mo › - , , … 2026年8月9日 &amp;#0183; (DPA)
+[裁判] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[裁判] 奈梅亨 vs 博德闪耀
+来源:网络 › test-machine › gtr.html 灼热丝试验仪 厂家_供应商_自主研发_广州市智力通机电有限公司 广州市智力通机电有限公司是一家灼热丝试验仪厂家及供应商，主要提供灼热丝试验仪批发，价格优惠，产品销往广东广州、深圳、北 …
+来源:网络 › gongsi 灼热丝试验仪 厂家- 灼热丝试验仪 厂家、公司、企业 - 阿里巴巴 阿里巴巴为您找到212条关于灼热丝试验仪生产商的工商注册年份、员工人数、年营业额、信用记录、主营产品、相关灼热丝试验仪产 …
+[裁判] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[天气] 马德里竞技 vs 马拉加
+来源:百度 › question 什么叫阴离子表面活性剂？什么叫阳离子表面活性剂？十二 ... 2010年8月12日 &amp;#0183; 是属于阴离子表面活性剂 阴离子表面活性剂 英文化学术语: . 表面活性剂的一类。在水中解离后， …
+来源:百度 › question 食品上用的表面活性剂有哪些 - 百度知道 2008年6月10日 &amp;#0183; 食品上用的表面活性剂有哪些表面活性剂是分子里含有固定的亲水亲油基团，能集中在溶液表面、两种不相混溶液体 …
+[天气] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[天气] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[天气] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 theguesthousehotel.’ (!
+来源:网络 › , whic
+[天气] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[天气] 奈梅亨 vs 博德闪耀
+来源:网络 poki. - ! , the #1 . , , …
+来源:网络 poki.to › explore › | ! , ,
+[天气] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>奈梅亨<span class="tvs">VS</span>博德闪耀
+      <span style="font-size:.75rem;color:#8d99b0;">(NEC Nijmegen vs 博德闪耀)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (40.6%) · 最可能比分 1-1 (11%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.59 / 平3.47 / 客2.20
+主胜赔率变动: 2.35 → 2.59 (+0.24)
+亚盘(主受1.0球): 主5.3 / 平4.75 / 客1.37
+大小球 2.5 球: 大1.44 / 小3.27
+波胆最低赔: 1-1@7.5 / 1-2@8.5 / 2-1@9.25
+模型亚盘倾向: away (价值 +32.6%, 信心 high)
+模型大小球倾向: 小2.5 (模型63% vs 市场69%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 核心赛果推演：布 … === 天气侦察 (未经核实, 仅供参考) === [天气] 安养 济州SK 来源:百度</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.4,
+&quot;摘要&quot;: &quot;最可能方向为客队博德闪耀略占优或平局，模型与市场均指向客队不败。核心风险在于主队伤停影响大但客队客场不确定性高，冷启动数据置信度低。&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主2.59/平3.47/客2.20，客队赔率最低；亚盘主-1.0模型主覆盖17%/客覆盖66%&quot;, &quot;优势分&quot;:-1, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场资金明显倾向客队，亚盘深盘下客队覆盖高，但模型与市场融合中市场主导，需警惕客队过热。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;模型概率客40.7%最高，预期进球客1.70略高于主1.54；ELO差为0&quot;, &quot;优势分&quot;:-1, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;客队进攻效率略优，但ELO无差距说明实力接近，状态面客队微弱占优。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;2026-08-19赛前分析及伤病追踪：主队四人伤停，客队仅一人受伤&quot;, &quot;优势分&quot;:-2, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;主队伤停明显更严重，尤其压缩阵容深度与临场调整空间，对主队不利。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:6, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无近2季交锋记录，不参考更早交锋，权重降低。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场，客队7天0场，双方均无密集赛程&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;双方体能均无劣势，赛程密度对等，不构成明显倾向。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:2, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;天气情报未提及，权重记0-4并重新分配。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判信息未公布，不猜测，权重重新分配至市场/状态/赛程/战意。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;联赛UNK，积分榜分区不明；主队伤停多可能被迫轮换&quot;, &quot;优势分&quot;:-1, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;战意信息不足，但主队伤停可能影响首发强度，客队阵容更完整，战意面略偏客队。&quot;}
+],
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;客队正常发挥，主队伤停影响防线&quot;, &quot;比分&quot;:[&quot;1-2&quot;,&quot;1-1&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;双方进攻效率均不高，主队收缩防守&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;主队利用主场气势克服伤停，客队客场疲软&quot;, &quot;比分&quot;:[&quot;2-1&quot;]}
+},
+&quot;触发器&quot;: [&quot;赛前主队核心球员伤停名单确认减少或增加&quot;, &quot;客队首发轮换幅度超过预期&quot;, &quot;临场亚盘从主-1.0调整为主-0.75或更低&quot;, &quot;天气或场地条件出现重大变化&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在客队客场实际表现低于模型预期，主队凭借主场韧性逼平或小胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主34.1% 平25.2% 客40.7%&lt;br&gt;预期进球: 1.54 - 1.70&lt;br&gt;大2.5: 62.8% | BTTS: 65.2%&lt;br&gt;贝叶斯后验: 主34.1% 平25.3% 客40.6%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 奈梅亨]
+来源:网络 .cn › detail 欧冠资格赛：奥林匹亚科斯迎战 奈梅亨 ，客队后防五人缺阵 ... 北京时间8月5日凌晨2点，2026-27赛季欧冠资格赛第三轮首回合将在比雷埃夫斯的卡拉伊斯卡基斯球场打响，希腊豪门奥林匹亚科斯 …
+[博德闪耀 / 博德闪耀]
+来源:网络 › zh-cn › news › other › 伤病追踪... 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 博德闪耀方面 米克尔森主要承担前场机动和冲击任务，更多在边路或攻击线活动。相比奈梅亨，博德闪耀的伤停对主框架 …
+来源:网易 › dy › article 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 伤病追踪：奈梅亨vs博德闪耀，主队四人伤停，客队仅一人受伤,四人,奈梅亨,圣博德,新赛季,博德闪耀,伤病追踪 奈梅亨与 …
+来源:网络 2026年8月19日 周三007 奈梅亨 vs 博德闪耀 赛前分析：防线 ... 10 小时之前 &amp;#0183; 2026年8月19日 周三007 奈梅亨 vs 博德闪耀赛前分析：防线伤停遇上挪超火力，主胜期待值是否被高估？ 2026-08-19 …
+来源:凤凰网 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 10 小时之前 &amp;#0183; 综合来看，这组伤停信息对奈梅亨的影响明显更大，尤其会压缩球队的阵容深度和临场调整空间； 奈梅亨与博德闪耀的 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[裁判] 马德里竞技 vs 马拉加
+来源:网络 nankai. › ... 金融学院 2027年接收优秀应届本科毕业生免试攻读研究生 ... 2025年12月29日 &amp;#0183; 金融学院2027年接收优秀应届本科毕业生免试攻读研究生预报名的通知 发布时间：2026-08-10 附件1：网上报名重 …
+来源:网络 nankai. › ... 南开大学 接收2026年 推荐 免试（含直博）生招生工作办法 2025年9月14日 &amp;#0183; Copyright 2014 &amp;#169; . .
+[裁判] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[裁判] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[裁判] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 um.edu.mo 首頁 - 澳門大學社會科學學院 公共行政博士學位課程 1 天前 &amp;#0183; 公共行政博士是一個培養應用型人才的專業博士學位課程，其主要目標是為本澳以及大中華地區（尤其是粵港澳大灣區）培養 …
+来源:网络 um.edu.mo › - , , … 2026年8月9日 &amp;#0183; (DPA)
+[裁判] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[裁判] 奈梅亨 vs 博德闪耀
+来源:网络 › test-machine › gtr.html 灼热丝试验仪 厂家_供应商_自主研发_广州市智力通机电有限公司 广州市智力通机电有限公司是一家灼热丝试验仪厂家及供应商，主要提供灼热丝试验仪批发，价格优惠，产品销往广东广州、深圳、北 …
+来源:网络 › gongsi 灼热丝试验仪 厂家- 灼热丝试验仪 厂家、公司、企业 - 阿里巴巴 阿里巴巴为您找到212条关于灼热丝试验仪生产商的工商注册年份、员工人数、年营业额、信用记录、主营产品、相关灼热丝试验仪产 …
+[裁判] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[天气] 马德里竞技 vs 马拉加
+来源:百度 › question 什么叫阴离子表面活性剂？什么叫阳离子表面活性剂？十二 ... 2010年8月12日 &amp;#0183; 是属于阴离子表面活性剂 阴离子表面活性剂 英文化学术语: . 表面活性剂的一类。在水中解离后， …
+来源:百度 › question 食品上用的表面活性剂有哪些 - 百度知道 2008年6月10日 &amp;#0183; 食品上用的表面活性剂有哪些表面活性剂是分子里含有固定的亲水亲油基团，能集中在溶液表面、两种不相混溶液体 …
+[天气] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[天气] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[天气] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 theguesthousehotel.’ (!
+来源:网络 › , whic
+[天气] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[天气] 奈梅亨 vs 博德闪耀
+来源:网络 poki. - ! , the #1 . , , …
+来源:网络 poki.to › explore › | ! , ,
+[天气] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>布拉迪斯拉发<span class="tvs">VS</span>采列
+      <span style="font-size:.75rem;color:#8d99b0;">(布拉迪斯拉发 vs 采列)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (54.7%) · 最可能比分 1-1 (11%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.63 / 平3.64 / 客4.15
+主胜赔率变动: 1.68 → 1.63 (-0.05)
+亚盘(主受1.0球): 主2.93 / 平3.6 / 客1.96
+大小球 2.5 球: 大1.76 / 小2.31
+波胆最低赔: 2-1@7.0 / 1-1@7.25 / 1-0@8.0
+模型亚盘倾向: away (价值 +11.8%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 核心赛果推演：布 … === 天气侦察 (未经核实, 仅供参考) === [天气] 安养 济州SK 来源:百度</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: ```json
+{
+&quot;方向分&quot;: 0.9,
+&quot;摘要&quot;: &quot;模型略偏主队但市场分歧小，主队主场战意强，冷启动下不确定性高。最大风险是双方实力接近，平局概率不低。&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;赔率1.63/3.64/4.15，亚盘主-1.0，模型主覆盖33%/客覆盖45%；市场融合Model 71% / Market 29%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧赔主胜低开但亚盘主-1.0下客队覆盖更高，显示市场对主队大胜信心不足，资金未明显单边聚集，谨慎看待主队优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差0，预期进球1.94-1.12，模型概率主54.9%平24.1%客21.1%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;预期进球差显示主队进攻端略占优，但ELO无差距且冷启动参数来自联赛均值，状态攻防证据可靠性不足。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;自动伤停侦察未返回本场有效信息，无法评估核心主力缺阵影响，降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未提供近2季交锋记录，无法判断克制关系，降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方赛程密度一致，均无密集赛程或双线作战压力，体能维度无差别。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报未提及本场，权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判任命未公布，不猜测，权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;搜狐赛前分析称布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧冠资格赛关键阶段，主队主场战意明确，但需注意冷启动下实力评估不确定性可能削弱战意转化。&quot;
+}
+],
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;主队利用主场战意取得领先，且防守未出现重大失误&quot;,
+&quot;比分&quot;: [&quot;2-1&quot;, &quot;2-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;双方实力接近，客队有效限制主队进攻，比赛陷入胶着&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;主队主场战意未能转化为进球，客队反击效率高&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;触发器&quot;: [
+&quot;赛前首发公布，主队核心攻击手缺阵&quot;,
+&quot;市场亚盘从主-1.0退至主-0.75或更低&quot;,
+&quot;赛前出现主队更衣室或体能负面消息&quot;,
+&quot;客队摆出明确防反阵型且主力后腰复出&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在冷启动下双方真实实力被联赛均值掩盖，主队主场优势被高估，实际比赛呈现均势甚至客队占优。&quot;
+}
+```<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主54.9% 平24.1% 客21.1%&lt;br&gt;预期进球: 1.94 - 1.12&lt;br&gt;大2.5: 59.2% | BTTS: 58.9%&lt;br&gt;贝叶斯后验: 主54.7% 平24.1% 客21.2%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 奈梅亨]
+来源:网络 .cn › detail 欧冠资格赛：奥林匹亚科斯迎战 奈梅亨 ，客队后防五人缺阵 ... 北京时间8月5日凌晨2点，2026-27赛季欧冠资格赛第三轮首回合将在比雷埃夫斯的卡拉伊斯卡基斯球场打响，希腊豪门奥林匹亚科斯 …
+[博德闪耀 / 博德闪耀]
+来源:网络 › zh-cn › news › other › 伤病追踪... 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 博德闪耀方面 米克尔森主要承担前场机动和冲击任务，更多在边路或攻击线活动。相比奈梅亨，博德闪耀的伤停对主框架 …
+来源:网易 › dy › article 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 7 小时之前 &amp;#0183; 伤病追踪：奈梅亨vs博德闪耀，主队四人伤停，客队仅一人受伤,四人,奈梅亨,圣博德,新赛季,博德闪耀,伤病追踪 奈梅亨与 …
+来源:网络 2026年8月19日 周三007 奈梅亨 vs 博德闪耀 赛前分析：防线 ... 10 小时之前 &amp;#0183; 2026年8月19日 周三007 奈梅亨 vs 博德闪耀赛前分析：防线伤停遇上挪超火力，主胜期待值是否被高估？ 2026-08-19 …
+来源:凤凰网 伤病追踪：奈梅亨vs 博德闪耀 ，主队四人 伤停 ，客队仅一人受伤 10 小时之前 &amp;#0183; 综合来看，这组伤停信息对奈梅亨的影响明显更大，尤其会压缩球队的阵容深度和临场调整空间； 奈梅亨与博德闪耀的 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[裁判] 马德里竞技 vs 马拉加
+来源:网络 nankai. › ... 金融学院 2027年接收优秀应届本科毕业生免试攻读研究生 ... 2025年12月29日 &amp;#0183; 金融学院2027年接收优秀应届本科毕业生免试攻读研究生预报名的通知 发布时间：2026-08-10 附件1：网上报名重 …
+来源:网络 nankai. › ... 南开大学 接收2026年 推荐 免试（含直博）生招生工作办法 2025年9月14日 &amp;#0183; Copyright 2014 &amp;#169; . .
+[裁判] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[裁判] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[裁判] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 um.edu.mo 首頁 - 澳門大學社會科學學院 公共行政博士學位課程 1 天前 &amp;#0183; 公共行政博士是一個培養應用型人才的專業博士學位課程，其主要目標是為本澳以及大中華地區（尤其是粵港澳大灣區）培養 …
+来源:网络 um.edu.mo › - , , … 2026年8月9日 &amp;#0183; (DPA)
+[裁判] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[裁判] 奈梅亨 vs 博德闪耀
+来源:网络 › test-machine › gtr.html 灼热丝试验仪 厂家_供应商_自主研发_广州市智力通机电有限公司 广州市智力通机电有限公司是一家灼热丝试验仪厂家及供应商，主要提供灼热丝试验仪批发，价格优惠，产品销往广东广州、深圳、北 …
+来源:网络 › gongsi 灼热丝试验仪 厂家- 灼热丝试验仪 厂家、公司、企业 - 阿里巴巴 阿里巴巴为您找到212条关于灼热丝试验仪生产商的工商注册年份、员工人数、年营业额、信用记录、主营产品、相关灼热丝试验仪产 …
+[裁判] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 安养 济州SK
+来源:百度 › item 安 （汉字）_百度百科 2015年12月15日 &amp;#0183; 安，汉语一级字，读作ān，最早见于甲骨文，本义是平静，即《说文解字》所谓的“静也”，由此引申出静止、舒适、 …
+来源:知乎 › question 汉字“ 安 ”怎么解释? - 知乎 “安”字的发音平和、舒缓，给人一种愉悦的感受。 而且“安”字在诗词歌赋中也常被用作韵脚，为作品增添了韵律美和音乐感。 在古 …
+[天气] 马德里竞技 vs 马拉加
+来源:百度 › question 什么叫阴离子表面活性剂？什么叫阳离子表面活性剂？十二 ... 2010年8月12日 &amp;#0183; 是属于阴离子表面活性剂 阴离子表面活性剂 英文化学术语: . 表面活性剂的一类。在水中解离后， …
+来源:百度 › question 食品上用的表面活性剂有哪些 - 百度知道 2008年6月10日 &amp;#0183; 食品上用的表面活性剂有哪些表面活性剂是分子里含有固定的亲水亲油基团，能集中在溶液表面、两种不相混溶液体 …
+[天气] 波特诺山丘 vs 帕尔梅拉斯
+来源:百度 › item › 迈克尔&amp;#183;波特 迈克尔&amp;#183; 波特 （哈佛商学院大学教授，价值医疗概念提出者 ... 迈克尔&amp;#183;波特（. Porter），出生于1947年，美国经济学家，哈佛商学院大学教授（大学教授，，是哈佛大 …
+来源:网络 波特 律动 2026年7月29日 &amp;#0183; 波特律动文档网站提供专业现代的辅助工具、丰富可靠的功能和友好易用的界面，助您轻松完成工作。
+[天气] 纽约红牛 vs 纳什维尔
+来源:百度 › item › 纽约 纽约 （美国第一大城市、2024全球最富有城市、世界三大 ... 纽约（英语：），隶属于美国纽约州。 是美国第一大城市、2024全球最富有城市。 位于美国东北部沿海哈德逊河口，濒临 …
+来源:百度 › item › 纽约州 纽约 州_百度百科 纽约州（），别称“帝国州”（），美利坚合众国联邦州，首府奥尔巴尼市，最大城市纽约市。 纽约州位于 …
+[天气] 科罗拉多急流 vs 洛杉矶FC
+来源:网络 theguesthousehotel.’ (!
+来源:网络 › , whic
+[天气] 凯尔特人 林茨
+来源:百度 › item › 凯尔特 凯尔特 人（古代欧洲陆地的民族）_百度百科 从大约公元前2000年起，直至公元前1世纪末，凯尔特人曾相继活跃并逐渐散布于中欧、西欧、南欧乃至小亚细亚等地。 凯尔特人常被 …
+来源:百度 › item › 凯尔特神话 凯尔特 神话（西方神话体系之一）_百度百科 凯尔特神话（）是广泛流传于威尔士、苏格兰、爱尔兰等地区的古典神话，在欧洲与希腊神话和北欧神话并列。 早期 …
+[天气] 奈梅亨 vs 博德闪耀
+来源:网络 poki. - ! , the #1 . , , …
+来源:网络 poki.to › explore › | ! , ,
+[天气] 布拉迪斯拉发 vs 采列
+来源:搜狐 欧冠： 布拉迪斯拉发 VS 采列 比赛分析_主场_赛季_客场 10 小时之前 &amp;#0183; 布拉迪斯拉发距离欧冠正赛仅一步之遥，主场战意拉满，数据模型指向布拉迪斯拉发主场取胜方向。 核心赛果推演：布 …</div>
+</article>
+  <div class="footer">自动生成于 2026-08-19 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

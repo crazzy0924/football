@@ -223,6 +223,29 @@ def cmd_predict(args):
             print("全部比赛已开球, 终盘无场次可预测。")
             return
 
+    # 球场采集 (比赛核验: football-data 官方赛程带球场, 仅其覆盖联赛有数据)
+    try:
+        from pipeline.result_fetcher import try_fetch_fixtures_footballdata, _teams_match
+        from pipeline.data_loader import normalize_team_name
+        fixtures = try_fetch_fixtures_footballdata(_today_str())
+        if fixtures:
+            n_venue = 0
+            for m in matches:
+                if m.get("venue"):
+                    continue
+                h = normalize_team_name(m.get("home_team", ""))
+                a = normalize_team_name(m.get("away_team", ""))
+                for fx in fixtures:
+                    fh = normalize_team_name(fx.get("home_team", ""))
+                    fa = normalize_team_name(fx.get("away_team", ""))
+                    if _teams_match(h, fh) and _teams_match(a, fa):
+                        m["venue"] = fx.get("venue", "")
+                        n_venue += 1
+                        break
+            print(f"[赛程] 球场采集: {n_venue}/{len(matches)} 场有球场数据")
+    except Exception as e:
+        print(f"[赛程] 球场采集失败: {e}")
+
     # Phase 8: 赛程密度 + 近2季交锋 预计算 (h2h 全库)
     sched_cache: dict = {}
     h2h_cache: dict = {}
@@ -374,6 +397,8 @@ def cmd_predict(args):
             "home_team": home,
             "away_team": away,
             "league_code": league,
+            "kickoff_time": m.get("kickoff_time", ""),
+            "venue": m.get("venue", ""),
             "odds": market,
             "elo_home": elo_h,
             "elo_away": elo_a,

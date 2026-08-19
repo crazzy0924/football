@@ -16,6 +16,7 @@ Design:
 from __future__ import annotations
 
 import json
+import re
 import time
 from typing import Any
 
@@ -193,14 +194,31 @@ def build_analyst_prompt(evidence: str) -> str:
 - 情报不足就明确写"数据不足已降权", 禁止编造伤停/天气/裁判/数字
 - 概率数字只用证据中给出的, 不自己造
 
-输出格式 (纯中文, 共7行, 不要概率数字, 不要投注建议):
-方向分: (按权重计算, -5 至 +5, 正值利主队)
-维度分: (8个分, 固定顺序 市场/状态/阵容/交锋/赛程/天气/裁判/战意, 各-5至+5, 格式如 市场+1/状态+2/阵容0/交锋-1/赛程0/天气0/裁判0/战意+1)
-结论: (1句, 最可能方向+核心理由)
-关键维度: (最强的2-3个维度, 各半句, 注明权重调整)
-三条路径: (常规/平局/冷门 各半句带触发条件, 冷门路径必须基于可验证的反击/定位球/门将等真实条件)
-反向验证: (1句: 如果这场预测错了, 最可能错在哪里)
-触发器: (1句: 赛前什么变化会推翻结论, 如首发/伤停/天气)
+输出格式 (只输出一个合法JSON对象, 不要任何其他文字/代码块标记, 不要概率数字, 不要投注建议):
+
+{
+  "方向分": 加权分数(-5至+5, 正值利主队, 一位小数),
+  "摘要": "80字以内: 最可能方向+核心理由+最大风险",
+  "八维": [
+    {"维度":"市场", "证据":"1-2条关键证据, 必须带日期或来源", "优势分":0, "权重":20, "置信度":"高/中/低", "研判":"该维度如何影响本场"},
+    {"维度":"状态攻防", ...}, {"维度":"阵容伤停", ...}, {"维度":"交锋克制", ...},
+    {"维度":"赛程体能", ...}, {"维度":"天气场地", ...}, {"维度":"裁判", ...}, {"维度":"战意轮换", ...}
+  ],
+  "路径": {
+    "常规": {"触发":"触发条件", "比分":["2-0","1-0"]},
+    "平局": {"触发":"触发条件", "比分":["1-1","0-0"]},
+    "冷门": {"触发":"冷门成立的可验证条件(反击/定位球/门将等)", "比分":["0-1"]}
+  },
+  "触发器": ["赛前什么变化会推翻结论, 最多4条"],
+  "反向验证": "如果这场预测错了, 最可能错在哪里"
+}
+
+规则:
+- 八维必须恰好8项, 顺序固定: 市场/状态攻防/阵容伤停/交锋克制/赛程体能/天气场地/裁判/战意轮换
+- 权重合计必须等于100; 裁判未公布或天气无情报时, 对应维度权重降为0-4并把权重分配给维度1/2/5/8
+- 证据必须来自证据包, 带日期/来源, 证据包没有的写"无数据, 已降权", 禁止编造
+- 优势分 -5至+5 整数; 方向分 = Σ(优势分×权重)÷100
+- 比分只用最可能比分中出现的, 冷门路径必须有可验证依据
 
 {evidence}
 
@@ -251,7 +269,7 @@ def _try_deepseek(prompt: str, api_key: str, model: str) -> str | None:
                 {"role": "system", "content": "你是资深足球赛前分析师。按用户要求的5行格式输出中文分析。不输出概率、不推荐投注、不编造。"},
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=500,
+            max_tokens=900,
             temperature=0.7,
         )
         msg = resp.get("message") or {}
@@ -307,6 +325,27 @@ def _try_http(prompt: str, api_key: str, model: str) -> str | None:
             return text.strip() if text else None
     except Exception as e:
         print(f"  [警告] Anthropic HTTP 失败: {e}")
+        return None
+
+
+def parse_structured_note(note: str) -> dict | None:
+    """把 LLM 输出的 JSON 文本解析成结构化对象 (兼容代码块包裹/前后杂字)"""
+    if not note:
+        return None
+    text = note.strip()
+    if text.startswith("```"):
+        text = re.sub(r"^```[a-zA-Z]*\s*", "", text)
+        text = re.sub(r"\s*```$", "", text)
+    start = text.find("{")
+    if start < 0:
+        return None
+    end = text.rfind("}")
+    if end <= start:
+        return None
+    try:
+        obj = json.loads(text[start:end + 1])
+        return obj if isinstance(obj, dict) else None
+    except Exception:
         return None
 
 

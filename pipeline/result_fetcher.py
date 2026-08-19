@@ -181,32 +181,70 @@ def try_fetch_results_apifootball(date_str: str) -> list[dict] | None:
         return None
 
 
-def _parse_footballdata_matches(payload: dict, date_str: str = "") -> list[dict]:
-    """解析 football-data.org v4 /matches 响应 → 结果列表 (纯函数, 可离线测试)
+def _parse_footballdata_matches(payload: dict, date_str: str = "", only_finished: bool = True) -> list[dict]:
+    """解析 football-data.org v4 /matches 响应 → 结果/赛程列表 (纯函数, 可离线测试)
 
     date_str: 只保留该 UTC 日期的场次 (接口要求 dateFrom<dateTo, 拉取窗口+1天)
+    only_finished=False 时也返回未开球赛程 (含球场信息, 供预测页使用)
     """
     results = []
     for m in (payload or {}).get("matches", []):
-        if m.get("status") != "FINISHED":
+        if only_finished and m.get("status") != "FINISHED":
             continue
         if date_str and (m.get("utcDate") or "")[:10] != date_str:
             continue
         home = (m.get("homeTeam") or {}).get("name", "")
         away = (m.get("awayTeam") or {}).get("name", "")
+        if not home or not away:
+            continue
+        venue = (m.get("venue") or "") or "—"
+        item = {
+            "home_team": home,
+            "away_team": away,
+            "venue": venue,
+        }
         score = m.get("score") or {}
         ft = score.get("fullTime") or {}
         hg = ft.get("home")
         ag = ft.get("away")
-        if not home or not away or hg is None or ag is None:
+        if hg is not None and ag is not None:
+            item["home_goals"] = int(hg)
+            item["away_goals"] = int(ag)
+        elif only_finished:
             continue
-        results.append({
-            "home_team": home,
-            "away_team": away,
-            "home_goals": int(hg),
-            "away_goals": int(ag),
-        })
+        results.append(item)
     return results
+
+
+def try_fetch_fixtures_footballdata(date_str: str) -> list[dict] | None:
+    """从 football-data.org v4 拉取当日赛程 (含球场, 供预测页 A 段比赛核验)
+
+    只覆盖五大联赛等官方数据源联赛; 其他联赛返回 None → 页面显示球场未获取。
+    """
+    try:
+        from config import FOOTBALL_DATA_API_KEY
+        if not FOOTBALL_DATA_API_KEY:
+            return None
+        import httpx
+        from datetime import datetime as _dt, timedelta as _td
+        end_str = (_dt.strptime(date_str, "%Y-%m-%d") + _td(days=1)).strftime("%Y-%m-%d")
+        headers = {"X-Auth-Token": FOOTBALL_DATA_API_KEY}
+        with httpx.Client(timeout=20) as c:
+            r = c.get(
+                "https://api.football-data.org/v4/matches",
+                params={"dateFrom": date_str, "dateTo": end_str},
+                headers=headers,
+            )
+        if r.status_code == 429:
+            print("  [赛程] football-data.org 触发限流, 跳过球场采集")
+            return None
+        if r.status_code != 200:
+            return None
+        fixtures = _parse_footballdata_matches(r.json(), date_str, only_finished=False)
+        return fixtures or None
+    except Exception as e:
+        print(f"  [赛程] football-data.org 拉取失败: {e}")
+        return None
 
 
 def try_fetch_results_footballdata(date_str: str) -> list[dict] | None:

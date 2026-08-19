@@ -154,6 +154,22 @@
   }
   .m-note .nt { font-size: .7rem; color: var(--violet); font-weight: 700; letter-spacing: 1px; margin-right: 6px; }
 
+  /* ── 结构化八维报告 (A-I 结构) ── */
+  .report-a { margin-top: 12px; background: rgba(94,168,255,.05); border: 1px solid rgba(94,168,255,.22); border-radius: 12px; padding: 12px 14px; }
+  .a-meta { font-size: .78rem; color: var(--dim); margin-bottom: 6px; }
+  .a-dir { font-size: .85rem; margin-bottom: 6px; }
+  .dir-h { color: #6ee7b7; } .dir-a { color: #fbbf24; } .dir-z { color: var(--dim); }
+  .a-summary { font-size: .86rem; color: #cfe0ff; background: rgba(94,168,255,.08); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+  .tb-wrap { overflow-x: auto; }
+  .dims-table, .paths-table { width: 100%; border-collapse: collapse; font-size: .75rem; margin-top: 8px; min-width: 560px; }
+  .dims-table th, .paths-table th { color: #9ec4ff; background: #0e1526; font-size: .72rem; }
+  .dims-table td, .dims-table th, .paths-table td, .paths-table th { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+  .dims-table .ev { color: var(--dim); font-size: .72rem; }
+  .dims-table .jd, .paths-table .jd { font-size: .72rem; }
+  .a-triggers { font-size: .8rem; color: #fcd34d; margin-top: 8px; }
+  .a-triggers .trg { display: inline-block; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3); border-radius: 6px; padding: 2px 8px; margin: 2px 4px 2px 0; }
+  .a-reverse { font-size: .8rem; color: #fca5a5; margin-top: 8px; }
+
   /* ── 今日看好速览 ── */
   .picks-strip {
     display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
@@ -327,7 +343,40 @@
     <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
     {% endif %}
 
-    {% if m.analyst_note %}
+    {% if m.summary_txt or m.dims_rows %}
+    <div class="report-a">
+      {% if m.kickoff or m.venue != '—' %}<div class="a-meta">🕗 开球 {{ m.kickoff }} · 📍 球场 {{ m.venue }}</div>{% endif %}
+      {% if m.dir_score is not none %}<div class="a-dir">🧭 加权方向分: <b class="{% if m.dir_score > 0 %}dir-h{% elif m.dir_score < 0 %}dir-a{% else %}dir-z{% endif %}">{{ m.dir_score }}</b> (正值利主队)</div>{% endif %}
+      {% if m.summary_txt %}<div class="a-summary">📌 {{ m.summary_txt }}</div>{% endif %}
+      {% if m.dims_rows %}
+      <div class="tb-wrap"><table class="dims-table">
+        <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
+        {% for d in m.dims_rows %}
+        <tr>
+          <td>{{ d.label }}</td>
+          <td class="ev">{{ d.evidence }}</td>
+          <td class="{% if d.score > 0 %}dir-h{% elif d.score < 0 %}dir-a{% else %}dir-z{% endif %}">{{ d.score }}</td>
+          <td>{{ d.weight }}%</td>
+          <td>{{ d.conf }}</td>
+          <td class="jd">{{ d.judge }}</td>
+        </tr>
+        {% endfor %}
+      </table></div>
+      {% endif %}
+      {% if m.paths_rows %}
+      <div class="tb-wrap"><table class="paths-table">
+        <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
+        {% for r in m.paths_rows %}
+        <tr><td>{{ r.label }}</td><td><b>{{ r.prob }}</b></td><td class="jd">{{ r.trigger }}</td><td>{{ r.scores }}</td></tr>
+        {% endfor %}
+      </table></div>
+      {% endif %}
+      {% if m.triggers_list %}
+      <div class="a-triggers">⚡ 临场触发器: {% for t in m.triggers_list %}<span class="trg">{{ t }}</span>{% endfor %}</div>
+      {% endif %}
+      {% if m.reverse_txt %}<div class="a-reverse">🔄 反向验证: {{ m.reverse_txt }}</div>{% endif %}
+    </div>
+    {% elif m.analyst_note %}
     <div class="m-note"><span class="nt">分析师</span>{{ m.analyst_note }}</div>
     {% endif %}
   </article>

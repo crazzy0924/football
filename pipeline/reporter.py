@@ -563,6 +563,50 @@ def _build_match_card(
     match_key = f"{home_team_en} vs {away_team_en}"
     analyst_note = (analyst_notes or {}).get(match_key)
 
+    # 结构化八维报告 (LLM JSON输出, 参考开源研究框架的 A-I 结构)
+    struct = None
+    if analyst_note:
+        try:
+            from pipeline.analyst import parse_structured_note
+            struct = parse_structured_note(analyst_note)
+        except Exception:
+            struct = None
+    dims_rows = []
+    paths_rows = []
+    triggers_list = []
+    summary_txt = None
+    dir_score = None
+    reverse_txt = None
+    if struct:
+        summary_txt = struct.get("摘要")
+        dir_score = struct.get("方向分")
+        reverse_txt = struct.get("反向验证")
+        for d in struct.get("八维") or []:
+            dims_rows.append({
+                "label": d.get("维度", ""),
+                "evidence": d.get("证据", ""),
+                "score": d.get("优势分", 0),
+                "weight": d.get("权重", 0),
+                "conf": d.get("置信度", ""),
+                "judge": d.get("研判", ""),
+            })
+        path_label = {"常规": "常规路径", "平局": "平局路径", "冷门": "冷门路径"}
+        # 路径概率取自贝叶斯后验 (合计100%, 硬校准)
+        if bayes and "posterior" in bayes:
+            post = bayes["posterior"]
+            path_prob = {"常规": max(post.values()), "平局": post.get("draw", 0), "冷门": min(post.values())}
+        else:
+            path_prob = {"常规": p_home, "平局": p_draw, "冷门": min(p_home, p_draw, p_away)}
+        for key in ("常规", "平局", "冷门"):
+            item = (struct.get("路径") or {}).get(key) or {}
+            paths_rows.append({
+                "label": path_label[key],
+                "prob": f"{path_prob.get(key, 0):.0%}",
+                "trigger": item.get("触发", ""),
+                "scores": " / ".join(item.get("比分") or []),
+            })
+        triggers_list = struct.get("触发器") or []
+
     return {
         "home_team": home_team,
         "away_team": away_team,
@@ -604,6 +648,15 @@ def _build_match_card(
         "edge_pct": edge_pct,
         "cold_start_flag": cold_start,
         "analyst_note": analyst_note,
+        # 结构化八维报告字段
+        "summary_txt": summary_txt,
+        "dir_score": dir_score,
+        "reverse_txt": reverse_txt,
+        "dims_rows": dims_rows,
+        "paths_rows": paths_rows,
+        "triggers_list": triggers_list,
+        "kickoff": (p.get("kickoff_time") or ""),
+        "venue": (p.get("venue") or "") or "—",
     }
 
 

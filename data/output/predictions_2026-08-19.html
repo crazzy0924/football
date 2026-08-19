@@ -154,6 +154,22 @@
   }
   .m-note .nt { font-size: .7rem; color: var(--violet); font-weight: 700; letter-spacing: 1px; margin-right: 6px; }
 
+  /* ── 结构化八维报告 (A-I 结构) ── */
+  .report-a { margin-top: 12px; background: rgba(94,168,255,.05); border: 1px solid rgba(94,168,255,.22); border-radius: 12px; padding: 12px 14px; }
+  .a-meta { font-size: .78rem; color: var(--dim); margin-bottom: 6px; }
+  .a-dir { font-size: .85rem; margin-bottom: 6px; }
+  .dir-h { color: #6ee7b7; } .dir-a { color: #fbbf24; } .dir-z { color: var(--dim); }
+  .a-summary { font-size: .86rem; color: #cfe0ff; background: rgba(94,168,255,.08); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+  .tb-wrap { overflow-x: auto; }
+  .dims-table, .paths-table { width: 100%; border-collapse: collapse; font-size: .75rem; margin-top: 8px; min-width: 560px; }
+  .dims-table th, .paths-table th { color: #9ec4ff; background: #0e1526; font-size: .72rem; }
+  .dims-table td, .dims-table th, .paths-table td, .paths-table th { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+  .dims-table .ev { color: var(--dim); font-size: .72rem; }
+  .dims-table .jd, .paths-table .jd { font-size: .72rem; }
+  .a-triggers { font-size: .8rem; color: #fcd34d; margin-top: 8px; }
+  .a-triggers .trg { display: inline-block; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3); border-radius: 6px; padding: 2px 8px; margin: 2px 4px 2px 0; }
+  .a-reverse { font-size: .8rem; color: #fca5a5; margin-top: 8px; }
+
   /* ── 今日看好速览 ── */
   .picks-strip {
     display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
@@ -320,8 +336,8 @@
       
       <span class="chip">优势 Draw <b>+0.2%</b></span>
       <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率↑ 2.63→2.95 (资金流客)</span>
-      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型43% vs 市场49% (-6%)</span>
-      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-0(模型10.6%vs市场7.8%)</span>
+      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型43% vs 市场50% (-7%)</span>
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-0(模型10.6%vs市场7.2%)</span>
       <span class="chip">盘口 <b>让球(主+1.0): 主60%/走21%/客19%</b></span>
       
     </div>
@@ -331,15 +347,6 @@
     <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
     
 
-    
-    <div class="m-note"><span class="nt">分析师</span>方向分: -0.5  
-维度分: 市场-1/状态-1/阵容0/交锋0/赛程0/天气0/裁判0/战意0  
-结论: 最可能方向为济州SK客场略占优但平局权重偏高，核心理由是市场融合后客胜概率领先且冷启动模型置信度低、市场主导定价。  
-关键维度: 市场维度客赔偏低且亚盘主+1覆盖结构显示资金未显著倾向主队，权重因天气裁判缺失由20%上调至26%；状态攻防维度预期进球接近且ELO持平，权重由18%上调至23%。  
-三条路径: 常规路径为济州SK凭借更优市场定价与略高预期进球客场小胜或逼平；平局路径为双方预期进球均低于1.30且最可能比分1-1，互相牵制形成闷平；冷门路径为安养FC利用主场定位球或反击先得分后收缩，触发条件是主队上半场零封并率先破门。  
-反向验证: 如果这场预测错了，最可能错在冷启动参数不可靠，两队真实实力差被联赛均值掩盖，主队实际主场战力高于模型假设。  
-触发器: 赛前若出现主队核心攻击手首发或客队防线主力伤停，则结论将向主队方向修正；若官方公布裁判尺度偏严或天气明显影响控球，也需重新评估平局与冷门权重。
-自检: 发现P2问题 (结论方向与最可能比分/概率方向基本一致，但裁判/天气侦察内容为无关汉字百科或他队信息，属于无效证据且未在结论中剔除，存在证据污染风险)</div>
     
   </article>
   

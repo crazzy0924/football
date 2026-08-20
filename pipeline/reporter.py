@@ -381,6 +381,9 @@ def _build_match_card(
         if league_code not in ("PL", "PD", "BL1", "SA", "FL1"):
             league_name = league_name + " · 非五大"
     cold_start = p.get("cold_start", False)
+    cross_league = p.get("cross_league", False)
+    # 下注门禁统一: 冷启动 或 跨级先验 都不下注
+    no_bet = cold_start or cross_league
 
     # 概率 — 优先贝叶斯后验, 否则用模型
     if bayes and "posterior" in bayes:
@@ -414,19 +417,19 @@ def _build_match_card(
     # 置信度 / 信号
     confidence = value.get("confidence", "none")
 
-    # 冷启动场次: 模型edge是噪音 → 覆盖信号
-    if cold_start and confidence != "none":
+    # 冷启动/跨级先验场次: 模型edge是噪音 → 覆盖信号
+    if (cold_start or cross_league) and confidence != "none":
         signal_class = "cold"
-        signal_text = "冷启动"
+        signal_text = "跨级先验" if cross_league and not cold_start else "冷启动"
         confidence = "low"  # downgrade edge for recommendation logic
     else:
         signal_class = SIGNAL_CLASSES.get(confidence, "skip")
         signal_text = SIGNAL_TEXTS.get(confidence, "SKIP")
 
     # 推荐等级
-    if confidence == "high" and not cold_start:
+    if confidence == "high" and not no_bet:
         recommendation = "recommended"
-    elif confidence in ("medium", "high") or (cold_start and confidence != "none"):
+    elif confidence in ("medium", "high") or ((cold_start or cross_league) and confidence != "none"):
         recommendation = "reference"
     else:
         recommendation = "skip"
@@ -453,6 +456,9 @@ def _build_match_card(
         bet_class = "skip"
     elif cold_start:
         bet_pick = "冷启动不碰"
+        bet_class = "cold"
+    elif cross_league:
+        bet_pick = "跨级先验不碰"
         bet_class = "cold"
     elif best_edge_val >= 0.05 and kelly_val >= 0.01:
         dir_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}.get(best_edge_dir, "观望")
@@ -504,7 +510,7 @@ def _build_match_card(
         if line is not None:
             ah_text = f"让球(主{line:+.1f}): 主{hc:.0%}/走{pu:.0%}/客{ac:.0%}"
         # 冷启动纪律: 冷启动场次让球盘也不出"看好", 只展示盘口覆盖
-        if bp in ("home", "away") and ev >= 0.05 and not cold_start:
+        if bp in ("home", "away") and ev >= 0.05 and not no_bet:
             dir_cn = "主队" if bp == "home" else "客队"
             ah_pick = f"让球看好{dir_cn} (+{ev:.1%})"
             if bet_class != "bet":
@@ -689,6 +695,7 @@ def _build_match_card(
         "edge_direction": best_edge_dir.title() if best_edge_val > 0 else None,
         "edge_pct": edge_pct,
         "cold_start_flag": cold_start,
+        "cross_league": cross_league,
         "analyst_note": analyst_note,
         # 结构化八维报告字段
         "summary_txt": summary_txt,

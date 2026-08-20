@@ -211,4 +211,15 @@ def load_models(
             f"Dixon-Coles params not found at {state_dir}. Run train first."
         )
 
+    # 球队层级 (跨级先验: 次级联赛球队在顶级联赛出战时降权)
+    tier_path = os.path.join(state_dir, "team_tier.json")
+    dc.team_tier = {}
+    if os.path.exists(tier_path):
+        import json as _json
+        try:
+            with open(tier_path, "r", encoding="utf-8") as f:
+                dc.team_tier = _json.load(f)
+        except Exception:
+            pass
+
     return elo, dc

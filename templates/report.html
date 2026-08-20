@@ -346,6 +346,8 @@
 
     {% if m.cold_start_flag %}
     <div class="m-cold">❄ 冷启动 — 模型数据不足，仅市场定价，不下注</div>
+    {% elif m.cross_league %}
+    <div class="m-cold">🔄 跨级先验 — 次级联赛样本已按规则降权纳入，市场融合 65%，仍不下注</div>
     {% endif %}
 
     {% if m.summary_txt or m.dims_rows %}

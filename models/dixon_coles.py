@@ -717,6 +717,19 @@ class DixonColesModel:
         away_cold = away_resolved not in self.team_attack
         is_cold = home_cold or away_cold
 
+        # 跨级先验 (2026-08-20): 次级联赛球队在顶级联赛出战时降权 (参考开源框架: 跨级样本不得直接平移强度)
+        tier_map = getattr(self, "team_tier", {}) or {}
+        top_tiers = {"PL", "PD", "BL1", "SA", "FL1"}
+        cross_h = (not home_cold) and tier_map.get(home_resolved, "1") == "2" and league_code in top_tiers
+        cross_a = (not away_cold) and tier_map.get(away_resolved, "1") == "2" and league_code in top_tiers
+        is_cross = cross_h or cross_a
+        if cross_h:
+            att_h = max(0.5, att_h * 0.92)          # 次级联赛攻击力到顶级联赛打折
+            def_h = min(2.0, 1.0 + (def_h - 1.0) * 1.12)  # 防守端面对顶级攻击更吃力
+        if cross_a:
+            att_a = max(0.5, att_a * 0.92)
+            def_a = min(2.0, 1.0 + (def_a - 1.0) * 1.12)
+
         # Get league parameters
         avg_goals = self.league_avg_goals.get(league_code, 2.65)
         home_adv = self.league_home_adv.get(league_code, 0.30)
@@ -831,6 +844,7 @@ class DixonColesModel:
         result["away_attack"] = att_a
         result["away_defense"] = def_a
         result["cold_start"] = home_cold or away_cold
+        result["cross_league"] = is_cross
         result["cold_start_detail"] = {
             "home_cold": home_cold,
             "away_cold": away_cold,

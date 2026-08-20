@@ -297,7 +297,13 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
         league = league + " · 非五大"
 
     cold = p.get("cold_start", False)
-    cold_html = '<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span>' if cold else ""
+    cross_lg = p.get("cross_league", False)
+    if cold:
+        cold_html = '<span class="cold"> [冷启动 — 模型参数滞后, 分析谨慎参考]</span>'
+    elif cross_lg:
+        cold_html = '<span class="cold"> [跨级先验 — 次级联赛数据已降权, 谨慎参考]</span>'
+    else:
+        cold_html = ""
 
     segs = _split_note(note or "")
     if not segs["结论"] and not segs["方向分"] and not segs["关键维度"]:
@@ -363,7 +369,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
         elif sd:
             best_score = max(sd.items(), key=lambda kv: kv[1])
             top_score_txt = f" · 最可能比分 {best_score[0]} ({best_score[1]:.0%})"
-        cold_tag = " (冷启动·参考)" if p.get("cold_start") else ""
+        cold_tag = " (冷启动·参考)" if p.get("cold_start") else (" (跨级先验·参考)" if p.get("cross_league") else "")
         pick_html = (f'<div class="pick-line">🎯 最可能: <b>{_esc(labels[best_i])}</b> '
                      f'({prob_triple[best_i]:.1%}){_esc(top_score_txt)}{_esc(cold_tag)}</div>')
 

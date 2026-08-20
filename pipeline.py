@@ -42,10 +42,21 @@ def cmd_train(args):
 
     print("加载全部比赛数据...")
     matches = load_all_matches(csv_dir)
-    # 聚焦联赛过滤 (2026-08-16: 只训练五大联赛, 聚焦回测Brier 0.595 vs 全量0.626)
-    from config import FOCUS_LEAGUES
-    matches = [m for m in matches if m["league_code"] in FOCUS_LEAGUES]
-    print(f"聚焦后 {len(matches)} 场比赛 ({FOCUS_LEAGUES}), 来自 {len(set(m['season'] for m in matches))} 个赛季")
+    # 训练数据 (2026-08-20 起): 五大联赛 + 次级联赛 (升班马跨级先验样本)
+    from config import FOCUS_LEAGUES, SECOND_TIER_LEAGUES
+    train_leagues = list(FOCUS_LEAGUES) + list(SECOND_TIER_LEAGUES)
+    matches = [m for m in matches if m["league_code"] in train_leagues]
+    print(f"训练样本 {len(matches)} 场 ({train_leagues}), 来自 {len(set(m['season'] for m in matches))} 个赛季")
+    # 球队所属层级: 次级联赛球队=跨级先验 (预测顶级联赛时降权)
+    team_tier: dict = {}
+    for m in matches:
+        t = "2" if m["league_code"] in SECOND_TIER_LEAGUES else "1"
+        for team in (m["home_team"], m["away_team"]):
+            if team not in team_tier or t == "1":
+                team_tier[team] = t
+    with open(os.path.join(state_dir, "team_tier.json"), "w", encoding="utf-8") as f:
+        json.dump(team_tier, f, ensure_ascii=False, indent=2)
+    print(f"球队层级记录: {len(team_tier)} 队 (次级 {sum(1 for v in team_tier.values() if v == '2')} 队跨级先验)")
 
     summary = train_all(matches, state_dir, use_mle=args.mle)
 
@@ -370,9 +381,10 @@ def cmd_predict(args):
                 [pred["home_win"], pred["draw"], pred["away_win"]],
                 market,
             )
-            # ── 冷启动: 降低模型置信度让贝叶斯倾向市场 ──
+            # ── 冷启动/跨级先验: 降低模型置信度让贝叶斯倾向市场 ──
             is_cold = pred.get("cold_start", False)
-            mc = 0.20 if is_cold else 0.50  # cold: 20% model, 80% market
+            is_cross = pred.get("cross_league", False)
+            mc = 0.20 if is_cold else (0.35 if is_cross else 0.50)  # 冷启动20% / 跨级先验35% / 正常50%模型权重
             bayes = bayesian_fusion_predict(
                 [pred["home_win"], pred["draw"], pred["away_win"]],
                 market,
@@ -419,6 +431,7 @@ def cmd_predict(args):
             } if value else None,
             "bayesian": bayes,
             "cold_start": pred.get("cold_start", False),
+            "cross_league": pred.get("cross_league", False),
             # Phase 1 A2: 无赔率且冷启动 → 预测退化为联赛先验，无信息量
             "no_signal": value is None and pred.get("cold_start", False),
             "ah_handicap": ah_pred,

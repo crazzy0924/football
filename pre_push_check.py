@@ -223,7 +223,8 @@ content_files = [f for f in content_files if f.name not in ('pre_push_check.py',
 # 注意: pinnacle_bets_ 是投注单(用户可见) → 不豁免, 队名必须中文 (8-14修正)
 content_files = [f for f in content_files if not (f.suffix == '.json' and (
     'today.json' in f.name or 'pinnacle_odds_' in f.name
-    or 'predictions_' in f.name or 'kambi_' in f.name or 'local_match_db' in f.name))]
+    or 'predictions_' in f.name or 'kambi_' in f.name or 'local_match_db' in f.name
+    or 'results_' in f.name or 'analysis_notes_' in f.name))]
 
 print(f'🔎 检查 {len(content_files)} 个内容文件...')
 print()

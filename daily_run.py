@@ -72,8 +72,45 @@ def _write_files_manifest() -> None:
     print("[清单] 已更新 " + path + " (" + str(len(pred_dates)) + "预测/" + str(len(rev_dates)) + "复盘/" + str(len(early_dates)) + "早盘/" + str(len(midday_dates)) + "午盘)")
 
 
+RETRY_TASK_NAME = "足球模型-补推"
+
+
+def _register_push_retry() -> None:
+    """断网时注册每10分钟补推任务: 网络恢复后自动补推, 成功后自删"""
+    try:
+        root = os.path.dirname(os.path.abspath(__file__))
+        subprocess.run([
+            "schtasks", "/Create", "/TN", RETRY_TASK_NAME,
+            "/TR", f'cmd /c cd /d {root} && python daily_run.py push-retry',
+            "/SC", "MINUTE", "/MO", "10", "/F",
+        ], capture_output=True)
+        print("[推送] 网络失败, 已注册每10分钟补推任务 (网通自动补回)")
+    except Exception as e:
+        print("[推送] 注册补推任务失败: " + str(e))
+
+
+def _remove_push_retry() -> None:
+    """补推成功后删除补推任务"""
+    try:
+        subprocess.run(["schtasks", "/Delete", "/TN", RETRY_TASK_NAME, "/F"],
+                       capture_output=True)
+    except Exception:
+        pass
+
+
+def cmd_push_retry() -> None:
+    """断网补推: 尝试推送; 成功或已同步则删除补推任务, 失败则10分钟后自动再试"""
+    r = subprocess.run(["git", "push", "origin", "master"], capture_output=True, text=True)
+    out = (r.stdout or "") + (r.stderr or "")
+    if r.returncode == 0 and ("up-to-date" in out or "->" in out):
+        print("[补推] 推送成功/已同步, 删除补推任务")
+        _remove_push_retry()
+    else:
+        print("[补推] 网络仍不通, 10分钟后自动重试")
+
+
 def _git_sync() -> None:
-    """CLAUDE.md 纪律: 汉化检查通过才提交推送"""
+    """CLAUDE.md 纪律: 汉化检查通过才提交推送; 断网自动注册补推自愈"""
     rc = _run([sys.executable, "pre_push_check.py"])
     if rc != 0:
         print("[推送] 汉化检查未通过, 跳过自动提交推送 (请人工处理)")
@@ -84,8 +121,13 @@ def _git_sync() -> None:
     if rc not in (0, 1):  # 1 = 无变更可提交
         print("[推送] 提交失败, 跳过推送")
         return
-    _run(["git", "push", "origin", "master"])
-    print("[推送] 已尝试推送 origin/master")
+    rc = _run(["git", "push", "origin", "master"])
+    if rc != 0:
+        # 断网自愈: 注册补推任务, 网通后自动补回并自删
+        _register_push_retry()
+        return
+    print("[推送] 已推送 origin/master")
+    _remove_push_retry()  # 若之前有补推任务残留, 一并清理
 
 
 def cmd_predict(args) -> None:
@@ -180,11 +222,15 @@ def main() -> None:
     p_review.add_argument("date", nargs="?", default=None, help="日期 YYYY-MM-DD (默认昨日)")
     p_review.add_argument("--results-text", help="赛果文本 (例: 'A 2-1 B\\nC 0-0 D')")
 
+    p_retry = sub.add_parser("push-retry", help="断网补推: 网通后自动推送并自删任务")
+
     args = parser.parse_args()
     if args.command == "predict":
         cmd_predict(args)
     elif args.command == "review":
         cmd_review(args)
+    elif args.command == "push-retry":
+        cmd_push_retry()
     else:
         parser.print_help()
         sys.exit(1)

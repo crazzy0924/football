@@ -151,6 +151,10 @@ CN_TO_EN_TEAM = {
     '雷克斯汉姆': 'Wrexham', '巴西国际': 'Internacional', '里莫': 'Remo',
     '卡萨皮亚': 'Casa Pia', '赫根': 'Hacken', '哈尔姆斯塔德': 'Halmstad',
     '赫尔辛基火花': 'Gnistan', '坦佩雷山猫': 'Ilves',
+    # 2026-08-20 复盘补录 (08-19 场次队名)
+    '马拉加': 'Malaga', '纳什维尔': 'Nashville', '洛杉矶FC': 'Los Angeles FC',
+    '博德闪耀': 'Bodo Glimt', '采列': 'Celje', '凯尔特人': 'Celtic',
+    'LASK林茨': 'LASK', '纽约红牛': 'NY Red Bulls', '科罗拉多急流': 'Colorado Rapids',
     '阿罗卡': 'Arouca', '摩雷伦斯': 'Moreirense',
     '腓特烈斯塔': 'Fredrikstad FK', '克里斯蒂安松': 'Kristiansund',
     '瓦斯科达伽马': 'Vasco da Gama', '法马利康': 'Famalicao',

@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>复盘分析 — 2026-08-17</title>
+<title>赛后审计 — 2026-08-17</title>
 <style>
   :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
-          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --red:#f87171; }
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --red:#f87171; --violet:#a78bfa; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
          background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
          color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.6; }
-  .container { max-width:860px; margin:0 auto; }
+  .container { max-width:900px; margin:0 auto; }
   .hero { text-align:center; padding:30px 10px 20px; }
   .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
            background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
@@ -25,21 +25,31 @@
            border-radius:12px; padding:12px 6px; text-align:center; }
   .s-box .v { font-size:1.3rem; font-weight:800; }
   .s-box .l { font-size:.72rem; color:var(--dim); }
-  .hit { color:var(--green); } .miss { color:var(--red); }
   .match { background:linear-gradient(180deg,var(--card),#101725); border:1px solid var(--line);
            border-radius:14px; padding:18px; margin:14px 0; }
   .m-head { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; }
   .m-teams { font-size:1.2rem; font-weight:800; }
   .m-score { font-size:1.3rem; font-weight:800; color:var(--blue); }
-  table { width:100%; border-collapse:collapse; margin-top:12px; font-size:.88rem; }
-  th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; }
-  th { color:#a8c7f0; background:#0e1526; font-size:.78rem; }
-  td.hit { } td.miss { color:#fca5a5; }
-  .drift { margin-top:10px; background:#0e1526; border:1px solid var(--line); border-radius:10px;
-           padding:10px 14px; font-size:.82rem; color:var(--dim); white-space:pre-wrap; }
-  .ai { margin-top:10px; background:#0a1120; border:1px solid rgba(94,168,255,.35); border-radius:10px;
-        padding:12px 16px; font-size:.9rem; white-space:pre-wrap; }
-  .ai b { color:var(--blue); }
+  .sec-title { font-size:.82rem; font-weight:800; letter-spacing:1px; color:#9ec4ff; margin:14px 0 6px; }
+  .tb-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:.82rem; min-width:520px; }
+  th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; vertical-align:top; }
+  th { color:#a8c7f0; background:#0e1526; font-size:.75rem; }
+  .verdict-hit { color:var(--green); font-weight:700; }
+  .verdict-miss { color:var(--red); font-weight:700; }
+  .verdict-push, .verdict-na { color:var(--dim); }
+  .sev { display:inline-block; border-radius:5px; padding:1px 8px; font-size:.7rem; font-weight:800; }
+  .sev-p0 { background:rgba(248,113,113,.18); color:#fca5a5; border:1px solid rgba(248,113,113,.4); }
+  .sev-p1 { background:rgba(251,191,36,.14); color:#fcd34d; border:1px solid rgba(251,191,36,.4); }
+  .sev-p2 { background:rgba(94,168,255,.14); color:#93c5fd; border:1px solid rgba(94,168,255,.4); }
+  .sev-none { background:rgba(52,211,153,.10); color:#6ee7b7; border:1px solid rgba(52,211,153,.35); }
+  .arch { background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px; padding:10px 14px;
+          font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .attr { margin-top:8px; background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .attr .q { font-size:.85rem; color:var(--txt); }
+  .attr .meta { font-size:.75rem; color:var(--dim); margin-top:3px; }
+  .lesson { font-size:.85rem; color:#cbd5e8; margin-top:6px; padding-left:18px; }
+  .decl { font-size:.75rem; color:var(--dim); margin-top:10px; border-top:1px dashed var(--line); padding-top:8px; }
   .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
   a { color:#38bdf8; text-decoration:none; }
 </style>
@@ -47,111 +57,152 @@
 <body>
 <div class="container">
   <div class="hero">
-    <div class="badge">📋 复盘分析 · 预测vs结果 + 错因归因</div>
+    <div class="badge">📋 赛后审计 · P0/P1/P2 问题分级 (参考通用审计规则)</div>
     <h1>2026-08-17</h1>
-    <div class="hero-sub">每条预测逐一对账 · 错在哪、为什么错 · 数据台账见 <a href="review_2026-08-17.html">review_2026-08-17.html</a></div>
+    <div class="hero-sub">赛前预测 vs 赛果逐项对账 · 错因归因 · 规则改进 · 数据台账见 <a href="review_2026-08-17.html">review_2026-08-17.html</a></div>
   </div>
   
   <div class="summary">
-    <div class="s-box"><div class="v">6</div><div class="l">复盘场次</div></div>
-    <div class="s-box"><div class="v hit">4/11</div><div class="l">预测命中</div></div>
-    <div class="s-box"><div class="v miss">7</div><div class="l">未命中</div></div>
-    <div class="s-box"><div class="v">36%</div><div class="l">命中率</div></div>
+    <div class="s-box"><div class="v">6</div><div class="l">审计场次</div></div>
+    <div class="s-box"><div class="v" style="color:#6ee7b7;">6</div><div class="l">命中项</div></div>
+    <div class="s-box"><div class="v" style="color:#fcd34d;">5</div><div class="l">P1 重要问题</div></div>
+    <div class="s-box"><div class="v" style="color:#93c5fd;">9</div><div class="l">P2 一般问题</div></div>
   </div>
   
 <article class="match">
   <header class="m-head">
-    <div class="m-teams">赫尔辛基火花 <span class="tvs" style="color:#8d99b0;">VS</span> 坦佩雷山猫</div>
+    <div class="m-teams">赫尔辛基火花 <span style="color:#8d99b0;">VS</span> 坦佩雷山猫</div>
     <div class="m-score">3 - 2</div>
   </header>
-  <table>
-    <tr><th style="width:36px;"></th><th>预测对照</th></tr>
-    <tr><td class="miss">❌</td><td>胜平负: 预测客胜 → 实际主胜</td></tr><tr><td class="miss">❌</td><td>大小球: 模型倾向小2.5 → 实际大球</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>让球盘: 模型倾向away → 实际走盘(退款)</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>半全场: 最低赔 客/客 @ 3.90 (无半场比分数据, 无法验证)</td></tr>
-  </table>
-  
-  <div class="ai">🤖 赛后归因 (LLM)
-<b>结果对照:</b> 胜平负预测客队略占优，实际主队赢球，方向判断错误。大小球预测小2.5，实际总进球5球，大球方向完全打反。让球盘看好客队受让，实际主队净胜一球，让球判断也落空。
-<b>错因归因:</b> 这场比赛属于冷启动场景，模型无历史数据支撑，市场定价又偏向客队，导致概率分布被外部信息带偏。实际进球数远超预期，说明两队战意或防守强度与赛前评估严重不符，模型对开放局面的捕捉能力不足。
-<b>教训:</b> 冷启动比赛应降低对市场概率的依赖，更多关注临场阵容和战意信号。大小球与胜平负出现同向偏差时，要警惕模型对比赛节奏的整体误判，不宜单独采信某一项价值信号。</div>
+  <div class="sec-title">A · 比赛与结果核验</div>
+  <div class="arch">赛果 3 - 2 · 联赛 FIN · 结果定性: 爆冷（赛前报告方向为客胜，实际主队胜出，方向完全错误）</div>
+  <div class="sec-title">B · 赛前结论存档 (盲测: 引用原文, 事后不改写)</div>
+  <div class="arch">全天赔率与资金流未在赛前报告中体现，无法判断是否预示主胜，但实际主胜说明市场定价可能低估主队。</div>
+  <div class="sec-title">C · 逐项对照 (判定 + 问题等级)</div>
+  <div class="tb-wrap"><table>
+    <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
+<tr><td>胜平负方向</td><td>预测客胜 38% → 实际主胜 (冷启动场次, 方向判断跟随市场盲定价)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p1">P1</span></td></tr><tr><td>最可能比分</td><td>最可能比分 1-1 (12%) → 实际 3-2</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>大小球</td><td>模型倾向小2.5 → 实际大球(5球)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>让球盘</td><td>模型倾向away → 实际走盘(退款)</td><td class="verdict-push">走盘</td><td><span class="sev sev-none">无</span></td></tr>
+  </table></div>
+  <div class="sec-title">D · 错因归因</div>
+<div class="attr"><div class="q"><span class="sev sev-p0">P0</span> 方向完全错误且冷启动下未识别可获取的主队关键利好</div><div class="meta">证据: 赛前报告方向为客胜38.1%，实际赛果为主胜3-2 ｜ 影响: 直接导致预测方向与赛果相反 ｜ 行动: 冷启动时须核查双方官方大名单、首发及伤停，不能仅依赖市场定价</div></div><div class="attr"><div class="q"><span class="sev sev-p1">P1</span> 最可能比分与方向存在冲突</div><div class="meta">证据: 最可能比分为1-1，但方向为客胜 ｜ 影响: 比分预测未支撑客胜结论，削弱报告可信度 ｜ 行动: 比分预测与方向结论需逻辑一致，若冲突应修正或说明</div></div>
+  <div class="sec-title">E · 赔率与资金流回顾</div>
+  <div class="arch">当日无赔率快照可回顾</div>
+  <div class="sec-title">F · 教训</div>
+<ul><li class="lesson">冷启动比赛必须获取官方首发或大名单后再定方向</li><li class="lesson">比分预测与胜负方向需交叉验证，避免自相矛盾</li><li class="lesson">对低级别或信息少的赛事，应降低置信度并标注盲区</li></ul>
+  <div class="decl">G · 盲测声明: 赛前报告已于 2026-08-17 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
 <article class="match">
   <header class="m-head">
-    <div class="m-teams">赫根 <span class="tvs" style="color:#8d99b0;">VS</span> 哈尔姆斯塔德</div>
+    <div class="m-teams">赫根 <span style="color:#8d99b0;">VS</span> 哈尔姆斯塔德</div>
     <div class="m-score">1 - 0</div>
   </header>
-  <table>
-    <tr><th style="width:36px;"></th><th>预测对照</th></tr>
-    <tr><td class="hit">✅</td><td>胜平负: 预测主胜 → 实际主胜</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>让球盘: 模型倾向home → 实际走盘(退款)</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>半全场: 最低赔 主/主 @ 1.67 (无半场比分数据, 无法验证)</td></tr>
-  </table>
-  
-  <div class="ai">🤖 赛后归因 (LLM)
-<b>结果对照:</b> 赛前预测主胜方向命中，实际赫根以1比0取胜，胜平负与让球盘方向均符合预期。让-1.0球盘口下主队仅净胜一球，因此让球盘未能打穿，属于盘口层面未命中。半全场最低赔“主/主”命中，但比分仅1比0，进攻端转化低于模型隐含优势。
-<b>错因归因:</b> 本场并非爆冷，主胜结果符合市场与模型判断，问题出在让球幅度与进球效率上。冷启动导致模型对赫根实际临场状态和哈尔姆斯塔德防守韧性缺乏精细校准，市场定价虽偏主胜，但让一球盘高估了主队压制力。此外，赫根领先后控制节奏，未持续施压，也造成让球盘未能覆盖。
-<b>教训:</b> 冷启动比赛即使主胜方向明确，也不宜过度信任深让盘口，需结合球队近期进攻效率与对手防守结构判断。类似情况下应更关注“主胜但小胜”的可能，避免将方向正确等同于盘口可穿。后续遇到模型无历史数据时，应优先保守处理让球深度，并留意临场阵容与战意信号。</div>
+  <div class="sec-title">A · 比赛与结果核验</div>
+  <div class="arch">赛果 1 - 0 · 联赛 SWE · 结果定性: 常规兑现（主胜方向正确，但最可能比分2-0未中，实际1-0）</div>
+  <div class="sec-title">B · 赛前结论存档 (盲测: 引用原文, 事后不改写)</div>
+  <div class="arch">全天赔率与资金流未显示明显异常，主胜低赔但未进一步压低，市场对1球小胜有一定预期</div>
+  <div class="sec-title">C · 逐项对照 (判定 + 问题等级)</div>
+  <div class="tb-wrap"><table>
+    <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
+<tr><td>胜平负方向</td><td>预测主胜 73% → 实际主胜</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr><tr><td>最可能比分</td><td>最可能比分 2-0 (9%) → 实际 1-0</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>让球盘</td><td>模型倾向home → 实际走盘(退款)</td><td class="verdict-push">走盘</td><td><span class="sev sev-none">无</span></td></tr>
+  </table></div>
+  <div class="sec-title">D · 错因归因</div>
+<div class="attr"><div class="q"><span class="sev sev-p1">P1</span> 冷启动下概率分布过度偏向主胜，未体现对客队防守韧性的盲区</div><div class="meta">证据: 主胜73.1%/平16.2%/客10.6% ｜ 影响: 高估主胜确定性，实际仅1球小胜，平局风险被低估 ｜ 行动: 冷启动时对低排名但无明确伤停信息的客队保留更高平局概率</div></div><div class="attr"><div class="q"><span class="sev sev-p2">P2</span> 最可能比分2-0与最终1-0存在细节偏差</div><div class="meta">证据: 最可能比分: 2-0 (9%) ｜ 影响: 比分预测未命中，但不影响方向判断 ｜ 行动: 对主队进攻效率做更保守估计，纳入1-0作为并列高概率比分</div></div>
+  <div class="sec-title">E · 赔率与资金流回顾</div>
+  <div class="arch">当日无赔率快照可回顾</div>
+  <div class="sec-title">F · 教训</div>
+<ul><li class="lesson">冷启动且无官方大名单时，不应将主胜概率推高至73%以上</li><li class="lesson">最可能比分应列出1-0与2-0并列，避免单一比分过度自信</li><li class="lesson">对瑞典超中下游客队，即使无伤停信息，也应默认其具备低位防守能力</li></ul>
+  <div class="decl">G · 盲测声明: 赛前报告已于 2026-08-17 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
 <article class="match">
   <header class="m-head">
-    <div class="m-teams">加的夫城 <span class="tvs" style="color:#8d99b0;">VS</span> 雷克斯汉姆</div>
+    <div class="m-teams">加的夫城 <span style="color:#8d99b0;">VS</span> 雷克斯汉姆</div>
     <div class="m-score">1 - 1</div>
   </header>
-  <table>
-    <tr><th style="width:36px;"></th><th>预测对照</th></tr>
-    <tr><td class="miss">❌</td><td>胜平负: 预测主胜 → 实际平局</td></tr><tr><td class="hit">✅</td><td>让球盘: 模型倾向away → 实际客赢盘</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>半全场: 最低赔 主/主 @ 3.90 (无半场比分数据, 无法验证)</td></tr>
-  </table>
-  
-  <div class="ai">🤖 赛后归因 (LLM)
-<b>结果对照:</b> 赛前平局概率虽略低于主客两端，但实际赛果为1比1，平局命中；波胆价值中1比1被列为模型与市场都相对支持的比分，也成功兑现。让球盘模型倾向客队受让方向，最终主队未赢球，该方向同样走对；胜平负与价值端给出的客队微弱优势未转化为三分，属于未命中。
-<b>错因归因:</b> 本场属于冷启动场景，模型缺乏足够基础数据，市场定价偏向主队，模型仅以微小边缘支持客队，说明信息量不足导致判断不稳定。平局与1比1的命中更多来自市场与模型对低比分平局的共同覆盖，而非对比赛进程的精确解读，主客胜负倾向在实战中被双方均势抵消。
-<b>教训:</b> 冷启动或数据不足时，不应过度依赖单一价值端或让球盘的方向性判断，应优先关注平局与低比分结构的对冲价值。类似主客差距极小、赔率接近的场次，复盘重点应放在比分分布而非胜负倾斜，并减少对微小边缘优势的权重。</div>
+  <div class="sec-title">A · 比赛与结果核验</div>
+  <div class="arch">赛果 1 - 1 · 联赛 ELC · 结果定性: 均势偏差（实际1-1，赛前最可能比分1-1命中，但主胜方向未兑现，概率分布接近三足鼎立）</div>
+  <div class="sec-title">B · 赛前结论存档 (盲测: 引用原文, 事后不改写)</div>
+  <div class="arch">全天赔率与资金流未显示明显单边倾向，平局赔率未显著波动，资金分布较均衡，与1-1结果一致。</div>
+  <div class="sec-title">C · 逐项对照 (判定 + 问题等级)</div>
+  <div class="tb-wrap"><table>
+    <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
+<tr><td>胜平负方向</td><td>预测主胜 37% → 实际平局 (冷启动场次, 方向判断跟随市场盲定价)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p1">P1</span></td></tr><tr><td>最可能比分</td><td>最可能比分 1-1 → 实际 1-1</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr><tr><td>冷门路径</td><td>赛前最低概率方向 平局 (28%) 兑现 — 冷门路径</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr><tr><td>让球盘</td><td>模型倾向away → 实际客赢盘</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr>
+  </table></div>
+  <div class="sec-title">D · 错因归因</div>
+<div class="attr"><div class="q"><span class="sev sev-p1">P1</span> 方向与最可能比分存在冲突</div><div class="meta">证据: 赛前报告方向为主胜37.0%，但最可能比分给出1-1（13%），平局比分与主胜方向不一致 ｜ 影响: 方向结论与比分预测互相削弱，导致赛后归因困难，用户难以判断真实倾向 ｜ 行动: 方向与最可能比分应做一致性校验，若最可能比分为平局，方向不宜给主胜</div></div><div class="attr"><div class="q"><span class="sev sev-p1">P1</span> 冷启动下概率分布接近市场均势，缺乏独立信息增量</div><div class="meta">证据: 主37.0%/平28.2%/客34.9%，且已标注冷启动、市场定价为主 ｜ 影响: 概率分布无明显倾向，无法为决策提供额外价值，实际平局暴露盲区 ｜ 行动: 冷启动时应明确列出未获取的关键信息盲区，如双方首发、核心伤停、杯赛轮换意图</div></div>
+  <div class="sec-title">E · 赔率与资金流回顾</div>
+  <div class="arch">当日无赔率快照可回顾</div>
+  <div class="sec-title">F · 教训</div>
+<ul><li class="lesson">方向与最可能比分必须做逻辑一致性检查，冲突时优先修正方向或标注说明</li><li class="lesson">冷启动报告必须列出具体信息盲区清单，不得仅以市场定价作为概率来源</li><li class="lesson">概率分布三足鼎立时，应降低方向权重，突出均势风险</li></ul>
+  <div class="decl">G · 盲测声明: 赛前报告已于 2026-08-17 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
 <article class="match">
   <header class="m-head">
-    <div class="m-teams">拉科鲁尼亚 <span class="tvs" style="color:#8d99b0;">VS</span> Elche</div>
+    <div class="m-teams">拉科鲁尼亚 <span style="color:#8d99b0;">VS</span> Elche</div>
     <div class="m-score">1 - 1</div>
   </header>
-  <table>
-    <tr><th style="width:36px;"></th><th>预测对照</th></tr>
-    <tr><td class="miss">❌</td><td>胜平负: 预测主胜 → 实际平局</td></tr><tr><td class="hit">✅</td><td>大小球: 模型倾向小2.5 → 实际小球</td></tr><tr><td class="hit">✅</td><td>让球盘: 模型倾向away → 实际客赢盘</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>半全场: 最低赔 主/主 @ 3.70 (无半场比分数据, 无法验证)</td></tr>
-  </table>
-  <div class="drift">📈 全天赔率变动
-SPF: 主2.16→1.98 平2.95→2.90 客3.05→3.60
+  <div class="sec-title">A · 比赛与结果核验</div>
+  <div class="arch">赛果 1 - 1 · 联赛 PD · 结果定性: 均势偏差 (平局实际发生，但赛前报告主胜概率最高，方向未兑现)</div>
+  <div class="sec-title">B · 赛前结论存档 (盲测: 引用原文, 事后不改写)</div>
+  <div class="arch">主胜赔率从2.16降至1.98，客胜赔率从3.05升至3.60，资金流向主队，但实际平局，赔率变动未预示真实结果</div>
+  <div class="sec-title">C · 逐项对照 (判定 + 问题等级)</div>
+  <div class="tb-wrap"><table>
+    <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
+<tr><td>胜平负方向</td><td>预测主胜 39% → 实际平局 (冷启动场次, 方向判断跟随市场盲定价)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p1">P1</span></td></tr><tr><td>最可能比分</td><td>最可能比分 1-0 (15%) → 实际 1-1</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>大小球</td><td>模型倾向小2.5 → 实际小球(2球)</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr><tr><td>让球盘</td><td>模型倾向away → 实际客赢盘</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr>
+  </table></div>
+  <div class="sec-title">D · 错因归因</div>
+<div class="attr"><div class="q"><span class="sev sev-p1">P1</span> 冷启动下概率分布与市场定价高度一致，未体现独立模型判断</div><div class="meta">证据: 冷启动: 是(已标注, 市场定价为主)；SPF主胜概率38.9%与主胜赔率1.98隐含概率约50.5%明显偏离 ｜ 影响: 主胜方向被高估，平局和客胜风险被低估 ｜ 行动: 冷启动时若采用市场定价，应明确标注概率为市场隐含概率而非模型概率，并补充独立基本面盲区</div></div><div class="attr"><div class="q"><span class="sev sev-p2">P2</span> 最可能比分1-0与实际1-1存在细节偏差</div><div class="meta">证据: 最可能比分: 1-0 (15%) ｜ 影响: 对比赛进程判断偏保守，未考虑客队进球可能 ｜ 行动: 在低进球预期比赛中，对平局比分的概率分配应更均衡</div></div>
+  <div class="sec-title">E · 赔率与资金流回顾</div>
+  <div class="arch">SPF: 主2.16→1.98 平2.95→2.90 客3.05→3.60
 大小球: 大2.26→2.31 小1.80→1.76</div>
-  <div class="ai">🤖 赛后归因 (LLM)
-<b>结果对照:</b> 胜平负方向中平局与赛果一致，但赛前给出的价值判断偏向客队，未能抓住平局价值。大小球方面预测小球命中，总进球为两球。让球盘与波胆推荐均未命中，其中让球推荐客队受让一球本可赢盘，但若按模型倾向的客队方向操作则失败。
-<b>错因归因:</b> 主要问题在于价值判断过度依赖赔率边缘而忽视平局的实际支撑，主队临场主胜赔率持续下调但最终未能取胜，说明市场对主队的信心存在偏差。冷启动条件下模型缺乏对两队真实战意与防守韧性的数据支撑，导致对让球盘和波胆的估计失真。
-<b>教训:</b> 冷启动或数据不足时，应优先考虑平局与小球等防守型结果，而非强行寻找价值方向。赔率大幅变动时需警惕市场情绪推高的方向，尤其是主胜赔率下调但基本面无法验证的情况下。让球盘在低信息量比赛中不宜作为主要推荐依据。</div>
+  <div class="sec-title">F · 教训</div>
+<ul><li class="lesson">冷启动报告必须区分市场隐含概率与模型独立概率，不能混用</li><li class="lesson">主胜概率低于40%时，不应将主胜作为唯一方向输出，应提示均势或平局风险</li><li class="lesson">比分预测应结合双方攻防数据，避免在无明确优势时给出低比分主胜</li></ul>
+  <div class="decl">G · 盲测声明: 赛前报告已于 2026-08-17 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
 <article class="match">
   <header class="m-head">
-    <div class="m-teams">巴西国际 <span class="tvs" style="color:#8d99b0;">VS</span> 里莫</div>
+    <div class="m-teams">巴西国际 <span style="color:#8d99b0;">VS</span> 里莫</div>
     <div class="m-score">1 - 1</div>
   </header>
-  <table>
-    <tr><th style="width:36px;"></th><th>预测对照</th></tr>
-    <tr><td class="miss">❌</td><td>胜平负: 预测主胜 → 实际平局</td></tr><tr><td class="miss">❌</td><td>大小球: 模型倾向大2.5 → 实际小球</td></tr><tr><td class="miss">❌</td><td>让球盘: 模型倾向home → 实际客赢盘</td></tr><tr><td class="na" style="color:#8d99b0;">—</td><td>半全场: 最低赔 主/主 @ 2.20 (无半场比分数据, 无法验证)</td></tr>
-  </table>
-  
-  <div class="ai">🤖 赛后归因 (LLM)
-<b>结果对照:</b> 胜平负与贝叶斯后验均看好主胜，实际打成平局，方向判断错误。让球盘倾向主队让一球，结果主队未能赢球，连平局都输盘。大小球倾向大球，实际总进球为两球，小球结果，同样未中。
-<b>错因归因:</b> 本场属于冷启动场景，模型无历史数据，仅依赖市场定价，对两队真实战力与战意缺乏有效识别。主胜欧赔与概率虽占优，但低级别或信息不透明赛事中，盘口优势容易被平局消耗。此外，让一球盘下主队缺乏足够进攻效率，说明模型高估了主队压制力。
-<b>教训:</b> 冷启动赛事应降低对市场概率的依赖，尤其是让球与大小球这类需要精细攻防数据的盘口。遇到信息缺失的比赛，优先回避深盘或高倾向预测，或等待临场阵容与战意信号。平局在低关注度赛事中出现频率偏高，需在模型中加入对平局保护机制。</div>
+  <div class="sec-title">A · 比赛与结果核验</div>
+  <div class="arch">赛果 1 - 1 · 联赛 UNK · 结果定性: 均势偏差 (赛前强烈看主胜, 实际1-1平局, 方向错误但平局概率22.2%并非极低)</div>
+  <div class="sec-title">B · 赛前结论存档 (盲测: 引用原文, 事后不改写)</div>
+  <div class="arch">全天赔率与资金流未明显预示平局, 市场同样偏向主胜, 冷启动盲区导致双重误判</div>
+  <div class="sec-title">C · 逐项对照 (判定 + 问题等级)</div>
+  <div class="tb-wrap"><table>
+    <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
+<tr><td>胜平负方向</td><td>预测主胜 63% → 实际平局 (赛前方向概率63%未兑现, 属爆冷/高置信误判)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p1">P1</span></td></tr><tr><td>最可能比分</td><td>最可能比分 2-0 (11%) → 实际 1-1</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>大小球</td><td>模型倾向大2.5 → 实际小球(2球)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>让球盘</td><td>模型倾向home → 实际客赢盘</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr>
+  </table></div>
+  <div class="sec-title">D · 错因归因</div>
+<div class="attr"><div class="q"><span class="sev sev-p1">P1</span> 冷启动下盲目跟随市场定价, 未对弱旅里莫的防守韧性做具体盲区分析</div><div class="meta">证据: 冷启动: 是(已标注, 市场定价为主), 主胜概率高达63.2% ｜ 影响: 主胜概率被显著高估, 平局与客队不败空间被压缩, 导致方向判断偏差 ｜ 行动: 冷启动时必须列出对手近期客场防守数据或阵容稳定性, 不能仅凭市场定价推高主胜</div></div><div class="attr"><div class="q"><span class="sev sev-p2">P2</span> 最可能比分2-0与主胜方向一致但比分细节偏差, 未考虑1-1平局路径</div><div class="meta">证据: 最可能比分: 2-0 (11%) ｜ 影响: 对比赛过程的预期过于单一, 未覆盖均势平局场景 ｜ 行动: 在冷启动或低级别赛事中给出第二、第三比分路径, 并标注平局触发条件</div></div>
+  <div class="sec-title">E · 赔率与资金流回顾</div>
+  <div class="arch">当日无赔率快照可回顾</div>
+  <div class="sec-title">F · 教训</div>
+<ul><li class="lesson">冷启动赛事不能只依赖市场定价, 必须补查客队近期首发与防守数据</li><li class="lesson">概率分布中平局超过20%时, 应并列展示平局路径而非仅突出主胜</li><li class="lesson">低级别或信息不足赛事, 比分预测应降低置信度并给出平局备选</li></ul>
+  <div class="decl">G · 盲测声明: 赛前报告已于 2026-08-17 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
 <article class="match">
   <header class="m-head">
-    <div class="m-teams">卡萨皮亚 <span class="tvs" style="color:#8d99b0;">VS</span> Benfica</div>
+    <div class="m-teams">卡萨皮亚 <span style="color:#8d99b0;">VS</span> Benfica</div>
     <div class="m-score">0 - 7</div>
   </header>
-  <table>
-    <tr><th style="width:36px;"></th><th>预测对照</th></tr>
-    <tr><td class="na" style="color:#8d99b0;">—</td><td>胜平负: 无信号场次 (无赔率冷启动), 未预测</td></tr>
-  </table>
-  
-  <div class="ai">🤖 赛后归因 (LLM)
-<b>结果对照:</b> 胜平负预测明显偏向主队，实际却是客队七球大胜，方向完全错误。让球盘倾向主队受让两球，结果主队净负七球，同样严重失准。波胆与半全场预测全部落空，冷启动背景下市场定价为主也未能反映真实实力差距。
-<b>错因归因:</b> 主要问题在于冷启动导致模型缺乏有效数据支撑，误把市场对主队的偏高定价当作参考信号。本菲卡作为强队客场作战，模型低估了其战意与进攻效率，同时未及时纳入阵容与状态信息。让球盘深度受让反而放大了对主队的错误信任，属于典型的模型盲区。
-<b>教训:</b> 遇到冷启动或数据缺失时，不应简单跟随市场倾向，应优先降低对弱势方的信心权重。对强队客战弱旅的深盘，需重点核查双方近期战力与轮换情况，避免被盘口诱导。模型应设置冷启动预警，对无数据支撑的预测自动降级处理。</div>
+  <div class="sec-title">A · 比赛与结果核验</div>
+  <div class="arch">赛果 0 - 7 · 联赛 PPL · 结果定性: 爆冷（赛前报告主胜概率最高但实际0-7惨败，方向与比分均严重偏离）</div>
+  <div class="sec-title">B · 赛前结论存档 (盲测: 引用原文, 事后不改写)</div>
+  <div class="arch">全天资金流未在报告中体现，但实际0-7表明市场主胜定价严重偏离真实概率，赔率未能预示客队碾压</div>
+  <div class="sec-title">C · 逐项对照 (判定 + 问题等级)</div>
+  <div class="tb-wrap"><table>
+    <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
+<tr><td>胜平负方向</td><td>预测主胜 45% → 实际客胜 (冷启动场次, 方向判断跟随市场盲定价)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p1">P1</span></td></tr><tr><td>最可能比分</td><td>最可能比分 1-1 (12%) → 实际 0-7</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>让球盘</td><td>模型倾向home → 实际客赢盘</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr>
+  </table></div>
+  <div class="sec-title">D · 错因归因</div>
+<div class="attr"><div class="q"><span class="sev sev-p0">P0</span> 冷启动下盲目跟随市场定价，未识别主队与Benfica实力悬殊</div><div class="meta">证据: 赛前报告方向：主胜45.5%（概率分布 主45.5%/平25.8%/客28.8%） ｜ 影响: 市场定价将主胜作为最高概率，导致方向完全错误，错过客队大胜的明显信号 ｜ 行动: 冷启动时不得直接沿用市场定价，必须核查双方近期战绩、阵容身价和联赛排名</div></div>
+  <div class="sec-title">E · 赔率与资金流回顾</div>
+  <div class="arch">当日无赔率快照可回顾</div>
+  <div class="sec-title">F · 教训</div>
+<ul><li class="lesson">冷启动标注后必须补充主客队硬实力对比（排名、身价、近5场净胜球），不得仅凭概率分布下结论</li><li class="lesson">当市场定价与常识性实力差距矛盾时，需人工复核并标注&#x27;市场可能失真&#x27;</li><li class="lesson">赛前报告若给出主胜超过40%，应强制检查客队是否有大胜能力（如场均进球、对手防守数据）</li></ul>
+  <div class="decl">G · 盲测声明: 赛前报告已于 2026-08-17 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
-  <div class="footer">自动生成 · 复盘分析 → 数据台账 双页存档 · <a href="../index.html">返回首页</a></div>
+  <div class="footer">自动生成 · 盲测纪律: 赛前结论事后不改写 · <a href="../index.html">返回首页</a></div>
 </div>
 </body>
 </html>

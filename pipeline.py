@@ -439,13 +439,23 @@ def cmd_predict(args):
             "h2h_recent": _recent_h2h(home, away, _db),
         })
 
-    # 保存JSON
+    # 保存JSON (与当日已有预测按场次合并: 终盘不再覆盖早盘已踢场次, 保证复盘完整)
     os.makedirs(output_dir, exist_ok=True)
     today_str = _today_str()
     out_path = os.path.join(output_dir, f"predictions_{today_str}.json")
+    merged_preds: dict = {}
+    if os.path.exists(out_path):
+        try:
+            with open(out_path, "r", encoding="utf-8") as f:
+                for p2 in json.load(f):
+                    merged_preds[f"{p2.get('home_team', '')}|{p2.get('away_team', '')}"] = p2
+        except Exception:
+            pass
+    for p2 in predictions:
+        merged_preds[f"{p2.get('home_team', '')}|{p2.get('away_team', '')}"] = p2
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(predictions, f, ensure_ascii=False, indent=2)
-    print(f"已保存 {len(predictions)} 条预测至 {out_path}")
+        json.dump(list(merged_preds.values()), f, ensure_ascii=False, indent=2)
+    print(f"已保存 {len(predictions)} 条预测至 {out_path} (合并后共 {len(merged_preds)} 条)")
 
     # 生成HTML (早盘/午盘=七维分析存档页, 终盘=预测页)
     stage = getattr(args, "stage", "final")

@@ -379,6 +379,10 @@ TEAM_NAME_ALIASES = {
     "Sport Lisboa e Benfica": "Benfica",
     "SC Internacional": "Internacional",
     "Clube do Remo": "Remo",
+    # 2026-08-20 复盘补录 (football-data.org 全名)
+    "Club Atlético de Madrid": "Ath Madrid",
+    "Málaga CF": "Malaga",
+    "CD Universidad Católica": "Universidad Catolica",
     "Almería": "Almeria",
     "Cádiz": "Cadiz",
     "Girona FC": "Girona",

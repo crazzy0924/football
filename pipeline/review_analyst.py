@@ -17,6 +17,7 @@ import glob
 import html as _html
 import json
 import os
+import re as _re
 import sys
 
 if __package__ in (None, ""):
@@ -152,7 +153,25 @@ def _query_postmortem(prompt: str) -> str:
         return ""
 
 
-def _build_postmortem_prompt(pred: dict, result: dict, drift_txt: str, competition_note: str) -> str:
+def _match_intel(intel_text: str, home: str, away: str) -> str:
+    """从情报账本里抽取本场相关片段 (球队段落 + 裁判/天气中含队名的行)"""
+    if not intel_text:
+        return "无当日情报账本"
+    out = []
+    cur_team = None
+    for line in intel_text.splitlines():
+        s = line.strip()
+        if s.startswith("[") and "]" in s:
+            cur_team = s[1:s.index("]")]
+        if home in s or away in s:
+            out.append(s)
+        elif cur_team and (home in cur_team or away in cur_team):
+            out.append(s)
+    return "\n".join(out[:14]) if out else "情报账本中无本场相关条目"
+
+
+def _build_postmortem_prompt(pred: dict, result: dict, drift_txt: str, competition_note: str,
+                             verdict_rows: list, intel_excerpt: str, audit_warning: str) -> str:
     home = pred.get("home_team", "?")
     away = pred.get("away_team", "?")
     m = pred.get("model", {})
@@ -160,39 +179,61 @@ def _build_postmortem_prompt(pred: dict, result: dict, drift_txt: str, competiti
     post = bayes.get("posterior") or {}
     probs = (post.get("home", m.get("home_win", 0)), post.get("draw", m.get("draw", 0)), post.get("away", m.get("away_win", 0)))
     pick_label = ("主胜", "平局", "客胜")[max(range(3), key=lambda i: probs[i])]
-    top_score = ""
     sd = m.get("score_distribution") or {}
-    if sd:
-        best = max(sd.items(), key=lambda kv: kv[1])
-        top_score = f"{best[0]} ({best[1]:.0%})"
+    top_scores = sorted(sd.items(), key=lambda kv: -kv[1])[:3]
+    top_score_txt = " ".join(f"{s}({p:.0%})" for s, p in top_scores)
+    ou_txt = "无信号"
+    ou_v = pred.get("ou_value")
+    if ou_v:
+        ou_txt = f"{ou_v['side']} (edge {ou_v.get('edge', 0):+.0%})"
+    ah_txt = "无"
+    ah = pred.get("ah_handicap") or {}
+    if ah.get("edge") and ah["edge"].get("best_pick"):
+        ah_txt = f"倾向{ah['edge']['best_pick']} (让{ah.get('goal_line', 0):+g}球, edge {ah['edge'].get('edge', 0):+.0%})"
+    btts_txt = f"模型BTTS {m.get('btts', 0):.0%}"
+    verdict_txt = "\n".join(f"- {it}: {de} → 判定{vd} (等级{sev})" for it, de, vd, sev in verdict_rows)
+    hg, ag = result.get("home_goals"), result.get("away_goals")
     lines = [
-        "你是足球赛后审计员。比赛已结束。请对赛前报告做赛后审计 (不是赛前分析)。",
+        "你是足球赛后审计员。比赛已结束。请对赛前报告做四维度赛后审计: 胜平负 / 大小球 / 让球 / 波胆。",
         "",
         f"比赛: {home} vs {away} ({pred.get('league_code', '')})",
         f"赛事备注: {competition_note or '无'}",
-        f"实际赛果: {result.get('home_goals', '?')} - {result.get('away_goals', '?')}",
+        f"实际赛果: {hg} - {ag} (总进球{hg + ag if hg is not None else '?'}球, BTTS={'是' if hg and ag else '否'})",
         "",
-        "赛前报告存档 (盲测: 只能引用, 不得改写):",
-        f"- 方向: {pick_label} {max(probs):.1%} (概率分布 主{probs[0]:.1%}/平{probs[1]:.1%}/客{probs[2]:.1%})",
-        f"- 最可能比分: {top_score}",
-        f"- 冷启动: {'是(已标注, 市场定价为主)' if pred.get('cold_start') else '否'}",
+        "赛前预测存档 (盲测: 只能引用):",
+        f"- 胜平负: {pick_label} {max(probs):.1%} (主{probs[0]:.1%}/平{probs[1]:.1%}/客{probs[2]:.1%})",
+        f"- 大小球: {ou_txt}",
+        f"- 让球: {ah_txt}",
+        f"- 波胆(前三): {top_score_txt} · {btts_txt}",
+        f"- 冷启动: {'是(已标注)' if pred.get('cold_start') else '否'}",
+        "",
+        "逐项判定 (已计算, 不要重算):",
+        verdict_txt,
     ]
     if drift_txt:
-        lines.append("全天赔率变动:")
-        lines.append(drift_txt)
+        lines += ["", "全天赔率变动 (复盘用):", drift_txt]
+    if audit_warning:
+        lines += ["", f"赛前自检当时预警: {audit_warning}"]
+    if intel_excerpt:
+        lines += ["", f"当日场外情报账本(本场相关):\n{intel_excerpt}"]
     lines += [
         "",
-        "审计要求 (参考通用审计规则的问题分级):",
-        "- P0 致命: 比赛身份/赛事类型错误; 核心事实编造; 方向完全错误且赛前存在本可获取的关键事实(如官方大名单核心缺阵)却未识别",
-        "- P1 重要: 关键伤停/首发过期或无来源; 权重或概率算错; 比分与方向冲突; 冷启动下盲目跟随市场定价",
-        "- P2 一般: 比分细节偏差; 措辞过度; 样本标签不清",
-        "- 冷启动已标注不算借口, 必须写具体盲区; 不得把同一事实拆成多条凑数",
+        "审计要求:",
+        "- 四个维度每个都要归因: 错在哪, 与全天赔率变动是否有关(资金流是否预示了结果), 与场外情报(伤停/战意/轮换/裁判)是否有关, 赛前自检是否已预警",
+        "- 查漏补缺: 赛前有哪些本可获取但没注意到的信息/信号 (结合情报账本和赔率变动逐条找), 最多4条",
+        "- 问题分级 P0/P1/P2; 冷启动已标注不算借口, 必须写具体盲区; 不得把同一事实拆成多条凑数",
         "",
         "输出 (只输出一个合法JSON对象, 纯中文):",
         '{',
-        '  "结果定性": "常规兑现 / 冷门路径兑现 / 爆冷 / 均势偏差 (一句判定+依据)",',
-        '  "归因": [{"级别":"P1", "问题":"一句话", "证据":"赛前报告原文或数据", "影响":"对结论的影响", "行动":"下次怎么做"}],',
-        '  "教训": ["可执行的规则改进, 最多3条, 不写空话"],',
+        '  "结果定性": "常规兑现 / 冷门路径兑现 / 爆冷 / 均势偏差 (一句)",',
+        '  "维度复盘": {',
+        '    "胜平负": {"归因":"错在哪/为何命中, 与赔率变动及场外情报的关联"},',
+        '    "大小球": {"归因":"..."},',
+        '    "让球": {"归因":"..."},',
+        '    "波胆": {"归因":"..."}',
+        '  },',
+        '  "查漏补缺": ["赛前没注意到的信息/信号, 每条一句, 最多4条"],',
+        '  "教训": ["可执行的规则改进, 最多3条"],',
         '  "赔率回顾": "全天赔率与资金流是否预示了结果, 一句"',
         '}',
     ]
@@ -284,6 +325,18 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
     """生成赛后审计页 (P0/P1/P2 分级), 返回文件路径"""
     predictions = _load_json(os.path.join(output_dir, f"predictions_{date_str}.json")) or []
     drift_map = _load_drift(date_str)
+    intel_path = os.path.join("data", "intel", f"{date_str}.txt")
+    if os.path.exists(intel_path):
+        with open(intel_path, "r", encoding="utf-8") as _f:
+            intel_text = _f.read().strip()
+    # 终盘自检预警 (审计复盘时回看: 当时自检说了什么)
+    audit_map = {}
+    notes_path = os.path.join(output_dir, f"analysis_notes_final_{date_str}.json")
+    notes_all = _load_json(notes_path) or {}
+    for _k, _v in notes_all.items():
+        _mm = _re.search(r"自检[:：]\s*(.+)", _v or "")
+        if _mm:
+            audit_map[_k] = _mm.group(1).strip()
 
     n_hit = 0
     n_p1 = 0
@@ -300,7 +353,7 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
         drift_txt = drift_map.get(key, "")
         goals = (m.get("home_goals") or 0) + (m.get("away_goals") or 0)
 
-        # C 逐项对照 (确定性计算)
+        # C 逐项对照 (确定性计算: 胜平负/波胆/冷门路径/大小球/让球)
         rows = []
         chk = _check_1x2(pred or m, m.get("actual", ""))
         rows.append(("胜平负方向", chk[2], chk[0], chk[1]))
@@ -324,13 +377,17 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
             elif sev == "P2":
                 n_p2 += 1
 
-        # D 归因 (LLM)
+        # D 四维归因 (LLM: 结合赔率变动+场外情报+自检预警)
         llm = {}
         if pred:
             try:
-                note = _query_postmortem(_build_postmortem_prompt(pred, result, drift_txt, competition_note))
+                intel_excerpt = _match_intel(intel_text, home, away)
+                audit_warning = audit_map.get(f"{home} vs {away}", "") or audit_map.get(f"{away} vs {home}", "")
+                prompt2 = _build_postmortem_prompt(pred, result, drift_txt, competition_note,
+                                                    rows, intel_excerpt, audit_warning)
+                note = _query_postmortem(prompt2)
                 llm = _parse_llm(note) or {}
-                print(f"  [复盘审计] {home} vs {away}: 归因 {len(llm.get('归因') or [])} 条")
+                print(f"  [复盘审计] {home} vs {away}: 维度归因 {len(llm.get('维度复盘') or {})} 项, 查漏 {len(llm.get('查漏补缺') or [])} 条")
             except Exception as e:
                 print(f"  [复盘审计] {home} vs {away} 失败: {e}")
 
@@ -340,12 +397,21 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
             + '<td><span class="sev sev-' + ("p0" if sev == "P0" else "p1" if sev == "P1" else "p2" if sev == "P2" else "none") + '">' + _esc(sev) + '</span></td></tr>'
             for item, detail, vd, sev in rows
         )
-        attr_html = ""
-        for a in llm.get("归因") or []:
-            lvl = a.get("级别", "P2")
-            attr_html += ('<div class="attr"><div class="q"><span class="sev sev-' + ("p0" if lvl == "P0" else "p1" if lvl == "P1" else "p2") + '">' + _esc(lvl) + '</span> '
-                          + _esc(a.get("问题", "")) + '</div>'
-                          + '<div class="meta">证据: ' + _esc(a.get("证据", "")) + ' ｜ 影响: ' + _esc(a.get("影响", "")) + ' ｜ 行动: ' + _esc(a.get("行动", "")) + '</div></div>')
+        # D 维度复盘渲染: 四维度 + LLM 归因
+        dim_map = {}
+        for item, detail, vd, sev in rows:
+            dim_map.setdefault(item, (vd, sev))
+        dim_rev = llm.get("维度复盘") or {}
+        dim_html = ""
+        for label, keyname in (("胜平负", "胜平负方向"), ("波胆", "最可能比分"), ("大小球", "大小球"), ("让球", "让球盘")):
+            vd, sev = dim_map.get(keyname, (None, None))
+            if vd is None:
+                continue
+            reason = (dim_rev.get(label) or {}).get("归因", "")
+            vcls = "hit" if vd == "命中" else "miss" if vd == "未中" else "push" if vd == "走盘" else "na"
+            dim_html += ('<div class="attr"><div class="q"><span class="verdict-' + vcls + '">' + _esc(vd) + '</span> <b>' + _esc(label) + '</b></div>'
+                         + '<div class="meta">归因: ' + _esc(reason or "—") + '</div></div>')
+        gaps = "".join('<li class="lesson">' + _esc(x) + '</li>' for x in (llm.get("查漏补缺") or []))
         lessons = "".join('<li class="lesson">' + _esc(x) + '</li>' for x in (llm.get("教训") or []))
         comp_txt = " · 赛事备注: " + competition_note if competition_note else ""
         cards.append("""
@@ -356,22 +422,21 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
   </header>
   <div class="sec-title">A · 比赛与结果核验</div>
   <div class="arch">赛果 """ + _esc(str(m.get("home_goals", "?"))) + " - " + _esc(str(m.get("away_goals", "?"))) + " · 联赛 " + _esc(pred.get("league_code", "") if pred else "?") + _esc(comp_txt) + " · 结果定性: " + _esc((llm.get("结果定性") or "待归因")) + """</div>
-  <div class="sec-title">B · 赛前结论存档 (盲测: 引用原文, 事后不改写)</div>
-  <div class="arch">""" + _esc((llm.get("赔率回顾") or "") or "—") + """</div>
-  <div class="sec-title">C · 逐项对照 (判定 + 问题等级)</div>
+  <div class="sec-title">C · 四维逐项对照 (胜平负/波胆/大小球/让球)</div>
   <div class="tb-wrap"><table>
     <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
 """ + rows_html + """
   </table></div>
-  <div class="sec-title">D · 错因归因</div>
-""" + (attr_html or '<div class="arch">无未中项, 无需归因。</div>') + """
-  <div class="sec-title">E · 赔率与资金流回顾</div>
-  <div class="arch">""" + _esc(drift_txt or "当日无赔率快照可回顾") + """</div>
-  <div class="sec-title">F · 教训</div>
+  <div class="sec-title">D · 四维归因 (关联赔率变动/场外情报/自检预警)</div>
+""" + dim_html + """
+  <div class="sec-title">E · 查漏补缺 (赛前没注意到的信息/信号)</div>
+""" + ('<ul>' + gaps + '</ul>' if gaps else '<div class="arch">—</div>') + """
+  <div class="sec-title">F · 赔率与资金流回顾</div>
+  <div class="arch">""" + _esc((llm.get("赔率回顾") or "") or (drift_txt or "当日无赔率快照")) + """</div>
+  <div class="sec-title">G · 教训</div>
 """ + ('<ul>' + lessons + '</ul>' if lessons else '<div class="arch">—</div>') + """
-  <div class="decl">G · 盲测声明: 赛前报告已于 """ + _esc(date_str) + """ 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
+  <div class="decl">H · 盲测声明: 赛前报告已于 """ + _esc(date_str) + """ 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>""")
-
     total = len(matched)
     summary = f"""
   <div class="summary">

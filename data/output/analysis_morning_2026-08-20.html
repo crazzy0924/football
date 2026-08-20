@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早盘七维分析存档 — 2026-08-20</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 早盘七维分析存档 · 非预测页</div>
+    <h1>2026-08-20</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-08-20.html">predictions_2026-08-20.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">沙职 · 非五大</span>迈季迈阿<span class="tvs">VS</span>利雅得新月
+      <span style="font-size:.75rem;color:#8d99b0;">(Al Majmaah vs Al Hilal)</span>
+    </div>
+    <span class="m-meta">开球 02:00:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (75.9%) · 最可能比分 0-2 (11%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主10.00 / 平5.72 / 客1.17
+亚盘(主让2.0球): 主1.98 / 平3.95 / 客2.7
+大小球 2.5 球: 大1.52 / 小2.91
+波胆最低赔: 0-2@7.5 / 1-2@7.75 / 0-3@8.5
+模型亚盘倾向: home (价值 +9.2%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: saime 拉 … === 天气侦察 (未经核实, 仅供参考) === [天气] 迈季迈阿宽广 vs 利雅得</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 3.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为客队利雅得新月取胜，模型与市场高度一致指向客胜。核心风险在于主队为冷启动参数，实际战力与联赛均值偏差可能被低估。&quot;,
+&quot;次选比分&quot;: &quot;0-3&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔客胜1.17，模型客胜76.1%，市场融合Model 71%/Market 29%&quot;, &quot;优势分&quot;:4, &quot;权重&quot;:24, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;市场与模型均强烈指向客队，客胜方向明确，主队受让两球仍显吃力。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;预期进球0.84-2.76，模型客胜76.1%，ELO差+0&quot;, &quot;优势分&quot;:4, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;模型预期进球差显著，客队进攻端优势明显；但ELO差为0且冷启动，状态面存在不确定性。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:6, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;伤停情报缺失，无法评估核心球员缺阵影响，降权处理。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;近2季交锋数据未提供，无法判断克制关系，降权。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场 / 客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方赛程密度均低，体能恢复充分，无显著优劣。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;天气情报未提及，权重记0。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判未公布，不猜测。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;沙职联赛，主队与客队实力定位差距大，客队为强队一方&quot;, &quot;优势分&quot;:4, &quot;权重&quot;:30, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;利雅得新月作为沙职强队，面对弱旅通常保持争胜压力，战意明确；主队冷启动，难以判断其轮换意图。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;客队利雅得新月预计主导控球并持续压迫主队防线。&quot;, &quot;无球&quot;: &quot;主队无球阶段将面临客队高位逼抢与边路冲击的风险。&quot;, &quot;最大变量&quot;: &quot;冷启动参数下主队实际防守韧性可能远高于联赛均值。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;客队开场后较早取得进球，主队被迫前压留出空间&quot;, &quot;比分&quot;:[&quot;0-2&quot;,&quot;0-3&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;主队密集防守奏效且客队进攻效率低下&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;主队利用定位球或反击先入球并全场死守&quot;, &quot;比分&quot;:[&quot;1-0&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;2-4球&quot;, &quot;净胜球&quot;: &quot;客队2-3球优势&quot;, &quot;上半场&quot;: &quot;客队可能上半场就建立领先优势&quot;},
+&quot;触发器&quot;: [&quot;赛前公布客队大面积轮换主力&quot;, &quot;主队出现核心中后场球员伤停&quot;, &quot;临场亚盘大幅下调客队让球幅度&quot;, &quot;天气或场地条件显著恶化&quot;],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能是冷启动导致主队真实实力被严重低估，实际比赛呈现胶着甚至主队爆冷。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主8.6% 平15.3% 客76.1%&lt;br&gt;预期进球: 0.84 - 2.76&lt;br&gt;大2.5: 70.4% | BTTS: 54.4%&lt;br&gt;贝叶斯后验: 主8.7% 平15.3% 客75.9%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 迈季迈阿宽广 vs 利雅得新月
+来源:网络 maicong. 迈 从科技 官方网站 2 天之前 &amp;#0183; MCHOSE迈从官网，知名外设品牌，通过推出鼠标、键盘、头戴耳机、音箱等外设产品，重新定义新一代用户与数字世界互 …
+来源:网络 . 迈 从科技 官方驱动 1 天前 &amp;#0183; .
+[裁判] 巴列卡诺 vs 阿拉维斯
+来源:百度 › item 巴 （汉语文字）_百度百科 四川等地自古多虫蛇，故周代有古国以“巴”为名，故地在今四川东部和重庆一带，后世称四川东部和重庆一带为“巴”。 后来“巴“字不再 …
+来源:百度 › item 巴 （压强的非法定计量单位）_百度百科 英文名称为“bar”，中文名称为“巴”，中国已将其列为非法定计量单位，1bar（巴）=105 Pa（帕斯卡）。 bar是厘米&amp;#183;克&amp;#183;秒单位制中的压 …
+[裁判] 科林蒂安 vs 罗萨里奥
+来源:百度 › item 科 （汉语汉字）_百度百科 始见于《说文》中的小篆文字。 《说文》说“科，程也。 从禾，从斗。 斗者，量也。 ”该字本义为“区分”、“程度”、“类别”的意思。 《广 …
+来源:网络 › wiki 科 - 维基词典，自由的多语言词典 2026年5月22日 &amp;#0183; 日语： 科 (ja) (か, ka) 高棉语： អំបូរ (km) () 库尔德语： 北库尔德语： x&amp;#234;zan (ku) 陰 拉特加莱语： saime 拉 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 迈季迈阿宽广 vs 利雅得新月
+来源:网络 maicong. 迈 从科技 官方网站 2 天之前 &amp;#0183; MCHOSE迈从官网，知名外设品牌，通过推出鼠标、键盘、头戴耳机、音箱等外设产品，重新定义新一代用户与数字世界互 …
+来源:网络 . 迈 从科技 官方驱动 1 天前 &amp;#0183; .
+[天气] 巴列卡诺 vs 阿拉维斯
+来源:百度 › item 巴 （汉语文字）_百度百科 四川等地自古多虫蛇，故周代有古国以“巴”为名，故地在今四川东部和重庆一带，后世称四川东部和重庆一带为“巴”。 后来“巴“字不再 …
+来源:百度 › item 巴 （压强的非法定计量单位）_百度百科 英文名称为“bar”，中文名称为“巴”，中国已将其列为非法定计量单位，1bar（巴）=105 Pa（帕斯卡）。 bar是厘米&amp;#183;克&amp;#183;秒单位制中的压 …
+[天气] 科林蒂安 vs 罗萨里奥
+来源:百度 › item 科 （汉语汉字）_百度百科 始见于《说文》中的小篆文字。 《说文》说“科，程也。 从禾，从斗。 斗者，量也。 ”该字本义为“区分”、“程度”、“类别”的意思。 《广 …
+来源:网络 › wiki 科 - 维基词典，自由的多语言词典 2026年5月22日 &amp;#0183; 日语： 科 (ja) (か, ka) 高棉语： អំបូរ (km) () 库尔德语： 北库尔德语： x&amp;#234;zan (ku) 陰 拉特加莱语： saime 拉 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>巴列卡诺<span class="tvs">VS</span>阿拉维斯
+      <span style="font-size:.75rem;color:#8d99b0;">(Vallecano vs Alaves)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (48.4%) · 最可能比分 1-0 (17%)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.01 / 平2.84 / 客3.58
+亚盘(主受1.0球): 主4.6 / 平3.4 / 客1.62
+大小球 2.5 球: 大2.59 / 小1.63
+波胆最低赔: 1-0@5.7 / 1-1@6.0 / 0-0@6.9
+模型亚盘倾向: away (价值 +15.0%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第17名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: saime 拉 … === 天气侦察 (未经核实, 仅供参考) === [天气] 迈季迈阿宽广 vs 利雅得</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季交锋: 主队 2胜 0平 0负, 进球 3:1</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 1.3,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为主队小胜, 模型与市场均指向主队但市场已折价, 核心是主场与交锋优势, 最大风险是巴列卡诺保级区近况差且进球预期偏低。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主2.01/平2.84/客3.58; 亚盘主-1.0下主覆盖25%/客覆盖48%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧赔主胜最低但亚盘主-1.0覆盖不足, 市场对主队让球信心有限, 资金未明显偏向主队大胜, 主队方向有优势但幅度受限。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主49.4%/平29.0%/客21.6%; 预期进球1.39-0.82; ELO差+98&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;ELO差接近100, 模型主胜概率近半, 预期进球主队明显占优, 但主队近况L且积分0分, 状态面存在矛盾, 优势分给中等偏正。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失, 无法判断核心主力是否缺阵, 权重下调并转移至市场与状态维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近2季交锋: 主队视角2胜0平0负, 总进球3-1&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;近两季交手主队全胜且总进球占优, 存在一定克制关系, 但样本较小, 仅作辅助加分。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方赛程密度一致, 均无密集消耗或双线作战, 体能维度无明确优势方。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报缺失, 权重记0并重新分配至市场/状态/赛程/战意维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判任命未公布, 不猜测, 权重转移至市场/状态/赛程/战意维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;巴列卡诺#17保级区, 0分, 近况L&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队处于保级区, 主场抢分需求明确, 但样本为赛季初期0分, 战意不宜过度放大, 仍对主队有正向支撑。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队预计控制球权并利用主场压上, 但预期进球仅1.39, 进攻效率存疑。&quot;,
+&quot;无球&quot;: &quot;主队无球阶段需防范阿拉维斯反击, 客队预期进球0.82具备一定偷袭能力。&quot;,
+&quot;最大变量&quot;: &quot;巴列卡诺若久攻不下, 保级压力可能转化为急躁, 给阿拉维斯定位球或反击机会。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;主队上半场取得进球且阿拉维斯进攻效率未提升&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;, &quot;2-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;主队进攻转化率低, 阿拉维斯防守稳固并抓住有限机会&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;巴列卡诺过早失球且保级压力下阵型前压, 阿拉维斯反击再下一城&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;主队净胜1球或无净胜&quot;,
+&quot;上半场&quot;: &quot;上半场大概率胶着, 主队进球能力有限, 0-0或1-0进入中场概率较高&quot;
+},
+&quot;触发器&quot;: [
+&quot;巴列卡诺首发缺少多名核心主力&quot;,
+&quot;赛前市场主胜赔率大幅上调&quot;,
+&quot;阿拉维斯出现明显轮换或核心缺阵&quot;,
+&quot;赛前确认极端天气影响比赛节奏&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误, 最可能错在巴列卡诺近况差且进攻效率被高估, 阿拉维斯客场逼平甚至小胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主49.4% 平29.0% 客21.6%&lt;br&gt;预期进球: 1.39 - 0.82&lt;br&gt;大2.5: 37.9% | BTTS: 41.0%&lt;br&gt;贝叶斯后验: 主48.4% 平29.4% 客22.2%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 迈季迈阿宽广 vs 利雅得新月
+来源:网络 maicong. 迈 从科技 官方网站 2 天之前 &amp;#0183; MCHOSE迈从官网，知名外设品牌，通过推出鼠标、键盘、头戴耳机、音箱等外设产品，重新定义新一代用户与数字世界互 …
+来源:网络 . 迈 从科技 官方驱动 1 天前 &amp;#0183; .
+[裁判] 巴列卡诺 vs 阿拉维斯
+来源:百度 › item 巴 （汉语文字）_百度百科 四川等地自古多虫蛇，故周代有古国以“巴”为名，故地在今四川东部和重庆一带，后世称四川东部和重庆一带为“巴”。 后来“巴“字不再 …
+来源:百度 › item 巴 （压强的非法定计量单位）_百度百科 英文名称为“bar”，中文名称为“巴”，中国已将其列为非法定计量单位，1bar（巴）=105 Pa（帕斯卡）。 bar是厘米&amp;#183;克&amp;#183;秒单位制中的压 …
+[裁判] 科林蒂安 vs 罗萨里奥
+来源:百度 › item 科 （汉语汉字）_百度百科 始见于《说文》中的小篆文字。 《说文》说“科，程也。 从禾，从斗。 斗者，量也。 ”该字本义为“区分”、“程度”、“类别”的意思。 《广 …
+来源:网络 › wiki 科 - 维基词典，自由的多语言词典 2026年5月22日 &amp;#0183; 日语： 科 (ja) (か, ka) 高棉语： អំបូរ (km) () 库尔德语： 北库尔德语： x&amp;#234;zan (ku) 陰 拉特加莱语： saime 拉 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 迈季迈阿宽广 vs 利雅得新月
+来源:网络 maicong. 迈 从科技 官方网站 2 天之前 &amp;#0183; MCHOSE迈从官网，知名外设品牌，通过推出鼠标、键盘、头戴耳机、音箱等外设产品，重新定义新一代用户与数字世界互 …
+来源:网络 . 迈 从科技 官方驱动 1 天前 &amp;#0183; .
+[天气] 巴列卡诺 vs 阿拉维斯
+来源:百度 › item 巴 （汉语文字）_百度百科 四川等地自古多虫蛇，故周代有古国以“巴”为名，故地在今四川东部和重庆一带，后世称四川东部和重庆一带为“巴”。 后来“巴“字不再 …
+来源:百度 › item 巴 （压强的非法定计量单位）_百度百科 英文名称为“bar”，中文名称为“巴”，中国已将其列为非法定计量单位，1bar（巴）=105 Pa（帕斯卡）。 bar是厘米&amp;#183;克&amp;#183;秒单位制中的压 …
+[天气] 科林蒂安 vs 罗萨里奥
+来源:百度 › item 科 （汉语汉字）_百度百科 始见于《说文》中的小篆文字。 《说文》说“科，程也。 从禾，从斗。 斗者，量也。 ”该字本义为“区分”、“程度”、“类别”的意思。 《广 …
+来源:网络 › wiki 科 - 维基词典，自由的多语言词典 2026年5月22日 &amp;#0183; 日语： 科 (ja) (か, ka) 高棉语： អំបូរ (km) () 库尔德语： 北库尔德语： x&amp;#234;zan (ku) 陰 拉特加莱语： saime 拉 …</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">解放者杯 · 非五大</span>科林蒂安<span class="tvs">VS</span>罗萨里奥中央
+      <span style="font-size:.75rem;color:#8d99b0;">(Corinthians vs Rosario Central)</span>
+    </div>
+    <span class="m-meta">开球 08:30:00<span class="cold"> [新赛季冷启动 — 模型参数滞后, 分析谨慎参考]</span></span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (47.6%) · 最可能比分 0-0 (17%) (冷启动·参考)</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.86 / 平2.67 / 客4.60
+亚盘(主受1.0球): 主4.12 / 平3.2 / 客1.74
+大小球 2.5 球: 大3.14 / 小1.47
+波胆最低赔: 1-0@4.7 / 0-0@5.4 / 1-1@6.5
+模型亚盘倾向: away (价值 +19.0%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: saime 拉 … === 天气侦察 (未经核实, 仅供参考) === [天气] 迈季迈阿宽广 vs 利雅得</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">近2季交锋: 主队 0胜 1平 0负, 进球 0:0</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.3,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;最可能方向为主队小胜或闷平，主队略占优势但幅度极小。核心风险是冷启动数据不可靠，且市场与模型接近无分歧，缺乏独立信号支撑。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主1.86/平2.67/客4.60；模型概率主47.6%平32.9%客19.5%，市场融合Model 71%/Market 29%&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:24, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;赔率结构略偏主队，但模型与市场几乎无分歧，且标注高margin、低模型置信度，市场对主队优势定价谨慎，仅给轻微正向分。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差0；预期进球1.22-0.66；模型概率主47.6%平32.9%客19.5%&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;预期进球差约0.56球，主队名义占优，但ELO完全持平且冷启动参数来自联赛均值，不确定性高，仅给轻微正向分。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:6, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;伤停情报缺失，无法区分核心与替补，该维度基本不影响判断。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;近2季交锋主队0胜1平0负，总进球0-0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;仅1次交锋且0-0，样本极小，无克制关系，中性。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场/客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方赛程密度一致且均无密集消耗，体能维度中性。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气场地，权重记0并按规则重新分配。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判信息未公布，不猜测，权重记0并按规则重新分配。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;解放者杯小组赛；无积分榜分区情报&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:26, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;解放者杯战意通常较高，但缺少具体积分与出线形势情报，无法判断轮换倾向，中性。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;主队预计控球推进，但缺乏核心伤停信息，无法判断终结质量。&quot;, &quot;无球&quot;: &quot;客队低位防守风险在于能否限制主队边路传中。&quot;, &quot;最大变量&quot;: &quot;冷启动参数不可靠，实际球队实力可能显著偏离模型。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;主队正常发挥且客队反击效率低&quot;, &quot;比分&quot;:[&quot;1-0&quot;,&quot;2-0&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;双方进攻均缺乏创造力或客队成功拖慢节奏&quot;, &quot;比分&quot;:[&quot;0-0&quot;,&quot;1-1&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;客队定位球或反击先进球且主队攻坚乏力&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;1-2球&quot;, &quot;净胜球&quot;: &quot;主队0-1球优势&quot;, &quot;上半场&quot;: &quot;大概率闷平或主队1球小领先&quot;},
+&quot;触发器&quot;: [&quot;主队核心前锋伤停确认&quot;, &quot;客队摆出全主力且主队大幅轮换&quot;, &quot;赛前赔率主胜大幅上调至2.0以上&quot;, &quot;出现明确天气或场地不利主队的情报&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在主队实际实力被高估，冷启动参数掩盖了客队更强或主队更弱的事实。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主47.6% 平32.9% 客19.5%&lt;br&gt;预期进球: 1.22 - 0.66&lt;br&gt;大2.5: 29.2% | BTTS: 35.4%&lt;br&gt;贝叶斯后验: 主47.6% 平33.0% 客19.4%&lt;br&gt;市场融合权重: 模型 71% / 市场 29%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 迈季迈阿宽广 vs 利雅得新月
+来源:网络 maicong. 迈 从科技 官方网站 2 天之前 &amp;#0183; MCHOSE迈从官网，知名外设品牌，通过推出鼠标、键盘、头戴耳机、音箱等外设产品，重新定义新一代用户与数字世界互 …
+来源:网络 . 迈 从科技 官方驱动 1 天前 &amp;#0183; .
+[裁判] 巴列卡诺 vs 阿拉维斯
+来源:百度 › item 巴 （汉语文字）_百度百科 四川等地自古多虫蛇，故周代有古国以“巴”为名，故地在今四川东部和重庆一带，后世称四川东部和重庆一带为“巴”。 后来“巴“字不再 …
+来源:百度 › item 巴 （压强的非法定计量单位）_百度百科 英文名称为“bar”，中文名称为“巴”，中国已将其列为非法定计量单位，1bar（巴）=105 Pa（帕斯卡）。 bar是厘米&amp;#183;克&amp;#183;秒单位制中的压 …
+[裁判] 科林蒂安 vs 罗萨里奥
+来源:百度 › item 科 （汉语汉字）_百度百科 始见于《说文》中的小篆文字。 《说文》说“科，程也。 从禾，从斗。 斗者，量也。 ”该字本义为“区分”、“程度”、“类别”的意思。 《广 …
+来源:网络 › wiki 科 - 维基词典，自由的多语言词典 2026年5月22日 &amp;#0183; 日语： 科 (ja) (か, ka) 高棉语： អំបូរ (km) () 库尔德语： 北库尔德语： x&amp;#234;zan (ku) 陰 拉特加莱语： saime 拉 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 迈季迈阿宽广 vs 利雅得新月
+来源:网络 maicong. 迈 从科技 官方网站 2 天之前 &amp;#0183; MCHOSE迈从官网，知名外设品牌，通过推出鼠标、键盘、头戴耳机、音箱等外设产品，重新定义新一代用户与数字世界互 …
+来源:网络 . 迈 从科技 官方驱动 1 天前 &amp;#0183; .
+[天气] 巴列卡诺 vs 阿拉维斯
+来源:百度 › item 巴 （汉语文字）_百度百科 四川等地自古多虫蛇，故周代有古国以“巴”为名，故地在今四川东部和重庆一带，后世称四川东部和重庆一带为“巴”。 后来“巴“字不再 …
+来源:百度 › item 巴 （压强的非法定计量单位）_百度百科 英文名称为“bar”，中文名称为“巴”，中国已将其列为非法定计量单位，1bar（巴）=105 Pa（帕斯卡）。 bar是厘米&amp;#183;克&amp;#183;秒单位制中的压 …
+[天气] 科林蒂安 vs 罗萨里奥
+来源:百度 › item 科 （汉语汉字）_百度百科 始见于《说文》中的小篆文字。 《说文》说“科，程也。 从禾，从斗。 斗者，量也。 ”该字本义为“区分”、“程度”、“类别”的意思。 《广 …
+来源:网络 › wiki 科 - 维基词典，自由的多语言词典 2026年5月22日 &amp;#0183; 日语： 科 (ja) (か, ka) 高棉语： អំបូរ (km) () 库尔德语： 北库尔德语： x&amp;#234;zan (ku) 陰 拉特加莱语： saime 拉 …</div>
+</article>
+  <div class="footer">自动生成于 2026-08-20 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

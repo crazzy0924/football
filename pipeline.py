@@ -425,6 +425,8 @@ def cmd_predict(args):
             # Phase 10: 波胆价值 + 大小球价值 (模型 vs 市场多维度 edge)
             "cs_value": _cs_value(pred, m),
             "ou_value": _ou_value(pred, m),
+            # 联合约束校验: 最可能比分必须同时满足让球盘+大小球倾向 (消除维度间矛盾)
+            "joint_top_scores": _joint_top_scores(pred, ah_pred, _ou_value(pred, m)),
             "ht_ft_odds": m.get("ht_ft_odds") or {},
             # Phase 7: 积分榜快照 (排名/积分/近况)
             "standings": {
@@ -955,6 +957,52 @@ def _cs_value(pred: dict, m: dict):
             })
     values.sort(key=lambda x: -x["edge"])
     return values[:2] if values else None
+
+
+def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None) -> list | None:
+    """联合约束校验 (2026-08-20):
+
+    在同时满足「让球盘倾向」与「大小球倾向」的比分中取概率最高者。
+    例: 主-1赢盘 ∩ 小2.5 → 唯一自洽比分 2-0; 若单格最高是 1-0 则属于维度间矛盾, 修正为 2-0。
+    无有效约束或无交集时返回 None (沿用原始最可能比分)。
+    """
+    sd = pred.get("score_distribution") or {}
+    if not sd:
+        return None
+    gl = None
+    pick = None
+    if ah_pred and ah_pred.get("edge") and abs(ah_pred["edge"].get("edge", 0)) >= 0.05:
+        pick = ah_pred["edge"].get("best_pick")
+        gl = ah_pred.get("goal_line", 0)
+    ou_side = None
+    if ou_v and abs(ou_v.get("edge", 0)) >= 0.05:
+        ou_side = ou_v.get("side")
+    if pick is None and ou_side is None:
+        return None
+
+    def _ok(h: int, a: int) -> bool:
+        if pick == "home" and gl is not None and (h - a) + gl <= 0:
+            return False
+        if pick == "away" and gl is not None and (h - a) + gl >= 0:
+            return False
+        if ou_side == "小2.5" and h + a > 2:
+            return False
+        if ou_side == "大2.5" and h + a <= 2:
+            return False
+        return True
+
+    cands = []
+    for s, p in sd.items():
+        try:
+            h, a = s.split("-")
+            if _ok(int(h), int(a)):
+                cands.append((s, p))
+        except Exception:
+            pass
+    if not cands:
+        return None
+    cands.sort(key=lambda kv: -kv[1])
+    return [{"score": s, "prob": round(p, 4)} for s, p in cands[:3]]
 
 
 def _ou_value(pred: dict, m: dict):

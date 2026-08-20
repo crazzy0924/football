@@ -80,10 +80,19 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
         f"大2.5: {model.get('over_25', 0):.1%} | BTTS: {model.get('btts', 0):.1%}",
     ])
 
+    # 联合约束比分优先 (与让球盘/大小球倾向自洽), 原始单格比分仅作对照
+    jt = prediction.get("joint_top_scores")
     top5 = model.get("top_5_scores", [])
-    if top5:
+    if jt:
+        scores_str = ", ".join(f"{v['score']}({v['prob']:.1%})" for v in jt)
+        lines.append(f"最可能比分(联合约束修正): {scores_str}")
+    elif top5:
         scores_str = ", ".join(f"{s[0]}({s[1]:.1%})" for s in top5[:3])
         lines.append(f"最可能比分: {scores_str}")
+    if jt and top5:
+        raw_str = ", ".join(f"{s[0]}({s[1]:.1%})" for s in top5[:3])
+        if not any(jt[0]["score"] == s[0] for s in top5[:3]):
+            lines.append(f"注意: 原始单格最高为 {raw_str}, 与让球/大小球倾向矛盾, 已按联合约束修正")
 
     if value:
         edges = {

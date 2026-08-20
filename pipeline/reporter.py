@@ -525,9 +525,14 @@ def _build_match_card(
     lam_a = model.get("lambda_away", 0)
     eg_text = f"{lam_h:.2f} - {lam_a:.2f}" if lam_h > 0 else None
 
-    # Top score
+    # Top score (联合约束优先: 与让球盘/大小球倾向自洽)
     top_scores = model.get("top_5_scores", [])
-    top_score_str = top_scores[0][0] if top_scores else None
+    jt = p.get("joint_top_scores") or []
+    top_score_str = jt[0]["score"] if jt else (top_scores[0][0] if top_scores else None)
+    # 矛盾修正标记 (原始单格与联合约束不一致时显示)
+    score_fix_note = None
+    if jt and top_scores and jt[0]["score"] != top_scores[0][0]:
+        score_fix_note = f"原始单格最高 {top_scores[0][0]}, 与让球/大小球矛盾, 已修正"
 
     # ELO
     elo_diff = p.get("elo_diff", 0)
@@ -657,6 +662,7 @@ def _build_match_card(
         "btts": f"{model.get('btts', 0):.1%}",
         "eg": eg_text or "N/A",
         "top_score": top_score_str or "N/A",
+        "score_fix_note": score_fix_note,
         "elo_diff": f"{elo_diff:+.0f}" if elo_diff else "0",
         "market_odds": market_odds_str,
         "pick": pick,

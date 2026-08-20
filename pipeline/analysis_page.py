@@ -352,7 +352,15 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
         best_i = max(range(3), key=lambda i: prob_triple[i])
         top_score_txt = ""
         sd = m.get("score_distribution") or {}
-        if sd:
+        jt = p.get("joint_top_scores") or []
+        if jt:
+            # 联合约束比分 (与让球盘/大小球倾向自洽)
+            top_score_txt = f" · 最可能比分 {jt[0]['score']} ({jt[0]['prob']:.0%})"
+            if sd:
+                raw_best = max(sd.items(), key=lambda kv: kv[1])
+                if raw_best[0] != jt[0]["score"]:
+                    top_score_txt += f" [原始{raw_best[0]}与让球/大小球矛盾, 已按约束修正]"
+        elif sd:
             best_score = max(sd.items(), key=lambda kv: kv[1])
             top_score_txt = f" · 最可能比分 {best_score[0]} ({best_score[1]:.0%})"
         cold_tag = " (冷启动·参考)" if p.get("cold_start") else ""

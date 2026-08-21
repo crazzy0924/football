@@ -80,6 +80,14 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
         f"大2.5: {model.get('over_25', 0):.1%} | BTTS: {model.get('btts', 0):.1%}",
     ])
 
+    # 全天赔率变动信号 (复盘经验库规则1: 变动≥0.05即独立信号)
+    drift = prediction.get("odds_drift")
+    if drift:
+        lines.append(f"全天赔率变动信号 (变动≥0.05即独立信号, 必须结合方向解读):\n{drift}")
+    # 一致性预警 (复盘经验库规则6/8)
+    for _ft in (prediction.get("flags") or {}).values():
+        lines.append(f"⚠️ 一致性预警: {_ft}")
+
     # 联合约束比分优先 (与让球盘/大小球倾向自洽), 原始单格比分仅作对照
     jt = prediction.get("joint_top_scores")
     top5 = model.get("top_5_scores", [])
@@ -205,6 +213,7 @@ def build_analyst_prompt(evidence: str) -> str:
 - 你的结论方向必须与最可能比分方向一致
 - 情报不足就明确写"数据不足已降权", 禁止编造伤停/天气/裁判/数字
 - 概率数字只用证据中给出的, 不自己造
+- 若情报/赔率变动/一致性预警中至少两方同向反对当前最高概率方向, 必须下调方向分并说明 (规则15)
 
 输出格式 (只输出一个合法JSON对象, 不要任何其他文字/代码块标记, 不要概率数字, 不要投注建议):
 

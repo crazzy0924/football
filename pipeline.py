@@ -262,6 +262,9 @@ def cmd_predict(args):
     except Exception as e:
         print(f"[赛程] 球场采集失败: {e}")
 
+    # 全天赔率变动地图 (复盘经验库规则1: 变动≥0.05即独立信号, 注入证据包)
+    _drift_map = _build_drift_map(_today_str())
+
     # Phase 8: 赛程密度 + 近2季交锋 预计算 (h2h 全库)
     sched_cache: dict = {}
     h2h_cache: dict = {}
@@ -410,6 +413,9 @@ def cmd_predict(args):
                 "edge": ah_edge,
             }
 
+        # 一致性校验 (复盘经验库规则 6/8): 方向-比分冲突 + BTTS-波胆交叉校验
+        _flags = _consistency_flags(pred, _joint_top_scores(pred, ah_pred, _ou_value(pred, m)))
+
         predictions.append({
             "home_team": home,
             "away_team": away,
@@ -417,6 +423,8 @@ def cmd_predict(args):
             "kickoff_time": m.get("kickoff_time", ""),
             "venue": m.get("venue", ""),
             "odds": market,
+            "odds_drift": _drift_map.get((home, away), ""),
+            "flags": _flags,
             "elo_home": elo_h,
             "elo_away": elo_a,
             "elo_diff": round(elo_h - elo_a, 1),
@@ -970,6 +978,75 @@ def _cs_value(pred: dict, m: dict):
             })
     values.sort(key=lambda x: -x["edge"])
     return values[:2] if values else None
+
+
+def _consistency_flags(pred: dict, jt: list | None) -> dict:
+    """一致性校验 (复盘经验库规则6/8): 方向-比分冲突 + BTTS-波胆交叉校验"""
+    flags: dict = {}
+    probs = [pred.get("home_win", 0), pred.get("draw", 0), pred.get("away_win", 0)]
+    if jt:
+        try:
+            h, a = jt[0]["score"].split("-")
+            h, a = int(h), int(a)
+            top_out = "主胜" if h > a else ("平局" if h == a else "客胜")
+            max_i = max(range(3), key=lambda i: probs[i])
+            labels = ("主胜", "平局", "客胜")
+            if top_out != labels[max_i] and probs[max_i] >= 0.35:
+                flags["direction_score_conflict"] = (f"最可能比分 {jt[0]['score']}({top_out}) 与最高概率方向 "
+                                                    f"{labels[max_i]}({probs[max_i]:.0%}) 冲突, 需回退修正或标注结论不可用")
+        except Exception:
+            pass
+    btts = pred.get("btts", 0)
+    if jt and btts >= 0.55:
+        shut = sum(1 for v in jt[:3] if v["score"].startswith("0-") or v["score"].endswith("-0"))
+        if shut >= 2:
+            flags["btts_score_conflict"] = f"BTTS {btts:.0%} 与波胆前3中 {shut} 个零封比分口径矛盾, 需交叉校验"
+    return flags
+
+
+def _build_drift_map(date_str: str) -> dict:
+    """当日赔率变动快照 → {(主队,客队): 变动描述} (复盘经验库规则1: 变动≥0.05即独立信号)"""
+    import glob as _glob
+    snaps = sorted(_glob.glob(os.path.join("data", "state", "odds_snapshots", f"snapshot_{date_str}_*.json")))
+    if len(snaps) < 2:
+        return {}
+    first, last = snaps[0], snaps[-1]
+    out: dict = {}
+    try:
+        with open(first, "r", encoding="utf-8") as f:
+            a_list = json.load(f)
+        with open(last, "r", encoding="utf-8") as f:
+            b_list = json.load(f)
+    except Exception:
+        return {}
+    b_map = {(mm.get("home_team"), mm.get("away_team")): mm for mm in b_list}
+    for mm in a_list:
+        key = (mm.get("home_team"), mm.get("away_team"))
+        bm = b_map.get(key)
+        if not bm:
+            continue
+        oa, ob = mm.get("odds") or {}, bm.get("odds") or {}
+        lines = []
+        if oa.get("home") and ob.get("home"):
+            dh = ob["home"] - oa["home"]
+            dd = ob.get("draw", 0) - oa.get("draw", 0)
+            da = ob["away"] - oa["away"]
+            lines.append(f"SPF: 主{oa['home']:.2f}→{ob['home']:.2f}({dh:+.2f}) 平{oa.get('draw', 0):.2f}→{ob.get('draw', 0):.2f}({dd:+.2f}) 客{oa['away']:.2f}→{ob['away']:.2f}({da:+.2f})")
+            sig = []
+            if abs(dh) >= 0.05:
+                sig.append(("主队资金流入" if dh < 0 else "主队资金流出") + f"({dh:+.2f})")
+            if abs(da) >= 0.05:
+                sig.append(("客队资金流入" if da < 0 else "客队资金流出") + f"({da:+.2f})")
+            if sig:
+                lines.append("资金信号: " + "; ".join(sig))
+        if mm.get("over_odds") and bm.get("over_odds"):
+            do = bm["over_odds"] - mm["over_odds"]
+            lines.append(f"大小球: 大{mm['over_odds']:.2f}→{bm['over_odds']:.2f}({do:+.2f}) 小{mm['under_odds']:.2f}→{bm['under_odds']:.2f}")
+            if abs(do) >= 0.05:
+                lines.append("资金信号: " + ("资金买大球" if do < 0 else "资金买小球") + f"({do:+.2f})")
+        if lines:
+            out[key] = "\n".join(lines)
+    return out
 
 
 def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None) -> list | None:

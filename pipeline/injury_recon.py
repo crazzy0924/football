@@ -179,6 +179,20 @@ def main() -> None:
         time.sleep(3)
     if wx_lines:
         intel = intel + "\n\n=== 天气侦察 (未经核实, 仅供参考) ===\n" + "\n".join(wx_lines)
+
+    # 情报矛盾检测 (复盘经验库规则10: "暂无伤停"与伤停条目并存 → 交叉核验)
+    conflict_lines = []
+    for team in teams:
+        cn = _cn_name(team)
+        idx = intel.find(f"[{team} / ")
+        if idx < 0:
+            continue
+        nxt = intel.find("\n[", idx + 1)
+        sec = intel[idx: nxt if nxt > 0 else len(intel)]
+        if ("暂无" in sec or "无伤停" in sec) and ("伤" in sec or "缺阵" in sec):
+            conflict_lines.append(f"[冲突] {team}/{cn}: 情报同时含'暂无伤停'与伤停条目, 需交叉核验 (规则10)")
+    if conflict_lines:
+        intel = intel + "\n\n=== 情报矛盾检测 (复盘经验库规则10) ===\n" + "\n".join(conflict_lines)
     if not intel:
         print("未获取到有效摘要。")
         return

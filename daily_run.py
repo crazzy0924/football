@@ -184,6 +184,11 @@ def cmd_predict(args) -> None:
     _write_files_manifest()
     _git_sync()
 
+    # 死规矩: 终盘输出后必须对照工作自检表, 查偷懒现象
+    if args.stage == "final":
+        print("\n[自检] 终盘流程自检 (工作自检表)...\n")
+        _run([sys.executable, "pipeline/self_check.py", date_str])
+
 
 def cmd_review(args) -> None:
     # 默认复盘昨日 (欧洲场凌晨完赛, 早上10点赛果已齐)

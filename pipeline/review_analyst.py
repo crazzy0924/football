@@ -387,7 +387,7 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
                                                     rows, intel_excerpt, audit_warning)
                 note = _query_postmortem(prompt2)
                 llm = _parse_llm(note) or {}
-                print(f"  [复盘审计] {home} vs {away}: 维度归因 {len(llm.get('维度复盘') or {})} 项, 查漏 {len(llm.get('查漏补缺') or [])} 条")
+                print(f"  [复盘审计] {home} vs {away}: 维度归因 {len(llm.get('维度复盘') or dict())} 项, 查漏 {len(llm.get('查漏补缺') or [])} 条")
             except Exception as e:
                 print(f"  [复盘审计] {home} vs {away} 失败: {e}")
 
@@ -407,7 +407,8 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
             vd, sev = dim_map.get(keyname, (None, None))
             if vd is None:
                 continue
-            reason = (dim_rev.get(label) or {}).get("归因", "")
+            rv = dim_rev.get(label) or {}
+            reason = rv.get("归因", "") if isinstance(rv, dict) else str(rv)
             vcls = "hit" if vd == "命中" else "miss" if vd == "未中" else "push" if vd == "走盘" else "na"
             dim_html += ('<div class="attr"><div class="q"><span class="verdict-' + vcls + '">' + _esc(vd) + '</span> <b>' + _esc(label) + '</b></div>'
                          + '<div class="meta">归因: ' + _esc(reason or "—") + '</div></div>')

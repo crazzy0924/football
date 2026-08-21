@@ -353,6 +353,13 @@ def cmd_predict(args):
 
         # ── 市场驱动冷启动: 把市场赔率传给DC ──
         market = m.get("odds") or m.get("market_odds")
+        anchor_from_ah = False
+        if not market or not market.get("home"):
+            # 体彩未开胜平负但有让球盘: 从让球盘反推市场锚点 (2026-08-21阿森纳教训)
+            derived = _derive_spf_from_ah(m, pred)
+            if derived:
+                market = derived
+                anchor_from_ah = True
         # Phase 9: 按联赛选择独立模型 (缺则回退统一模型)
         dc_use = league_models.get(league, dc)
         pred = dc_use.predict(home, away, league, form_factors=form_factors, market_odds=market)
@@ -423,6 +430,7 @@ def cmd_predict(args):
             "kickoff_time": m.get("kickoff_time", ""),
             "venue": m.get("venue", ""),
             "odds": market,
+            "anchor_from_ah": anchor_from_ah,
             "odds_drift": _drift_map.get((home, away), ""),
             "flags": _flags,
             "elo_home": elo_h,
@@ -978,6 +986,64 @@ def _cs_value(pred: dict, m: dict):
             })
     values.sort(key=lambda x: -x["edge"])
     return values[:2] if values else None
+
+
+def _derive_spf_from_ah(m: dict, pred: dict) -> dict | None:
+    """从让球盘+模型比分分布反推胜平负市场概率 (体彩未开SPF时的市场锚点, 2026-08-21阿森纳教训)
+
+    让球盘 devig → P(净胜>阈值)/P(走盘)/P(净胜<阈值), 再用模型条件分布拆成主/平/客。
+    """
+    ah_odds = m.get("ah_odds")
+    gl = m.get("handicap")
+    if not ah_odds or gl is None:
+        return None
+    try:
+        h_o, d_o, a_o = float(ah_odds["home"]), float(ah_odds["draw"]), float(ah_odds["away"])
+    except Exception:
+        return None
+    if h_o <= 1 or d_o <= 1 or a_o <= 1:
+        return None
+    inv = [1 / h_o, 1 / d_o, 1 / a_o]
+    tot = sum(inv)
+    p_cover, p_push, p_other = inv[0] / tot, inv[1] / tot, inv[2] / tot
+    threshold = -gl  # 主让k球时阈值=k; 主受k球时阈值=-k
+    sd = pred.get("score_distribution") or {}
+    p_gt = p_eq = p_neg = p_all = 0.0  # 净胜>0 / =0 / <0 (模型侧概率)
+    p_cover_side = p_push_side = p_other_side = 0.0  # 模型侧: 盘口三区概率
+    for s, p in sd.items():
+        try:
+            h, a = map(int, s.split("-"))
+        except Exception:
+            continue
+        mar = h - a
+        if mar > 0:
+            p_gt += p
+        elif mar == 0:
+            p_eq += p
+        else:
+            p_neg += p
+        if mar > threshold:
+            p_cover_side += p
+        elif mar == threshold:
+            p_push_side += p
+        else:
+            p_other_side += p
+    p_all = p_gt + p_eq + p_neg
+    if p_all <= 0:
+        return None
+    if threshold >= 0:  # 主让球: 走盘/赢盘侧全是主胜, 其余按模型条件分布拆
+        p_home = p_cover + p_push + p_other * (p_gt / p_all)
+        p_draw = p_other * (p_eq / p_all)
+        p_away = p_other * (p_neg / p_all)
+    else:  # 主受深盘: 赢盘侧含主/平/客
+        denom = p_cover_side if p_cover_side > 0 else 1e-9
+        p_home = p_cover * (p_gt / denom)
+        p_draw = p_cover * (p_eq / denom)
+        p_away = p_cover * (p_neg / denom) + p_push + p_other
+    s = p_home + p_draw + p_away
+    if s <= 0:
+        return None
+    return {"home": round(p_home / s, 4), "draw": round(p_draw / s, 4), "away": round(p_away / s, 4)}
 
 
 def _consistency_flags(pred: dict, jt: list | None) -> dict:

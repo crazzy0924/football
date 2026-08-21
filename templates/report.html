@@ -329,6 +329,7 @@
       <span class="chip">BTTS <b>{{ m.btts }}</b></span>
       <span class="chip">预期进球 <b>{{ m.eg }}</b></span>
       {% if m.market_odds %}<span class="chip">市场赔率 <b>{{ m.market_odds }}</b></span>{% endif %}
+      {% if m.anchor_from_ah %}<span class="chip" style="border-color: rgba(94,168,255,.5)">锚点: 体彩未开胜平负, 由让球盘反推</span>{% endif %}
       {% if m.kelly_fraction %}<span class="chip kelly {{ m.kelly_class }}">凯利 <b>{{ m.kelly_fraction }}</b></span>{% endif %}
       {% if m.edge_direction %}<span class="chip">优势 {{ m.edge_direction }} <b>+{{ m.edge_pct }}</b></span>{% endif %}
       {% if m.odds_move %}<span class="chip" style="border-color: rgba(251,191,36,.45)">📈 {{ m.odds_move }}</span>{% endif %}

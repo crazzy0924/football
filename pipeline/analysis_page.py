@@ -371,6 +371,8 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
             best_score = max(sd.items(), key=lambda kv: kv[1])
             top_score_txt = f" · 最可能比分 {best_score[0]} ({best_score[1]:.0%})"
         cold_tag = " (冷启动·参考)" if p.get("cold_start") else (" (跨级先验·参考)" if p.get("cross_league") else "")
+        if p.get("anchor_from_ah"):
+            cold_tag += " (市场锚点=让球盘反推)"
         pick_html = (f'<div class="pick-line">🎯 最可能: <b>{_esc(labels[best_i])}</b> '
                      f'({prob_triple[best_i]:.1%}){_esc(top_score_txt)}{_esc(cold_tag)}</div>')
 

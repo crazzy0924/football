@@ -726,6 +726,7 @@ def _build_match_card(
         "triggers_list": triggers_list,
         "kickoff": (p.get("kickoff_time") or ""),
         "venue": (p.get("venue") or "") or "—",
+        "anchor_from_ah": p.get("anchor_from_ah", False),
         "flag_texts": " · ".join((p.get("flags") or {}).values()),
         "audit_txt": audit_txt,
         "conf_txt": conf_txt,

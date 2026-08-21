@@ -129,15 +129,15 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
             parts.append(f"{away} #{sa.get('pos', '?')}{z} ({sa.get('points', '?')}分, 近况{sa.get('form', '?')})")
         lines.append("联赛积分榜: " + "; ".join(parts))
 
-    # Phase 8: 赛程密度 + 近2季交锋
+    # Phase 8: 赛程密度 + 近3年交锋 (需结合阵容变化程度解读)
     sched = prediction.get("schedule") or {}
     if sched:
         lines.append(f"赛程密度: 主队7天{sched.get('home_7d', 0)}场 / 客队7天{sched.get('away_7d', 0)}场")
     h2h = prediction.get("h2h_recent")
     if h2h:
         lines.append(
-            f"近2季交锋: 主队视角 {h2h.get('w', 0)}胜{h2h.get('d', 0)}平{h2h.get('l', 0)}负 "
-            f"(总进球{h2h.get('gf', 0)}-{h2h.get('ga', 0)})"
+            f"近3年交锋: 主队视角 {h2h.get('w', 0)}胜{h2h.get('d', 0)}平{h2h.get('l', 0)}负 "
+            f"(总进球{h2h.get('gf', 0)}-{h2h.get('ga', 0)}); 解读必须结合双方阵容变化: 阵容稳定则参考价值高, 大换血/换帅则降权"
         )
 
     # 市场视角: 让球盘 + 欧赔 + 波胆 + 半全场 + 大小球
@@ -199,7 +199,7 @@ def build_analyst_prompt(evidence: str) -> str:
 1. 市场视角: 亚盘/欧赔/大小球反映资金流向; 模型与市场分歧大时警惕模型盲区
 2. 状态与攻防: 模型概率/预期进球/ELO差 反映实力与近期状态
 3. 阵容与伤停: 必须区分核心主力与替补; 情报未提及伤停时明确说明, 不得编造
-4. 交锋与克制: 仅参考"近2季交锋", 更早交锋易误导
+4. 交锋与克制: 参考"近3年交锋"; 必须结合双方阵容变化程度解读 — 阵容稳定则参考价值高, 阵容大换血/换帅则降权; 情报含转会/新援/离队信息时据此判断
 5. 赛程与体能: 7天场次密度、双线作战、轮换概率
 6. 天气与场地: 情报含天气才评; 没有就写"情报未提及, 权重记0"
 7. 裁判: 情报含裁判任命才评; 未公布写"裁判未公布, 权重记0", 不猜测

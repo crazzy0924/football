@@ -295,7 +295,7 @@ def cmd_predict(args):
             h2h_cache[key] = None
             return None
         seasons = sorted({str(mm.get("season", "")) for mm in db.get("matches", [])})
-        recent_seasons = set(seasons[-2:])  # 只看近2个赛季
+        recent_seasons = set(seasons[-3:])  # 近3个赛季 (2026-08-21用户确认: 新赛季交手少, 放宽样本+结合阵容变化解读)
         w = d = l = 0
         gf = ga = 0
         for mm in db.get("matches", []):

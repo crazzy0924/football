@@ -236,9 +236,9 @@ def _build_weather_dim(intel_text: str) -> str:
 def _build_h2h_dim(p) -> str:
     h = p.get("h2h_recent")
     if not h:
-        return "近2季无交锋记录"
-    return (f"近2季交锋: 主队 {h.get('w', 0)}胜 {h.get('d', 0)}平 {h.get('l', 0)}负, "
-            f"进球 {h.get('gf', 0)}:{h.get('ga', 0)}")
+        return "近3年无交锋记录"
+    return (f"近3年交锋: 主队 {h.get('w', 0)}胜 {h.get('d', 0)}平 {h.get('l', 0)}负, "
+            f"进球 {h.get('gf', 0)}:{h.get('ga', 0)} (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)")
 
 
 def _split_note(note: str) -> dict:
@@ -395,7 +395,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
     <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">{_esc(_build_motivation_dim(p))}</div></div>
     <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">{_esc(_build_weather_dim(intel_text))}</div></div>
-    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近2季)</div><div class="dim-body">{_esc(_build_h2h_dim(p))}</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">{_esc(_build_h2h_dim(p))}</div></div>
     <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">{dim7_txt}</div></div>
   </div>
   <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>{_esc('<br>'.join(model_lines))}</div>

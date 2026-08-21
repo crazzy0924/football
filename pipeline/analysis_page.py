@@ -61,6 +61,7 @@ _CSS = """
   .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
                border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
   .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
   .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
   .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
   .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
@@ -373,6 +374,10 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
         pick_html = (f'<div class="pick-line">🎯 最可能: <b>{_esc(labels[best_i])}</b> '
                      f'({prob_triple[best_i]:.1%}){_esc(top_score_txt)}{_esc(cold_tag)}</div>')
 
+    # 一致性预警展示 (复盘经验库规则6/8)
+    flags_txt = " · ".join((p.get("flags") or {}).values())
+    flags_html = f'<div class="flags-line">⚠️ 一致性预警: {_esc(flags_txt)}</div>' if flags_txt else ""
+
     market_txt = _build_market_dim(p, market, move)
     intel_html = ""
     if intel_text:
@@ -388,6 +393,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     <span class="m-meta">开球 {_esc(kick) or '时间未定'}{cold_html}</span>
   </header>
   {pick_html}
+  {flags_html}
   {dim_strip}
   <div class="dims">
     <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">{_esc(market_txt)}</div></div>

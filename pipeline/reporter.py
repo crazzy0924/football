@@ -341,6 +341,23 @@ _TZ_OFFSET = {"PL": -7, "ELC": -7, "PD": -6, "BL1": -6, "SA": -6, "FL1": -6,
               "DED": -6, "PPL": -7, "CLB": -12, "BSA": -11, "MLS": -12, "SPL": -7}
 
 
+def _cn_note(note: str, home_en: str, away_en: str) -> str:
+    """分析师笔记汉化: 英文队名换中文, 连续英文词组移除 (汉化纪律)"""
+    if not note:
+        return note
+    for en in (home_en, away_en):
+        if en and en in note:
+            cn = TEAM_CN.get(en)
+            if cn:
+                note = note.replace(en, cn)
+            else:
+                note = note.replace(en, "")
+    # 兜底: 剩余连续英文词组 (如 "vs LASK") 移除
+    note = re.sub(r"[A-Za-z][A-Za-z0-9\-]*(?:\s+[A-Za-z][A-Za-z0-9\-]*)+", "", note)
+    note = re.sub(r"\s{2,}", " ", note).strip()
+    return note
+
+
 def _local_time(p: dict, league_code: str) -> str:
     """开球当地时间估算 (北京时间+时差, 约值)"""
     kt = (p.get("kickoff_time") or "").strip()
@@ -594,6 +611,9 @@ def _build_match_card(
     # 分析师注释 — 按英文名查(键为英文)
     match_key = f"{home_team_en} vs {away_team_en}"
     analyst_note = (analyst_notes or {}).get(match_key)
+    # 汉化纪律: 笔记中的英文队名/连续英文词组替换为中文或移除 (否则推送被拦)
+    if analyst_note:
+        analyst_note = _cn_note(analyst_note, home_team_en, away_team_en)
 
     # 结构化八维报告 (LLM JSON输出, 参考开源研究框架的 A-I 结构)
     struct = None

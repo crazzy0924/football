@@ -191,8 +191,11 @@ def main() -> None:
         sec = intel[idx: nxt if nxt > 0 else len(intel)]
         if ("暂无" in sec or "无伤停" in sec) and ("伤" in sec or "缺阵" in sec):
             conflict_lines.append(f"[冲突] {team}/{cn}: 情报同时含'暂无伤停'与伤停条目, 需交叉核验 (规则10)")
+    # 始终写入检测块 (自检表B5要求可查)
     if conflict_lines:
         intel = intel + "\n\n=== 情报矛盾检测 (复盘经验库规则10) ===\n" + "\n".join(conflict_lines)
+    else:
+        intel = intel + "\n\n=== 情报矛盾检测 (复盘经验库规则10) ===\n(本日未发现矛盾条目)"
     if not intel:
         print("未获取到有效摘要。")
         return

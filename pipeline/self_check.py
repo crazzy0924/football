@@ -114,6 +114,16 @@ def main() -> None:
     rc, out = _sh(["schtasks", "/Query", "/TN", "足球模型-补推"])
     add("E1b", "补推任务无残留", rc != 0, "无残留" if rc != 0 else "补推任务存在(上次推送未完成)", hard=True)
 
+    # D6 终盘页左侧联赛导航 (2026-08-21用户永久要求)
+    pred_html = os.path.join("data", "output", f"predictions_{date_str}.html")
+    if os.path.exists(pred_html):
+        with open(pred_html, "r", encoding="utf-8") as f:
+            ph = f.read()
+        add("D6", "终盘页联赛导航", "league-nav" in ph and "ln-btn" in ph,
+            "左侧联赛菜单已渲染" if "league-nav" in ph else "终盘页缺少联赛导航", hard=True)
+    else:
+        add("D6", "终盘页联赛导航", None, "当日终盘页未生成")
+
     # D2 审计格式: 最近复盘分析页无对勾叉
     ra_files = sorted(glob.glob(os.path.join("data", "output", "review_analysis_*.html")))
     if ra_files:

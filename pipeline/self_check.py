@@ -154,7 +154,7 @@ def main() -> None:
     # schtasks CSV 每行前缀带反斜杠 (如 "\足球模型-..."), 按包含匹配
     ready = sum(1 for ln in out.splitlines()
                 if '足球模型-' in ln and ('"Ready"' in ln or '"就绪"' in ln))
-    add("E2", "计划任务健康", ready == 6, f"{ready}/6 个 Ready", hard=False)
+    add("E2", "计划任务健康", ready == 5, f"{ready}/5 个 Ready", hard=False)
 
     # E3 新赛季CSV
     csvs = glob.glob(os.path.join("data", "historical_odds", "*_2026_2027.csv"))

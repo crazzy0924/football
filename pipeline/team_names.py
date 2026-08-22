@@ -155,6 +155,9 @@ CN_TO_EN_TEAM = {
     '马拉加': 'Malaga', '纳什维尔': 'Nashville', '洛杉矶FC': 'Los Angeles FC',
     '博德闪耀': 'Bodo Glimt', '采列': 'Celje', '凯尔特人': 'Celtic',
     'LASK林茨': 'LASK', '纽约红牛': 'NY Red Bulls', '科罗拉多急流': 'Colorado Rapids',
+    # 2026-08-22 复盘补录
+    '考文垂': 'Coventry', '长崎航海': 'V-Varen Nagasaki', '千叶市原': 'JEF United Chiba',
+    '拉赫蒂': 'Lahti', '塞伊奈约基': 'SJK Seinajoki', '吉达联合': 'Al Ittihad',
     '阿罗卡': 'Arouca', '摩雷伦斯': 'Moreirense',
     '腓特烈斯塔': 'Fredrikstad FK', '克里斯蒂安松': 'Kristiansund',
     '瓦斯科达伽马': 'Vasco da Gama', '法马利康': 'Famalicao',

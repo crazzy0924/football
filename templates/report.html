@@ -224,6 +224,20 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   .match { animation: fadeUp .45s ease both; }
 
+  /* ── 左侧联赛导航 ── */
+  .layout { display: flex; gap: 18px; align-items: flex-start; }
+  .league-nav { width: 158px; flex-shrink: 0; position: sticky; top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .ln-btn { background: var(--card); border: 1px solid var(--line); color: var(--dim); border-radius: 10px;
+            padding: 9px 14px; text-align: left; font-size: .86rem; cursor: pointer; transition: all .15s; }
+  .ln-btn:hover { border-color: #33486f; color: var(--txt); }
+  .ln-btn.active { border-color: var(--blue); color: #dbeafe; background: rgba(94,168,255,.12); font-weight: 700; }
+  .main-col { flex: 1; min-width: 0; }
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    .league-nav { width: 100%; position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+    .ln-btn { flex: 1 0 auto; text-align: center; padding: 7px 10px; font-size: .8rem; white-space: nowrap; }
+  }
+
   /* ── 页脚 ── */
   .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
 
@@ -236,6 +250,15 @@
 </head>
 <body>
 <div class="container">
+
+  <div class="layout">
+    <aside class="league-nav">
+      <button class="ln-btn active" data-lg="*">全部</button>
+      {% for g in league_groups %}
+      <button class="ln-btn" data-lg="{{ g }}">{{ g }}</button>
+      {% endfor %}
+    </aside>
+    <div class="main-col">
 
   <div class="hero">
     <div class="hero-badge">⚽ 每日足球智能预测</div>
@@ -271,7 +294,7 @@
   {% endif %}
 
   {% for m in matches %}
-  <article class="match {{ m.recommendation }}" style="animation-delay: {{ loop.index0 * 60 }}ms">
+  <article class="match {{ m.recommendation }}" data-lg="{{ m.league_group }}" style="animation-delay: {{ loop.index0 * 60 }}ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">{{ m.league }}</span>
@@ -402,9 +425,35 @@
   </article>
   {% endfor %}
 
+    </div>
+  </div>
+
   <div class="footer">
     足球预测模型 v3.0 · 生成于 {{ date }} · 仅供参考，历史表现不代表未来结果
   </div>
 </div>
+
+<script>
+  // 左侧联赛导航: 点击一级菜单过滤对应赛事的比赛卡片
+  (function () {
+    var btns = document.querySelectorAll(".ln-btn");
+    var cards = document.querySelectorAll("article.match");
+    if (!btns.length) return;
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active");
+        var lg = b.getAttribute("data-lg");
+        var shown = 0;
+        cards.forEach(function (c) {
+          var hit = lg === "*" || c.getAttribute("data-lg") === lg;
+          c.style.display = hit ? "" : "none";
+          if (hit) shown++;
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  })();
+</script>
 </body>
 </html>

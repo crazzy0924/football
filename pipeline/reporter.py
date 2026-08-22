@@ -275,6 +275,12 @@ def generate_report(
     # 同日早盘/午盘七维分析存档链接 (终盘页引用, 数据可追溯)
     analysis_links = _build_analysis_links(today, output_dir)
 
+    # 左侧联赛导航分组 (只列出当天有比赛的联赛)
+    league_groups = []
+    for _g in ("英超", "西甲", "德甲", "意甲", "法甲", "非五大"):
+        if any(m["league_group"] == _g for m in match_cards):
+            league_groups.append(_g)
+
     context = {
         "date": today,
         "backtest_brier": f"{backtest_brier:.4f}" if backtest_brier else None,
@@ -286,6 +292,7 @@ def generate_report(
         "matches": match_cards,
         "picks": picks,
         "analysis_links": analysis_links,
+        "league_groups": league_groups,
     }
 
     # Render template
@@ -356,6 +363,13 @@ def _cn_note(note: str, home_en: str, away_en: str) -> str:
     note = re.sub(r"[A-Za-z][A-Za-z0-9\-]*(?:\s+[A-Za-z][A-Za-z0-9\-]*)+", "", note)
     note = re.sub(r"\s{2,}", " ", note).strip()
     return note
+
+
+def _league_group(league_code: str) -> str:
+    """联赛分组键: 五大联赛各自一组, 其余归"非五大" (左侧导航用)"""
+    if league_code in ("PL", "PD", "BL1", "SA", "FL1"):
+        return {"PL": "英超", "PD": "西甲", "BL1": "德甲", "SA": "意甲", "FL1": "法甲"}[league_code]
+    return "非五大"
 
 
 def _local_time(p: dict, league_code: str) -> str:
@@ -678,6 +692,7 @@ def _build_match_card(
         "home_team": home_team,
         "away_team": away_team,
         "league": league_name,
+        "league_group": _league_group(league_code),
         "p_home": f"{p_home:.1%}",
         "p_draw": f"{p_draw:.1%}",
         "p_away": f"{p_away:.1%}",

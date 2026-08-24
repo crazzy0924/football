@@ -324,6 +324,7 @@
     <!-- 数据可视化: 比分概率 + 近况/ELO -->
     <div class="viz-grid">
       <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
         {% for s in m.score_bars %}
         <div class="sb">
           <div class="sb-pct">{{ s.pct }}%</div>
@@ -349,7 +350,7 @@
 
     <div class="chips">
       <span class="chip">大2.5球 <b>{{ m.over25 }}</b></span>
-      <span class="chip">BTTS <b>{{ m.btts }}</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>{{ m.btts }}</b> (参考)</span>
       <span class="chip">预期进球 <b>{{ m.eg }}</b></span>
       {% if m.market_odds %}<span class="chip">市场赔率 <b>{{ m.market_odds }}</b></span>{% endif %}
       {% if m.anchor_from_ah %}<span class="chip" style="border-color: rgba(94,168,255,.5)">锚点: 体彩未开胜平负, 由让球盘反推</span>{% endif %}

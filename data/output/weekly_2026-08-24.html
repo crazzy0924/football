@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>周复盘 — 2026-08-24</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.6; }
+  .container { max-width:900px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.8rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .summary { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0 22px; }
+  .s-box { background:linear-gradient(180deg,var(--card),#101725); border:1px solid var(--line);
+           border-radius:12px; padding:12px 6px; text-align:center; }
+  .s-box .v { font-size:1.3rem; font-weight:800; }
+  .s-box .l { font-size:.72rem; color:var(--dim); }
+  .sec { font-size:.88rem; font-weight:800; letter-spacing:1px; color:#9ec4ff; margin:18px 0 8px; }
+  .tb-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:.82rem; min-width:520px; }
+  th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; }
+  th { color:#a8c7f0; background:#0e1526; font-size:.75rem; }
+  .good { color:var(--green); font-weight:700; } .bad { color:var(--red); font-weight:700; }
+  .fix { margin:6px 0; background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:.84rem; }
+  .fix b { color:#fcd34d; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">📈 周整体复盘 · 五大联赛开赛以来</div>
+    <h1>第 1 周 (08-16 → 08-23)</h1>
+    <div class="hero-sub">逐日趋势 + 四维胜率 + 维度台账 + 修正记录 · 自动生成</div>
+  </div>
+  <div class="summary">
+    <div class="s-box"><div class="v">54</div><div class="l">周场次</div></div>
+    <div class="s-box"><div class="v" style="color:#6ee7b7;">63.0%</div><div class="l">加权准确率</div></div>
+    <div class="s-box"><div class="v" style="color:#93c5fd;">0.1766</div><div class="l">加权Brier</div></div>
+    <div class="s-box"><div class="v">7</div><div class="l">复盘天数</div></div>
+  </div>
+  <div class="sec">一 · 逐日趋势</div>
+  <div class="tb-wrap"><table>
+    <tr><th>日期</th><th>场次</th><th>冷启动</th><th>Brier</th><th>准确率</th></tr>
+    <tr><td>2026-08-16</td><td>2</td><td>1</td><td>0.2082</td><td class="good">50%</td></tr><tr><td>2026-08-17</td><td>5</td><td>5</td><td>0.2157</td><td class="bad">20%</td></tr><tr><td>2026-08-19</td><td>8</td><td>8</td><td>0.1665</td><td class="good">75%</td></tr><tr><td>2026-08-20</td><td>8</td><td>7</td><td>0.1639</td><td class="good">62%</td></tr><tr><td>2026-08-21</td><td>11</td><td>9</td><td>0.1723</td><td class="good">73%</td></tr><tr><td>2026-08-22</td><td>9</td><td>0</td><td>0.1934</td><td class="good">56%</td></tr><tr><td>2026-08-23</td><td>11</td><td>2</td><td>0.1601</td><td class="good">73%</td></tr>
+  </table></div>
+  <div class="sec">二 · 四维胜率 (全部 vs 仅五大联赛)</div>
+  <div class="tb-wrap"><table>
+    <tr><th>维度</th><th>全部</th><th>仅五大联赛</th></tr>
+    <tr><td>胜平负</td><td>32/48 = 66.7%</td><td>17/25 = 68.0%</td></tr><tr><td>波胆</td><td>6/48 = 12.5%</td><td>3/25 = 12.0%</td></tr><tr><td>大小球</td><td>13/24 = 54.2%</td><td>8/15 = 53.3%</td></tr><tr><td>让球</td><td>21/36 = 58.3%</td><td>10/17 = 58.8%</td></tr>
+  </table></div>
+  <div class="sec">三 · 维度台账累计</div>
+  <div class="tb-wrap"><table>
+    <tr><th>维度</th><th>样本</th><th>命中率</th><th>Brier</th></tr>
+    <tr><td>1X2</td><td>115</td><td>54.8%</td><td>0.1966</td></tr><tr><td>OU25</td><td>115</td><td>59.1%</td><td>0.2397</td></tr><tr><td>OU35</td><td>115</td><td>71.3%</td><td>0.1945</td></tr><tr><td>BTTS</td><td>115</td><td>52.2%</td><td>0.2552</td></tr><tr><td>AH</td><td>74</td><td>59.5%</td><td>0.1786</td></tr>
+  </table></div>
+  <div class="sec">四 · 本周修正记录 (思路复盘成果)</div>
+  <div class="fix"><b>方向融合思路成功:</b> 胜平负 66.7% (五大联赛 68%), 冷启动日靠市场定价也能 75% — 维持现状</div><div class="fix"><b>波胆降级:</b> 精确比分 12.5%: 页面已标注'仅供方向参考', 不再作为信心来源</div><div class="fix"><b>BTTS降权:</b> 52.2%≈抛硬币: 提示词标注'不作独立信号', 页面弱化展示</div><div class="fix"><b>让球盘修复:</b> edge键名bug已修(此前长赔率虚高), 下周重新观察信号质量</div><div class="fix"><b>赔率变动监控:</b> ≥0.05变动自动注入证据包, 下周验证奈梅亨类漏信号是否复现</div><div class="fix"><b>一致性校验:</b> 方向-比分冲突/BTTS矛盾自动标记, 终盘强制处理</div>
+  <div class="footer">自动生成于 2026-08-24 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

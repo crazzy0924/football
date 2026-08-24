@@ -77,7 +77,7 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
 
     lines.extend([
         f"预期进球: {model.get('lambda_home', 0):.2f} - {model.get('lambda_away', 0):.2f}",
-        f"大2.5: {model.get('over_25', 0):.1%} | BTTS: {model.get('btts', 0):.1%}",
+        f"大2.5: {model.get('over_25', 0):.1%} | BTTS: {model.get('btts', 0):.1%} (周复盘修正: BTTS累计52%≈抛硬币, 不作独立信号)",
     ])
 
     # 全天赔率变动信号 (复盘经验库规则1: 变动≥0.05即独立信号)

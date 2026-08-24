@@ -158,6 +158,8 @@ CN_TO_EN_TEAM = {
     # 2026-08-22 复盘补录
     '考文垂': 'Coventry', '长崎航海': 'V-Varen Nagasaki', '千叶市原': 'JEF United Chiba',
     '拉赫蒂': 'Lahti', '塞伊奈约基': 'SJK Seinajoki', '吉达联合': 'Al Ittihad',
+    # 2026-08-24 复盘补录
+    '弗洛西诺内': 'Frosinone', '威尼斯': 'Venezia',
     '阿罗卡': 'Arouca', '摩雷伦斯': 'Moreirense',
     '腓特烈斯塔': 'Fredrikstad FK', '克里斯蒂安松': 'Kristiansund',
     '瓦斯科达伽马': 'Vasco da Gama', '法马利康': 'Famalicao',

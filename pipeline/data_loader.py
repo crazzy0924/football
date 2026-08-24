@@ -381,6 +381,11 @@ TEAM_NAME_ALIASES = {
     "Clube do Remo": "Remo",
     # 2026-08-20 复盘补录 (football-data.org 全名)
     "Club Atlético de Madrid": "Ath Madrid",
+    # 2026-08-24 复盘补录
+    "Manchester City FC": "Man City",
+    "AFC Bournemouth": "Bournemouth",
+    "Venezia FC": "Venezia",
+    "Frosinone Calcio": "Frosinone",
     # 新赛季CSV队名变体
     "Dep. A Coruna": "Deportivo La Coruna",
     "Málaga CF": "Malaga",

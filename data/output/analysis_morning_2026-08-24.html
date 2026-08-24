@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早盘七维分析存档 — 2026-08-24</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 早盘七维分析存档 · 非预测页</div>
+    <h1>2026-08-24</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-08-24.html">predictions_2026-08-24.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>博洛尼亚<span class="tvs">VS</span>拉齐奥
+      <span style="font-size:.75rem;color:#8d99b0;">(Bologna vs Lazio)</span>
+    </div>
+    <span class="m-meta">开球 00:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (37.0%) · 最可能比分 1-1 (12%)</div>
+  <div class="flags-line">⚠️ 一致性预警: 最可能比分 1-1(平局) 与最高概率方向 主胜(36%) 冲突, 需回退修正或标注结论不可用</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.08 / 平2.98 / 客3.20
+主胜赔率变动: 2.08 → 2.08 (+0.00)
+亚盘(主受1.0球): 主4.75 / 平3.55 / 客1.57
+大小球 2.5 球: 大2.24 / 小1.81
+波胆最低赔: 1-1@6.0 / 1-0@6.5 / 2-1@8.0
+模型亚盘倾向: away (价值 +28.7%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第10名 (中游) · 客队: 第11名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 活在中国土地上的 … === 天气侦察 (未经核实, 仅供参考) === [天气] 博洛尼亚 vs 拉齐奥 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 1平 2负, 进球 6:6 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.4,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;最可能方向为平局或客队小胜，主胜概率被市场与一致性预警压制。核心理由是模型与市场均指向接近均势、客队有边缘优势，且最可能比分与最高概率方向冲突。最大风险是伤停情报缺失，无法验证双方真实战力。&quot;,
+&quot;次选比分&quot;: &quot;0-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;赔率2.08/2.98/3.20，全天无变动；亚盘主-1.0下主覆盖17%/客覆盖62%；Model-Market Edge客胜+7.3%&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 23,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场对主胜定价谨慎，客胜存在正边缘，亚盘深盘下客队覆盖明显更高，资金与模型均未支持主队方向，该维度略偏客队。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-14，主1588.9 vs 客1602.6；预期进球1.32-1.30；大2.5仅48.5%，BTTS 52.5%&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 21,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;两队ELO接近，预期进球几乎相同，攻防数据无明显分化，状态维度呈均势，无法形成明确方向。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失，无法区分核心与替补影响，该维度降权处理，不构成方向判断依据。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队1胜1平2负，总进球6-6；阵容变化程度未知&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;历史交锋客队略占优，但缺乏当前阵容稳定性信息，参考价值受限，仅轻微向客队倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能恢复条件相同，该维度无方向性影响。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报未提及，权重记0并重新分配，不纳入判断。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0，不猜测&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判任命未得到有效信息，无法评估判罚尺度影响，权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;两队均为中游，博洛尼亚#10、拉齐奥#11，积分榜均0分近况&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无争冠、欧战或保级刚需，战意接近，轮换意愿可能受教练战术安排影响，不构成明确方向。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;无数据，已省略&quot;,
+&quot;无球&quot;: &quot;无数据，已省略&quot;,
+&quot;最大变量&quot;: &quot;伤停与首发名单是最大变量，可能直接改变均势格局。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;客队利用反击或定位球率先得分，主队难以渗透&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;, &quot;1-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;双方预期进球接近且均缺乏终结效率，比赛陷入中场绞杀&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;主队若在定位球或边路传中制造混乱并先进球，可能压制客队&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;客队0-1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率谨慎试探，进球可能偏晚。&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前公布双方首发，若主队核心伤停或客队大幅轮换，需重新评估&quot;,
+&quot;临场赔率出现主胜或客胜方向超过0.05的显著变动&quot;,
+&quot;天气转为雨战或场地条件恶化，影响技术流球队发挥&quot;,
+&quot;若出现明确伤停情报显示某队缺少关键中卫或后腰，均势格局将被打破&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了，最可能错在低估了博洛尼亚主场在中游对话中的实际压制力，或拉齐奥轮换导致客胜优势被高估。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主35.8% 平29.3% 客34.9%&lt;br&gt;预期进球: 1.32 - 1.30&lt;br&gt;大2.5: 48.5% | BTTS: 52.5%&lt;br&gt;贝叶斯后验: 主37.0% 平29.4% 客33.6%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[裁判] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[裁判] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[裁判] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[裁判] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[天气] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[天气] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[天气] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[天气] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>奥萨苏纳<span class="tvs">VS</span>莱万特
+      <span style="font-size:.75rem;color:#8d99b0;">(Osasuna vs Levante)</span>
+    </div>
+    <span class="m-meta">开球 01:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (50.3%) · 最可能比分 1-2 (7%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: 最可能比分 1-2(客胜) 与最高概率方向 主胜(49%) 冲突, 需回退修正或标注结论不可用</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.62 / 平3.36 / 客4.66
+主胜赔率变动: 1.62 → 1.62 (+0.00)
+亚盘(主受1.0球): 主3.1 / 平3.26 / 客2.0
+大小球 2.5 球: 大2.02 / 小1.98
+波胆最低赔: 1-1@6.4 / 1-0@6.5 / 2-1@7.0
+模型亚盘倾向: away (价值 +15.5%, 信心 high)
+模型大小球倾向: 大2.5 (模型59% vs 市场50%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第16名 (保级区) · 客队: 第20名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 活在中国土地上的 … === 天气侦察 (未经核实, 仅供参考) === [天气] 博洛尼亚 vs 拉齐奥 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 0平 1负, 进球 4:3 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.5,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;模型倾向主胜但最可能比分指向客胜，一致性冲突导致结论不稳。市场低看主队但欧赔仍偏主，方向模糊，主队小幅占优但风险极高。&quot;,
+&quot;次选比分&quot;: &quot;1-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主1.62/平3.36/客4.66；亚盘主-1.0下模型主覆盖28%/客覆盖49%；Model-Market Edge客+7.3%&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧赔表面偏主，但亚盘深盘下模型客覆盖更高，市场与模型在客胜方向存在正向边际，资金结构更支持客队受让，主队热度与覆盖不足形成反差。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;预期进球1.80-1.26，ELO差-38，主49.3%/平24.4%/客26.3%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队预期进球占优且模型概率领先，但ELO略低于客队，整体状态优势有限，攻防数据支持主队小优而非稳胜。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及双方伤停或阵容变化，无法判断核心球员缺阵影响，该维度权重下调。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队1胜0平1负，总进球4-3&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;交锋接近均势，但双方均为保级区且积分显示0分近况，阵容稳定性不明，历史交锋参考价值有限。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方赛程密度相同，均无密集作战或双线压力，体能维度无明显倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报缺失，权重记0并分配至市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无官方裁判任命信息，不猜测，权重分配至核心维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;奥萨苏纳#16保级区0分，莱万特#20保级区0分&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 30,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均处保级区且积分相同，战意理论上均强，但主队主场作战且市场定位略高，战意兑现概率稍占优。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队预计主导控球并依赖边路与定位球冲击客队防线。&quot;,
+&quot;无球&quot;: &quot;客队受让姿态下需防范主队高压后的身后空当。&quot;,
+&quot;最大变量&quot;: &quot;保级区双方心理波动与临场失误可能直接改变比分走向。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;主队早早进球且客队进攻效率低下&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;双方谨慎互交白卷或各进一球后陷入僵持&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;客队反击高效且主队防线失误送分&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场大概率胶着，进球可能集中在下半场&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前公布主队核心伤停则下调主队方向分&quot;,
+&quot;亚盘由主-1.0退至主-0.75且客水走低则转看客队&quot;,
+&quot;若莱万特首发出现明显轮换则战意维度降权&quot;,
+&quot;若临场大小球盘口大幅下调则总进球预期降低&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在主队热度与模型概率误导，实际客队凭借反击与主队防线失误带走分数，形成冷门客胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主49.3% 平24.4% 客26.3%&lt;br&gt;预期进球: 1.80 - 1.26&lt;br&gt;大2.5: 58.9% | BTTS: 59.0%&lt;br&gt;贝叶斯后验: 主50.3% 平24.8% 客24.9%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[裁判] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[裁判] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[裁判] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[裁判] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[天气] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[天气] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[天气] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[天气] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>罗马<span class="tvs">VS</span>佛罗伦萨
+      <span style="font-size:.75rem;color:#8d99b0;">(Roma vs Fiorentina)</span>
+    </div>
+    <span class="m-meta">开球 02:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (50.8%) · 最可能比分 1-1 (11%) [原始1-0与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: 最可能比分 1-1(平局) 与最高概率方向 主胜(49%) 冲突, 需回退修正或标注结论不可用</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.52 / 平3.60 / 客5.15
+主胜赔率变动: 1.52 → 1.52 (+0.00)
+亚盘(主受1.0球): 主2.64 / 平3.35 / 客2.21
+大小球 2.5 球: 大1.93 / 小2.08
+波胆最低赔: 1-0@6.7 / 1-1@7.0 / 2-1@7.0
+模型亚盘倾向: away (价值 +14.7%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第12名 (中游) · 客队: 第13名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 活在中国土地上的 … === 天气侦察 (未经核实, 仅供参考) === [天气] 博洛尼亚 vs 拉齐奥 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 3胜 0平 1负, 进球 8:6 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 1.1,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;模型倾向主胜但最可能比分与方向冲突，市场深盘与模型覆盖背离。罗马实力占优但缺乏伤停与天气裁判情报，方向修正为谨慎偏主，最大风险是平局或客队偷分。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主1.52/平3.60/客5.15；亚盘主-1.0下模型主覆盖仅27%、客覆盖48%；全天赔率无变动&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:24, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;欧赔明显压低主胜，但亚盘深盘下模型覆盖不足，显示市场对罗马赢盘信心有限。市场与模型在主胜概率上分歧明显，需警惕模型高估主队，主胜方向分不宜过高。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差+156；预期进球1.57-0.99；模型概率主49.1%平28.1%客22.8%&quot;, &quot;优势分&quot;:2, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;ELO与预期进球均支持罗马实力占优，但预期进球差不到一球，说明优势有限。模型主胜概率不足五成，状态攻防只能给中等偏正分。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:6, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;伤停情报缺失，无法判断核心缺阵影响，权重下调并转移至状态、赛程与战意维度。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;近3年罗马3胜0平1负，总进球8-6；双方阵容变化程度无情报&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;历史交锋罗马略占优，但缺乏双方当前阵容稳定度信息，参考价值受限，仅给轻微正向分。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场，客队7天0场；无双线作战情报&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方赛程密度一致且均无密集作战，体能维度没有明显倾斜。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;天气情报无效，权重记0并重新分配。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判信息未公布，不猜测，权重重新分配至市场、状态、赛程与战意。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;罗马#12中游，佛罗伦萨#13中游；双方均0分近况标注&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:26, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;两队均处中游且积分形势不明，无明确争冠或保级压力，战意方向不明确。不能滥用必须赢逻辑，战意维度中性。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;无数据，已省略&quot;, &quot;无球&quot;: &quot;无数据，已省略&quot;, &quot;最大变量&quot;: &quot;最可能比分与主胜方向冲突，平局风险是最大变量&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;罗马尽早取得进球并控制节奏&quot;, &quot;比分&quot;:[&quot;2-0&quot;,&quot;1-0&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;佛罗伦萨收缩防守，罗马破密集乏力&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;佛罗伦萨高效反击或定位球先拔头筹&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;1-3球&quot;, &quot;净胜球&quot;: &quot;主队0-1球优势&quot;, &quot;上半场&quot;: &quot;上半场可能较为胶着，进球概率不高&quot;},
+&quot;触发器&quot;: [&quot;若赛前公布罗马核心主力伤停，需下调主胜方向分&quot;, &quot;若亚盘由主-1.0退至主-0.75且水位走高，需警惕平局&quot;, &quot;若佛罗伦萨公布多名主力复出，需上调客队抵抗力&quot;, &quot;若市场主胜赔率升至1.60以上，模型主胜方向需再降权&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在把模型主胜概率当作方向依据，而实际最可能比分是1-1，比赛以平局收场。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主49.1% 平28.1% 客22.8%&lt;br&gt;预期进球: 1.57 - 0.99&lt;br&gt;大2.5: 47.0% | BTTS: 49.0%&lt;br&gt;贝叶斯后验: 主50.8% 平27.5% 客21.7%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[裁判] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[裁判] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[裁判] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[裁判] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[天气] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[天气] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[天气] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[天气] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">英超</span>富勒姆<span class="tvs">VS</span>切尔西
+      <span style="font-size:.75rem;color:#8d99b0;">(Fulham vs Chelsea)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (39.2%) · 最可能比分 1-1 (12%)</div>
+  <div class="flags-line">⚠️ 一致性预警: 最可能比分 1-1(平局) 与最高概率方向 客胜(37%) 冲突, 需回退修正或标注结论不可用</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.55 / 平3.52 / 客1.78
+主胜赔率变动: 3.55 → 3.55 (+0.00)
+亚盘(主让1.0球): 主1.8 / 平3.65 / 客3.35
+大小球 2.5 球: 大1.68 / 小2.48
+波胆最低赔: 1-2@7.0 / 1-1@7.5 / 0-1@9.5
+模型亚盘倾向: home (价值 +28.5%, 信心 high)
+模型大小球倾向: 小2.5 (模型50% vs 市场60%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第11名 (中游) · 客队: 第12名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 活在中国土地上的 … === 天气侦察 (未经核实, 仅供参考) === [天气] 博洛尼亚 vs 拉齐奥 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 0平 2负, 进球 5:6 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.4,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;模型与市场均指向客队略优，但最可能比分与最高概率方向冲突，且伤停、天气、裁判情报缺失，本场方向不确定性高，谨慎看客队不败或小胜，平局风险大。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔客胜1.78明显低于主胜3.55；亚盘主+1.0下模型主覆盖62%而客覆盖仅17%；Model-Market Edge home=+10.9% away=-13.1%&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 23,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场资金明显倾向切尔西客胜，但模型对主队有正向边际，亚盘深盘下主队受让覆盖高，说明市场与模型存在分歧，客胜方向需谨慎对待。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差+15，模型概率主35.9%平27.4%客36.8%，预期进球1.33-1.35，双方积分榜均中游且近况0分&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 21,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;两队实力接近，ELO差仅15，预期进球均不高，攻防数据未显示任一方有明显状态优势，属于胶着局面。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失，无法判断核心球员缺阵影响，该维度降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队视角2胜0平2负，总进球5-6；无双方阵容变化程度情报&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;交锋记录均衡，但缺乏阵容变化信息，参考价值受限，不构成明确克制关系。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 15,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程压力，体能状况对等，该维度不倾向任何一方。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;情报未提及，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气场地信息缺失，无法评估影响，权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判任命未公布，不进行猜测，权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;富勒姆#11中游，切尔西#12中游，均无明确争冠/欧战/保级压力&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 23,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;两队均处中游，战意不极端，轮换概率中等，该维度对方向影响有限。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主攻方有球阶段预计以边路推进和定位球为主要得分手段，节奏偏慢。&quot;,
+&quot;无球&quot;: &quot;无球阶段需警惕对手快速转换和肋部直塞，中后场衔接存在风险。&quot;,
+&quot;最大变量&quot;: &quot;最可能改变比赛的变量是临场首发中前场核心是否轮换或伤缺。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;切尔西控球占优并率先取得进球，富勒姆反击效率一般&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;, &quot;2-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;双方攻防均保守，机会转化率低，中场绞杀僵持&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;富勒姆利用定位球或反击先下一城，切尔西前场效率低下&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;客队0-1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场大概率僵持，进球少或0-0进入中场。&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前首发公布，若切尔西轮换多名核心，则客胜方向需下调&quot;,
+&quot;若富勒姆主力中卫或后腰缺阵，则客胜概率上升&quot;,
+&quot;若临场赔率客胜大幅上调或主胜下调，则需重新评估&quot;,
+&quot;若天气变为雨战或场地条件恶化，则平局概率上升&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了，最可能错在低估了切尔西的阵容深度和临场爆发力，或高估了富勒姆的防守韧性，导致客队以2球以上优势取胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主35.9% 平27.4% 客36.8%&lt;br&gt;预期进球: 1.33 - 1.35&lt;br&gt;大2.5: 50.2% | BTTS: 53.9%&lt;br&gt;贝叶斯后验: 主33.9% 平27.0% 客39.2%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[裁判] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[裁判] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[裁判] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[裁判] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[天气] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[天气] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[天气] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[天气] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>马拉加<span class="tvs">VS</span>拉科鲁尼亚
+      <span style="font-size:.75rem;color:#8d99b0;">(Malaga vs Deportivo La Coruna)</span>
+    </div>
+    <span class="m-meta">开球 03:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>平局</b> (41.5%) · 最可能比分 0-0 (27%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.33 / 平2.80 / 客2.92
+主胜赔率变动: 2.33 → 2.33 (+0.00)
+亚盘(主受1.0球): 主5.5 / 平3.8 / 客1.46
+大小球 2.5 球: 大2.38 / 小1.72
+波胆最低赔: 1-1@5.4 / 1-0@6.5 / 0-0@8.0
+模型亚盘倾向: away (价值 +43.1%, 信心 high)
+模型大小球倾向: 小2.5 (模型14% vs 市场42%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 活在中国土地上的 … === 天气侦察 (未经核实, 仅供参考) === [天气] 博洛尼亚 vs 拉齐奥 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.6,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为平局偏客不败，核心是模型与市场均指向低进球、客队预期进球略优，但主队ELO更高形成拉扯；最大风险是主队主场战意或一次定位球打破均势。&quot;,
+&quot;次选比分&quot;: &quot;0-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔2.33/2.80/2.92，平局赔率偏低；亚盘主-1.0模型主覆盖5%/客覆盖76%；大小球小2.5市场42% vs 模型14%&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场资金明显不看好主队让球，且平局赔率被压低，与模型平局最高概率方向一致；但模型对主胜估值低于市场，存在模型盲区可能，整体略偏客不败。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差+100；预期进球0.52-0.74；模型概率主21.6%/平43.8%/客34.6%&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;ELO显示主队实力占优，但模型预期进球主队反而低于客队，说明近期攻防状态或比赛环境不利于主队，客队进攻效率略高，方向略偏客不败。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失，无法判断核心主力是否缺阵，该维度对方向判断贡献有限，降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无近3年交锋数据，无法评估克制关系，降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方赛程密度一致，均无一周双赛压力，体能维度对方向无显著倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报未提及，权重记0并重新分配，不予评估。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判任命未公布，不猜测，该维度权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;无积分榜分区数据，无明确战意情报&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 16,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;缺少争冠、欧战、保级等战意背景，无法判断轮换概率，维持中性。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队有球阶段可能依赖边路传中与定位球制造威胁，但预期进球低显示转化效率有限。&quot;,
+&quot;无球&quot;: &quot;无球阶段主队需提防客队快速反击，客队预期进球略高，反击效率是主要风险。&quot;,
+&quot;最大变量&quot;: &quot;一次定位球或防守失误最可能打破低比分僵局。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;双方谨慎开局，重视防守，比赛进入低节奏消耗战&quot;,
+&quot;比分&quot;: [&quot;0-0&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;主队利用主场优势先入一球，但客队通过反击扳平&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;主队主场战意不足或客队高效反击连续得手&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;0-2球&quot;,
+&quot;净胜球&quot;: &quot;客队0-1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场大概率0-0，双方试探为主&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前公布主队核心前锋或中场伤停，主队攻击力进一步削弱&quot;,
+&quot;主队让球盘从-1.0降至-0.75或更低，市场进一步看衰主队&quot;,
+&quot;客队出现双线作战或大面积轮换消息&quot;,
+&quot;天气恶化导致场地条件变差，进一步压低进球预期&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在主队凭借更高ELO和主场优势打出1-0或2-0，模型低估了主队主场爆发力。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主21.6% 平43.8% 客34.6%&lt;br&gt;预期进球: 0.52 - 0.74&lt;br&gt;大2.5: 13.6% | BTTS: 20.6%&lt;br&gt;贝叶斯后验: 主24.7% 平41.5% 客33.8%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[裁判] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[裁判] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[裁判] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[裁判] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 博洛尼亚 vs 拉齐奥
+来源:百度 › item › 博洛尼亚 博洛尼亚 （意大利艾米利亚-罗马涅大区首府）_百度百科 2010年11月30日 &amp;#0183; 博洛尼亚（Bologna），意大利艾米利亚-罗马涅大区首府，地处波河平原南缘、亚平宁山脉北麓，面积140平方公 …
+来源:网络 › posts › bologna-top... 博洛尼亚 (Bologna) 的 10 个最佳景点 | Lily 和 Roger 的旅行博客 2026年6月16日 &amp;#0183; 博洛尼亚 (Bologna) 有哪些不容错过的景点？在这篇攻略中，我们精选了适合一两天的行程的十个博洛尼亚的最佳景 …
+[天气] 奥萨苏纳 vs 莱万特
+来源:网络 《赛迦奥特曼 普通话》第1集-高清在线观看-爱奇艺 2014年6月9日 &amp;#0183; 《赛迦奥特曼 普通话》高清在线观看，剧情简介：光之国最强的年轻战士赛罗奥特曼、传说的英雄戴拿奥特曼、慈爱 …
+来源:百度 › item 澳（汉语汉字）_百度百科 古文假借也。 毛诗曰：奥，隈也。 此言水曲之裏渊奥然也。 大雅：芮鞫之卽。 笺云：水之内曰澳，水之外曰鞫。 鞫谓水曲之表圜穹 …
+[天气] 罗马 vs 佛罗伦萨
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后分为 …
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 Ciar&amp;#225;n …
+[天气] 富勒姆 vs 切尔西
+来源:百度 › item › 富勒姆足球俱乐部 富勒姆 足球俱乐部_百度百科 2018年5月27日 &amp;#0183; 富勒姆足球俱乐部（.C.）是一家位于英格兰伦敦的足球俱乐部，成立于1879年，主场为克拉文农场球场， …
+来源:网络 fulhamfc. - 1 天前 &amp;#0183; : , highlights, , tickets,
+[天气] 马拉加 vs 拉科鲁尼亚
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 根据马原产地的自然环境条件，以及外形特征和性能等方面的差异，可将马分为草原种、沙漠种、山地种和森林种。 草原种分布在广 …
+来源:知乎 中国 马 图鉴（一） - 知乎 - 知乎专栏 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活在中国土地上的 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+  <div class="footer">自动生成于 2026-08-24 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

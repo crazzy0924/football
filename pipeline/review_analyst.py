@@ -78,6 +78,34 @@ def _esc(s) -> str:
     return _html.escape(str(s if s is not None else ""))
 
 
+def _cn(name: str) -> str:
+    """英文队名转中文 (与预测页同源, 页面队名全中文)"""
+    try:
+        from pipeline.reporter import TEAM_CN
+        return TEAM_CN.get(name, name)
+    except Exception:
+        return name
+
+
+def _cn_llm(obj, home: str, away: str):
+    """递归清洗 LLM 输出里的英文队名与连续英文词组 (汉化纪律)"""
+    if isinstance(obj, dict):
+        return {k: _cn_llm(v, home, away) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_cn_llm(v, home, away) for v in obj]
+    if isinstance(obj, str):
+        try:
+            from pipeline.reporter import TEAM_CN
+            for en in (home, away):
+                if en and en in obj:
+                    obj = obj.replace(en, TEAM_CN.get(en, en))
+        except Exception:
+            pass
+        obj = _re.sub(r"[A-Za-z][A-Za-z0-9\-]*(?:\s+[A-Za-z][A-Za-z0-9\-]*)+", "", obj)
+        return _re.sub(r"\s{2,}", " ", obj).strip()
+    return obj
+
+
 def _load_json(path: str):
     if not os.path.exists(path):
         return None
@@ -345,6 +373,8 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
     for m in matched:
         home = m.get("home_team", "?")
         away = m.get("away_team", "?")
+        home_cn = _cn(home)
+        away_cn = _cn(away)
         key = (home, away)
         pred = next((p for p in predictions
                      if (p.get("home_team") == home and p.get("away_team") == away)
@@ -386,7 +416,7 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
                 prompt2 = _build_postmortem_prompt(pred, result, drift_txt, competition_note,
                                                     rows, intel_excerpt, audit_warning)
                 note = _query_postmortem(prompt2)
-                llm = _parse_llm(note) or {}
+                llm = _cn_llm(_parse_llm(note) or {}, home, away)
                 print(f"  [复盘审计] {home} vs {away}: 维度归因 {len(llm.get('维度复盘') or dict())} 项, 查漏 {len(llm.get('查漏补缺') or [])} 条")
             except Exception as e:
                 print(f"  [复盘审计] {home} vs {away} 失败: {e}")
@@ -418,7 +448,7 @@ def generate_review_analysis(date_str: str, matched: list, output_dir: str = "da
         cards.append("""
 <article class="match">
   <header class="m-head">
-    <div class="m-teams">""" + _esc(home) + """ <span style="color:#8d99b0;">VS</span> """ + _esc(away) + """</div>
+    <div class="m-teams">""" + _esc(home_cn) + """ <span style="color:#8d99b0;">VS</span> """ + _esc(away_cn) + """</div>
     <div class="m-score">""" + _esc(str(m.get("home_goals", "?"))) + " - " + _esc(str(m.get("away_goals", "?"))) + """</div>
   </header>
   <div class="sec-title">A · 比赛与结果核验</div>

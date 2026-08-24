@@ -69,10 +69,10 @@ def analyze_hhad_edge(model_probs: dict, market_odds: dict) -> dict:
     if not market_odds:
         return {'edge': 0, 'best_pick': 'skip', 'confidence': 'none'}
 
-    # 体彩HHAD赔率 → 隐含概率 (简单1/odds，未去水)
-    h_imp = 1.0 / float(market_odds.get('h', 999))
-    d_imp = 1.0 / float(market_odds.get('d', 999))
-    a_imp = 1.0 / float(market_odds.get('a', 999))
+    # 体彩HHAD赔率 → 隐含概率 (去水归一化; 键名与ah_odds一致: home/draw/away)
+    h_imp = 1.0 / float(market_odds.get('home', market_odds.get('h', 999)))
+    d_imp = 1.0 / float(market_odds.get('draw', market_odds.get('d', 999)))
+    a_imp = 1.0 / float(market_odds.get('away', market_odds.get('a', 999)))
     total = h_imp + d_imp + a_imp
     h_imp /= total
     d_imp /= total

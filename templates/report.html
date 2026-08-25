@@ -203,7 +203,15 @@
 
   /* ── 比分概率迷你图 ── */
   .viz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0 6px; }
-  .score-bars { display: flex; gap: 8px; align-items: flex-end; height: 64px; }
+  .score-bars { display: flex; gap: 8px; align-items: flex-end; height: 42px; opacity: .92; }
+  /* 核心三信号 (胜平负/让球/大小球) — 用户定调: 三维为决策核心, 比分仅作派生参考 */
+  .core3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 2px; }
+  .c3 { background: #0e1526; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+  .c3-l { font-size: .68rem; color: #a9c6ff; letter-spacing: 1px; }
+  .c3-v { font-size: .88rem; font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c3-j { font-size: .74rem; margin-top: 3px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c3.bet .c3-j { color: var(--green); font-weight: 700; }
+  .c3.conflict .c3-j, .c3.cold .c3-j, .c3.skip .c3-j { color: var(--amber); font-weight: 700; }
   .sb { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 3px; }
   .sb-bar {
     width: 70%; background: linear-gradient(180deg, #5ea8ff, #2f6fd8);
@@ -318,6 +326,25 @@
         <span><i class="dot draw"></i>平局 <b>{{ m.p_draw }}</b></span>
         <span><i class="dot away"></i>客胜 <b>{{ m.p_away }}</b></span>
         <span>ELO差 <b>{{ m.elo_diff }}</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 {{ m.bet_class }}">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">{{ m.p_home }} / {{ m.p_draw }} / {{ m.p_away }}</div>
+        <div class="c3-j">{{ m.bet_pick }}</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">{{ m.ah_text or '体彩未开让球盘' }}</div>
+        <div class="c3-j">{{ m.ah_pick or '盘口仅作覆盖参考' }}</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>{{ m.over25 }}</b></div>
+        <div class="c3-j">{{ m.ou_text or '—' }}</div>
       </div>
     </div>
 

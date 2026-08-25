@@ -482,12 +482,17 @@ def _build_match_card(
 
     # 一致性裁决 (纪律: 三向冲突不出推荐): 方向-比分冲突 → 整场强制降级, 不显示看好/建议金额
     conflict = (p.get("flags") or {}).get("direction_score_conflict")
+    # 纪律: 仅五大联赛场次可出方向信号, 非五大联赛一律仅观察
+    non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1")
 
-    # 看好方向 (下注栏, CLAUDE.md 纪律): edge≥5% + Kelly≥1% + 非冷启动 + 非无信号
+    # 看好方向 (下注栏, CLAUDE.md 纪律): edge≥5% + Kelly≥1% + 非冷启动 + 非无信号 + 仅五大联赛
     no_signal = p.get("no_signal", False)
     if conflict:
         bet_pick = "结论不可用(方向-比分冲突)"
         bet_class = "conflict"
+    elif non_focus:
+        bet_pick = "非五大仅观察"
+        bet_class = "skip"
     elif no_signal:
         bet_pick = "无信号"
         bet_class = "skip"
@@ -548,7 +553,8 @@ def _build_match_card(
             ah_text = f"让球(主{line:+.1f}): 主{hc:.0%}/走{pu:.0%}/客{ac:.0%}"
         # 冷启动纪律: 冷启动场次让球盘也不出"看好", 只展示盘口覆盖
         # 一致性裁决: 方向-比分冲突场次让球盘同样不出"看好", 只展示覆盖比例
-        if bp in ("home", "away") and ev >= 0.05 and not no_bet and not conflict:
+        # 纪律: 非五大联赛让球盘同样不出"看好"
+        if bp in ("home", "away") and ev >= 0.05 and not no_bet and not conflict and not non_focus:
             dir_cn = "主队" if bp == "home" else "客队"
             ah_pick = f"让球看好{dir_cn} (+{ev:.1%})"
             if bet_class != "bet":

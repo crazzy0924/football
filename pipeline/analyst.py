@@ -289,6 +289,12 @@ def query_analyst(
 def _try_deepseek(prompt: str, api_key: str, model: str) -> str | None:
     """Call DeepSeek via deepseek-harness (OpenAI-compatible, cost-optimized)."""
     try:
+        _os = __import__("os")
+        _os.environ["NO_PROXY"] = "*"
+        _os.environ["no_proxy"] = "*"
+        _os.environ.pop("HTTP_PROXY", None)
+        _os.environ.pop("HTTPS_PROXY", None)
+        _os.environ.pop("ALL_PROXY", None)
         from deepseek_harness import DeepSeekHarness
         client = DeepSeekHarness(api_key=api_key, disable_thinking_by_default=True)
         resp = client.chat(

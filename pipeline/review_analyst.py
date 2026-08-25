@@ -161,6 +161,11 @@ def _parse_llm(note: str) -> dict | None:
 def _query_postmortem(prompt: str) -> str:
     """赛后归因 LLM (独立审计人格)"""
     try:
+        os.environ["NO_PROXY"] = "*"
+        os.environ["no_proxy"] = "*"
+        os.environ.pop("HTTP_PROXY", None)
+        os.environ.pop("HTTPS_PROXY", None)
+        os.environ.pop("ALL_PROXY", None)
         from config import DEEPSEEK_API_KEY, DEEPSEEK_MODEL
         from deepseek_harness import DeepSeekHarness
         client = DeepSeekHarness(api_key=DEEPSEEK_API_KEY, disable_thinking_by_default=True)

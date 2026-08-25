@@ -87,6 +87,23 @@ def main() -> None:
     except Exception:
         add("C1", "联合约束比分", None, "跳过", hard=False)
 
+    # C8 三向冲突强制降级: 方向-比分冲突场次必须标"结论不可用", 不得残留看好推荐
+    try:
+        n_conf = sum(1 for p in preds if (p.get("flags") or {}).get("direction_score_conflict"))
+        fp_path = os.path.join("data", "output", f"predictions_{date_str}.html")
+        old_marker = 0
+        n_down = 0
+        if os.path.exists(fp_path):
+            with open(fp_path, "r", encoding="utf-8") as f:
+                ph = f.read()
+            old_marker = ph.count("需回退修正或标注结论不可用")
+            n_down = ph.count("结论不可用")
+        ok = (old_marker == 0) and (n_down >= n_conf)
+        add("C8", "冲突场次强制降级", ok,
+            f"冲突 {n_conf} 场, 降级标记 {n_down} 处, 旧文案残留 {old_marker}", hard=True)
+    except Exception as e:
+        add("C3", "冲突场次强制降级", None, f"检查失败: {e}", hard=False)
+
     # B5 情报矛盾检测块
     intel_path = os.path.join("data", "intel", f"{date_str}.txt")
     if os.path.exists(intel_path):

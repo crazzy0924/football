@@ -1059,7 +1059,7 @@ def _consistency_flags(pred: dict, jt: list | None) -> dict:
             labels = ("主胜", "平局", "客胜")
             if top_out != labels[max_i] and probs[max_i] >= 0.35:
                 flags["direction_score_conflict"] = (f"最可能比分 {jt[0]['score']}({top_out}) 与最高概率方向 "
-                                                    f"{labels[max_i]}({probs[max_i]:.0%}) 冲突, 需回退修正或标注结论不可用")
+                                                    f"{labels[max_i]}({probs[max_i]:.0%}) 冲突, 已强制降级为结论不可用")
         except Exception:
             pass
     btts = pred.get("btts", 0)

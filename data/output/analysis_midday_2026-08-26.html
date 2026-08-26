@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>午盘七维分析存档 — 2026-08-26</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 午盘七维分析存档 · 非预测页</div>
+    <h1>2026-08-26</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-08-26.html">predictions_2026-08-26.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>皇家马德里<span class="tvs">VS</span>皇家社会
+      <span style="font-size:.75rem;color:#8d99b0;">(Real Madrid vs Sociedad)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (71.1%) · 最可能比分 1-1 (8%) [原始1-0与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: 最可能比分 1-1(平局) 与最高概率方向 主胜(70%) 冲突, 已强制降级为结论不可用</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.14 / 平6.30 / 客10.75
+主胜赔率变动: 1.22 → 1.14 (-0.08)
+亚盘(主受1.0球): 主1.52 / 平4.35 / 客4.15
+大小球 2.5 球: 大1.4 / 小3.53
+波胆最低赔: 2-0@7.75 / 2-1@8.0 / 3-0@8.5
+模型亚盘倾向: away (价值 +7.1%, 信心 medium)
+模型大小球倾向: 小2.5 (模型54% vs 市场72%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第7名 (中游) · 客队: 第19名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 4胜 0平 0负, 进球 10:2 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.3,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;模型指向主胜但最可能比分被联合约束修正为平局, 方向与比分冲突, 结论不可用; 主队实力与交锋占优, 但市场深盘下主胜价值不足, 最大风险是低比分平局。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主1.14/平6.30/客10.75; SPF主1.22→1.14, 客8.10→10.75; 大小球大1.45→1.40&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;主胜赔率极低且资金流入主队, 市场强烈定价主胜; 但1.14已隐含极高概率, 模型主胜69.6%低于市场, 深盘下主胜价值有限, 平局赔率大幅升高但模型平局概率不低, 存在分歧。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO 1807.4 vs 1526.6, 差+281; 模型概率主69.6%平19.5%客10.9%; 预期进球2.13-0.71&quot;, &quot;优势分&quot;:3, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;ELO差距和预期进球均显著利好主队, 主队实力与攻防数据全面占优, 但预期进球2.13并未完全支撑大比分, 客队进球能力弱。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:10, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及双方伤停或阵容变化, 无法评估核心主力缺阵影响, 该维度降权处理, 不编造。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;近3年交锋主队4胜0平0负, 总进球10-2&quot;, &quot;优势分&quot;:2, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;主队历史交锋绝对占优, 但需结合阵容变化; 情报未提供双方转会或换帅信息, 参考价值中等, 不单独作为强信号。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场, 客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:12, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;双方均无密集赛程或双线作战压力, 体能条件对等, 不构成明显优势。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气或场地, 权重记0并重新分配。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判未公布, 不猜测, 权重降为0并重新分配。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;皇马#7中游3分近况W; 皇家社会#19保级区0分近况L&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;皇马积分落后但赛季初战意通常较强, 皇家社会保级压力虽早但客场面对强队难有主动抢分能力; 主队轮换概率低, 但深盘下小胜即满足, 战意不构成大胜驱动。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;皇马预计控球主导, 通过边路与中场压制创造机会, 但面对低位防守需耐心渗透。&quot;, &quot;无球&quot;: &quot;皇家社会若深度退守, 皇马需防反击和定位球, 客队进攻端威胁有限。&quot;, &quot;最大变量&quot;: &quot;皇马若早取得进球, 比赛可能打开; 若久攻不下, 低比分平局风险上升。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;: &quot;皇马控球压制并较早破门, 皇家社会进攻无力&quot;, &quot;比分&quot;:[&quot;2-0&quot;,&quot;1-0&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;: &quot;皇马久攻不下, 皇家社会防守紧凑或门将高光&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;: &quot;皇马轮换或轻敌, 皇家社会反击或定位球得手&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;1-3球&quot;, &quot;净胜球&quot;: &quot;主队0-2球优势&quot;, &quot;上半场&quot;: &quot;上半场可能僵持, 皇马控制节奏但进球可能偏晚&quot;},
+&quot;触发器&quot;: [&quot;皇马首发是否轮换多名主力&quot;, &quot;皇家社会是否摆出五后卫深度防守&quot;, &quot;赛前亚盘从主-1.0降至主-0.75或更低&quot;, &quot;皇马是否在60分钟前取得进球&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了, 最可能错在皇马尽管实力占优但只打成平局, 模型最可能比分与最高概率方向冲突已提示主胜结论不可靠, 低比分平局是主要陷阱。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主69.6% 平19.5% 客10.9%&lt;br&gt;预期进球: 2.13 - 0.71&lt;br&gt;大2.5: 53.5% | BTTS: 43.7%&lt;br&gt;贝叶斯后验: 主71.1% 平18.5% 客10.4%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+  <div class="footer">自动生成于 2026-08-26 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

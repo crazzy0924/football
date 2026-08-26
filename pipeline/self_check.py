@@ -62,47 +62,46 @@ def main() -> None:
     snaps = glob.glob(os.path.join("data", "state", "odds_snapshots", f"snapshot_{date_str}_*.json"))
     add("B1", "赔率快照留档", len(snaps) >= 2, f"{len(snaps)} 个快照", hard=False)
 
-    # C2 一致性预警显示 (JSON flags 数 vs 早盘页出现次数)
+    # 口径对齐: 终盘页只渲染聚焦联赛场次, JSON是合并式(含非五大); C1/C2/C8 只对聚焦场次自检
     try:
         pred_path = os.path.join("data", "output", f"predictions_{date_str}.json")
         with open(pred_path, "r", encoding="utf-8") as f:
             preds = json.load(f)
-        n_flags = sum(1 for p in preds if (p.get("flags") or {}))
-        page_path = os.path.join("data", "output", f"analysis_morning_{date_str}.html")
-        n_shown = 0
-        if os.path.exists(page_path):
-            with open(page_path, "r", encoding="utf-8") as f:
-                n_shown = f.read().count("一致性预警")
-        add("C2", "一致性预警已显示", n_shown >= n_flags,
-            f"预测带预警 {n_flags} 场, 页面显示 {n_shown} 处", hard=True)
-    except Exception as e:
-        add("C2", "一致性预警已显示", None, f"检查失败: {e}", hard=False)
-
-    # C1 联合约束: 有让球/大小球倾向的场次必须带 joint_top_scores
-    try:
-        missing = [p.get("home_team") for p in preds
-                   if ((p.get("ah_handicap") or {}).get("edge") or {}).get("edge") is not None
-                   and not p.get("joint_top_scores")]
-        add("C1", "联合约束比分", not missing, f"缺失 {len(missing)} 场: {missing}", hard=True)
-    except Exception:
-        add("C1", "联合约束比分", None, "跳过", hard=False)
-
-    # C8 三向冲突强制降级: 方向-比分冲突场次必须标"结论不可用", 不得残留看好推荐
-    try:
-        n_conf = sum(1 for p in preds if (p.get("flags") or {}).get("direction_score_conflict"))
+        focus_preds = [p for p in preds if p.get("league_code") in ("PL", "PD", "BL1", "SA", "FL1")]
         fp_path = os.path.join("data", "output", f"predictions_{date_str}.html")
-        old_marker = 0
-        n_down = 0
+        ph = ""
         if os.path.exists(fp_path):
             with open(fp_path, "r", encoding="utf-8") as f:
                 ph = f.read()
-            old_marker = ph.count("需回退修正或标注结论不可用")
-            n_down = ph.count("结论不可用")
+
+        # C2 一致性预警显示: 聚焦场次 flags 文本必须出现在终盘页
+        n_flags = 0
+        n_shown = 0
+        for p in focus_preds:
+            for v in (p.get("flags") or {}).values():
+                n_flags += 1
+                if v[:6] in ph:
+                    n_shown += 1
+        add("C2", "一致性预警已显示", n_shown >= n_flags,
+            f"聚焦场次带预警 {n_flags} 条, 页面显示 {n_shown} 条", hard=True)
+
+        # C1 联合约束: 聚焦场次有让球/大小球倾向的必须带 joint_top_scores
+        missing = [p.get("home_team") for p in focus_preds
+                   if ((p.get("ah_handicap") or {}).get("edge") or {}).get("edge") is not None
+                   and not p.get("joint_top_scores")]
+        add("C1", "联合约束比分", not missing, f"缺失 {len(missing)} 场: {missing}", hard=True)
+
+        # C8 三向冲突强制降级: 聚焦场次方向-比分冲突必须标"结论不可用", 不得残留看好推荐
+        n_conf = sum(1 for p in focus_preds if (p.get("flags") or {}).get("direction_score_conflict"))
+        old_marker = ph.count("需回退修正或标注结论不可用")
+        n_down = ph.count("结论不可用")
         ok = (old_marker == 0) and (n_down >= n_conf)
         add("C8", "冲突场次强制降级", ok,
             f"冲突 {n_conf} 场, 降级标记 {n_down} 处, 旧文案残留 {old_marker}", hard=True)
     except Exception as e:
-        add("C3", "冲突场次强制降级", None, f"检查失败: {e}", hard=False)
+        add("C2", "一致性预警已显示", None, f"检查失败: {e}", hard=False)
+        add("C1", "联合约束比分", None, f"检查失败: {e}", hard=False)
+        add("C8", "冲突场次强制降级", None, f"检查失败: {e}", hard=False)
 
     # B5 情报矛盾检测块
     intel_path = os.path.join("data", "intel", f"{date_str}.txt")

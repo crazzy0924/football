@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足球预测报告 — 2026-08-26</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --bg2: #0e1424;
+    --card: #121a2c;
+    --line: #1e2a42;
+    --txt: #e9eef8;
+    --dim: #8d99b0;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --blue: #5ea8ff;
+    --violet: #a78bfa;
+    --pink: #f472b6;
+    --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background:
+      radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%),
+      radial-gradient(800px 400px at 90% -20%, rgba(167,139,250,.10), transparent 60%),
+      var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+    padding: 28px 16px 40px;
+    line-height: 1.55;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* ── 主视觉 ── */
+  .hero { text-align: center; padding: 34px 10px 26px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: .78rem; color: #bfd7ff;
+    background: linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+    border: 1px solid rgba(94,168,255,.35);
+    padding: 5px 16px; border-radius: 999px; letter-spacing: .5px;
+  }
+  .hero h1 {
+    font-size: 2rem; font-weight: 800; margin-top: 14px;
+    background: linear-gradient(90deg, #e9eef8, #9ec4ff 60%, #c4b5fd);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { color: var(--dim); font-size: .85rem; margin-top: 8px; }
+
+  /* ── 统计 ── */
+  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 6px 0 26px; }
+  .stat {
+    background: linear-gradient(180deg, var(--card), #101725);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 6px; text-align: center;
+    transition: transform .15s, border-color .15s;
+  }
+  .stat:hover { transform: translateY(-2px); border-color: #33486f; }
+  .stat .v { font-size: 1.5rem; font-weight: 800; }
+  .stat .l { font-size: .72rem; color: var(--dim); margin-top: 3px; }
+  .stat:nth-child(1) .v { color: var(--blue); }
+  .stat:nth-child(2) .v { color: var(--green); }
+  .stat:nth-child(3) .v { color: var(--amber); }
+  .stat:nth-child(4) .v { color: var(--pink); }
+  .stat:nth-child(5) .v { color: var(--violet); font-size: 1.15rem; padding-top: 5px; }
+
+  /* ── 比赛卡片 ── */
+  .match {
+    background: linear-gradient(180deg, var(--card), #0f1727);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+    position: relative; overflow: hidden;
+  }
+  .match::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: var(--line);
+  }
+  .match.recommended::before { background: linear-gradient(180deg, var(--green), #0d9488); }
+  .match.reference::before { background: linear-gradient(180deg, var(--amber), #d97706); }
+  .match.skip { opacity: .72; }
+  .match:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 34px rgba(2, 8, 23, .55);
+    border-color: #2c3d63;
+  }
+
+  .m-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .m-league {
+    font-size: .78rem; font-weight: 700; color: #a9c6ff;
+    background: rgba(94,168,255,.12);
+    border: 1px solid rgba(94,168,255,.32); padding: 4px 12px; border-radius: 999px;
+    letter-spacing: 1px; margin-right: 4px; vertical-align: 2px;
+  }
+  .m-teams { display: flex; align-items: center; gap: 14px; font-size: 1.18rem; font-weight: 700; }
+  .m-teams .tvs { font-size: .7rem; color: var(--dim); border: 1px solid var(--line); padding: 2px 8px; border-radius: 6px; letter-spacing: 2px; }
+
+  /* 看好推荐 */
+  .m-pick {
+    font-size: .95rem; font-weight: 800; padding: 8px 16px; border-radius: 12px;
+    white-space: nowrap;
+  }
+  .m-pick.bet {
+    color: #06281c;
+    background: linear-gradient(135deg, #34d399, #6ee7b7);
+    box-shadow: 0 4px 18px rgba(52, 211, 153, .35);
+  }
+  .m-pick.skip { color: var(--dim); background: rgba(141,153,176,.10); border: 1px solid var(--line); }
+  .m-pick.cold { color: var(--pink); background: rgba(244,114,182,.10); border: 1px solid rgba(244,114,182,.3); }
+
+  /* 概率堆叠条 */
+  .prob { margin: 16px 0 14px; }
+  .prob-track {
+    display: flex; height: 14px; border-radius: 999px; overflow: hidden;
+    background: #0a0f1c; box-shadow: inset 0 1px 4px rgba(0,0,0,.5);
+  }
+  .seg { height: 100%; transition: width .4s ease; }
+  .seg.home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .seg.draw { background: linear-gradient(90deg, #47506a, #7c86a3); }
+  .seg.away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .prob-legends { display: flex; gap: 18px; margin-top: 9px; font-size: .8rem; color: var(--dim); flex-wrap: wrap; }
+  .prob-legends b { color: var(--txt); font-size: .88rem; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+  .dot.home { background: var(--blue); }
+  .dot.draw { background: #7c86a3; }
+  .dot.away { background: var(--amber); }
+
+  /* 指标胶囊 */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-size: .76rem; color: #c3cce0; background: rgba(141,153,176,.08);
+    border: 1px solid var(--line); padding: 4px 11px; border-radius: 999px;
+  }
+  .chip b { color: var(--txt); }
+  .chip.kelly { border-color: rgba(52,211,153,.4); }
+  .chip.kelly.neg { border-color: rgba(248,113,113,.4); }
+  .chip.kelly.neg b { color: var(--red); }
+  .chip.kelly.pos b { color: var(--green); }
+
+  .m-cold {
+    margin-top: 12px; font-size: .78rem; color: var(--pink);
+    background: rgba(244,114,182,.08); border: 1px dashed rgba(244,114,182,.35);
+    padding: 6px 12px; border-radius: 10px; display: inline-block;
+  }
+  .m-note {
+    margin-top: 12px; font-size: .83rem; color: #cbd5e8;
+    background: linear-gradient(135deg, rgba(167,139,250,.10), rgba(94,168,255,.06));
+    border-left: 3px solid var(--violet);
+    border-radius: 0 12px 12px 0; padding: 10px 14px; line-height: 1.6;
+  }
+  .m-note .nt { font-size: .7rem; color: var(--violet); font-weight: 700; letter-spacing: 1px; margin-right: 6px; }
+
+  /* ── 结构化八维报告 (A-I 结构) ── */
+  .report-a { margin-top: 12px; background: rgba(94,168,255,.05); border: 1px solid rgba(94,168,255,.22); border-radius: 12px; padding: 12px 14px; }
+  .a-meta { font-size: .78rem; color: var(--dim); margin-bottom: 6px; }
+  .a-dir { font-size: .85rem; margin-bottom: 6px; }
+  .dir-h { color: #6ee7b7; } .dir-a { color: #fbbf24; } .dir-z { color: var(--dim); }
+  .a-summary { font-size: .86rem; color: #cfe0ff; background: rgba(94,168,255,.08); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+  .tb-wrap { overflow-x: auto; }
+  .dims-table, .paths-table { width: 100%; border-collapse: collapse; font-size: .75rem; margin-top: 8px; min-width: 560px; }
+  .dims-table th, .paths-table th { color: #9ec4ff; background: #0e1526; font-size: .72rem; }
+  .dims-table td, .dims-table th, .paths-table td, .paths-table th { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+  .dims-table .ev { color: var(--dim); font-size: .72rem; }
+  .dims-table .jd, .paths-table .jd { font-size: .72rem; }
+  .a-triggers { font-size: .8rem; color: #fcd34d; margin-top: 8px; }
+  .a-triggers .trg { display: inline-block; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3); border-radius: 6px; padding: 2px 8px; margin: 2px 4px 2px 0; }
+  .a-reverse { font-size: .8rem; color: #fca5a5; margin-top: 8px; }
+  .a-audit { font-size: .8rem; color: #a78bfa; margin-top: 8px; background: rgba(167,139,250,.08); border-radius: 8px; padding: 6px 10px; }
+  .a-tactics { font-size: .82rem; color: #b9c7e2; margin-top: 8px; background: rgba(94,168,255,.06); border-radius: 8px; padding: 8px 12px; }
+  .a-tactics b { color: #9ec4ff; }
+  .a-ext { font-size: .82rem; color: #a8c7f0; margin-top: 8px; background: rgba(52,211,153,.06); border-radius: 8px; padding: 8px 12px; }
+  .a-missing { font-size: .75rem; color: #8d99b0; margin-top: 8px; }
+
+  /* ── 今日看好速览 ── */
+  .picks-strip {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
+    padding: 14px 16px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(52,211,153,.10), rgba(94,168,255,.06));
+    border: 1px solid rgba(52,211,153,.35);
+  }
+  .picks-title { width: 100%; font-size: .85rem; font-weight: 800; color: #6ee7b7; letter-spacing: 1px; }
+  .pick-card {
+    background: #0f1a28; border: 1px solid rgba(52,211,153,.4); border-radius: 12px;
+    padding: 8px 14px; min-width: 200px; flex: 1;
+  }
+  .pc-teams { font-size: .82rem; font-weight: 700; color: var(--txt); }
+  .pc-bet { font-size: .78rem; color: var(--green); font-weight: 700; margin-top: 3px; }
+
+  /* ── 近况形态徽章 ── */
+  .form-row { display: flex; gap: 16px; font-size: .75rem; color: var(--dim); align-items: center; margin-top: 2px; }
+  .f-letters { display: inline-flex; gap: 3px; margin-left: 4px; }
+  .f-letters span {
+    display: inline-flex; width: 17px; height: 17px; align-items: center; justify-content: center;
+    border-radius: 5px; font-size: .62rem; font-weight: 800;
+  }
+  .f-letters span.f-W { background: rgba(52,211,153,.18); color: #6ee7b7; }
+  .f-letters span.f-D { background: rgba(141,153,176,.15); color: #a5b0c5; }
+  .f-letters span.f-L { background: rgba(248,113,113,.18); color: #fca5a5; }
+
+  /* ── 比分概率迷你图 ── */
+  .viz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0 6px; }
+  .score-bars { display: flex; gap: 8px; align-items: flex-end; height: 42px; opacity: .92; }
+  /* 核心三信号 (胜平负/让球/大小球) — 用户定调: 三维为决策核心, 比分仅作派生参考 */
+  .core3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 2px; }
+  .c3 { background: #0e1526; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+  .c3-l { font-size: .68rem; color: #a9c6ff; letter-spacing: 1px; }
+  .c3-v { font-size: .88rem; font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c3-j { font-size: .74rem; margin-top: 3px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c3.bet .c3-j { color: var(--green); font-weight: 700; }
+  .c3.conflict .c3-j, .c3.cold .c3-j, .c3.skip .c3-j { color: var(--amber); font-weight: 700; }
+  .sb { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 3px; }
+  .sb-bar {
+    width: 70%; background: linear-gradient(180deg, #5ea8ff, #2f6fd8);
+    border-radius: 4px 4px 2px 2px; min-height: 3px;
+    transition: height .4s ease;
+  }
+  .sb-label { font-size: .66rem; color: var(--dim); }
+  .sb-pct { font-size: .6rem; color: var(--txt); font-weight: 600; }
+
+  /* ── ELO 力量条 ── */
+  .elo-row { display: flex; align-items: center; gap: 8px; font-size: .72rem; color: var(--dim); }
+  .elo-track { flex: 1; height: 8px; border-radius: 999px; background: #0a0f1c; overflow: hidden; display: flex; }
+  .elo-home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .elo-away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .elo-row b { color: var(--txt); }
+
+  /* ── 入场动效 ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .match { animation: fadeUp .45s ease both; }
+
+  /* ── 左侧联赛导航 ── */
+  .layout { display: flex; gap: 18px; align-items: flex-start; }
+  .league-nav { width: 158px; flex-shrink: 0; position: sticky; top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .ln-btn { background: var(--card); border: 1px solid var(--line); color: var(--dim); border-radius: 10px;
+            padding: 9px 14px; text-align: left; font-size: .86rem; cursor: pointer; transition: all .15s; }
+  .ln-btn:hover { border-color: #33486f; color: var(--txt); }
+  .ln-btn.active { border-color: var(--blue); color: #dbeafe; background: rgba(94,168,255,.12); font-weight: 700; }
+  .main-col { flex: 1; min-width: 0; }
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    .league-nav { width: 100%; position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+    .ln-btn { flex: 1 0 auto; text-align: center; padding: 7px 10px; font-size: .8rem; white-space: nowrap; }
+  }
+
+  /* ── 页脚 ── */
+  .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    .m-teams { font-size: 1.02rem; gap: 8px; }
+    .hero h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="layout">
+    <aside class="league-nav">
+      <button class="ln-btn active" data-lg="*">全部</button>
+      
+      <button class="ln-btn" data-lg="西甲">西甲</button>
+      
+    </aside>
+    <div class="main-col">
+
+  <div class="hero">
+    <div class="hero-badge">⚽ 每日足球智能预测</div>
+    <h1>2026-08-26</h1>
+    <div class="hero-sub">
+      Dixon-Coles + ELO + 贝叶斯市场融合
+      · 回测 Brier 0.5954
+    </div>
+    
+    <div class="hero-sub" style="margin-top:10px;">本日七维分析存档: <a href="analysis_morning_2026-08-26.html">📋 早盘七维分析存档</a> · <a href="analysis_midday_2026-08-26.html">📋 午盘七维分析存档</a></div>
+    
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="v">1</div><div class="l">今日场次</div></div>
+    <div class="stat"><div class="v">0</div><div class="l">推荐下注</div></div>
+    <div class="stat"><div class="v">1</div><div class="l">仅供参考</div></div>
+    <div class="stat"><div class="v">0</div><div class="l">冷启动</div></div>
+    <div class="stat"><div class="v">0/1/0</div><div class="l">胜/平/负</div></div>
+  </div>
+
+  <!-- 今日看好速览 -->
+  
+
+  
+  <article class="match reference" data-lg="西甲" style="animation-delay: 0ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">西甲</span>
+        <span>皇家马德里</span>
+        <span class="tvs">VS</span>
+        <span>皇家社会</span>
+      </div>
+      <span class="m-pick conflict">
+        · 结论不可用(方向-比分冲突)
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 71.1%"></div>
+        <div class="seg draw" style="width: 18.5%"></div>
+        <div class="seg away" style="width: 10.4%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>71.1%</b></span>
+        <span><i class="dot draw"></i>平局 <b>18.5%</b></span>
+        <span><i class="dot away"></i>客胜 <b>10.4%</b></span>
+        <span>ELO差 <b>+281</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 conflict">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">71.1% / 18.5% / 10.4%</div>
+        <div class="c3-j">结论不可用(方向-比分冲突)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主-1.0): 主45%/走26%/客28%</div>
+        <div class="c3-j">盘口仅作覆盖参考</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>53.5%</b></div>
+        <div class="c3-j">小2.5 模型54% vs 市场73% (-20%)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">14.2%</div>
+          <div class="sb-bar" style="height: 42.599999999999994%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">13.2%</div>
+          <div class="sb-bar" style="height: 39.599999999999994%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.4%</div>
+          <div class="sb-bar" style="height: 28.200000000000003%"></div>
+          <div class="sb-label">3-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.3%</div>
+          <div class="sb-bar" style="height: 27.900000000000002%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.1%</div>
+          <div class="sb-bar" style="height: 24.299999999999997%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1807</b>
+          <div class="elo-track"><div class="elo-home" style="width: 54%"></div><div class="elo-away" style="width: 46%"></div></div>
+          <b>1527</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-W">W</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-L">L</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>53.5%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>43.7%</b> (参考)</span>
+      <span class="chip">预期进球 <b>2.13 - 0.71</b></span>
+      <span class="chip">市场赔率 <b>1.14/6.30/10.75</b></span>
+      
+      <span class="chip kelly pos">凯利 <b>1.09%</b></span>
+      <span class="chip">优势 Draw <b>+5.5%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率↓ 1.22→1.14 (资金流主)</span>
+      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型54% vs 市场73% (-20%)</span>
+      <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 主胜(70%) 冲突, 已强制降级为结论不可用</span>
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 1-0(模型14.2%vs市场8.1%) · 2-0(模型13.2%vs市场10.4%)</span>
+      <span class="chip">盘口 <b>让球(主-1.0): 主45%/走26%/客28%</b></span>
+      
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#7(3分) · 客队#19</b></span>
+      <span class="chip">近况 主[W] 客[L]</span>
+    </div>
+    
+
+    
+
+    
+    <div class="report-a">
+      <div class="a-meta">🕗 开球 北京时间 03:00:00 (当地约21:00) · 📍 球场 — · 🧪 研究时点 2026-08-26 · 终盘</div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-h">0.8</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 低</b></div>
+      <div class="a-summary">📌 实力与交锋均指向皇马主胜, 但模型最可能比分与最高概率方向冲突, 主胜结论可靠性下降; 深盘下皇马小胜或不胜风险并存, 最大风险是久攻不下被逼平。 <span style="color:#8d99b0;">次选比分 1-0</span></div>
+      <div class="a-reverse">⚠️ 一致性修正: 原始单格最高 1-0, 与让球/大小球矛盾, 已修正</div>
+      
+      <div class="tb-wrap"><table class="dims-table">
+        <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
+        
+        <tr>
+          <td>市场</td>
+          <td class="ev">欧赔主1.14/平6.30/客10.75; SPF主1.22→1.14, 客8.10→10.75; 大小球大1.45→1.37</td>
+          <td class="dir-h">2</td>
+          <td>22%</td>
+          <td>中</td>
+          <td class="jd">主胜赔率极低且资金持续流入主队, 市场强烈定价皇马赢球; 但1.14隐含概率已高, 模型主胜69.6%低于市场, 平局赔率大幅升高与模型平局概率存在分歧, 深盘下主胜价值有限。</td>
+        </tr>
+        
+        <tr>
+          <td>状态攻防</td>
+          <td class="ev">ELO 1807.4 vs 1526.6, 差+281; 模型概率主69.6%平19.5%客10.9%; 预期进球2.13-0.71</td>
+          <td class="dir-h">3</td>
+          <td>20%</td>
+          <td>高</td>
+          <td class="jd">ELO差距和预期进球均显著利好皇马, 攻防数据全面占优; 但预期进球2.13未完全支撑大比分, 皇家社会进球能力弱, 皇马存在小胜或平局可能。</td>
+        </tr>
+        
+        <tr>
+          <td>阵容伤停</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>10%</td>
+          <td>低</td>
+          <td class="jd">情报未提及双方伤停或阵容变化, 无法评估核心主力缺阵影响, 该维度降权处理, 不编造。</td>
+        </tr>
+        
+        <tr>
+          <td>交锋克制</td>
+          <td class="ev">近3年交锋主队4胜0平0负, 总进球10-2</td>
+          <td class="dir-h">2</td>
+          <td>8%</td>
+          <td>中</td>
+          <td class="jd">皇马历史交锋绝对占优, 但情报未提供双方转会或换帅信息, 阵容变化程度不明, 参考价值中等, 不单独作为强信号。</td>
+        </tr>
+        
+        <tr>
+          <td>赛程体能</td>
+          <td class="ev">主队7天0场, 客队7天0场</td>
+          <td class="dir-z">0</td>
+          <td>12%</td>
+          <td>高</td>
+          <td class="jd">双方均无密集赛程或双线作战压力, 体能条件对等, 不构成明显优势。</td>
+        </tr>
+        
+        <tr>
+          <td>天气场地</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>4%</td>
+          <td>低</td>
+          <td class="jd">情报未提及天气或场地, 权重记0并重新分配。</td>
+        </tr>
+        
+        <tr>
+          <td>裁判</td>
+          <td class="ev">裁判未公布, 权重记0</td>
+          <td class="dir-z">0</td>
+          <td>4%</td>
+          <td>低</td>
+          <td class="jd">裁判未公布, 不猜测, 权重降为0并重新分配。</td>
+        </tr>
+        
+        <tr>
+          <td>战意轮换</td>
+          <td class="ev">皇马#7中游3分近况W; 皇家社会#19保级区0分近况L</td>
+          <td class="dir-h">1</td>
+          <td>20%</td>
+          <td>中</td>
+          <td class="jd">皇马赛季初积分落后但战意通常较强, 皇家社会保级压力虽早但客场面对强队难有主动抢分能力; 皇马轮换幅度不确定, 小胜即满足, 战意不构成大胜驱动。</td>
+        </tr>
+        
+      </table></div>
+      
+      
+      <div class="tb-wrap"><table class="paths-table">
+        <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
+        
+        <tr><td>常规路径</td><td><b>71%</b></td><td class="jd">皇马控球压制并较早破门, 皇家社会进攻无力</td><td>2-0 / 1-0</td></tr>
+        
+        <tr><td>平局路径</td><td><b>19%</b></td><td class="jd">皇马久攻不下, 皇家社会防守紧凑或门将高光</td><td>1-1 / 0-0</td></tr>
+        
+        <tr><td>冷门路径</td><td><b>10%</b></td><td class="jd">皇马轮换或轻敌, 皇家社会反击或定位球得手</td><td>0-1</td></tr>
+        
+      </table></div>
+      
+      
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 皇马预计控球主导, 通过边路与中场压制创造机会, 但面对低位防守需耐心渗透。 <b>无球:</b> 皇家社会若深度退守, 皇马需防反击和定位球, 客队进攻端威胁有限。 <b>最大变量:</b> 皇马若早取得进球, 比赛可能打开; 若久攻不下, 低比分平局风险上升。</div>
+      
+      
+      <div class="a-ext">📐 扩展情景: 总进球 1-3球 · 净胜球 主队0-2球优势 · 上半场 上半场可能僵持, 皇马控制节奏但进球可能偏晚</div>
+      
+      
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">皇马首发是否轮换多名主力</span><span class="trg">皇家社会是否摆出五后卫深度防守</span><span class="trg">赛前亚盘从主-1.0降至主-0.75或更低</span><span class="trg">皇马是否在60分钟前取得进球</span></div>
+      
+      <div class="a-reverse">🔄 反向验证: 如果这场预测错了, 最可能错在皇马尽管实力占优但只打成平局, 模型最可能比分与最高概率方向冲突已提示主胜结论不可靠, 低比分平局是主要陷阱。</div>
+      <div class="a-audit">🤖 自检: 发现P1问题 (结论方向分0.8主胜与最可能比分1-1平局冲突且未解决，早盘方向分-0.3改为0.8缺乏充分依据)</div>
+      
+      <div class="a-missing">📋 数据缺失声明: 阵容伤停、天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      
+    </div>
+    
+  </article>
+  
+
+    </div>
+  </div>
+
+  <div class="footer">
+    足球预测模型 v3.0 · 生成于 2026-08-26 · 仅供参考，历史表现不代表未来结果
+  </div>
+</div>
+
+<script>
+  // 左侧联赛导航: 点击一级菜单过滤对应赛事的比赛卡片
+  (function () {
+    var btns = document.querySelectorAll(".ln-btn");
+    var cards = document.querySelectorAll("article.match");
+    if (!btns.length) return;
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active");
+        var lg = b.getAttribute("data-lg");
+        var shown = 0;
+        cards.forEach(function (c) {
+          var hit = lg === "*" || c.getAttribute("data-lg") === lg;
+          c.style.display = hit ? "" : "none";
+          if (hit) shown++;
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -168,8 +168,10 @@ def main() -> None:
     # E2 计划任务 Ready 数
     rc, out = _sh(["schtasks", "/Query", "/FO", "CSV"])
     # schtasks CSV 每行前缀带反斜杠 (如 "\足球模型-..."), 按包含匹配
+    # 只数5个常规任务, 补推任务是断网自愈的临时任务, 不参与健康检查
     ready = sum(1 for ln in out.splitlines()
-                if '足球模型-' in ln and ('"Ready"' in ln or '"就绪"' in ln))
+                if '足球模型-' in ln and '补推' not in ln
+                and ('"Ready"' in ln or '"就绪"' in ln))
     add("E2", "计划任务健康", ready == 5, f"{ready}/5 个 Ready", hard=False)
 
     # E3 新赛季CSV

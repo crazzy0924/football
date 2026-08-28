@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>足球预测报告 — 2026-08-28</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --bg2: #0e1424;
+    --card: #121a2c;
+    --line: #1e2a42;
+    --txt: #e9eef8;
+    --dim: #8d99b0;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --blue: #5ea8ff;
+    --violet: #a78bfa;
+    --pink: #f472b6;
+    --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background:
+      radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%),
+      radial-gradient(800px 400px at 90% -20%, rgba(167,139,250,.10), transparent 60%),
+      var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+    padding: 28px 16px 40px;
+    line-height: 1.55;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  /* ── 主视觉 ── */
+  .hero { text-align: center; padding: 34px 10px 26px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: .78rem; color: #bfd7ff;
+    background: linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+    border: 1px solid rgba(94,168,255,.35);
+    padding: 5px 16px; border-radius: 999px; letter-spacing: .5px;
+  }
+  .hero h1 {
+    font-size: 2rem; font-weight: 800; margin-top: 14px;
+    background: linear-gradient(90deg, #e9eef8, #9ec4ff 60%, #c4b5fd);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-sub { color: var(--dim); font-size: .85rem; margin-top: 8px; }
+
+  /* ── 统计 ── */
+  .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 6px 0 26px; }
+  .stat {
+    background: linear-gradient(180deg, var(--card), #101725);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 6px; text-align: center;
+    transition: transform .15s, border-color .15s;
+  }
+  .stat:hover { transform: translateY(-2px); border-color: #33486f; }
+  .stat .v { font-size: 1.5rem; font-weight: 800; }
+  .stat .l { font-size: .72rem; color: var(--dim); margin-top: 3px; }
+  .stat:nth-child(1) .v { color: var(--blue); }
+  .stat:nth-child(2) .v { color: var(--green); }
+  .stat:nth-child(3) .v { color: var(--amber); }
+  .stat:nth-child(4) .v { color: var(--pink); }
+  .stat:nth-child(5) .v { color: var(--violet); font-size: 1.15rem; padding-top: 5px; }
+
+  /* ── 比赛卡片 ── */
+  .match {
+    background: linear-gradient(180deg, var(--card), #0f1727);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+    position: relative; overflow: hidden;
+  }
+  .match::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: var(--line);
+  }
+  .match.recommended::before { background: linear-gradient(180deg, var(--green), #0d9488); }
+  .match.reference::before { background: linear-gradient(180deg, var(--amber), #d97706); }
+  .match.skip { opacity: .72; }
+  .match:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 34px rgba(2, 8, 23, .55);
+    border-color: #2c3d63;
+  }
+
+  .m-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .m-league {
+    font-size: .78rem; font-weight: 700; color: #a9c6ff;
+    background: rgba(94,168,255,.12);
+    border: 1px solid rgba(94,168,255,.32); padding: 4px 12px; border-radius: 999px;
+    letter-spacing: 1px; margin-right: 4px; vertical-align: 2px;
+  }
+  .m-teams { display: flex; align-items: center; gap: 14px; font-size: 1.18rem; font-weight: 700; }
+  .m-teams .tvs { font-size: .7rem; color: var(--dim); border: 1px solid var(--line); padding: 2px 8px; border-radius: 6px; letter-spacing: 2px; }
+
+  /* 看好推荐 */
+  .m-pick {
+    font-size: .95rem; font-weight: 800; padding: 8px 16px; border-radius: 12px;
+    white-space: nowrap;
+  }
+  .m-pick.bet {
+    color: #06281c;
+    background: linear-gradient(135deg, #34d399, #6ee7b7);
+    box-shadow: 0 4px 18px rgba(52, 211, 153, .35);
+  }
+  .m-pick.skip { color: var(--dim); background: rgba(141,153,176,.10); border: 1px solid var(--line); }
+  .m-pick.cold { color: var(--pink); background: rgba(244,114,182,.10); border: 1px solid rgba(244,114,182,.3); }
+
+  /* 概率堆叠条 */
+  .prob { margin: 16px 0 14px; }
+  .prob-track {
+    display: flex; height: 14px; border-radius: 999px; overflow: hidden;
+    background: #0a0f1c; box-shadow: inset 0 1px 4px rgba(0,0,0,.5);
+  }
+  .seg { height: 100%; transition: width .4s ease; }
+  .seg.home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .seg.draw { background: linear-gradient(90deg, #47506a, #7c86a3); }
+  .seg.away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .prob-legends { display: flex; gap: 18px; margin-top: 9px; font-size: .8rem; color: var(--dim); flex-wrap: wrap; }
+  .prob-legends b { color: var(--txt); font-size: .88rem; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+  .dot.home { background: var(--blue); }
+  .dot.draw { background: #7c86a3; }
+  .dot.away { background: var(--amber); }
+
+  /* 指标胶囊 */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-size: .76rem; color: #c3cce0; background: rgba(141,153,176,.08);
+    border: 1px solid var(--line); padding: 4px 11px; border-radius: 999px;
+  }
+  .chip b { color: var(--txt); }
+  .chip.kelly { border-color: rgba(52,211,153,.4); }
+  .chip.kelly.neg { border-color: rgba(248,113,113,.4); }
+  .chip.kelly.neg b { color: var(--red); }
+  .chip.kelly.pos b { color: var(--green); }
+
+  .m-cold {
+    margin-top: 12px; font-size: .78rem; color: var(--pink);
+    background: rgba(244,114,182,.08); border: 1px dashed rgba(244,114,182,.35);
+    padding: 6px 12px; border-radius: 10px; display: inline-block;
+  }
+  .m-note {
+    margin-top: 12px; font-size: .83rem; color: #cbd5e8;
+    background: linear-gradient(135deg, rgba(167,139,250,.10), rgba(94,168,255,.06));
+    border-left: 3px solid var(--violet);
+    border-radius: 0 12px 12px 0; padding: 10px 14px; line-height: 1.6;
+  }
+  .m-note .nt { font-size: .7rem; color: var(--violet); font-weight: 700; letter-spacing: 1px; margin-right: 6px; }
+
+  /* ── 结构化八维报告 (A-I 结构) ── */
+  .report-a { margin-top: 12px; background: rgba(94,168,255,.05); border: 1px solid rgba(94,168,255,.22); border-radius: 12px; padding: 12px 14px; }
+  .a-meta { font-size: .78rem; color: var(--dim); margin-bottom: 6px; }
+  .a-dir { font-size: .85rem; margin-bottom: 6px; }
+  .dir-h { color: #6ee7b7; } .dir-a { color: #fbbf24; } .dir-z { color: var(--dim); }
+  .a-summary { font-size: .86rem; color: #cfe0ff; background: rgba(94,168,255,.08); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+  .tb-wrap { overflow-x: auto; }
+  .dims-table, .paths-table { width: 100%; border-collapse: collapse; font-size: .75rem; margin-top: 8px; min-width: 560px; }
+  .dims-table th, .paths-table th { color: #9ec4ff; background: #0e1526; font-size: .72rem; }
+  .dims-table td, .dims-table th, .paths-table td, .paths-table th { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+  .dims-table .ev { color: var(--dim); font-size: .72rem; }
+  .dims-table .jd, .paths-table .jd { font-size: .72rem; }
+  .a-triggers { font-size: .8rem; color: #fcd34d; margin-top: 8px; }
+  .a-triggers .trg { display: inline-block; background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3); border-radius: 6px; padding: 2px 8px; margin: 2px 4px 2px 0; }
+  .a-reverse { font-size: .8rem; color: #fca5a5; margin-top: 8px; }
+  .a-audit { font-size: .8rem; color: #a78bfa; margin-top: 8px; background: rgba(167,139,250,.08); border-radius: 8px; padding: 6px 10px; }
+  .a-tactics { font-size: .82rem; color: #b9c7e2; margin-top: 8px; background: rgba(94,168,255,.06); border-radius: 8px; padding: 8px 12px; }
+  .a-tactics b { color: #9ec4ff; }
+  .a-ext { font-size: .82rem; color: #a8c7f0; margin-top: 8px; background: rgba(52,211,153,.06); border-radius: 8px; padding: 8px 12px; }
+  .a-missing { font-size: .75rem; color: #8d99b0; margin-top: 8px; }
+
+  /* ── 今日看好速览 ── */
+  .picks-strip {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
+    padding: 14px 16px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(52,211,153,.10), rgba(94,168,255,.06));
+    border: 1px solid rgba(52,211,153,.35);
+  }
+  .picks-title { width: 100%; font-size: .85rem; font-weight: 800; color: #6ee7b7; letter-spacing: 1px; }
+  .pick-card {
+    background: #0f1a28; border: 1px solid rgba(52,211,153,.4); border-radius: 12px;
+    padding: 8px 14px; min-width: 200px; flex: 1;
+  }
+  .pc-teams { font-size: .82rem; font-weight: 700; color: var(--txt); }
+  .pc-bet { font-size: .78rem; color: var(--green); font-weight: 700; margin-top: 3px; }
+
+  /* ── 近况形态徽章 ── */
+  .form-row { display: flex; gap: 16px; font-size: .75rem; color: var(--dim); align-items: center; margin-top: 2px; }
+  .f-letters { display: inline-flex; gap: 3px; margin-left: 4px; }
+  .f-letters span {
+    display: inline-flex; width: 17px; height: 17px; align-items: center; justify-content: center;
+    border-radius: 5px; font-size: .62rem; font-weight: 800;
+  }
+  .f-letters span.f-W { background: rgba(52,211,153,.18); color: #6ee7b7; }
+  .f-letters span.f-D { background: rgba(141,153,176,.15); color: #a5b0c5; }
+  .f-letters span.f-L { background: rgba(248,113,113,.18); color: #fca5a5; }
+
+  /* ── 比分概率迷你图 ── */
+  .viz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0 6px; }
+  .score-bars { display: flex; gap: 8px; align-items: flex-end; height: 42px; opacity: .92; }
+  /* 核心三信号 (胜平负/让球/大小球) — 用户定调: 三维为决策核心, 比分仅作派生参考 */
+  .core3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 2px; }
+  .c3 { background: #0e1526; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-width: 0; }
+  .c3-l { font-size: .68rem; color: #a9c6ff; letter-spacing: 1px; }
+  .c3-v { font-size: .88rem; font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c3-j { font-size: .74rem; margin-top: 3px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c3.bet .c3-j { color: var(--green); font-weight: 700; }
+  .c3.conflict .c3-j, .c3.cold .c3-j, .c3.skip .c3-j { color: var(--amber); font-weight: 700; }
+  .sb { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 3px; }
+  .sb-bar {
+    width: 70%; background: linear-gradient(180deg, #5ea8ff, #2f6fd8);
+    border-radius: 4px 4px 2px 2px; min-height: 3px;
+    transition: height .4s ease;
+  }
+  .sb-label { font-size: .66rem; color: var(--dim); }
+  .sb-pct { font-size: .6rem; color: var(--txt); font-weight: 600; }
+
+  /* ── ELO 力量条 ── */
+  .elo-row { display: flex; align-items: center; gap: 8px; font-size: .72rem; color: var(--dim); }
+  .elo-track { flex: 1; height: 8px; border-radius: 999px; background: #0a0f1c; overflow: hidden; display: flex; }
+  .elo-home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .elo-away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+  .elo-row b { color: var(--txt); }
+
+  /* ── 入场动效 ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .match { animation: fadeUp .45s ease both; }
+
+  /* ── 左侧联赛导航 ── */
+  .layout { display: flex; gap: 18px; align-items: flex-start; }
+  .league-nav { width: 158px; flex-shrink: 0; position: sticky; top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .ln-btn { background: var(--card); border: 1px solid var(--line); color: var(--dim); border-radius: 10px;
+            padding: 9px 14px; text-align: left; font-size: .86rem; cursor: pointer; transition: all .15s; }
+  .ln-btn:hover { border-color: #33486f; color: var(--txt); }
+  .ln-btn.active { border-color: var(--blue); color: #dbeafe; background: rgba(94,168,255,.12); font-weight: 700; }
+  .main-col { flex: 1; min-width: 0; }
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    .league-nav { width: 100%; position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+    .ln-btn { flex: 1 0 auto; text-align: center; padding: 7px 10px; font-size: .8rem; white-space: nowrap; }
+  }
+
+  /* ── 页脚 ── */
+  .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    .m-teams { font-size: 1.02rem; gap: 8px; }
+    .hero h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="layout">
+    <aside class="league-nav">
+      <button class="ln-btn active" data-lg="*">全部</button>
+      
+      <button class="ln-btn" data-lg="英超">英超</button>
+      
+      <button class="ln-btn" data-lg="西甲">西甲</button>
+      
+      <button class="ln-btn" data-lg="德甲">德甲</button>
+      
+      <button class="ln-btn" data-lg="意甲">意甲</button>
+      
+      <button class="ln-btn" data-lg="法甲">法甲</button>
+      
+    </aside>
+    <div class="main-col">
+
+  <div class="hero">
+    <div class="hero-badge">⚽ 每日足球智能预测</div>
+    <h1>2026-08-28</h1>
+    <div class="hero-sub">
+      Dixon-Coles + ELO + 贝叶斯市场融合
+      · 回测 Brier 0.5954
+    </div>
+    
+    <div class="hero-sub" style="margin-top:10px;">本日七维分析存档: <a href="analysis_morning_2026-08-28.html">📋 早盘七维分析存档</a> · <a href="analysis_midday_2026-08-28.html">📋 午盘七维分析存档</a></div>
+    
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="v">6</div><div class="l">今日场次</div></div>
+    <div class="stat"><div class="v">1</div><div class="l">推荐下注</div></div>
+    <div class="stat"><div class="v">4</div><div class="l">仅供参考</div></div>
+    <div class="stat"><div class="v">0</div><div class="l">冷启动</div></div>
+    <div class="stat"><div class="v">4/1/1</div><div class="l">胜/平/负</div></div>
+  </div>
+
+  <!-- 今日看好速览 -->
+  
+  <div class="picks-strip">
+    <div class="picks-title">★ 今日看好 (共 3 个方向)</div>
+    
+    <div class="pick-card">
+      <div class="pc-teams">桑坦德竞技 vs 埃尔切</div>
+      <div class="pc-bet">主胜 @1.90 (凯利5%) 建议¥12</div>
+    </div>
+    
+    <div class="pick-card">
+      <div class="pc-teams">拜仁慕尼黑 vs 斯图加特</div>
+      <div class="pc-bet">让球看好客队 (+5.5%)</div>
+    </div>
+    
+    <div class="pick-card">
+      <div class="pc-teams">AC米兰 vs 威尼斯</div>
+      <div class="pc-bet">让球看好主队 (+5.5%)</div>
+    </div>
+    
+  </div>
+  
+
+  
+  <article class="match recommended" data-lg="西甲" style="animation-delay: 0ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">西甲</span>
+        <span>桑坦德竞技</span>
+        <span class="tvs">VS</span>
+        <span>埃尔切</span>
+      </div>
+      <span class="m-pick bet">
+        ★ 看好 主胜 @1.90 (凯利5%) 建议¥12
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 58.8%"></div>
+        <div class="seg draw" style="width: 21.4%"></div>
+        <div class="seg away" style="width: 19.9%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>58.8%</b></span>
+        <span><i class="dot draw"></i>平局 <b>21.4%</b></span>
+        <span><i class="dot away"></i>客胜 <b>19.9%</b></span>
+        <span>ELO差 <b>+75</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 bet">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">58.8% / 21.4% / 19.9%</div>
+        <div class="c3-j">主胜 @1.90 (凯利5%) 建议¥12</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主-1.0): 主40%/走23%/客37%</div>
+        <div class="c3-j">让球看好主队 (+16.7%)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>68.3%</b></div>
+        <div class="c3-j">大2.5 模型68% vs 市场57% (+11%)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.5%</div>
+          <div class="sb-bar" style="height: 28.5%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.9%</div>
+          <div class="sb-bar" style="height: 23.700000000000003%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.9%</div>
+          <div class="sb-bar" style="height: 23.700000000000003%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.6%</div>
+          <div class="sb-bar" style="height: 22.799999999999997%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.4%</div>
+          <div class="sb-bar" style="height: 22.200000000000003%"></div>
+          <div class="sb-label">3-1</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1590</b>
+          <div class="elo-track"><div class="elo-home" style="width: 51%"></div><div class="elo-away" style="width: 49%"></div></div>
+          <b>1515</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-L">L</span><span class="f-,">,</span><span class="f-D">D</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-L">L</span><span class="f-,">,</span><span class="f-D">D</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>68.3%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>62.5%</b> (参考)</span>
+      <span class="chip">预期进球 <b>2.33 - 1.20</b></span>
+      <span class="chip">市场赔率 <b>1.90/3.35/3.30</b></span>
+      
+      <span class="chip kelly pos">凯利 <b>4.71%</b></span>
+      <span class="chip">优势 Home <b>+14.9%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 1.90</span>
+      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 大2.5 模型68% vs 市场57% (+11%)</span>
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 4-1(模型4.3%vs市场2.2%) · 3-0(模型6.1%vs市场4.3%)</span>
+      <span class="chip">盘口 <b>让球(主-1.0): 主40%/走23%/客37%</b></span>
+      <span class="chip" style="border-color: rgba(52,211,153,.5)">🏆 让球看好主队 (+16.7%)</span>
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#13(1分) · 客队#18(1分)</b></span>
+      <span class="chip">近况 主[L,D] 客[L,D]</span>
+    </div>
+    
+
+    
+
+    
+    <div class="report-a">
+      <div class="a-meta">🕗 开球 北京时间 01:00:00 (当地约19:00) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-h">1.4</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
+      <div class="a-summary">📌 最可能方向为主队小胜至完胜，核心是模型与资金同向、主场进攻预期高；最大风险是客队保级战意与主队近期状态样本不足。 <span style="color:#8d99b0;">次选比分 3-0</span></div>
+      <div class="a-reverse">⚠️ 一致性修正: 原始单格最高 2-1, 与让球/大小球矛盾, 已修正</div>
+      
+      <div class="tb-wrap"><table class="dims-table">
+        <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
+        
+        <tr>
+          <td>市场</td>
+          <td class="ev">赔率变动：主1.95→1.90，客3.15→3.30；大小球大1.86→1.76，资金买大球</td>
+          <td class="dir-h">2</td>
+          <td>22%</td>
+          <td>高</td>
+          <td class="jd">主胜赔率下调且客胜上调，资金流入主队、同时压大球，但客胜上调幅度较大，市场对客队爆冷保持一定警惕，整体仍与模型同向。</td>
+        </tr>
+        
+        <tr>
+          <td>状态攻防</td>
+          <td class="ev">ELO差+75，预期进球2.33-1.20，模型主胜61.6%</td>
+          <td class="dir-h">2</td>
+          <td>20%</td>
+          <td>中</td>
+          <td class="jd">实力差与预期进球均支持主队控场，但双方近况同为L,D，状态层面缺少连续验证，优势分不宜过高。</td>
+        </tr>
+        
+        <tr>
+          <td>阵容伤停</td>
+          <td class="ev">无数据，已降权</td>
+          <td class="dir-z">0</td>
+          <td>8%</td>
+          <td>低</td>
+          <td class="jd">未获取到双方伤停或首发情报，无法区分核心与替补，本维度不作方向判断。</td>
+        </tr>
+        
+        <tr>
+          <td>交锋克制</td>
+          <td class="ev">近3年交锋主队视角1胜0平1负，总进球2-3</td>
+          <td class="dir-z">0</td>
+          <td>6%</td>
+          <td>低</td>
+          <td class="jd">交锋样本少且无阵容变化细节，克制关系不明确，参考价值低。</td>
+        </tr>
+        
+        <tr>
+          <td>赛程体能</td>
+          <td class="ev">主队7天0场，客队7天0场</td>
+          <td class="dir-z">0</td>
+          <td>14%</td>
+          <td>中</td>
+          <td class="jd">双方均为单线低密度，体能条件接近，不构成明显偏向。</td>
+        </tr>
+        
+        <tr>
+          <td>天气场地</td>
+          <td class="ev">情报未提及，权重记0</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">无天气与场地信息，本维度不纳入方向判断。</td>
+        </tr>
+        
+        <tr>
+          <td>裁判</td>
+          <td class="ev">裁判未公布，权重记0</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">无裁判任命信息，不猜测尺度或倾向。</td>
+        </tr>
+        
+        <tr>
+          <td>战意轮换</td>
+          <td class="ev">桑坦德竞技 #13中游，埃尔切 #18保级区；双方均1分，近况L,D</td>
+          <td class="dir-a">-1</td>
+          <td>30%</td>
+          <td>中</td>
+          <td class="jd">客队保级压力可能提升比赛强度，但积分优势仍属主队，整体谨慎偏主，客队战意构成一定对冲。</td>
+        </tr>
+        
+      </table></div>
+      
+      
+      <div class="tb-wrap"><table class="paths-table">
+        <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
+        
+        <tr><td>常规路径</td><td><b>59%</b></td><td class="jd">主队上半场取得领先且保持进攻强度</td><td>2-0 / 3-0</td></tr>
+        
+        <tr><td>平局路径</td><td><b>21%</b></td><td class="jd">主队破密集防守效率低，客队反击得手</td><td>1-1</td></tr>
+        
+        <tr><td>冷门路径</td><td><b>20%</b></td><td class="jd">客队先进球且门将高接抵挡，主队久攻不下</td><td>0-1</td></tr>
+        
+      </table></div>
+      
+      
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 主队预计掌控球权并利用边路与高位压迫制造持续进攻。 <b>无球:</b> 主队需防范客队保级驱动的快速反击与定位球。 <b>最大变量:</b> 客队若率先进球，可能收缩防线改变比赛节奏。</div>
+      
+      
+      <div class="a-ext">📐 扩展情景: 总进球 2-4球 · 净胜球 主队1-2球优势 · 上半场 主队大概率控场但上半场可能仅有1球差距</div>
+      
+      
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">主队核心中前场球员赛前确认缺阵</span><span class="trg">客队首发出现明显轮换或放弃保级信号</span><span class="trg">临场主胜赔率回升至1.95以上</span><span class="trg">天气或场地条件显著影响传控</span></div>
+      
+      <div class="a-reverse">🔄 反向验证: 如果预测错误，最可能错在客队保级战意转化为高效反击，且主队近期进攻状态被高估。</div>
+      <div class="a-audit">🤖 自检: 通过（结论方向与概率/比分一致，未发现编造或矛盾，早午盘变化有依据）</div>
+      
+      <div class="a-missing">📋 数据缺失声明: 阵容伤停、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      
+    </div>
+    
+  </article>
+  
+  <article class="match reference" data-lg="德甲" style="animation-delay: 60ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">德甲</span>
+        <span>拜仁慕尼黑</span>
+        <span class="tvs">VS</span>
+        <span>斯图加特</span>
+      </div>
+      <span class="m-pick bet">
+        ★ 看好 让球看好客队 (+5.5%)
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 75.1%"></div>
+        <div class="seg draw" style="width: 14.4%"></div>
+        <div class="seg away" style="width: 10.6%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>75.1%</b></span>
+        <span><i class="dot draw"></i>平局 <b>14.4%</b></span>
+        <span><i class="dot away"></i>客胜 <b>10.6%</b></span>
+        <span>ELO差 <b>+234</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 bet">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">75.1% / 14.4% / 10.6%</div>
+        <div class="c3-j">让球看好客队 (+5.5%)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主-2.0): 主38%/走19%/客42%</div>
+        <div class="c3-j">让球看好客队 (+5.5%)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>82.8%</b></div>
+        <div class="c3-j">—</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.0%</div>
+          <div class="sb-bar" style="height: 24.0%"></div>
+          <div class="sb-label">3-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.4%</div>
+          <div class="sb-bar" style="height: 22.200000000000003%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">6.5%</div>
+          <div class="sb-bar" style="height: 19.5%"></div>
+          <div class="sb-label">4-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">6.3%</div>
+          <div class="sb-bar" style="height: 18.9%"></div>
+          <div class="sb-label">3-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">5.8%</div>
+          <div class="sb-bar" style="height: 17.4%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1933</b>
+          <div class="elo-track"><div class="elo-home" style="width: 53%"></div><div class="elo-away" style="width: 47%"></div></div>
+          <b>1699</b>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>82.8%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>69.2%</b> (参考)</span>
+      <span class="chip">预期进球 <b>3.25 - 1.26</b></span>
+      <span class="chip">市场赔率 <b>1.12/7.25/10.10</b></span>
+      
+      <span class="chip kelly pos">凯利 <b>0.31%</b></span>
+      <span class="chip">优势 Draw <b>+2.6%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 1.12</span>
+      
+      
+      
+      <span class="chip">盘口 <b>让球(主-2.0): 主38%/走19%/客42%</b></span>
+      <span class="chip" style="border-color: rgba(52,211,153,.5)">🏆 让球看好客队 (+5.5%)</span>
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>客队#2 · 新赛季首轮</b></span>
+      
+    </div>
+    
+
+    
+
+    
+    <div class="report-a">
+      <div class="a-meta">🕗 开球 北京时间 02:30:00 (当地约20:30) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-h">3.0</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
+      <div class="a-summary">📌 拜仁实力与交锋全面占优，最可能主胜2-1；但亚盘-2深盘下主覆盖不足，斯图加特争冠区战意与客队资金流出构成风险。 <span style="color:#8d99b0;">次选比分 3-2</span></div>
+      <div class="a-reverse">⚠️ 一致性修正: 原始单格最高 3-1, 与让球/大小球矛盾, 已修正</div>
+      
+      <div class="tb-wrap"><table class="dims-table">
+        <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
+        
+        <tr>
+          <td>市场</td>
+          <td class="ev">欧赔主1.12/平7.25/客10.10；全天变动客队资金流出+1.85；亚盘主-2.0主覆盖38%</td>
+          <td class="dir-h">4</td>
+          <td>24%</td>
+          <td>高</td>
+          <td class="jd">欧赔主胜极低、客队大幅升水，资金明显倾向拜仁；但亚盘-2深盘下主覆盖仅38%，市场对拜仁大胜信心不足，主胜方向明确但净胜球存疑。</td>
+        </tr>
+        
+        <tr>
+          <td>状态攻防</td>
+          <td class="ev">ELO差+234；预期进球3.25-1.26；模型主胜74.2%</td>
+          <td class="dir-h">5</td>
+          <td>22%</td>
+          <td>高</td>
+          <td class="jd">实力与预期进球均显示拜仁显著占优，进攻端预期超3球，斯图加特防线承压；拜仁防守预期失1.26球，存在被破门可能。</td>
+        </tr>
+        
+        <tr>
+          <td>阵容伤停</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>6%</td>
+          <td>低</td>
+          <td class="jd">情报未提及具体伤停，无法判断核心缺阵影响，权重下调并转移至市场与状态攻防。</td>
+        </tr>
+        
+        <tr>
+          <td>交锋克制</td>
+          <td class="ev">近3年拜仁4胜0平0负，总进球16-3</td>
+          <td class="dir-h">5</td>
+          <td>8%</td>
+          <td>中</td>
+          <td class="jd">交锋完全一边倒，但需结合阵容变化；无转会信息佐证，参考价值中等，仍明显利主队。</td>
+        </tr>
+        
+        <tr>
+          <td>赛程体能</td>
+          <td class="ev">双方7天均0场</td>
+          <td class="dir-z">0</td>
+          <td>14%</td>
+          <td>中</td>
+          <td class="jd">双方均无密集赛程负担，体能条件均衡，不构成明显优势。</td>
+        </tr>
+        
+        <tr>
+          <td>天气场地</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">情报未提及，权重记0并重新分配。</td>
+        </tr>
+        
+        <tr>
+          <td>裁判</td>
+          <td class="ev">裁判未公布, 权重记0</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">裁判未公布，不猜测，权重重新分配。</td>
+        </tr>
+        
+        <tr>
+          <td>战意轮换</td>
+          <td class="ev">斯图加特#2争冠区；拜仁联赛积分榜未提供</td>
+          <td class="dir-h">2</td>
+          <td>26%</td>
+          <td>中</td>
+          <td class="jd">斯图加特处于争冠区，客场面对拜仁有较强抢分动机，可能提升抵抗强度；拜仁主场争冠压力下预计全力，但深盘下轮换风险存在。</td>
+        </tr>
+        
+      </table></div>
+      
+      
+      <div class="tb-wrap"><table class="paths-table">
+        <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
+        
+        <tr><td>常规路径</td><td><b>75%</b></td><td class="jd">拜仁上半场率先破门，斯图加特反击效率有限</td><td>2-1 / 3-2</td></tr>
+        
+        <tr><td>平局路径</td><td><b>14%</b></td><td class="jd">斯图加特成功收缩防线并把握定位球机会</td><td>1-1</td></tr>
+        
+        <tr><td>冷门路径</td><td><b>11%</b></td><td class="jd">拜仁久攻不下且斯图加特反击得手</td><td>0-1</td></tr>
+        
+      </table></div>
+      
+      
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 拜仁主导控球并持续通过边路与肋部渗透压制斯图加特防线。 <b>无球:</b> 拜仁高位逼抢后需防斯图加特快速转换与定位球失球。 <b>最大变量:</b> 斯图加特能否在客场早早取得进球将显著改变比赛开放度。</div>
+      
+      
+      <div class="a-ext">📐 扩展情景: 总进球 3-5球 · 净胜球 主队1球优势 · 上半场 拜仁控场但可能仅1球领先或平局</div>
+      
+      
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">拜仁首发大幅轮换</span><span class="trg">斯图加特核心射手缺阵</span><span class="trg">亚盘降至-1.5或更低</span><span class="trg">赛前确认拜仁后防主力伤停</span></div>
+      
+      <div class="a-reverse">🔄 反向验证: 最可能错在拜仁无法净胜2球，亚盘-2深盘下主覆盖不足，斯图加特争冠战意可能将分差控制在1球。</div>
+      <div class="a-audit">🤖 自检: 通过（方向与概率一致，未编造证据，维度间无矛盾，与存档变化有依据）</div>
+      
+      <div class="a-missing">📋 数据缺失声明: 阵容伤停、天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      
+    </div>
+    
+  </article>
+  
+  <article class="match reference" data-lg="意甲" style="animation-delay: 120ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">意甲</span>
+        <span>AC米兰</span>
+        <span class="tvs">VS</span>
+        <span>威尼斯</span>
+      </div>
+      <span class="m-pick bet">
+        ★ 看好 让球看好主队 (+5.5%)
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 70.0%"></div>
+        <div class="seg draw" style="width: 19.7%"></div>
+        <div class="seg away" style="width: 10.3%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>70.0%</b></span>
+        <span><i class="dot draw"></i>平局 <b>19.7%</b></span>
+        <span><i class="dot away"></i>客胜 <b>10.3%</b></span>
+        <span>ELO差 <b>-2</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 bet">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">70.0% / 19.7% / 10.3%</div>
+        <div class="c3-j">让球看好主队 (+5.5%)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主-1.0): 主48%/走25%/客27%</div>
+        <div class="c3-j">让球看好主队 (+5.5%)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>55.1%</b></div>
+        <div class="c3-j">—</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">13.5%</div>
+          <div class="sb-bar" style="height: 40.5%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">13.4%</div>
+          <div class="sb-bar" style="height: 40.2%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.9%</div>
+          <div class="sb-bar" style="height: 29.700000000000003%"></div>
+          <div class="sb-label">3-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.2%</div>
+          <div class="sb-bar" style="height: 27.599999999999998%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.9%</div>
+          <div class="sb-bar" style="height: 23.700000000000003%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1654</b>
+          <div class="elo-track"><div class="elo-home" style="width: 50%"></div><div class="elo-away" style="width: 50%"></div></div>
+          <b>1656</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-W">W</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-L">L</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>55.1%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>43.6%</b> (参考)</span>
+      <span class="chip">预期进球 <b>2.22 - 0.69</b></span>
+      <span class="chip">市场赔率 <b>1.32/4.30/7.20</b></span>
+      
+      
+      <span class="chip">优势 Home <b>+3.6%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率稳定 1.32</span>
+      
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 1-0(模型13.5%vs市场11.5%)</span>
+      <span class="chip">盘口 <b>让球(主-1.0): 主48%/走25%/客27%</b></span>
+      <span class="chip" style="border-color: rgba(52,211,153,.5)">🏆 让球看好主队 (+5.5%)</span>
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#2(3分) · 客队#18</b></span>
+      <span class="chip">近况 主[W] 客[L]</span>
+    </div>
+    
+
+    
+
+    
+    <div class="report-a">
+      <div class="a-meta">🕗 开球 北京时间 02:45:00 (当地约20:45) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-h">1.4</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
+      <div class="a-summary">📌 米兰主场对升班马威尼斯优势明确，模型与市场同向支持主胜，但客队资金流入及米兰进攻效率存疑限制大胜预期，最大风险是久攻不下被逼平。 <span style="color:#8d99b0;">次选比分 1-0</span></div>
+      <div class="a-reverse">⚠️ 一致性修正: 原始单格最高 1-0, 与让球/大小球矛盾, 已修正</div>
+      
+      <div class="tb-wrap"><table class="dims-table">
+        <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
+        
+        <tr>
+          <td>市场</td>
+          <td class="ev">欧赔主1.32/平4.30/客7.20；全天变动客胜7.50→7.20(-0.30)显示客队资金流入</td>
+          <td class="dir-h">2</td>
+          <td>22%</td>
+          <td>中</td>
+          <td class="jd">深盘支撑主胜，但客胜赔率下降形成独立资金信号，与模型最高概率方向部分相左；市场融合中模型权重较高，主胜方向不变但大胜需谨慎。</td>
+        </tr>
+        
+        <tr>
+          <td>状态攻防</td>
+          <td class="ev">预期进球2.22-0.69；ELO差-2；主队近况W，客队近况L</td>
+          <td class="dir-h">3</td>
+          <td>20%</td>
+          <td>高</td>
+          <td class="jd">米兰预期进球显著压制对手，客队进攻端预期不足0.7球；ELO接近但联赛状态差距明显，米兰主场控制力占优。</td>
+        </tr>
+        
+        <tr>
+          <td>阵容伤停</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>8%</td>
+          <td>低</td>
+          <td class="jd">情报未提及双方伤停或阵容变动，无法区分核心与替补，该维度降权处理，不编造伤停信息。</td>
+        </tr>
+        
+        <tr>
+          <td>交锋克制</td>
+          <td class="ev">近3年主队2胜0平0负，总进球6-0</td>
+          <td class="dir-h">2</td>
+          <td>8%</td>
+          <td>中</td>
+          <td class="jd">历史交锋米兰零封且全胜，克制关系存在；但样本仅2场且威尼斯作为升班马阵容变化可能较大，参考价值有限。</td>
+        </tr>
+        
+        <tr>
+          <td>赛程体能</td>
+          <td class="ev">主队7天0场，客队7天0场</td>
+          <td class="dir-z">0</td>
+          <td>14%</td>
+          <td>高</td>
+          <td class="jd">双方均无密集赛程，体能恢复充分，无轮换压力，该维度对方向无显著倾斜。</td>
+        </tr>
+        
+        <tr>
+          <td>天气场地</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>2%</td>
+          <td>低</td>
+          <td class="jd">情报未提及天气或场地条件，权重记0-4并重新分配至市场、状态攻防、赛程体能和战意轮换。</td>
+        </tr>
+        
+        <tr>
+          <td>裁判</td>
+          <td class="ev">裁判未公布, 权重记0</td>
+          <td class="dir-z">0</td>
+          <td>2%</td>
+          <td>低</td>
+          <td class="jd">裁判任命未公布，不猜测尺度倾向，权重降为0-4并重新分配。</td>
+        </tr>
+        
+        <tr>
+          <td>战意轮换</td>
+          <td class="ev">米兰#2争冠区3分，威尼斯#18保级区0分</td>
+          <td class="dir-h">2</td>
+          <td>24%</td>
+          <td>中</td>
+          <td class="jd">米兰争冠阶段主场抢分动力充足，客队保级压力大但实力有限；主队战意明确，但需防轻敌导致轮换影响效率。</td>
+        </tr>
+        
+      </table></div>
+      
+      
+      <div class="tb-wrap"><table class="paths-table">
+        <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
+        
+        <tr><td>常规路径</td><td><b>70%</b></td><td class="jd">米兰上半场取得进球，控球率超过60%且客队无有效反击</td><td>2-0 / 1-0</td></tr>
+        
+        <tr><td>平局路径</td><td><b>20%</b></td><td class="jd">米兰久攻不下，客队门将高接低挡且定位球防守稳固</td><td>1-1 / 0-0</td></tr>
+        
+        <tr><td>冷门路径</td><td><b>10%</b></td><td class="jd">威尼斯通过定位球或反击先进球，米兰心态急躁且轮换阵容磨合不足</td><td>0-1</td></tr>
+        
+      </table></div>
+      
+      
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 米兰主导控球并利用边路与肋部渗透持续压迫威尼斯低位防线。 <b>无球:</b> 米兰高位逼抢后需防威尼斯快速转换打身后空当。 <b>最大变量:</b> 米兰能否在上半场尽早破门，避免陷入密集防守僵局。</div>
+      
+      
+      <div class="a-ext">📐 扩展情景: 总进球 2-3球 · 净胜球 主队1-2球优势 · 上半场 米兰上半场控场但进球不会早，半场可能0-0或1-0</div>
+      
+      
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">米兰首发轮换超过5人，需下调主胜权重</span><span class="trg">威尼斯主力门将或后防核心缺席，大胜概率提升</span><span class="trg">临场主胜赔率升至1.40以上，警惕市场对主队信心下降</span><span class="trg">赛前确认米兰有核心攻击手伤停，进攻效率预期下调</span></div>
+      
+      <div class="a-reverse">🔄 反向验证: 如果这场预测错了，最可能错在米兰面对密集防守破门乏力，全场压制却被逼平，方向虽对但比分路径偏离。</div>
+      <div class="a-audit">🤖 自检: 通过（方向与概率一致，未编造证据，维度间无矛盾，与早午盘存档变化仅有方向分微调且依据充分）</div>
+      
+      <div class="a-missing">📋 数据缺失声明: 阵容伤停、天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      
+    </div>
+    
+  </article>
+  
+  <article class="match reference" data-lg="法甲" style="animation-delay: 180ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">法甲</span>
+        <span>里尔</span>
+        <span class="tvs">VS</span>
+        <span>巴黎圣日尔曼</span>
+      </div>
+      <span class="m-pick conflict">
+        · 结论不可用(方向-比分冲突)
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 24.5%"></div>
+        <div class="seg draw" style="width: 25.4%"></div>
+        <div class="seg away" style="width: 50.1%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>24.5%</b></span>
+        <span><i class="dot draw"></i>平局 <b>25.4%</b></span>
+        <span><i class="dot away"></i>客胜 <b>50.1%</b></span>
+        <span>ELO差 <b>-123</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 conflict">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">24.5% / 25.4% / 50.1%</div>
+        <div class="c3-j">结论不可用(方向-比分冲突)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主+1.0): 主51%/走24%/客26%</div>
+        <div class="c3-j">盘口仅作覆盖参考</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>50.8%</b></div>
+        <div class="c3-j">小2.5 模型51% vs 市场58% (-7%)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">11.7%</div>
+          <div class="sb-bar" style="height: 35.099999999999994%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.8%</div>
+          <div class="sb-bar" style="height: 32.400000000000006%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.5%</div>
+          <div class="sb-bar" style="height: 28.5%"></div>
+          <div class="sb-label">1-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.6%</div>
+          <div class="sb-bar" style="height: 25.799999999999997%"></div>
+          <div class="sb-label">0-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.4%</div>
+          <div class="sb-bar" style="height: 22.200000000000003%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1696</b>
+          <div class="elo-track"><div class="elo-home" style="width: 48%"></div><div class="elo-away" style="width: 52%"></div></div>
+          <b>1819</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-W">W</span></span></span>
+          <span>客近况<span class="f-letters"></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>50.8%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>53.2%</b> (参考)</span>
+      <span class="chip">预期进球 <b>1.10 - 1.60</b></span>
+      <span class="chip">市场赔率 <b>4.65/3.90/1.52</b></span>
+      
+      <span class="chip kelly pos">凯利 <b>1.34%</b></span>
+      <span class="chip">优势 Home <b>+6.7%</b></span>
+      
+      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型51% vs 市场58% (-7%)</span>
+      <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 客胜(48%) 冲突, 已强制降级为结论不可用</span>
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 1-0(模型7.4%vs市场5.0%) · 1-1(模型11.7%vs市场10.0%)</span>
+      <span class="chip">盘口 <b>让球(主+1.0): 主51%/走24%/客26%</b></span>
+      
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#4(3分)</b></span>
+      
+    </div>
+    
+
+    
+
+    
+    <div class="report-a">
+      <div class="a-meta">🕗 开球 北京时间 02:45:00 (当地约20:45) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-h">0.1</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 低</b></div>
+      <div class="a-summary">📌 模型最高概率客胜但最可能比分1-1, 方向冲突已降级。巴黎实力占优但客场让幅有限, 里尔主场有欧战战意, 平局风险高, 最大风险是巴黎个人能力打破均势。 <span style="color:#8d99b0;">次选比分 1-0</span></div>
+      
+      
+      <div class="tb-wrap"><table class="dims-table">
+        <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
+        
+        <tr>
+          <td>市场</td>
+          <td class="ev">欧赔主4.65/平3.90/客1.52, 亚盘主+1.0, 市场融合Model 81% / Market 19%, </td>
+          <td class="dir-h">1</td>
+          <td>23%</td>
+          <td>中</td>
+          <td class="jd">市场明显倾向客队, 但亚盘主+1.0下模型主覆盖51%, 主队受让方有拉力。高margin使市场信号被部分折扣, 客胜优势不宜过度放大。</td>
+        </tr>
+        
+        <tr>
+          <td>状态攻防</td>
+          <td class="ev">ELO差-123, 预期进球1.10-1.60, 模型概率主25.7%/平26.0%/客48.3%</td>
+          <td class="dir-h">2</td>
+          <td>20%</td>
+          <td>中</td>
+          <td class="jd">巴黎整体实力和预期进球占优, 但客队预期进球仅1.60, 优势并非碾压。里尔近期有W且处欧战区, 状态不差, 主场具备一定抵抗力。</td>
+        </tr>
+        
+        <tr>
+          <td>阵容伤停</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>6%</td>
+          <td>低</td>
+          <td class="jd">情报未提及伤停, 无法区分核心与替补, 权重降为6。禁止编造伤停信息。</td>
+        </tr>
+        
+        <tr>
+          <td>交锋克制</td>
+          <td class="ev">近3年交锋主队0胜1平3负, 总进球3-11</td>
+          <td class="dir-a">-1</td>
+          <td>8%</td>
+          <td>中</td>
+          <td class="jd">历史交锋巴黎明显占优, 但需结合阵容变化。情报未提供阵容稳定度信息, 参考价值中等, 不单独作为强信号。</td>
+        </tr>
+        
+        <tr>
+          <td>赛程体能</td>
+          <td class="ev">主队7天0场, 客队7天0场</td>
+          <td class="dir-z">0</td>
+          <td>14%</td>
+          <td>高</td>
+          <td class="jd">双方均无密集赛程, 体能和轮换压力相当, 该维度无明显倾向。</td>
+        </tr>
+        
+        <tr>
+          <td>天气场地</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>2%</td>
+          <td>低</td>
+          <td class="jd">情报未提及天气场地, 权重降为2, 不作评估。</td>
+        </tr>
+        
+        <tr>
+          <td>裁判</td>
+          <td class="ev">裁判未公布, 权重记0</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">裁判未公布, 权重为0, 不猜测。</td>
+        </tr>
+        
+        <tr>
+          <td>战意轮换</td>
+          <td class="ev">里尔#4欧战区, 积3分, 近况W</td>
+          <td class="dir-h">1</td>
+          <td>27%</td>
+          <td>中</td>
+          <td class="jd">里尔处于欧战区, 主场作战有抢分动力, 但并非必须赢的绝境。巴黎作为强队客场也需维持竞争力, 但战意层面主队略占情绪优势。</td>
+        </tr>
+        
+      </table></div>
+      
+      
+      <div class="tb-wrap"><table class="paths-table">
+        <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
+        
+        <tr><td>常规路径</td><td><b>50%</b></td><td class="jd">巴黎正常发挥, 里尔防线较早失守</td><td>1-0 / 2-0</td></tr>
+        
+        <tr><td>平局路径</td><td><b>25%</b></td><td class="jd">里尔防守紧凑, 巴黎破密集乏力</td><td>1-1 / 0-0</td></tr>
+        
+        <tr><td>冷门路径</td><td><b>24%</b></td><td class="jd">里尔反击或定位球先得手, 巴黎久攻不下</td><td>1-0</td></tr>
+        
+      </table></div>
+      
+      
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 巴黎预计控球主导, 里尔伺机反击。 <b>无球:</b> 里尔需防范巴黎边路渗透和定位球。 <b>最大变量:</b> 巴黎个人能力能否打破里尔密集防守。</div>
+      
+      
+      <div class="a-ext">📐 扩展情景: 总进球 1-3球 · 净胜球 客队0-1球优势或平局 · 上半场 上半场可能较为谨慎, 平局概率较高</div>
+      
+      
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">巴黎首发轮换主力导致攻击力下降</span><span class="trg">里尔出现核心伤停或防线变动</span><span class="trg">临场亚盘从主+1.0调整为主+0.75或更深</span><span class="trg">赛前确认巴黎有欧冠分心或大幅轮换</span></div>
+      
+      <div class="a-reverse">🔄 反向验证: 如果预测错了, 最可能错在巴黎客场进攻效率高于预期, 早进球后比赛进入巴黎节奏, 最终客胜而非平局。</div>
+      <div class="a-audit">🤖 自检: 发现P2问题 (方向分0.1与摘要“平局风险高”及最可能比分1-1存在轻微不一致，且“常规路径”比分1-0/2-0与客胜方向冲突未充分说明)。</div>
+      
+      <div class="a-missing">📋 数据缺失声明: 阵容伤停、天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      
+    </div>
+    
+  </article>
+  
+  <article class="match reference" data-lg="英超" style="animation-delay: 240ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">英超</span>
+        <span>水晶宫</span>
+        <span class="tvs">VS</span>
+        <span>曼城</span>
+      </div>
+      <span class="m-pick skip">
+        · 观望
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 16.2%"></div>
+        <div class="seg draw" style="width: 22.0%"></div>
+        <div class="seg away" style="width: 61.8%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>16.2%</b></span>
+        <span><i class="dot draw"></i>平局 <b>22.0%</b></span>
+        <span><i class="dot away"></i>客胜 <b>61.8%</b></span>
+        <span>ELO差 <b>-270</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 skip">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">16.2% / 22.0% / 61.8%</div>
+        <div class="c3-j">观望</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主+1.0): 主36%/走25%/客39%</div>
+        <div class="c3-j">盘口仅作覆盖参考</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>55.2%</b></div>
+        <div class="c3-j">小2.5 模型55% vs 市场61% (-5%)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">12.2%</div>
+          <div class="sb-bar" style="height: 36.599999999999994%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">11.0%</div>
+          <div class="sb-bar" style="height: 33.0%"></div>
+          <div class="sb-label">0-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.9%</div>
+          <div class="sb-bar" style="height: 29.700000000000003%"></div>
+          <div class="sb-label">1-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.3%</div>
+          <div class="sb-bar" style="height: 27.900000000000002%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.4%</div>
+          <div class="sb-bar" style="height: 22.200000000000003%"></div>
+          <div class="sb-label">0-3</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1546</b>
+          <div class="elo-track"><div class="elo-home" style="width: 46%"></div><div class="elo-away" style="width: 54%"></div></div>
+          <b>1815</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-L">L</span></span></span>
+          <span>客近况<span class="f-letters"></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>55.2%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>50.4%</b> (参考)</span>
+      <span class="chip">预期进球 <b>0.89 - 2.01</b></span>
+      <span class="chip">市场赔率 <b>4.75/3.90/1.51</b></span>
+      
+      
+      <span class="chip">优势 Away <b>+3.8%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率↓ 4.90→4.75 (资金流主)</span>
+      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型55% vs 市场61% (-5%)</span>
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-1(模型12.2%vs市场9.4%) · 0-2(模型11.1%vs市场9.4%)</span>
+      <span class="chip">盘口 <b>让球(主+1.0): 主36%/走25%/客39%</b></span>
+      
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#17 · 新赛季首轮</b></span>
+      
+    </div>
+    
+
+    
+
+    
+    <div class="report-a">
+      <div class="a-meta">🕗 开球 北京时间 03:00:00 (当地约20:00) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-a">-2.3</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
+      <div class="a-summary">📌 最可能方向为曼城客场小胜，核心理由是实力差与市场双支持，最大风险是水晶宫主场死守逼平或曼城久攻不下。 <span style="color:#8d99b0;">次选比分 0-2</span></div>
+      
+      
+      <div class="tb-wrap"><table class="dims-table">
+        <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
+        
+        <tr>
+          <td>市场</td>
+          <td class="ev">欧赔4.75/3.90/1.51，客队大幅低赔；全天主胜4.90→4.75(-0.15)、平局4.00→3.90(-0.10)，主队与平局资金流入，客胜1.48→1.51(+0.03)</td>
+          <td class="dir-a">-3</td>
+          <td>22%</td>
+          <td>高</td>
+          <td class="jd">欧赔与亚盘仍明显倾向曼城，客胜方向与模型一致；主胜和平局赔率下行提示资金对冷平有防范，但幅度不足以逆转客胜基调，仅降低客队大胜预期。</td>
+        </tr>
+        
+        <tr>
+          <td>状态攻防</td>
+          <td class="ev">ELO差-270，模型客胜62.5%，预期进球0.89-2.01，最可能比分0-1</td>
+          <td class="dir-a">-4</td>
+          <td>20%</td>
+          <td>高</td>
+          <td class="jd">曼城实力、预期进球和模型概率全面占优，水晶宫预期进球不足1球，状态攻防维度明确利客队。</td>
+        </tr>
+        
+        <tr>
+          <td>阵容伤停</td>
+          <td class="ev">无数据, 已降权</td>
+          <td class="dir-z">0</td>
+          <td>8%</td>
+          <td>低</td>
+          <td class="jd">伤停情报未提及，无法判断核心球员缺阵影响。原14%权重降至8%，剩余6%重新分配给市场与状态攻防。</td>
+        </tr>
+        
+        <tr>
+          <td>交锋克制</td>
+          <td class="ev">近3年交锋水晶宫0胜1平3负，总进球4-13</td>
+          <td class="dir-a">-3</td>
+          <td>8%</td>
+          <td>中</td>
+          <td class="jd">历史交锋曼城压制明显，但双方阵容变化程度未知，参考价值中等。仍支持客队方向。</td>
+        </tr>
+        
+        <tr>
+          <td>赛程体能</td>
+          <td class="ev">主队7天0场，客队7天0场</td>
+          <td class="dir-z">0</td>
+          <td>14%</td>
+          <td>高</td>
+          <td class="jd">双方均无密集赛程，体能条件对等，该维度对方向无显著倾斜。</td>
+        </tr>
+        
+        <tr>
+          <td>天气场地</td>
+          <td class="ev">情报未提及, 权重记0</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">天气与场地信息缺失，权重重新分配给市场、状态攻防、赛程体能和战意轮换。</td>
+        </tr>
+        
+        <tr>
+          <td>裁判</td>
+          <td class="ev">裁判未公布, 权重记0</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">裁判未公布，不猜测，权重重新分配给市场、状态攻防、赛程体能和战意轮换。</td>
+        </tr>
+        
+        <tr>
+          <td>战意轮换</td>
+          <td class="ev">水晶宫#17保级区，近况L；曼城为争冠级别球队</td>
+          <td class="dir-a">-2</td>
+          <td>20%</td>
+          <td>中</td>
+          <td class="jd">水晶宫有保级抢分动力，但实力差距过大；曼城争冠需要稳定拿分，战意不弱。该维度仍偏客队，但主队死守可能增加平局风险。</td>
+        </tr>
+        
+      </table></div>
+      
+      
+      <div class="tb-wrap"><table class="paths-table">
+        <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
+        
+        <tr><td>常规路径</td><td><b>62%</b></td><td class="jd">曼城正常控场并较早取得进球</td><td>0-1 / 0-2</td></tr>
+        
+        <tr><td>平局路径</td><td><b>22%</b></td><td class="jd">水晶宫防守严密，曼城终结效率下降</td><td>1-1 / 0-0</td></tr>
+        
+        <tr><td>冷门路径</td><td><b>16%</b></td><td class="jd">水晶宫反击或定位球得手且曼城进攻持续低效</td><td>1-0</td></tr>
+        
+      </table></div>
+      
+      
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 曼城控球主导，通过边路肋部渗透与中场轮转寻找禁区机会。 <b>无球:</b> 水晶宫低位防守下，曼城需防范快速反击和定位球失分。 <b>最大变量:</b> 曼城能否较早打入首球，若久攻不下比赛可能进入胶着。</div>
+      
+      
+      <div class="a-ext">📐 扩展情景: 总进球 1-3球 · 净胜球 客队1球优势为主 · 上半场 上半场大概率胶着，曼城可能下半场发力</div>
+      
+      
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">曼城首发轮换幅度明显加大，核心中前场缺阵</span><span class="trg">水晶宫出现关键伤停或防线主力缺阵</span><span class="trg">临场客胜赔率大幅回升至1.60以上</span><span class="trg">赛前确认水晶宫改打更激进的高位逼抢战术</span></div>
+      
+      <div class="a-reverse">🔄 反向验证: 如果这场预测错了，最可能错在曼城控场但终结效率不足，水晶宫通过定位球或反击逼平，形成1-1平局。</div>
+      <div class="a-audit">🤖 自检: 通过（方向与最可能比分一致，未编造证据，维度无矛盾，与早午盘变化有依据）</div>
+      
+      <div class="a-missing">📋 数据缺失声明: 阵容伤停、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      
+    </div>
+    
+  </article>
+  
+  <article class="match skip" data-lg="西甲" style="animation-delay: 300ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">西甲</span>
+        <span>阿拉维斯</span>
+        <span class="tvs">VS</span>
+        <span>比利亚雷亚尔</span>
+      </div>
+      <span class="m-pick skip">
+        · 观望
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 30.0%"></div>
+        <div class="seg draw" style="width: 26.6%"></div>
+        <div class="seg away" style="width: 43.5%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>30.0%</b></span>
+        <span><i class="dot draw"></i>平局 <b>26.6%</b></span>
+        <span><i class="dot away"></i>客胜 <b>43.5%</b></span>
+        <span>ELO差 <b>-152</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 skip">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">30.0% / 26.6% / 43.5%</div>
+        <div class="c3-j">观望</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主+1.0): 主55%/走23%/客22%</div>
+        <div class="c3-j">盘口仅作覆盖参考</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>53.4%</b></div>
+        <div class="c3-j">—</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.9%</div>
+          <div class="sb-bar" style="height: 32.7%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.3%</div>
+          <div class="sb-bar" style="height: 30.900000000000002%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.1%</div>
+          <div class="sb-bar" style="height: 27.299999999999997%"></div>
+          <div class="sb-label">1-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.2%</div>
+          <div class="sb-bar" style="height: 24.599999999999998%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.4%</div>
+          <div class="sb-bar" style="height: 22.200000000000003%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1528</b>
+          <div class="elo-track"><div class="elo-home" style="width: 48%"></div><div class="elo-away" style="width: 52%"></div></div>
+          <b>1680</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"></span></span>
+          <span>客近况<span class="f-letters"><span class="f-D">D</span><span class="f-,">,</span><span class="f-D">D</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>53.4%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>55.6%</b> (参考)</span>
+      <span class="chip">预期进球 <b>1.26 - 1.56</b></span>
+      <span class="chip">市场赔率 <b>3.05/3.20/2.05</b></span>
+      
+      
+      <span class="chip">优势 Home <b>+1.1%</b></span>
+      <span class="chip" style="border-color: rgba(251,191,36,.45)">📈 主胜赔率↑ 2.90→3.05 (资金流客)</span>
+      
+      
+      
+      <span class="chip">盘口 <b>让球(主+1.0): 主55%/走23%/客22%</b></span>
+      
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>客队#10(2分)</b></span>
+      
+    </div>
+    
+
+    
+
+    
+    <div class="report-a">
+      <div class="a-meta">🕗 开球 北京时间 03:30:00 (当地约21:30) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-a">-0.4</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
+      <div class="a-summary">📌 客队实力与市场略占优，但双方均无密集赛程且主队主场韧性未明，平局风险偏高；最可能方向为比利亚雷亚尔小胜或平局，最大风险是阿拉维斯主场逼平。 <span style="color:#8d99b0;">次选比分 0-1</span></div>
+      
+      
+      <div class="tb-wrap"><table class="dims-table">
+        <tr><th>维度</th><th>关键证据(带日期)</th><th>优势分</th><th>权重</th><th>置信</th><th>研判</th></tr>
+        
+        <tr>
+          <td>市场</td>
+          <td class="ev">全天赔率变动：主胜2.90→3.05(+0.15)，客胜2.10→2.05(-0.05)；客队资金流入</td>
+          <td class="dir-a">-2</td>
+          <td>21%</td>
+          <td>高</td>
+          <td class="jd">市场资金流向客队，主胜升赔显示主队信心不足；但模型与市场融合中模型权重高，客胜优势温和，不构成强单边。</td>
+        </tr>
+        
+        <tr>
+          <td>状态攻防</td>
+          <td class="ev">ELO差-152，预期进球1.26-1.56，客队近况D,D</td>
+          <td class="dir-a">-1</td>
+          <td>20%</td>
+          <td>中</td>
+          <td class="jd">客队整体实力与预期进球占优，但近况连续平局，进攻效率未形成强势，优势有限。</td>
+        </tr>
+        
+        <tr>
+          <td>阵容伤停</td>
+          <td class="ev">无数据，已降权</td>
+          <td class="dir-z">0</td>
+          <td>9%</td>
+          <td>低</td>
+          <td class="jd">情报未提及伤停或阵容变化，无法判断核心球员缺阵影响，该维度不提供方向。</td>
+        </tr>
+        
+        <tr>
+          <td>交锋克制</td>
+          <td class="ev">近3年交锋：主队1胜1平2负，总进球3-7</td>
+          <td class="dir-a">-1</td>
+          <td>8%</td>
+          <td>中</td>
+          <td class="jd">历史交锋客队占优，但双方阵容变化程度未明，参考价值中等；客队克制关系略利好客队。</td>
+        </tr>
+        
+        <tr>
+          <td>赛程体能</td>
+          <td class="ev">主队7天0场，客队7天0场</td>
+          <td class="dir-z">0</td>
+          <td>14%</td>
+          <td>高</td>
+          <td class="jd">双方均无密集赛程，体能压力对等，不构成方向倾斜。</td>
+        </tr>
+        
+        <tr>
+          <td>天气场地</td>
+          <td class="ev">情报未提及，权重记0</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">无天气数据，权重重新分配至市场、状态攻防、赛程体能、战意轮换。</td>
+        </tr>
+        
+        <tr>
+          <td>裁判</td>
+          <td class="ev">裁判未公布，权重记0</td>
+          <td class="dir-z">0</td>
+          <td>0%</td>
+          <td>低</td>
+          <td class="jd">无裁判信息，不猜测，权重重新分配至市场、状态攻防、赛程体能、战意轮换。</td>
+        </tr>
+        
+        <tr>
+          <td>战意轮换</td>
+          <td class="ev">比利亚雷亚尔排名第10，中游；阿拉维斯积分榜未提供明确分区</td>
+          <td class="dir-a">-1</td>
+          <td>18%</td>
+          <td>中</td>
+          <td class="jd">客队中游无强烈争分压力，主队战意未明；整体战意不足以形成强驱动，略偏客队实力导向。</td>
+        </tr>
+        
+      </table></div>
+      
+      
+      <div class="tb-wrap"><table class="paths-table">
+        <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
+        
+        <tr><td>常规路径</td><td><b>43%</b></td><td class="jd">比利亚雷亚尔正常发挥，控球占优并创造稳定机会</td><td>0-1 / 1-2</td></tr>
+        
+        <tr><td>平局路径</td><td><b>27%</b></td><td class="jd">阿拉维斯防守紧凑，比赛进入低节奏消耗战</td><td>1-1 / 0-0</td></tr>
+        
+        <tr><td>冷门路径</td><td><b>27%</b></td><td class="jd">阿拉维斯利用主场反击或定位球率先得分并守住优势</td><td>1-0</td></tr>
+        
+      </table></div>
+      
+      
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 比利亚雷亚尔控球推进为主，利用边路与中场渗透寻找机会。 <b>无球:</b> 阿拉维斯需防范客队快速转换与定位球，中场拦截压力较大。 <b>最大变量:</b> 阿拉维斯若率先取得进球，可能改变比赛节奏并提升平局概率。</div>
+      
+      
+      <div class="a-ext">📐 扩展情景: 总进球 2-3球 · 净胜球 客队0-1球优势 · 上半场 上半场预计谨慎，双方试探为主，进球概率偏低</div>
+      
+      
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">若赛前公布阿拉维斯核心后卫或门将伤停，主队方向分需下调</span><span class="trg">若比利亚雷亚尔轮换主力中场或前锋，客胜方向分需下调</span><span class="trg">若亚盘从主+1.0调整为主+0.75，需重新评估市场对主队信心</span><span class="trg">若临场主胜赔率跌破2.90，说明资金回流主队，方向分需上调</span></div>
+      
+      <div class="a-reverse">🔄 反向验证: 如果预测错了，最可能错在阿拉维斯主场韧性超出预期，利用有限机会逼平或小胜，导致客胜方向落空。</div>
+      <div class="a-audit">🤖 自检: 通过（结论方向与概率一致，未编造证据，维度间无矛盾，与早午盘变化有依据）</div>
+      
+      <div class="a-missing">📋 数据缺失声明: 阵容伤停、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      
+    </div>
+    
+  </article>
+  
+
+    </div>
+  </div>
+
+  <div class="footer">
+    足球预测模型 v3.0 · 生成于 2026-08-28 · 仅供参考，历史表现不代表未来结果
+  </div>
+</div>
+
+<script>
+  // 左侧联赛导航: 点击一级菜单过滤对应赛事的比赛卡片
+  (function () {
+    var btns = document.querySelectorAll(".ln-btn");
+    var cards = document.querySelectorAll("article.match");
+    if (!btns.length) return;
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active");
+        var lg = b.getAttribute("data-lg");
+        var shown = 0;
+        cards.forEach(function (c) {
+          var hit = lg === "*" || c.getAttribute("data-lg") === lg;
+          c.style.display = hit ? "" : "none";
+          if (hit) shown++;
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+  })();
+</script>
+</body>
+</html>

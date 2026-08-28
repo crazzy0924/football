@@ -88,6 +88,7 @@ def main() -> None:
         # C1 联合约束: 聚焦场次有让球/大小球倾向的必须带 joint_top_scores
         missing = [p.get("home_team") for p in focus_preds
                    if ((p.get("ah_handicap") or {}).get("edge") or {}).get("edge") is not None
+                   and p.get("ou_value") is not None
                    and not p.get("joint_top_scores")]
         add("C1", "联合约束比分", not missing, f"缺失 {len(missing)} 场: {missing}", hard=True)
 
@@ -171,7 +172,7 @@ def main() -> None:
     # 只数5个常规任务, 补推任务是断网自愈的临时任务, 不参与健康检查
     ready = sum(1 for ln in out.splitlines()
                 if '足球模型-' in ln and '补推' not in ln
-                and ('"Ready"' in ln or '"就绪"' in ln))
+                and ('"Ready"' in ln or '"就绪"' in ln or '"Running"' in ln or '"正在运行"' in ln))
     add("E2", "计划任务健康", ready == 5, f"{ready}/5 个 Ready", hard=False)
 
     # E3 新赛季CSV

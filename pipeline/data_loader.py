@@ -339,6 +339,8 @@ def _parse_date(date_str: str) -> str:
 # 规范队名别名 — API名 → CSV名
 TEAM_NAME_ALIASES = {
     # Bundesliga
+    "Deportivo Alaves": "Alaves",
+    "Deportivo Alavés": "Alaves",
     "FC Bayern München": "Bayern Munich",
     "FC Bayern Munchen": "Bayern Munich",
     "Borussia Dortmund": "Dortmund",

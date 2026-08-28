@@ -470,6 +470,15 @@ def _build_match_card(
                     _top_out = "主胜" if _h > _a else ("平局" if _h == _a else "客胜")
                 except Exception:
                     pass
+            else:
+                _sd0 = (p.get("model") or {}).get("score_distribution") or {}
+                if _sd0:
+                    try:
+                        _best0 = max(_sd0.items(), key=lambda kv: kv[1])[0]
+                        _h, _a = (int(x) for x in _best0.split("-"))
+                        _top_out = "主胜" if _h > _a else ("平局" if _h == _a else "客胜")
+                    except Exception:
+                        pass
             _max_p = max(p_home, p_draw, p_away)
             _max_cn = "主胜" if _max_p == p_home else ("平局" if _max_p == p_draw else "客胜")
             _bd_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}[_bd]

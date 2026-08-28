@@ -1056,15 +1056,23 @@ def _consistency_flags(pred: dict, jt: list | None) -> dict:
     """一致性校验 (复盘经验库规则6/8): 方向-比分冲突 + BTTS-波胆交叉校验"""
     flags: dict = {}
     probs = [pred.get("home_win", 0), pred.get("draw", 0), pred.get("away_win", 0)]
+    # 比分方向来源: 联合约束修正后比分; 无大小球数据(jt空)回退模型分布最高单格 (2026-08-28纪律复查员发现阿拉维斯三向漏网)
+    _top_score = None
     if jt:
+        _top_score = jt[0]["score"]
+    else:
+        _sd0 = pred.get("score_distribution") or {}
+        if _sd0:
+            _top_score = max(_sd0.items(), key=lambda kv: kv[1])[0]
+    if _top_score:
         try:
-            h, a = jt[0]["score"].split("-")
+            h, a = _top_score.split("-")
             h, a = int(h), int(a)
             top_out = "主胜" if h > a else ("平局" if h == a else "客胜")
             max_i = max(range(3), key=lambda i: probs[i])
             labels = ("主胜", "平局", "客胜")
             if top_out != labels[max_i] and probs[max_i] >= 0.35:
-                flags["direction_score_conflict"] = (f"最可能比分 {jt[0]['score']}({top_out}) 与最高概率方向 "
+                flags["direction_score_conflict"] = (f"最可能比分 {_top_score}({top_out}) 与最高概率方向 "
                                                     f"{labels[max_i]}({probs[max_i]:.0%}) 冲突, 已强制降级为结论不可用")
         except Exception:
             pass

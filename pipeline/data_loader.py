@@ -339,6 +339,8 @@ def _parse_date(date_str: str) -> str:
 # 规范队名别名 — API名 → CSV名
 TEAM_NAME_ALIASES = {
     # Bundesliga
+    "FC Bayern München": "Bayern Munich",
+    "FC Bayern Munchen": "Bayern Munich",
     "Borussia Dortmund": "Dortmund",
     "Borussia M'gladbach": "M'gladbach",
     "Borussia Mönchengladbach": "M'gladbach",
@@ -412,6 +414,7 @@ TEAM_NAME_ALIASES = {
     "Brighton & Hove Albion": "Brighton",
     # Ligue 1
     "Paris Saint-Germain": "Paris SG",
+    "Paris Saint-Germain FC": "Paris SG",
     "Paris Saint Germain": "Paris SG",
     "PSG": "Paris SG",
     "Västerås": "Vasteras",

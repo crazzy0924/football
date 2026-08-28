@@ -111,6 +111,7 @@
   }
   .m-pick.skip { color: var(--dim); background: rgba(141,153,176,.10); border: 1px solid var(--line); }
   .m-pick.cold { color: var(--pink); background: rgba(244,114,182,.10); border: 1px solid rgba(244,114,182,.3); }
+  .m-pick.conflict { color: var(--amber); background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.4); }
 
   /* 概率堆叠条 */
   .prob { margin: 16px 0 14px; }
@@ -311,7 +312,7 @@
         <span>{{ m.away_team }}</span>
       </div>
       <span class="m-pick {{ m.bet_class }}">
-        {% if m.bet_class == 'bet' %}★ 看好{% elif m.bet_class == 'cold' %}❄{% else %}·{% endif %} {{ m.bet_pick }}
+        {% if m.recommendation == 'recommended' %}★ 推荐{% elif m.recommendation == 'reference' %}参考{% else %}观察{% endif %} {{ m.bet_pick }}
       </span>
     </header>
 
@@ -368,8 +369,8 @@
         </div>
         {% if m.form_h or m.form_a %}
         <div class="form-row" style="margin-top:10px">
-          <span>主近况<span class="f-letters">{% for c in m.form_h %}<span class="f-{{ c }}">{{ c }}</span>{% endfor %}</span></span>
-          <span>客近况<span class="f-letters">{% for c in m.form_a %}<span class="f-{{ c }}">{{ c }}</span>{% endfor %}</span></span>
+          <span>主近况<span class="f-letters">{% for c in m.form_h %}{% if c in 'WDL' %}<span class="f-{{ c }}">{{ c }}</span>{% endif %}{% endfor %}</span></span>
+          <span>客近况<span class="f-letters">{% for c in m.form_a %}{% if c in 'WDL' %}<span class="f-{{ c }}">{{ c }}</span>{% endif %}{% endfor %}</span></span>
         </div>
         {% endif %}
       </div>
@@ -406,7 +407,7 @@
     {% if m.summary_txt or m.dims_rows %}
     <div class="report-a">
       {% if m.kickoff or m.venue != '—' %}<div class="a-meta">🕗 开球 北京时间 {{ m.kickoff }}{% if m.local_time != '—' %} (当地{{ m.local_time }}){% endif %} · 📍 球场 {{ m.venue }} · 🧪 研究时点 {{ m.research_time }}</div>{% endif %}
-      {% if m.dir_score is not none %}<div class="a-dir">🧭 加权方向分: <b class="{% if m.dir_score > 0 %}dir-h{% elif m.dir_score < 0 %}dir-a{% else %}dir-z{% endif %}">{{ m.dir_score }}</b> (正值利主队){% if m.conf_txt %} · 整体置信度: <b class="dir-h">{{ m.conf_txt }}</b>{% endif %}</div>{% endif %}
+      {% if m.dir_score is not none %}<div class="a-dir">🧭 加权方向分: <b class="{% if m.dir_score > 0 %}dir-h{% elif m.dir_score < 0 %}dir-a{% else %}dir-z{% endif %}">{{ m.dir_score }}</b> (正值利主队){% if m.conf_txt %} · {{ m.conf_txt }}{% endif %}</div>{% endif %}
       {% if m.summary_txt %}<div class="a-summary">📌 {{ m.summary_txt }}{% if m.second_score %} <span style="color:#8d99b0;">次选比分 {{ m.second_score }}</span>{% endif %}</div>{% endif %}
       {% if m.score_fix_note %}<div class="a-reverse">⚠️ 一致性修正: {{ m.score_fix_note }}</div>{% endif %}
       {% if m.dims_rows %}
@@ -457,7 +458,7 @@
   </div>
 
   <div class="footer">
-    足球预测模型 v3.0 · 生成于 {{ date }} · 仅供参考，历史表现不代表未来结果
+    足球预测模型 v3.0 · 生成于 {{ date }} · 仅供参考，历史表现不代表未来结果 · <a href="../index.html">返回首页</a>
   </div>
 </div>
 

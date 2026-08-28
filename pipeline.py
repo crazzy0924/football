@@ -355,11 +355,15 @@ def cmd_predict(args):
         market = m.get("odds") or m.get("market_odds")
         anchor_from_ah = False
         if not market or not market.get("home"):
-            # 体彩未开胜平负但有让球盘: 从让球盘反推市场锚点 (2026-08-21阿森纳教训)
-            derived = _derive_spf_from_ah(m, pred)
-            if derived:
-                market = derived
-                anchor_from_ah = True
+            # 体彩未开胜平负但有让球盘: 先用纯模型(无市场)算一遍, 再从让球盘反推市场锚点后重算 (2026-08-21阿森纳教训; 2026-08-28修复: 原先引用未赋值的pred)
+            try:
+                pred_no_mkt = dc_use.predict(home, away, league, form_factors=form_factors, market_odds=None)
+                derived = _derive_spf_from_ah(m, pred_no_mkt)
+                if derived:
+                    market = derived
+                    anchor_from_ah = True
+            except Exception:
+                pass
         # Phase 9: 按联赛选择独立模型 (缺则回退统一模型)
         dc_use = league_models.get(league, dc)
         pred = dc_use.predict(home, away, league, form_factors=form_factors, market_odds=market)

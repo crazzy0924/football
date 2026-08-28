@@ -95,7 +95,7 @@ def main() -> None:
         # C8 三向冲突强制降级: 聚焦场次方向-比分冲突必须标"结论不可用", 不得残留看好推荐
         n_conf = sum(1 for p in focus_preds if (p.get("flags") or {}).get("direction_score_conflict"))
         old_marker = ph.count("需回退修正或标注结论不可用")
-        n_down = ph.count("结论不可用")
+        n_down = ph.count("结论不可用(方向-比分冲突)")
         ok = (old_marker == 0) and (n_down >= n_conf)
         add("C8", "冲突场次强制降级", ok,
             f"冲突 {n_conf} 场, 降级标记 {n_down} 处, 旧文案残留 {old_marker}", hard=True)

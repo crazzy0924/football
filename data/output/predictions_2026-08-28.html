@@ -111,6 +111,7 @@
   }
   .m-pick.skip { color: var(--dim); background: rgba(141,153,176,.10); border: 1px solid var(--line); }
   .m-pick.cold { color: var(--pink); background: rgba(244,114,182,.10); border: 1px solid rgba(244,114,182,.3); }
+  .m-pick.conflict { color: var(--amber); background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.4); }
 
   /* 概率堆叠条 */
   .prob { margin: 16px 0 14px; }
@@ -291,7 +292,7 @@
   <div class="stats">
     <div class="stat"><div class="v">6</div><div class="l">今日场次</div></div>
     <div class="stat"><div class="v">1</div><div class="l">推荐下注</div></div>
-    <div class="stat"><div class="v">4</div><div class="l">仅供参考</div></div>
+    <div class="stat"><div class="v">3</div><div class="l">仅供参考</div></div>
     <div class="stat"><div class="v">0</div><div class="l">冷启动</div></div>
     <div class="stat"><div class="v">4/1/1</div><div class="l">胜/平/负</div></div>
   </div>
@@ -329,7 +330,7 @@
         <span>埃尔切</span>
       </div>
       <span class="m-pick bet">
-        ★ 看好 主胜 @1.90 (凯利5%) 建议¥12
+        ★ 推荐 主胜 @1.90 (凯利5%) 建议¥12
       </span>
     </header>
 
@@ -410,8 +411,8 @@
         </div>
         
         <div class="form-row" style="margin-top:10px">
-          <span>主近况<span class="f-letters"><span class="f-L">L</span><span class="f-,">,</span><span class="f-D">D</span></span></span>
-          <span>客近况<span class="f-letters"><span class="f-L">L</span><span class="f-,">,</span><span class="f-D">D</span></span></span>
+          <span>主近况<span class="f-letters"><span class="f-L">L</span><span class="f-D">D</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-L">L</span><span class="f-D">D</span></span></span>
         </div>
         
       </div>
@@ -444,7 +445,7 @@
     
     <div class="report-a">
       <div class="a-meta">🕗 开球 北京时间 01:00:00 (当地约19:00) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
-      <div class="a-dir">🧭 加权方向分: <b class="dir-h">1.4</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-h">1.6</b> (正值利主队) · 整体置信度: 中</div>
       <div class="a-summary">📌 最可能方向为主队小胜至完胜，核心是模型与资金同向、主场进攻预期高；最大风险是客队保级战意与主队近期状态样本不足。 <span style="color:#8d99b0;">次选比分 3-0</span></div>
       <div class="a-reverse">⚠️ 一致性修正: 原始单格最高 2-1, 与让球/大小球矛盾, 已修正</div>
       
@@ -457,7 +458,7 @@
           <td class="dir-h">2</td>
           <td>22%</td>
           <td>高</td>
-          <td class="jd">主胜赔率下调且客胜上调，资金流入主队、同时压大球，但客胜上调幅度较大，市场对客队爆冷保持一定警惕，整体仍与模型同向。</td>
+          <td class="jd">主胜赔率下调且客胜上调，资金流入主队、同时压大球，市场与模型方向一致，增强主队方向可信度。</td>
         </tr>
         
         <tr>
@@ -547,7 +548,7 @@
       <div class="a-triggers">⚡ 临场触发器: <span class="trg">主队核心中前场球员赛前确认缺阵</span><span class="trg">客队首发出现明显轮换或放弃保级信号</span><span class="trg">临场主胜赔率回升至1.95以上</span><span class="trg">天气或场地条件显著影响传控</span></div>
       
       <div class="a-reverse">🔄 反向验证: 如果预测错误，最可能错在客队保级战意转化为高效反击，且主队近期进攻状态被高估。</div>
-      <div class="a-audit">🤖 自检: 通过（结论方向与概率/比分一致，未发现编造或矛盾，早午盘变化有依据）</div>
+      <div class="a-audit">🤖 自检: 发现P1问题 (结论方向主胜与次选比分3-0一致，但“最可能比分”经联合约束修正后为3-1，而次选比分却给3-0，且证据包中伤停情报为其他联赛内容，未对桑坦德vs埃尔切提供有效伤停，分析未编造但存在比分选择与修正后概率排序不一致的矛盾)</div>
       
       <div class="a-missing">📋 数据缺失声明: 阵容伤停、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
       
@@ -564,7 +565,7 @@
         <span>斯图加特</span>
       </div>
       <span class="m-pick bet">
-        ★ 看好 让球看好客队 (+5.5%)
+        参考 让球看好客队 (+5.5%)
       </span>
     </header>
 
@@ -674,8 +675,8 @@
     
     <div class="report-a">
       <div class="a-meta">🕗 开球 北京时间 02:30:00 (当地约20:30) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
-      <div class="a-dir">🧭 加权方向分: <b class="dir-h">3.0</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
-      <div class="a-summary">📌 拜仁实力与交锋全面占优，最可能主胜2-1；但亚盘-2深盘下主覆盖不足，斯图加特争冠区战意与客队资金流出构成风险。 <span style="color:#8d99b0;">次选比分 3-2</span></div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-h">2.6</b> (正值利主队) · 整体置信度: 中</div>
+      <div class="a-summary">📌 拜仁主场实力与交锋占优，最可能主胜2-1；但Musiala缺阵削弱进攻，亚盘-2深盘下覆盖不足，斯图加特争冠战意构成风险。 <span style="color:#8d99b0;">次选比分 3-2</span></div>
       <div class="a-reverse">⚠️ 一致性修正: 原始单格最高 3-1, 与让球/大小球矛盾, 已修正</div>
       
       <div class="tb-wrap"><table class="dims-table">
@@ -683,7 +684,7 @@
         
         <tr>
           <td>市场</td>
-          <td class="ev">欧赔主1.12/平7.25/客10.10；全天变动客队资金流出+1.85；亚盘主-2.0主覆盖38%</td>
+          <td class="ev">欧赔主1.12/平7.25/客10.10；全天变动客队资金流出+1.85</td>
           <td class="dir-h">4</td>
           <td>24%</td>
           <td>高</td>
@@ -693,19 +694,19 @@
         <tr>
           <td>状态攻防</td>
           <td class="ev">ELO差+234；预期进球3.25-1.26；模型主胜74.2%</td>
-          <td class="dir-h">5</td>
+          <td class="dir-h">4</td>
           <td>22%</td>
           <td>高</td>
-          <td class="jd">实力与预期进球均显示拜仁显著占优，进攻端预期超3球，斯图加特防线承压；拜仁防守预期失1.26球，存在被破门可能。</td>
+          <td class="jd">实力与预期进球均显示拜仁显著占优，但Musiala缺阵进攻端主力减员，预期进球可能下修；斯图加特防守预期失1.26球，拜仁有被破门可能。</td>
         </tr>
         
         <tr>
           <td>阵容伤停</td>
-          <td class="ev">无数据, 已降权</td>
-          <td class="dir-z">0</td>
-          <td>6%</td>
-          <td>低</td>
-          <td class="jd">情报未提及具体伤停，无法判断核心缺阵影响，权重下调并转移至市场与状态攻防。</td>
+          <td class="ev">拜仁Musiala缺阵德甲揭幕战，主帅Kompany确认；斯图加特多名主力带伤/缺阵，来源德媒2026-08-26~28</td>
+          <td class="dir-a">-1</td>
+          <td>14%</td>
+          <td>中</td>
+          <td class="jd">拜仁进攻端核心Musiala缺阵削弱创造力；斯图加特伤停严峻，双方均有减员，但拜仁整体阵容深度更强，影响相对可控。</td>
         </tr>
         
         <tr>
@@ -714,7 +715,7 @@
           <td class="dir-h">5</td>
           <td>8%</td>
           <td>中</td>
-          <td class="jd">交锋完全一边倒，但需结合阵容变化；无转会信息佐证，参考价值中等，仍明显利主队。</td>
+          <td class="jd">交锋完全一边倒，但需结合双方阵容变化；斯图加特伤停较多，拜仁阵容变动相对有限，参考价值中等，仍明显利主队。</td>
         </tr>
         
         <tr>
@@ -748,9 +749,9 @@
           <td>战意轮换</td>
           <td class="ev">斯图加特#2争冠区；拜仁联赛积分榜未提供</td>
           <td class="dir-h">2</td>
-          <td>26%</td>
+          <td>18%</td>
           <td>中</td>
-          <td class="jd">斯图加特处于争冠区，客场面对拜仁有较强抢分动机，可能提升抵抗强度；拜仁主场争冠压力下预计全力，但深盘下轮换风险存在。</td>
+          <td class="jd">斯图加特处于争冠区，客场有较强抢分动机；拜仁主场争冠压力下预计全力，但Musiala缺阵可能引发进攻端调整，影响磨合。</td>
         </tr>
         
       </table></div>
@@ -761,25 +762,25 @@
         
         <tr><td>常规路径</td><td><b>75%</b></td><td class="jd">拜仁上半场率先破门，斯图加特反击效率有限</td><td>2-1 / 3-2</td></tr>
         
-        <tr><td>平局路径</td><td><b>14%</b></td><td class="jd">斯图加特成功收缩防线并把握定位球机会</td><td>1-1</td></tr>
+        <tr><td>平局路径</td><td><b>14%</b></td><td class="jd">拜仁前场创造力不足，斯图加特收缩防线并把握定位球</td><td>1-1</td></tr>
         
         <tr><td>冷门路径</td><td><b>11%</b></td><td class="jd">拜仁久攻不下且斯图加特反击得手</td><td>0-1</td></tr>
         
       </table></div>
       
       
-      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 拜仁主导控球并持续通过边路与肋部渗透压制斯图加特防线。 <b>无球:</b> 拜仁高位逼抢后需防斯图加特快速转换与定位球失球。 <b>最大变量:</b> 斯图加特能否在客场早早取得进球将显著改变比赛开放度。</div>
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 拜仁主导控球，通过边路与肋部渗透弥补Musiala缺阵的创造力损失。 <b>无球:</b> 拜仁高位逼抢后需防斯图加特快速转换与定位球失球。 <b>最大变量:</b> Musiala缺阵下拜仁前场串联效率能否保持，将决定比赛开放度。</div>
       
       
-      <div class="a-ext">📐 扩展情景: 总进球 3-5球 · 净胜球 主队1球优势 · 上半场 拜仁控场但可能仅1球领先或平局</div>
+      <div class="a-ext">📐 扩展情景: 总进球 3-4球 · 净胜球 主队1球优势 · 上半场 拜仁控场但可能仅1球领先或平局</div>
       
       
-      <div class="a-triggers">⚡ 临场触发器: <span class="trg">拜仁首发大幅轮换</span><span class="trg">斯图加特核心射手缺阵</span><span class="trg">亚盘降至-1.5或更低</span><span class="trg">赛前确认拜仁后防主力伤停</span></div>
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">拜仁首发进一步轮换</span><span class="trg">斯图加特核心射手缺阵确认</span><span class="trg">亚盘降至-1.5或更低</span><span class="trg">赛前确认拜仁后防主力伤停</span></div>
       
-      <div class="a-reverse">🔄 反向验证: 最可能错在拜仁无法净胜2球，亚盘-2深盘下主覆盖不足，斯图加特争冠战意可能将分差控制在1球。</div>
-      <div class="a-audit">🤖 自检: 通过（方向与概率一致，未编造证据，维度间无矛盾，与存档变化有依据）</div>
+      <div class="a-reverse">🔄 反向验证: 最可能错在拜仁受Musiala缺阵影响进攻效率下降，无法净胜2球，斯图加特争冠战意将分差控制在1球。</div>
+      <div class="a-audit">🤖 自检: 发现P2问题 (早盘“阵容伤停”无数据降权，终盘引入Musiala缺阵与斯图加特伤停但未说明来源核实状态，且“斯图加特多名主力带伤/缺阵”与“伤停严峻”在证据包中仅来自未核实搜索摘要，存在将未证实情报当作已确认伤停使用的风险)</div>
       
-      <div class="a-missing">📋 数据缺失声明: 阵容伤停、天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      <div class="a-missing">📋 数据缺失声明: 天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
       
     </div>
     
@@ -794,7 +795,7 @@
         <span>威尼斯</span>
       </div>
       <span class="m-pick bet">
-        ★ 看好 让球看好主队 (+5.5%)
+        参考 让球看好主队 (+5.5%)
       </span>
     </header>
 
@@ -909,8 +910,8 @@
     
     <div class="report-a">
       <div class="a-meta">🕗 开球 北京时间 02:45:00 (当地约20:45) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
-      <div class="a-dir">🧭 加权方向分: <b class="dir-h">1.4</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
-      <div class="a-summary">📌 米兰主场对升班马威尼斯优势明确，模型与市场同向支持主胜，但客队资金流入及米兰进攻效率存疑限制大胜预期，最大风险是久攻不下被逼平。 <span style="color:#8d99b0;">次选比分 1-0</span></div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-h">1.1</b> (正值利主队) · 整体置信度: 中</div>
+      <div class="a-summary">📌 米兰主场仍被看好，但Leao缺阵及大幅轮换削弱进攻上限，客队资金流入与阵容不确定性叠加，最可能小胜而非大胜，最大风险是轮换后久攻不下被逼平。 <span style="color:#8d99b0;">次选比分 1-0</span></div>
       <div class="a-reverse">⚠️ 一致性修正: 原始单格最高 1-0, 与让球/大小球矛盾, 已修正</div>
       
       <div class="tb-wrap"><table class="dims-table">
@@ -918,11 +919,11 @@
         
         <tr>
           <td>市场</td>
-          <td class="ev">欧赔主1.32/平4.30/客7.20；全天变动客胜7.50→7.20(-0.30)显示客队资金流入</td>
+          <td class="ev">欧赔主1.32/平4.30/客7.20；全天变动客胜7.50→7.20(-0.30)；亚盘主-1.0模型主覆盖48%/客覆盖27%</td>
           <td class="dir-h">2</td>
           <td>22%</td>
           <td>中</td>
-          <td class="jd">深盘支撑主胜，但客胜赔率下降形成独立资金信号，与模型最高概率方向部分相左；市场融合中模型权重较高，主胜方向不变但大胜需谨慎。</td>
+          <td class="jd">欧赔深盘支撑主胜，但客胜赔率下降形成独立资金信号，与模型最高概率方向部分相左；主-1.0盘口下主覆盖未过半，市场对米兰大胜信心有限，主胜方向不变但大胜需谨慎。</td>
         </tr>
         
         <tr>
@@ -931,25 +932,25 @@
           <td class="dir-h">3</td>
           <td>20%</td>
           <td>高</td>
-          <td class="jd">米兰预期进球显著压制对手，客队进攻端预期不足0.7球；ELO接近但联赛状态差距明显，米兰主场控制力占优。</td>
+          <td class="jd">米兰预期进球显著压制对手，客队进攻端预期不足0.7球，主队防守风险低；ELO接近但联赛状态差距明显，米兰主场控制力占优。</td>
         </tr>
         
         <tr>
           <td>阵容伤停</td>
-          <td class="ev">无数据, 已降权</td>
-          <td class="dir-z">0</td>
-          <td>8%</td>
-          <td>低</td>
-          <td class="jd">情报未提及双方伤停或阵容变动，无法区分核心与替补，该维度降权处理，不编造伤停信息。</td>
+          <td class="ev">YSscores/Sport.fr/GdS 2026-08-27~28: 阿莫林确认Leao缺阵, 大幅轮换, 米兰四名核心(含Leao)缺阵或轮换, Rabiot可能首秀</td>
+          <td class="dir-a">-2</td>
+          <td>14%</td>
+          <td>中</td>
+          <td class="jd">Leao为核心攻击手，其缺阵直接削弱米兰进攻上限；大幅轮换意味着阵容磨合度下降，Rabiot首秀存在不确定性。该情报与模型高概率方向形成反向信号，需下调主队优势。</td>
         </tr>
         
         <tr>
           <td>交锋克制</td>
           <td class="ev">近3年主队2胜0平0负，总进球6-0</td>
-          <td class="dir-h">2</td>
+          <td class="dir-h">1</td>
           <td>8%</td>
-          <td>中</td>
-          <td class="jd">历史交锋米兰零封且全胜，克制关系存在；但样本仅2场且威尼斯作为升班马阵容变化可能较大，参考价值有限。</td>
+          <td>低</td>
+          <td class="jd">历史交锋米兰零封且全胜，克制关系存在；但样本仅2场且威尼斯作为升班马阵容变化可能较大，参考价值有限，降权处理。</td>
         </tr>
         
         <tr>
@@ -981,11 +982,11 @@
         
         <tr>
           <td>战意轮换</td>
-          <td class="ev">米兰#2争冠区3分，威尼斯#18保级区0分</td>
-          <td class="dir-h">2</td>
-          <td>24%</td>
+          <td class="ev">米兰#2争冠区3分，威尼斯#18保级区0分；阿莫林确认大幅轮换</td>
+          <td class="dir-h">1</td>
+          <td>18%</td>
           <td>中</td>
-          <td class="jd">米兰争冠阶段主场抢分动力充足，客队保级压力大但实力有限；主队战意明确，但需防轻敌导致轮换影响效率。</td>
+          <td class="jd">米兰争冠阶段主场抢分动力充足，但大幅轮换说明主帅有保留，战意与轮换形成对冲；客队保级压力大但实力有限，主队战意明确但需防轮换影响效率。</td>
         </tr>
         
       </table></div>
@@ -996,31 +997,31 @@
         
         <tr><td>常规路径</td><td><b>70%</b></td><td class="jd">米兰上半场取得进球，控球率超过60%且客队无有效反击</td><td>2-0 / 1-0</td></tr>
         
-        <tr><td>平局路径</td><td><b>20%</b></td><td class="jd">米兰久攻不下，客队门将高接低挡且定位球防守稳固</td><td>1-1 / 0-0</td></tr>
+        <tr><td>平局路径</td><td><b>20%</b></td><td class="jd">米兰轮换阵容磨合不足，久攻不下且客队门将高接低挡</td><td>1-1 / 0-0</td></tr>
         
-        <tr><td>冷门路径</td><td><b>10%</b></td><td class="jd">威尼斯通过定位球或反击先进球，米兰心态急躁且轮换阵容磨合不足</td><td>0-1</td></tr>
+        <tr><td>冷门路径</td><td><b>10%</b></td><td class="jd">威尼斯通过定位球或反击先进球，米兰轮换阵容心态急躁且缺乏Leao式个人突破</td><td>0-1</td></tr>
         
       </table></div>
       
       
-      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 米兰主导控球并利用边路与肋部渗透持续压迫威尼斯低位防线。 <b>无球:</b> 米兰高位逼抢后需防威尼斯快速转换打身后空当。 <b>最大变量:</b> 米兰能否在上半场尽早破门，避免陷入密集防守僵局。</div>
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 米兰仍将主导控球，但缺少Leao后边路爆点下降，更多依赖中路渗透与Rabiot前插。 <b>无球:</b> 米兰高位逼抢后需防威尼斯快速转换，轮换阵容默契不足可能暴露肋部空当。 <b>最大变量:</b> Leao缺阵后米兰进攻端能否由Rabiot或其他轮换球员提供足够创造力。</div>
       
       
-      <div class="a-ext">📐 扩展情景: 总进球 2-3球 · 净胜球 主队1-2球优势 · 上半场 米兰上半场控场但进球不会早，半场可能0-0或1-0</div>
+      <div class="a-ext">📐 扩展情景: 总进球 1-3球 · 净胜球 主队0-2球优势 · 上半场 米兰上半场控场但轮换阵容可能进球偏晚，半场可能0-0或1-0</div>
       
       
-      <div class="a-triggers">⚡ 临场触发器: <span class="trg">米兰首发轮换超过5人，需下调主胜权重</span><span class="trg">威尼斯主力门将或后防核心缺席，大胜概率提升</span><span class="trg">临场主胜赔率升至1.40以上，警惕市场对主队信心下降</span><span class="trg">赛前确认米兰有核心攻击手伤停，进攻效率预期下调</span></div>
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">确认米兰除Leao外还有核心中卫或后腰缺阵，需进一步下调主胜权重</span><span class="trg">临场主胜赔率升至1.40以上，警惕市场对主队信心下降</span><span class="trg">Rabiot首发且状态出色，主队进攻上限提升</span><span class="trg">威尼斯主力门将或后防核心缺席，米兰小胜概率提升</span></div>
       
-      <div class="a-reverse">🔄 反向验证: 如果这场预测错了，最可能错在米兰面对密集防守破门乏力，全场压制却被逼平，方向虽对但比分路径偏离。</div>
-      <div class="a-audit">🤖 自检: 通过（方向与概率一致，未编造证据，维度间无矛盾，与早午盘存档变化仅有方向分微调且依据充分）</div>
+      <div class="a-reverse">🔄 反向验证: 如果这场预测错了，最可能错在米兰大幅轮换后进攻端缺乏创造力，全场压制却被逼平，方向虽对但比分路径偏离。</div>
+      <div class="a-audit">🤖 自检: 通过（结论方向与模型概率一致，伤停情报有据可查，维度间无矛盾，与早午盘变化有Leao缺阵依据）</div>
       
-      <div class="a-missing">📋 数据缺失声明: 阵容伤停、天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      <div class="a-missing">📋 数据缺失声明: 天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
       
     </div>
     
   </article>
   
-  <article class="match reference" data-lg="法甲" style="animation-delay: 180ms">
+  <article class="match skip" data-lg="法甲" style="animation-delay: 180ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">法甲</span>
@@ -1029,7 +1030,7 @@
         <span>巴黎圣日尔曼</span>
       </div>
       <span class="m-pick conflict">
-        · 结论不可用(方向-比分冲突)
+        观察 结论不可用(方向-比分冲突)
       </span>
     </header>
 
@@ -1144,8 +1145,8 @@
     
     <div class="report-a">
       <div class="a-meta">🕗 开球 北京时间 02:45:00 (当地约20:45) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
-      <div class="a-dir">🧭 加权方向分: <b class="dir-h">0.1</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 低</b></div>
-      <div class="a-summary">📌 模型最高概率客胜但最可能比分1-1, 方向冲突已降级。巴黎实力占优但客场让幅有限, 里尔主场有欧战战意, 平局风险高, 最大风险是巴黎个人能力打破均势。 <span style="color:#8d99b0;">次选比分 1-0</span></div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-a">-0.1</b> (正值利主队) · 整体置信度: 低</div>
+      <div class="a-summary">📌 巴黎实力与交锋占优但核心缺阵，里尔主场有欧战区战意，平局风险最高。最大风险是巴黎个人能力或定位球打破均势，方向与最可能比分1-1一致。 <span style="color:#8d99b0;">次选比分 1-0</span></div>
       
       
       <div class="tb-wrap"><table class="dims-table">
@@ -1153,74 +1154,74 @@
         
         <tr>
           <td>市场</td>
-          <td class="ev">欧赔主4.65/平3.90/客1.52, 亚盘主+1.0, 市场融合Model 81% / Market 19%, </td>
+          <td class="ev">欧赔4.65/3.90/1.52，亚盘主+1.0，市场融合Model 81% / Market 19%，</td>
           <td class="dir-h">1</td>
-          <td>23%</td>
+          <td>24%</td>
           <td>中</td>
-          <td class="jd">市场明显倾向客队, 但亚盘主+1.0下模型主覆盖51%, 主队受让方有拉力。高margin使市场信号被部分折扣, 客胜优势不宜过度放大。</td>
+          <td class="jd">市场明显倾向客队，但高margin使市场信号被折扣；亚盘主+1.0下模型主覆盖51%，主队受让方有拉力，客胜优势不宜过度放大。</td>
         </tr>
         
         <tr>
           <td>状态攻防</td>
-          <td class="ev">ELO差-123, 预期进球1.10-1.60, 模型概率主25.7%/平26.0%/客48.3%</td>
-          <td class="dir-h">2</td>
-          <td>20%</td>
+          <td class="ev">ELO差-123，预期进球1.10-1.60，模型概率主25.7%/平26.0%/客48.3%</td>
+          <td class="dir-h">1</td>
+          <td>22%</td>
           <td>中</td>
-          <td class="jd">巴黎整体实力和预期进球占优, 但客队预期进球仅1.60, 优势并非碾压。里尔近期有W且处欧战区, 状态不差, 主场具备一定抵抗力。</td>
+          <td class="jd">巴黎整体实力和预期进球占优，但客场预期进球仅1.60，优势非碾压。里尔近况W且处欧战区，主场具备抵抗力。</td>
         </tr>
         
         <tr>
           <td>阵容伤停</td>
-          <td class="ev">无数据, 已降权</td>
-          <td class="dir-z">0</td>
-          <td>6%</td>
+          <td class="ev">法媒2026-08-27~28：巴黎三名核心缺席或成疑（Dembélé/Mendes/Neves）；自动伤停侦察未经官方核实</td>
+          <td class="dir-h">1</td>
+          <td>14%</td>
           <td>低</td>
-          <td class="jd">情报未提及伤停, 无法区分核心与替补, 权重降为6。禁止编造伤停信息。</td>
+          <td class="jd">巴黎核心缺阵削弱其进攻组织与边路推进，但情报未获官方确认且未说明里尔伤停，主队信息不足，整体按降权处理。</td>
         </tr>
         
         <tr>
           <td>交锋克制</td>
-          <td class="ev">近3年交锋主队0胜1平3负, 总进球3-11</td>
+          <td class="ev">近3年交锋主队0胜1平3负，总进球3-11</td>
           <td class="dir-a">-1</td>
           <td>8%</td>
           <td>中</td>
-          <td class="jd">历史交锋巴黎明显占优, 但需结合阵容变化。情报未提供阵容稳定度信息, 参考价值中等, 不单独作为强信号。</td>
+          <td class="jd">历史交锋巴黎明显占优，但巴黎当前有核心缺阵且开局状态不佳，阵容变化使交锋参考价值下降，不单独作强信号。</td>
         </tr>
         
         <tr>
           <td>赛程体能</td>
-          <td class="ev">主队7天0场, 客队7天0场</td>
+          <td class="ev">主队7天0场，客队7天0场</td>
           <td class="dir-z">0</td>
           <td>14%</td>
           <td>高</td>
-          <td class="jd">双方均无密集赛程, 体能和轮换压力相当, 该维度无明显倾向。</td>
+          <td class="jd">双方均无密集赛程，体能和轮换压力相当，该维度无明显倾向。</td>
         </tr>
         
         <tr>
           <td>天气场地</td>
-          <td class="ev">无数据, 已降权</td>
+          <td class="ev">无数据，已降权</td>
           <td class="dir-z">0</td>
           <td>2%</td>
           <td>低</td>
-          <td class="jd">情报未提及天气场地, 权重降为2, 不作评估。</td>
+          <td class="jd">情报未提及天气场地，权重降为2，不作评估。</td>
         </tr>
         
         <tr>
           <td>裁判</td>
-          <td class="ev">裁判未公布, 权重记0</td>
+          <td class="ev">裁判未公布，权重记0</td>
           <td class="dir-z">0</td>
           <td>0%</td>
           <td>低</td>
-          <td class="jd">裁判未公布, 权重为0, 不猜测。</td>
+          <td class="jd">裁判未公布，权重为0，不猜测。</td>
         </tr>
         
         <tr>
           <td>战意轮换</td>
-          <td class="ev">里尔#4欧战区, 积3分, 近况W</td>
+          <td class="ev">里尔#4欧战区，积3分，近况W；巴黎前两轮0-1负+2-2平，开局承压</td>
           <td class="dir-h">1</td>
-          <td>27%</td>
+          <td>16%</td>
           <td>中</td>
-          <td class="jd">里尔处于欧战区, 主场作战有抢分动力, 但并非必须赢的绝境。巴黎作为强队客场也需维持竞争力, 但战意层面主队略占情绪优势。</td>
+          <td class="jd">里尔主场处于欧战区有抢分动力，巴黎需避免进一步失分，双方战意均不低，但巴黎核心缺阵可能影响执行力，主队略占情绪优势。</td>
         </tr>
         
       </table></div>
@@ -1229,27 +1230,27 @@
       <div class="tb-wrap"><table class="paths-table">
         <tr><th>路径</th><th>概率</th><th>触发条件</th><th>可能比分</th></tr>
         
-        <tr><td>常规路径</td><td><b>50%</b></td><td class="jd">巴黎正常发挥, 里尔防线较早失守</td><td>1-0 / 2-0</td></tr>
+        <tr><td>常规路径</td><td><b>50%</b></td><td class="jd">巴黎控球占优但攻坚乏力，里尔反击或定位球先得手</td><td>1-0</td></tr>
         
-        <tr><td>平局路径</td><td><b>25%</b></td><td class="jd">里尔防守紧凑, 巴黎破密集乏力</td><td>1-1 / 0-0</td></tr>
+        <tr><td>平局路径</td><td><b>25%</b></td><td class="jd">里尔防守紧凑，巴黎破密集乏力且核心缺阵影响创造力</td><td>1-1 / 0-0</td></tr>
         
-        <tr><td>冷门路径</td><td><b>24%</b></td><td class="jd">里尔反击或定位球先得手, 巴黎久攻不下</td><td>1-0</td></tr>
+        <tr><td>冷门路径</td><td><b>24%</b></td><td class="jd">里尔定位球或反击破门后巴黎久攻不下，主队全取三分</td><td>1-0</td></tr>
         
       </table></div>
       
       
-      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 巴黎预计控球主导, 里尔伺机反击。 <b>无球:</b> 里尔需防范巴黎边路渗透和定位球。 <b>最大变量:</b> 巴黎个人能力能否打破里尔密集防守。</div>
+      <div class="a-tactics">♟ 战术关键点: <b>有球:</b> 巴黎预计仍以控球主导，但缺少Dembélé/Mendes后边路推进与突破能力下降。 <b>无球:</b> 里尔需防范巴黎中路渗透与定位球，尤其巴黎锋线个人能力仍可制造威胁。 <b>最大变量:</b> 巴黎核心缺阵后进攻组织效率能否维持，以及里尔能否利用主场先发制人。</div>
       
       
-      <div class="a-ext">📐 扩展情景: 总进球 1-3球 · 净胜球 客队0-1球优势或平局 · 上半场 上半场可能较为谨慎, 平局概率较高</div>
+      <div class="a-ext">📐 扩展情景: 总进球 1-3球 · 净胜球 平局或客队0-1球优势 · 上半场 上半场可能较为谨慎，平局概率较高</div>
       
       
-      <div class="a-triggers">⚡ 临场触发器: <span class="trg">巴黎首发轮换主力导致攻击力下降</span><span class="trg">里尔出现核心伤停或防线变动</span><span class="trg">临场亚盘从主+1.0调整为主+0.75或更深</span><span class="trg">赛前确认巴黎有欧冠分心或大幅轮换</span></div>
+      <div class="a-triggers">⚡ 临场触发器: <span class="trg">官方首发确认巴黎核心Dembélé/Mendes/Neves全部缺阵或其中两人缺阵</span><span class="trg">临场亚盘从主+1.0调整为主+0.75或更深</span><span class="trg">里尔出现核心伤停或防线变动</span><span class="trg">赛前确认巴黎有欧冠分心或大幅轮换</span></div>
       
-      <div class="a-reverse">🔄 反向验证: 如果预测错了, 最可能错在巴黎客场进攻效率高于预期, 早进球后比赛进入巴黎节奏, 最终客胜而非平局。</div>
-      <div class="a-audit">🤖 自检: 发现P2问题 (方向分0.1与摘要“平局风险高”及最可能比分1-1存在轻微不一致，且“常规路径”比分1-0/2-0与客胜方向冲突未充分说明)。</div>
+      <div class="a-reverse">🔄 反向验证: 如果预测错了，最可能错在巴黎即使核心缺阵仍凭借整体实力和定位球早进球，里尔被迫压出后被打反击，最终客胜而非平局。</div>
+      <div class="a-audit">🤖 自检: 发现P1问题 (结论方向分-0.1与摘要“平局风险最高”及最可能比分1-1一致，但八维中“状态攻防”优势分给1且权重22，实际模型概率客胜48.3%显著高于主胜，该维度应倾向客队而非主队，维度结论与概率方向矛盾)</div>
       
-      <div class="a-missing">📋 数据缺失声明: 阵容伤停、天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
+      <div class="a-missing">📋 数据缺失声明: 天气场地、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
       
     </div>
     
@@ -1264,7 +1265,7 @@
         <span>曼城</span>
       </div>
       <span class="m-pick skip">
-        · 观望
+        参考 观望
       </span>
     </header>
 
@@ -1379,8 +1380,8 @@
     
     <div class="report-a">
       <div class="a-meta">🕗 开球 北京时间 03:00:00 (当地约20:00) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
-      <div class="a-dir">🧭 加权方向分: <b class="dir-a">-2.3</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
-      <div class="a-summary">📌 最可能方向为曼城客场小胜，核心理由是实力差与市场双支持，最大风险是水晶宫主场死守逼平或曼城久攻不下。 <span style="color:#8d99b0;">次选比分 0-2</span></div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-a">-2.1</b> (正值利主队) · 整体置信度: 中</div>
+      <div class="a-summary">📌 最可能方向为曼城客场小胜，核心理由是实力、市场与交锋全面占优，最大风险是水晶宫主场死守逼平或曼城久攻不下。 <span style="color:#8d99b0;">次选比分 0-2</span></div>
       
       
       <div class="tb-wrap"><table class="dims-table">
@@ -1388,11 +1389,11 @@
         
         <tr>
           <td>市场</td>
-          <td class="ev">欧赔4.75/3.90/1.51，客队大幅低赔；全天主胜4.90→4.75(-0.15)、平局4.00→3.90(-0.10)，主队与平局资金流入，客胜1.48→1.51(+0.03)</td>
+          <td class="ev">赔率4.75/3.90/1.51，客队大幅低赔；全天主胜4.90→4.75、平局4.00→3.90，资金略向主队和平局流入</td>
           <td class="dir-a">-3</td>
-          <td>22%</td>
+          <td>21%</td>
           <td>高</td>
-          <td class="jd">欧赔与亚盘仍明显倾向曼城，客胜方向与模型一致；主胜和平局赔率下行提示资金对冷平有防范，但幅度不足以逆转客胜基调，仅降低客队大胜预期。</td>
+          <td class="jd">欧赔与亚盘均明显倾向曼城，市场方向与模型一致；主胜和平局赔率下行但幅度有限，不足以逆转客胜基调，仅提示对冷平保持警惕。</td>
         </tr>
         
         <tr>
@@ -1401,7 +1402,7 @@
           <td class="dir-a">-4</td>
           <td>20%</td>
           <td>高</td>
-          <td class="jd">曼城实力、预期进球和模型概率全面占优，水晶宫预期进球不足1球，状态攻防维度明确利客队。</td>
+          <td class="jd">曼城实力、预期进球和模型概率全面占优，水晶宫攻击端预期不足1球，状态攻防维度明确利客队。</td>
         </tr>
         
         <tr>
@@ -1410,7 +1411,7 @@
           <td class="dir-z">0</td>
           <td>8%</td>
           <td>低</td>
-          <td class="jd">伤停情报未提及，无法判断核心球员缺阵影响。原14%权重降至8%，剩余6%重新分配给市场与状态攻防。</td>
+          <td class="jd">伤停情报未提及，无法判断核心球员缺阵影响。原14%权重降至8%，剩余6%重新分配给市场、状态攻防、赛程体能和战意轮换。</td>
         </tr>
         
         <tr>
@@ -1426,7 +1427,7 @@
           <td>赛程体能</td>
           <td class="ev">主队7天0场，客队7天0场</td>
           <td class="dir-z">0</td>
-          <td>14%</td>
+          <td>13%</td>
           <td>高</td>
           <td class="jd">双方均无密集赛程，体能条件对等，该维度对方向无显著倾斜。</td>
         </tr>
@@ -1453,7 +1454,7 @@
           <td>战意轮换</td>
           <td class="ev">水晶宫#17保级区，近况L；曼城为争冠级别球队</td>
           <td class="dir-a">-2</td>
-          <td>20%</td>
+          <td>19%</td>
           <td>中</td>
           <td class="jd">水晶宫有保级抢分动力，但实力差距过大；曼城争冠需要稳定拿分，战意不弱。该维度仍偏客队，但主队死守可能增加平局风险。</td>
         </tr>
@@ -1482,7 +1483,7 @@
       <div class="a-triggers">⚡ 临场触发器: <span class="trg">曼城首发轮换幅度明显加大，核心中前场缺阵</span><span class="trg">水晶宫出现关键伤停或防线主力缺阵</span><span class="trg">临场客胜赔率大幅回升至1.60以上</span><span class="trg">赛前确认水晶宫改打更激进的高位逼抢战术</span></div>
       
       <div class="a-reverse">🔄 反向验证: 如果这场预测错了，最可能错在曼城控场但终结效率不足，水晶宫通过定位球或反击逼平，形成1-1平局。</div>
-      <div class="a-audit">🤖 自检: 通过（方向与最可能比分一致，未编造证据，维度无矛盾，与早午盘变化有依据）</div>
+      <div class="a-audit">🤖 自检: 通过（方向与概率一致，未编造证据，维度无矛盾，与存档变化有依据）</div>
       
       <div class="a-missing">📋 数据缺失声明: 阵容伤停、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
       
@@ -1499,7 +1500,7 @@
         <span>比利亚雷亚尔</span>
       </div>
       <span class="m-pick skip">
-        · 观望
+        观察 观望
       </span>
     </header>
 
@@ -1581,7 +1582,7 @@
         
         <div class="form-row" style="margin-top:10px">
           <span>主近况<span class="f-letters"></span></span>
-          <span>客近况<span class="f-letters"><span class="f-D">D</span><span class="f-,">,</span><span class="f-D">D</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-D">D</span><span class="f-D">D</span></span></span>
         </div>
         
       </div>
@@ -1614,8 +1615,8 @@
     
     <div class="report-a">
       <div class="a-meta">🕗 开球 北京时间 03:30:00 (当地约21:30) · 📍 球场 — · 🧪 研究时点 2026-08-28 · 终盘</div>
-      <div class="a-dir">🧭 加权方向分: <b class="dir-a">-0.4</b> (正值利主队) · 整体置信度: <b class="dir-h">整体置信度: 中</b></div>
-      <div class="a-summary">📌 客队实力与市场略占优，但双方均无密集赛程且主队主场韧性未明，平局风险偏高；最可能方向为比利亚雷亚尔小胜或平局，最大风险是阿拉维斯主场逼平。 <span style="color:#8d99b0;">次选比分 0-1</span></div>
+      <div class="a-dir">🧭 加权方向分: <b class="dir-a">-0.4</b> (正值利主队) · 整体置信度: 中</div>
+      <div class="a-summary">📌 客队实力与市场略占优，但模型与赔率均指向低分差，平局风险高；最可能方向为比利亚雷亚尔小胜或平局，最大风险是阿拉维斯主场逼平。 <span style="color:#8d99b0;">次选比分 0-1</span></div>
       
       
       <div class="tb-wrap"><table class="dims-table">
@@ -1625,7 +1626,7 @@
           <td>市场</td>
           <td class="ev">全天赔率变动：主胜2.90→3.05(+0.15)，客胜2.10→2.05(-0.05)；客队资金流入</td>
           <td class="dir-a">-2</td>
-          <td>21%</td>
+          <td>22%</td>
           <td>高</td>
           <td class="jd">市场资金流向客队，主胜升赔显示主队信心不足；但模型与市场融合中模型权重高，客胜优势温和，不构成强单边。</td>
         </tr>
@@ -1643,7 +1644,7 @@
           <td>阵容伤停</td>
           <td class="ev">无数据，已降权</td>
           <td class="dir-z">0</td>
-          <td>9%</td>
+          <td>10%</td>
           <td>低</td>
           <td class="jd">情报未提及伤停或阵容变化，无法判断核心球员缺阵影响，该维度不提供方向。</td>
         </tr>
@@ -1717,7 +1718,7 @@
       <div class="a-triggers">⚡ 临场触发器: <span class="trg">若赛前公布阿拉维斯核心后卫或门将伤停，主队方向分需下调</span><span class="trg">若比利亚雷亚尔轮换主力中场或前锋，客胜方向分需下调</span><span class="trg">若亚盘从主+1.0调整为主+0.75，需重新评估市场对主队信心</span><span class="trg">若临场主胜赔率跌破2.90，说明资金回流主队，方向分需上调</span></div>
       
       <div class="a-reverse">🔄 反向验证: 如果预测错了，最可能错在阿拉维斯主场韧性超出预期，利用有限机会逼平或小胜，导致客胜方向落空。</div>
-      <div class="a-audit">🤖 自检: 通过（结论方向与概率一致，未编造证据，维度间无矛盾，与早午盘变化有依据）</div>
+      <div class="a-audit">🤖 自检: 发现P2问题 (方向分-0.4与最可能比分1-1/0-1并存但摘要称“最可能方向为客队小胜或平局”，且模型概率客胜43.5%未显著高于平局26.6%+主胜30.0%的联合风险，方向表述偏模糊但未达P1；另情报包中伤停侦察内容为其他联赛且未用于本场，未发现编造本场伤停/天气/裁判数字)。</div>
       
       <div class="a-missing">📋 数据缺失声明: 阵容伤停、裁判 无可靠数据, 已按规则降权或省略, 未作编造。</div>
       
@@ -1730,7 +1731,7 @@
   </div>
 
   <div class="footer">
-    足球预测模型 v3.0 · 生成于 2026-08-28 · 仅供参考，历史表现不代表未来结果
+    足球预测模型 v3.0 · 生成于 2026-08-28 · 仅供参考，历史表现不代表未来结果 · <a href="../index.html">返回首页</a>
   </div>
 </div>
 

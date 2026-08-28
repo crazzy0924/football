@@ -457,8 +457,31 @@ def _build_match_card(
         signal_class = SIGNAL_CLASSES.get(confidence, "skip")
         signal_text = SIGNAL_TEXTS.get(confidence, "SKIP")
 
-    # 推荐等级
-    if confidence == "high" and not no_bet:
+    conflict = bool((p.get("flags") or {}).get("direction_score_conflict"))
+    # 三向校验第三腿: 凯利/edge方向 与 比分方向、概率最高方向 三者互异 → 同样降级
+    if not conflict:
+        _bd = value.get("best_direction")
+        if _bd in ("home", "draw", "away"):
+            _jt = p.get("joint_top_scores")
+            _top_out = None
+            if _jt:
+                try:
+                    _h, _a = (int(x) for x in _jt[0]["score"].split("-"))
+                    _top_out = "主胜" if _h > _a else ("平局" if _h == _a else "客胜")
+                except Exception:
+                    pass
+            _max_p = max(p_home, p_draw, p_away)
+            _max_cn = "主胜" if _max_p == p_home else ("平局" if _max_p == p_draw else "客胜")
+            _bd_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}[_bd]
+            if _top_out and _bd_cn != _top_out and _bd_cn != _max_cn and _top_out != _max_cn:
+                conflict = True
+    # 纪律: 仅五大联赛场次可出方向信号, 非五大联赛一律仅观察
+    non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1")
+
+    # 推荐等级 (纪律: 冲突场/非五大场一律skip, 不得绿色高亮不得计入推荐)
+    if conflict or non_focus:
+        recommendation = "skip"
+    elif confidence == "high" and not no_bet:
         recommendation = "recommended"
     elif confidence in ("medium", "high") or ((cold_start or cross_league) and confidence != "none"):
         recommendation = "reference"
@@ -481,10 +504,6 @@ def _build_match_card(
     edge_pct = f"{best_edge_val:.1%}" if best_edge_val > 0 else None
 
     # 一致性裁决 (纪律: 三向冲突不出推荐): 方向-比分冲突 → 整场强制降级, 不显示看好/建议金额
-    conflict = (p.get("flags") or {}).get("direction_score_conflict")
-    # 纪律: 仅五大联赛场次可出方向信号, 非五大联赛一律仅观察
-    non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1")
-
     # 看好方向 (下注栏, CLAUDE.md 纪律): edge≥5% + Kelly≥1% + 非冷启动 + 非无信号 + 仅五大联赛
     no_signal = p.get("no_signal", False)
     if conflict:

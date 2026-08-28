@@ -94,7 +94,7 @@
     li.innerHTML = html;
     list.appendChild(li);
   }
-  if (shown === 0) document.getElementById('no-files-hint').style.display = 'block';
+  if (shown === 0) { var _p = document.getElementById('file-list'); if (_p && !document.getElementById('no-files-hint')) { var _d = document.createElement('div'); _d.id = 'no-files-hint'; _d.className = 'muted'; _d.textContent = '暂无报告数据 (系统会在早盘/终盘后自动更新)'; _p.appendChild(_d); } }
 </script>
 <script>
   // 手机安装引导: 按设备显示对应步骤; Chrome/Edge 安卓支持一键安装

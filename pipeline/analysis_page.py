@@ -345,10 +345,14 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
             )
 
     # 最可能结果标记 (用户要求: 分析页也要把最可能预测标出来, 供参考)
-    # 无胜平负赔率的场次: 模型没有市场锚点, 不给方向
+    # 无胜平负赔率的场次: 有让球盘时按规则13由让球盘反推锚点, 完全无盘才"无法预测"
     odds_here = p.get("odds") or {}
+    league_code_here = p.get("league_code", "")
     if not odds_here.get("home"):
-        pick_html = '<div class="pick-line">🎯 最可能: <b>无法预测</b> (体彩未开胜平负盘)</div>'
+        if p.get("anchor_from_ah") or ((p.get("ah_handicap") or {}).get("edge") is not None):
+            pick_html = '<div class="pick-line">🎯 最可能: <b>锚点反推</b> (体彩未开胜平负盘, 由让球盘反推方向·仅参考)</div>'
+        else:
+            pick_html = '<div class="pick-line">🎯 最可能: <b>无法预测</b> (体彩未开任何盘口)</div>'
     else:
         if bayes.get("posterior"):
             post = bayes["posterior"]
@@ -373,6 +377,8 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
         cold_tag = " (冷启动·参考)" if p.get("cold_start") else (" (跨级先验·参考)" if p.get("cross_league") else "")
         if p.get("anchor_from_ah"):
             cold_tag += " (市场锚点=让球盘反推)"
+        if league_code_here not in ("PL", "PD", "BL1", "SA", "FL1"):
+            cold_tag += " (非五大·仅观察)"
         pick_html = (f'<div class="pick-line">🎯 最可能: <b>{_esc(labels[best_i])}</b> '
                      f'({prob_triple[best_i]:.1%}){_esc(top_score_txt)}{_esc(cold_tag)}</div>')
 

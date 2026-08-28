@@ -425,7 +425,9 @@ def cmd_predict(args):
             }
 
         # 一致性校验 (复盘经验库规则 6/8): 方向-比分冲突 + BTTS-波胆交叉校验
-        _flags = _consistency_flags(pred, _joint_top_scores(pred, ah_pred, _ou_value(pred, m)))
+        _ou_v = _ou_value(pred, m)
+        _jt_scores = _joint_top_scores(pred, ah_pred, _ou_v)
+        _flags = _consistency_flags(pred, _jt_scores)
 
         predictions.append({
             "home_team": home,
@@ -457,9 +459,9 @@ def cmd_predict(args):
             "ah_handicap": ah_pred,
             # Phase 10: 波胆价值 + 大小球价值 (模型 vs 市场多维度 edge)
             "cs_value": _cs_value(pred, m),
-            "ou_value": _ou_value(pred, m),
+            "ou_value": _ou_v,
             # 联合约束校验: 最可能比分必须同时满足让球盘+大小球倾向 (消除维度间矛盾)
-            "joint_top_scores": _joint_top_scores(pred, ah_pred, _ou_value(pred, m)),
+            "joint_top_scores": _jt_scores,
             "ht_ft_odds": m.get("ht_ft_odds") or {},
             # Phase 7: 积分榜快照 (排名/积分/近况)
             "standings": {

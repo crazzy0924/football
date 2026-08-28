@@ -8,7 +8,7 @@ fetch_sporttery.py 与 result_fetcher.py 共用;
 from __future__ import annotations
 
 CN_TO_EN_TEAM = {
-    '巴黎圣日尔曼': 'Paris Saint-Germain',
+    '巴黎圣日尔曼': 'Paris SG',
     '阿斯顿维拉': 'Aston Villa',
     '普拉滕斯': 'Platense',
     '科金博联': 'Coquimbo Unido',

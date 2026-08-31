@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复盘报告 — 2026-08-30</title>
+<style>
+  :root {
+    --bg: #0b0f1a; --bg2: #0e1424; --card: #121a2c; --line: #1e2a42;
+    --txt: #e9eef8; --dim: #8d99b0;
+    --green: #34d399; --amber: #fbbf24; --blue: #5ea8ff;
+    --violet: #a78bfa; --pink: #f472b6; --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, sans-serif;
+    background:
+      radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%),
+      radial-gradient(800px 400px at 90% -20%, rgba(167,139,250,.10), transparent 60%),
+      var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+    padding: 28px 16px 40px;
+    line-height: 1.55;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  .header { text-align: center; padding: 30px 10px 22px; }
+  .header h1 {
+    font-size: 2rem; font-weight: 800;
+    background: linear-gradient(90deg, #e9eef8, #9ec4ff 60%, #c4b5fd);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .header .meta { color: var(--dim); font-size: .85rem; margin-top: 8px; }
+
+  .scorecard { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 4px 0 24px; }
+  .sc {
+    background: linear-gradient(180deg, var(--card), #101725);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 6px; text-align: center;
+    transition: transform .15s;
+  }
+  .sc:hover { transform: translateY(-2px); }
+  .sc .value { font-size: 1.35rem; font-weight: 800; }
+  .sc .label { font-size: .72rem; color: var(--dim); margin-top: 3px; }
+  .sc.good .value { color: var(--green); }
+  .sc.bad .value { color: var(--red); }
+  .sc.warn .value { color: var(--amber); }
+
+  .direction-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 10px 0 18px; background: #0a0f1c; }
+  .seg-home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .seg-draw { background: linear-gradient(90deg, #47506a, #7c86a3); }
+  .seg-away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+
+  .match-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px; margin-bottom: 8px;
+    background: linear-gradient(180deg, var(--card), #0f1727);
+    border: 1px solid var(--line); border-radius: 12px;
+    font-size: .85rem;
+    transition: transform .15s;
+  }
+  .match-row:hover { transform: translateX(3px); border-color: #2c3d63; }
+  .match-row.hit { border-left: 3px solid var(--green); }
+  .match-row.miss { border-left: 3px solid var(--red); }
+  .match-row.push { border-left: 3px solid var(--amber); }
+
+  .mr-teams { flex: 2; min-width: 0; font-weight: 600; }
+  .mr-teams .vs { color: var(--dim); margin: 0 6px; font-weight: 400; }
+  .mr-result { flex: 0 0 56px; text-align: center; font-weight: 800; font-size: 1.05rem; }
+  .mr-pred { flex: 1; text-align: center; font-size: .76rem; color: var(--dim); }
+  .mr-prob { flex: 0 0 66px; text-align: right; font-weight: 600; }
+  .mr-bet { flex: 0 0 76px; text-align: right; font-weight: 700; }
+  .mr-bet.won { color: var(--green); }
+  .mr-bet.lost { color: var(--red); }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: .7rem; }
+  .badge.hit { background: rgba(52,211,153,.15); color: #6ee7b7; }
+  .badge.miss { background: rgba(248,113,113,.15); color: #fca5a5; }
+  .badge.push { background: rgba(251,191,36,.15); color: #fcd34d; }
+
+  .section-title {
+    font-size: .95rem; font-weight: 800; letter-spacing: .5px;
+    margin: 26px 0 10px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    color: #b8cdf5;
+  }
+
+  .dim-box {
+    background: #0e1524; border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; font-size: .78rem; line-height: 1.8;
+    white-space: pre-wrap; font-family: 'JetBrains Mono', Consolas, monospace;
+    color: #cbd5e8;
+  }
+
+  .cal-table { width: 100%; font-size: .8rem; border-collapse: collapse; margin-bottom: 16px; }
+  .cal-table th, .cal-table td { padding: 7px 10px; text-align: center; border-bottom: 1px solid var(--line); }
+  .cal-table th { color: var(--dim); font-weight: 600; }
+
+  .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
+
+  @media (max-width: 640px) {
+    .scorecard { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>赛后复盘</h1>
+    <div class="meta">2026-08-30 — 匹配 5/5 场</div>
+  </div>
+
+  <!-- 指标卡片 -->
+  <div class="scorecard">
+    <div class="sc good">
+      <div class="value">0.1959</div>
+      <div class="label">Brier 分数</div>
+    </div>
+    <div class="sc bad">
+      <div class="value">60.0%</div>
+      <div class="label">准确率</div>
+    </div>
+    <div class="sc bad">
+      <div class="value">0.9824</div>
+      <div class="label">对数损失</div>
+    </div>
+    <div class="sc bad">
+      <div class="value">-0.04u</div>
+      <div class="label">盈亏 (单位)</div>
+    </div>
+    <div class="sc bad">
+      <div class="value">-1.2%</div>
+      <div class="label">回报率</div>
+    </div>
+  </div>
+
+  <!-- 方向准确率 -->
+  <div class="section-title">方向分解</div>
+  <div style="display:flex;gap:20px;font-size:0.82rem;margin-bottom:8px">
+    <span>主胜: 3/3 (100.0%)</span>
+    <span>平局: 0/1 (0.0%)</span>
+    <span>客胜: 0/1 (0.0%)</span>
+  </div>
+  <div class="direction-bar">
+    <div class="seg-home" style="width:60%"></div>
+    <div class="seg-draw" style="width:20%"></div>
+    <div class="seg-away" style="width:20%"></div>
+  </div>
+
+  <!-- 多维度复盘 -->
+  
+  <div class="section-title">多维度复盘 (5维度独立计分)</div>
+  <pre class="dim-box">维度复盘 (门禁: 模型Brier < 气候基线):
+--------------------------------------------------------
+  1X2    胜平负 (3-way)          今日5场 Brier 0.1959 vs 基线0.2253 ✅有技能
+        累计168场 Brier 0.1859 vs 基线0.2222 命中58% ✅
+  OU25   大小球2.5 (2-way)       今日5场 Brier 0.2692 vs 基线0.2155 ❌无技能
+        累计168场 Brier 0.2278 vs 基线0.21 命中62% ❌
+  OU35   大小球3.5 (2-way)       今日5场 Brier 0.1448 vs 基线0.2253 ✅有技能
+        累计168场 Brier 0.2036 vs 基线0.2322 命中69% ✅
+  BTTS   双方进球 (2-way)         今日5场 Brier 0.1853 vs 基线0.2498 ✅有技能
+        累计168场 Brier 0.2467 vs 基线0.2489 命中57% ✅
+  AH     让球盘 (2-way)          今日5场 Brier 0.1883 vs 基线0.24 ✅有技能
+        累计127场 Brier 0.1799 vs 基线0.2364 命中61% ✅</pre>
+  
+
+  <!-- 投注结算 P&L (Phase 5) -->
+  
+  <div class="section-title">投注结算 (P&L 账本)</div>
+  <pre class="dim-box">今日无投注单，P&L 不结算。</pre>
+  
+
+  <!-- 比赛结果 -->
+  <div class="section-title">比赛结果</div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      桑德兰 <span class="vs">vs</span> 富勒姆
+      
+    </div>
+    <div class="mr-result">
+      
+      1-0
+      
+    </div>
+    <div class="mr-pred">
+      预测: 36.9% / 30.3% / 32.8%
+    </div>
+    <div class="mr-prob">
+      30.3%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge push">△ 走水</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      利兹联 <span class="vs">vs</span> 布伦特福德
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      预测: 30.5% / 25.0% / 44.4%
+    </div>
+    <div class="mr-prob">
+      44.4%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.012u
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      巴黎FC <span class="vs">vs</span> 尼斯
+      
+    </div>
+    <div class="mr-result">
+      
+      3-0
+      
+    </div>
+    <div class="mr-pred">
+      预测: 38.0% / 28.7% / 33.3%
+    </div>
+    <div class="mr-prob">
+      33.3%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.015u
+      
+    </div>
+    <span class="badge push">△ 走水</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      那不勒斯 <span class="vs">vs</span> 科莫
+      
+    </div>
+    <div class="mr-result">
+      
+      1-2
+      
+    </div>
+    <div class="mr-pred">
+      预测: 46.6% / 29.6% / 23.8%
+    </div>
+    <div class="mr-prob">
+      46.6%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.010u
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      皇家马德里 <span class="vs">vs</span> 马拉加
+      
+    </div>
+    <div class="mr-result">
+      
+      4-0
+      
+    </div>
+    <div class="mr-pred">
+      预测: 88.2% / 9.9% / 1.9%
+    </div>
+    <div class="mr-prob">
+      88.2%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge hit">✓ 命中</span>
+  </div>
+  
+
+  <!-- ELO更新 -->
+  
+  <div class="section-title">ELO 更新</div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    桑德兰: 1557.9 → 1571.7
+    <span style="color:var(--green)">
+      (+13.8)
+    </span>
+    <span style="font-size:0.65rem"> — 1-0 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    富勒姆: 1571.9 → 1558.1
+    <span style="color:var(--red)">
+      (-13.8)
+    </span>
+    <span style="font-size:0.65rem"> — 0-1 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    利兹联: 1638.2 → 1635.0
+    <span style="color:var(--red)">
+      (-3.2)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    布伦特福德: 1629.2 → 1632.4
+    <span style="color:var(--green)">
+      (+3.2)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    巴黎FC: 1630.5 → 1644.4
+    <span style="color:var(--green)">
+      (+13.9)
+    </span>
+    <span style="font-size:0.65rem"> — 3-0 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    尼斯: 1498.2 → 1484.3
+    <span style="color:var(--red)">
+      (-13.9)
+    </span>
+    <span style="font-size:0.65rem"> — 0-3 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    那不勒斯: 1729.5 → 1711.5
+    <span style="color:var(--red)">
+      (-18.0)
+    </span>
+    <span style="font-size:0.65rem"> — 1-2 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    科莫: 1731.6 → 1749.6
+    <span style="color:var(--green)">
+      (+18.0)
+    </span>
+    <span style="font-size:0.65rem"> — 2-1 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    皇家马德里: 1820.0 → 1828.4
+    <span style="color:var(--green)">
+      (+8.4)
+    </span>
+    <span style="font-size:0.65rem"> — 4-0 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    马拉加: 1600.9 → 1592.5
+    <span style="color:var(--red)">
+      (-8.4)
+    </span>
+    <span style="font-size:0.65rem"> — 0-4 负</span>
+  </div>
+  
+  
+
+  <div class="footer">
+    足球预测模型 v3.0 · 复盘 2026-08-30
+    · 赛果自动更新ELO
+  </div>
+</div>
+</body>
+</html>

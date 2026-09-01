@@ -360,6 +360,10 @@ TEAM_NAME_ALIASES = {
     "Internazionale": "Inter",
     "Atalanta BC": "Atalanta",
     "Atalanta Bergamo": "Atalanta",
+    "US Lecce": "Lecce",
+    "AS Roma": "Roma",
+    "Bologna FC": "Bologna",
+    "Arsenal FC": "Arsenal",
     "Nottingham Forest": "Nott'm Forest",
     "Nottm Forest": "Nott'm Forest",
     # La Liga

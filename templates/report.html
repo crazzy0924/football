@@ -386,6 +386,7 @@
       {% if m.kelly_fraction %}<span class="chip kelly {{ m.kelly_class }}">凯利 <b>{{ m.kelly_fraction }}</b></span>{% endif %}
       {% if m.edge_direction %}<span class="chip">优势 {{ m.edge_direction }} <b>+{{ m.edge_pct }}</b></span>{% endif %}
       {% if m.odds_move %}<span class="chip" style="border-color: rgba(251,191,36,.45)">📈 {{ m.odds_move }}</span>{% endif %}
+      {% if m.trajectory %}<span class="chip" style="border-color: rgba(94,168,255,.45)">🧭 结论轨迹: {{ m.trajectory }}</span>{% endif %}
       {% if m.ou_text and not m.ou_text.startswith('无差异') %}<span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ {{ m.ou_text }}</span>{% endif %}
       {% if m.flag_texts %}<span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ {{ m.flag_texts }}</span>{% endif %}
       {% if m.cs_text %}<span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: {{ m.cs_text }}</span>{% endif %}

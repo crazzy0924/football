@@ -264,6 +264,12 @@
     <aside class="league-nav">
       <button class="ln-btn active" data-lg="*">全部</button>
       
+      <button class="ln-btn" data-lg="英超">英超</button>
+      
+      <button class="ln-btn" data-lg="西甲">西甲</button>
+      
+      <button class="ln-btn" data-lg="意甲">意甲</button>
+      
       <button class="ln-btn" data-lg="英冠">英冠</button>
       
       <button class="ln-btn" data-lg="非五大">非五大</button>
@@ -284,18 +290,658 @@
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="v">10</div><div class="l">今日场次</div></div>
+    <div class="stat"><div class="v">15</div><div class="l">今日场次</div></div>
     <div class="stat"><div class="v">0</div><div class="l">推荐下注</div></div>
-    <div class="stat"><div class="v">4</div><div class="l">仅供参考</div></div>
+    <div class="stat"><div class="v">6</div><div class="l">仅供参考</div></div>
     <div class="stat"><div class="v">10</div><div class="l">冷启动</div></div>
-    <div class="stat"><div class="v">2/7/1</div><div class="l">胜/平/负</div></div>
+    <div class="stat"><div class="v">4/8/3</div><div class="l">胜/平/负</div></div>
   </div>
 
   <!-- 今日看好速览 -->
   
+  <div class="picks-strip">
+    <div class="picks-title">★ 今日看好 (共 1 个方向)</div>
+    
+    <div class="pick-card">
+      <div class="pc-teams">巴塞罗那 vs 巴列卡诺</div>
+      <div class="pc-bet">让球看好客队 (+26.0%)</div>
+    </div>
+    
+  </div>
+  
 
   
-  <article class="match skip" data-lg="非五大" style="animation-delay: 0ms">
+  <article class="match skip" data-lg="意甲" style="animation-delay: 0ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">意甲</span>
+        <span>莱切</span>
+        <span class="tvs">VS</span>
+        <span>罗马</span>
+      </div>
+      <span class="m-pick conflict">
+        观察 结论不可用(方向-比分冲突)
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 15.5%"></div>
+        <div class="seg draw" style="width: 27.7%"></div>
+        <div class="seg away" style="width: 56.7%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>15.5%</b></span>
+        <span><i class="dot draw"></i>平局 <b>27.7%</b></span>
+        <span><i class="dot away"></i>客胜 <b>56.7%</b></span>
+        <span>ELO差 <b>-251</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 conflict">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">15.5% / 27.7% / 56.7%</div>
+        <div class="c3-j">结论不可用(方向-比分冲突)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主+1.0): 主42%/走29%/客29%</div>
+        <div class="c3-j">盘口仅作覆盖参考</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>36.7%</b></div>
+        <div class="c3-j">小2.5 模型37% vs 市场49% (-12%)</div>
+        <div class="c3-j" style="color:var(--dim);font-size:.75rem">总进球 0-3球 (80%覆盖·置信度中)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">18.3%</div>
+          <div class="sb-bar" style="height: 54.900000000000006%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">12.6%</div>
+          <div class="sb-bar" style="height: 37.8%"></div>
+          <div class="sb-label">0-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.9%</div>
+          <div class="sb-bar" style="height: 32.7%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.7%</div>
+          <div class="sb-bar" style="height: 32.099999999999994%"></div>
+          <div class="sb-label">0-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.6%</div>
+          <div class="sb-bar" style="height: 25.799999999999997%"></div>
+          <div class="sb-label">1-2</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1511</b>
+          <div class="elo-track"><div class="elo-home" style="width: 46%"></div><div class="elo-away" style="width: 54%"></div></div>
+          <b>1762</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-W">W</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-W">W</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>36.7%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>37.4%</b> (参考)</span>
+      <span class="chip">预期进球 <b>0.68 - 1.49</b></span>
+      <span class="chip">市场赔率 <b>7.20/4.10/1.34</b></span>
+      
+      <span class="chip kelly pos">凯利 <b>1.57%</b></span>
+      <span class="chip">优势 Draw <b>+7.5%</b></span>
+      
+      
+      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型37% vs 市场49% (-12%)</span>
+      <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 客胜(55%) 冲突, 已强制降级为结论不可用</span>
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-1(模型18.4%vs市场13.2%) · 0-0(模型10.7%vs市场6.6%)</span>
+      <span class="chip">盘口 <b>让球(主+1.0): 主42%/走29%/客29%</b></span>
+      
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#9(3分) · 客队#7(3分)</b></span>
+      <span class="chip">近况 主[W] 客[W]</span>
+    </div>
+    
+
+    
+
+    
+  </article>
+  
+  <article class="match reference" data-lg="西甲" style="animation-delay: 60ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">西甲</span>
+        <span>奥萨苏纳</span>
+        <span class="tvs">VS</span>
+        <span>赫塔费</span>
+      </div>
+      <span class="m-pick skip">
+        参考 观望
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 40.8%"></div>
+        <div class="seg draw" style="width: 33.6%"></div>
+        <div class="seg away" style="width: 25.6%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>40.8%</b></span>
+        <span><i class="dot draw"></i>平局 <b>33.6%</b></span>
+        <span><i class="dot away"></i>客胜 <b>25.6%</b></span>
+        <span>ELO差 <b>-26</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 skip">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">40.8% / 33.6% / 25.6%</div>
+        <div class="c3-j">观望</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主-1.0): 主17%/走26%/客58%</div>
+        <div class="c3-j">盘口仅作覆盖参考</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>29.3%</b></div>
+        <div class="c3-j">—</div>
+        <div class="c3-j" style="color:var(--dim);font-size:.75rem">总进球 0-3球 (80%覆盖·置信度中)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">17.4%</div>
+          <div class="sb-bar" style="height: 52.199999999999996%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">14.2%</div>
+          <div class="sb-bar" style="height: 42.599999999999994%"></div>
+          <div class="sb-label">0-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">13.0%</div>
+          <div class="sb-bar" style="height: 39.0%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">12.3%</div>
+          <div class="sb-bar" style="height: 36.900000000000006%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.7%</div>
+          <div class="sb-bar" style="height: 26.099999999999998%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1510</b>
+          <div class="elo-track"><div class="elo-home" style="width: 50%"></div><div class="elo-away" style="width: 50%"></div></div>
+          <b>1535</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-W">W</span><span class="f-D">D</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-W">W</span><span class="f-L">L</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>29.3%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>35.7%</b> (参考)</span>
+      <span class="chip">预期进球 <b>1.07 - 0.81</b></span>
+      <span class="chip">市场赔率 <b>2.00/2.65/4.00</b></span>
+      
+      <span class="chip kelly pos">凯利 <b>0.48%</b></span>
+      <span class="chip">优势 Away <b>+4.2%</b></span>
+      
+      
+      
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-1(模型13.0%vs市场9.4%) · 1-0(模型17.4%vs市场15.0%)</span>
+      <span class="chip">盘口 <b>让球(主-1.0): 主17%/走26%/客58%</b></span>
+      
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#8(4分) · 客队#13(3分)</b></span>
+      <span class="chip">近况 主[W,D] 客[W,L]</span>
+    </div>
+    
+
+    
+
+    
+  </article>
+  
+  <article class="match skip" data-lg="意甲" style="animation-delay: 120ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">意甲</span>
+        <span>亚特兰大</span>
+        <span class="tvs">VS</span>
+        <span>博洛尼亚</span>
+      </div>
+      <span class="m-pick skip">
+        观察 观望
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 48.3%"></div>
+        <div class="seg draw" style="width: 27.6%"></div>
+        <div class="seg away" style="width: 24.1%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>48.3%</b></span>
+        <span><i class="dot draw"></i>平局 <b>27.6%</b></span>
+        <span><i class="dot away"></i>客胜 <b>24.1%</b></span>
+        <span>ELO差 <b>+98</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 skip">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">48.3% / 27.6% / 24.1%</div>
+        <div class="c3-j">观望</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主-1.0): 主26%/走25%/客49%</div>
+        <div class="c3-j">盘口仅作覆盖参考</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>49.7%</b></div>
+        <div class="c3-j">—</div>
+        <div class="c3-j" style="color:var(--dim);font-size:.75rem">总进球 1-4球 (80%覆盖·置信度中)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">12.1%</div>
+          <div class="sb-bar" style="height: 36.3%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">11.2%</div>
+          <div class="sb-bar" style="height: 33.599999999999994%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.5%</div>
+          <div class="sb-bar" style="height: 28.5%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.9%</div>
+          <div class="sb-bar" style="height: 26.700000000000003%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.9%</div>
+          <div class="sb-bar" style="height: 23.700000000000003%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1670</b>
+          <div class="elo-track"><div class="elo-home" style="width: 52%"></div><div class="elo-away" style="width: 48%"></div></div>
+          <b>1572</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-W">W</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-L">L</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>49.7%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>51.5%</b> (参考)</span>
+      <span class="chip">预期进球 <b>1.60 - 1.06</b></span>
+      <span class="chip">市场赔率 <b>1.78/3.25/3.85</b></span>
+      
+      
+      <span class="chip">优势 Away <b>+1.4%</b></span>
+      
+      
+      
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 0-1(模型7.9%vs市场6.3%)</span>
+      <span class="chip">盘口 <b>让球(主-1.0): 主26%/走25%/客49%</b></span>
+      
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#11(3分) · 客队#14</b></span>
+      <span class="chip">近况 主[W] 客[L]</span>
+    </div>
+    
+
+    
+
+    
+  </article>
+  
+  <article class="match skip" data-lg="英超" style="animation-delay: 180ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">英超</span>
+        <span>阿斯顿维拉</span>
+        <span class="tvs">VS</span>
+        <span>阿森纳</span>
+      </div>
+      <span class="m-pick conflict">
+        观察 结论不可用(方向-比分冲突)
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 21.8%"></div>
+        <div class="seg draw" style="width: 24.2%"></div>
+        <div class="seg away" style="width: 54.1%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>21.8%</b></span>
+        <span><i class="dot draw"></i>平局 <b>24.2%</b></span>
+        <span><i class="dot away"></i>客胜 <b>54.1%</b></span>
+        <span>ELO差 <b>-225</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 conflict">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">21.8% / 24.2% / 54.1%</div>
+        <div class="c3-j">结论不可用(方向-比分冲突)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主+1.0): 主47%/走24%/客29%</div>
+        <div class="c3-j">盘口仅作覆盖参考</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>54.3%</b></div>
+        <div class="c3-j">—</div>
+        <div class="c3-j" style="color:var(--dim);font-size:.75rem">总进球 1-5球 (80%覆盖·置信度中)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">11.0%</div>
+          <div class="sb-bar" style="height: 33.0%"></div>
+          <div class="sb-label">0-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.5%</div>
+          <div class="sb-bar" style="height: 31.5%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.7%</div>
+          <div class="sb-bar" style="height: 29.099999999999998%"></div>
+          <div class="sb-label">1-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">8.8%</div>
+          <div class="sb-bar" style="height: 26.400000000000002%"></div>
+          <div class="sb-label">0-2</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">6.7%</div>
+          <div class="sb-bar" style="height: 20.1%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1626</b>
+          <div class="elo-track"><div class="elo-home" style="width: 47%"></div><div class="elo-away" style="width: 53%"></div></div>
+          <b>1851</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-L">L</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-W">W</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>54.3%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>54.5%</b> (参考)</span>
+      <span class="chip">预期进球 <b>1.10 - 1.75</b></span>
+      <span class="chip">市场赔率 <b>6.20/4.10/1.38</b></span>
+      
+      <span class="chip kelly pos">凯利 <b>2.19%</b></span>
+      <span class="chip">优势 Home <b>+9.2%</b></span>
+      
+      
+      
+      <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 客胜(52%) 冲突, 已强制降级为结论不可用</span>
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 1-0(模型6.7%vs市场4.3%) · 2-1(模型6.1%vs市场4.5%)</span>
+      <span class="chip">盘口 <b>让球(主+1.0): 主47%/走24%/客29%</b></span>
+      
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#18 · 客队#9(3分)</b></span>
+      <span class="chip">近况 主[L] 客[W]</span>
+    </div>
+    
+
+    
+
+    
+  </article>
+  
+  <article class="match reference" data-lg="西甲" style="animation-delay: 240ms">
+    <header class="m-head">
+      <div class="m-teams">
+        <span class="m-league">西甲</span>
+        <span>巴塞罗那</span>
+        <span class="tvs">VS</span>
+        <span>巴列卡诺</span>
+      </div>
+      <span class="m-pick bet">
+        参考 让球看好客队 (+26.0%)
+      </span>
+    </header>
+
+    <div class="prob">
+      <div class="prob-track">
+        <div class="seg home" style="width: 60.8%"></div>
+        <div class="seg draw" style="width: 22.6%"></div>
+        <div class="seg away" style="width: 16.6%"></div>
+      </div>
+      <div class="prob-legends">
+        <span><i class="dot home"></i>主胜 <b>60.8%</b></span>
+        <span><i class="dot draw"></i>平局 <b>22.6%</b></span>
+        <span><i class="dot away"></i>客胜 <b>16.6%</b></span>
+        <span>ELO差 <b>+317</b></span>
+      </div>
+    </div>
+
+    <!-- 核心三信号: 胜平负 / 让球盘 / 大小球 (决策核心, 比分降为派生参考) -->
+    <div class="core3">
+      <div class="c3 bet">
+        <div class="c3-l">① 胜平负</div>
+        <div class="c3-v">60.8% / 22.6% / 16.6%</div>
+        <div class="c3-j">让球看好客队 (+26.0%)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">② 让球盘</div>
+        <div class="c3-v">让球(主-2.0): 主28%/走22%/客51%</div>
+        <div class="c3-j">让球看好客队 (+26.0%)</div>
+      </div>
+      <div class="c3">
+        <div class="c3-l">③ 大小球</div>
+        <div class="c3-v">大2.5 <b>57.3%</b></div>
+        <div class="c3-j">小2.5 模型57% vs 市场78% (-20%)</div>
+        <div class="c3-j" style="color:var(--dim);font-size:.75rem">总进球 1-5球 (80%覆盖·置信度中)</div>
+      </div>
+    </div>
+
+    <!-- 数据可视化: 比分概率 + 近况/ELO -->
+    <div class="viz-grid">
+      <div class="score-bars">
+        <div style="font-size:.65rem;color:var(--dim);margin-bottom:4px;">比分参考(波胆累计命中12.5%, 仅供方向参考)</div>
+        
+        <div class="sb">
+          <div class="sb-pct">13.1%</div>
+          <div class="sb-bar" style="height: 39.3%"></div>
+          <div class="sb-label">1-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">13.0%</div>
+          <div class="sb-bar" style="height: 39.0%"></div>
+          <div class="sb-label">2-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">10.0%</div>
+          <div class="sb-bar" style="height: 30.0%"></div>
+          <div class="sb-label">3-0</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">9.2%</div>
+          <div class="sb-bar" style="height: 27.599999999999998%"></div>
+          <div class="sb-label">2-1</div>
+        </div>
+        
+        <div class="sb">
+          <div class="sb-pct">7.4%</div>
+          <div class="sb-bar" style="height: 22.200000000000003%"></div>
+          <div class="sb-label">1-1</div>
+        </div>
+        
+      </div>
+      <div>
+        <div class="elo-row">
+          <b>1888</b>
+          <div class="elo-track"><div class="elo-home" style="width: 55%"></div><div class="elo-away" style="width: 45%"></div></div>
+          <b>1572</b>
+        </div>
+        
+        <div class="form-row" style="margin-top:10px">
+          <span>主近况<span class="f-letters"><span class="f-W">W</span><span class="f-W">W</span></span></span>
+          <span>客近况<span class="f-letters"><span class="f-D">D</span><span class="f-L">L</span></span></span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip">大2.5球 <b>57.3%</b></span>
+      <span class="chip" style="opacity:.65;">BTTS <b>44.6%</b> (参考)</span>
+      <span class="chip">预期进球 <b>2.30 - 0.70</b></span>
+      <span class="chip">市场赔率 <b>0.86/0.06/0.08</b></span>
+      <span class="chip" style="border-color: rgba(94,168,255,.5)">锚点: 体彩未开胜平负, 由让球盘反推</span>
+      
+      <span class="chip">优势 Home <b>+39.7%</b></span>
+      
+      
+      <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型57% vs 市场78% (-20%)</span>
+      
+      <span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: 1-0(模型13.1%vs市场7.1%) · 1-1(模型7.4%vs市场4.0%)</span>
+      <span class="chip">盘口 <b>让球(主-2.0): 主28%/走22%/客51%</b></span>
+      <span class="chip" style="border-color: rgba(52,211,153,.5)">🏆 让球看好客队 (+26.0%)</span>
+    </div>
+    
+    <div class="chips" style="margin-top:8px">
+      <span class="chip">📊 积分榜: <b>主队#4(6分) · 客队#16(1分)</b></span>
+      <span class="chip">近况 主[W,W] 客[D,L]</span>
+    </div>
+    
+
+    
+
+    
+  </article>
+  
+  <article class="match skip" data-lg="非五大" style="animation-delay: 300ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">沙职 · 非五大</span>
@@ -396,6 +1042,7 @@
       
       
       <span class="chip">优势 Home <b>+0.4%</b></span>
+      
       
       
       
@@ -523,7 +1170,7 @@
     
   </article>
   
-  <article class="match reference" data-lg="英冠" style="animation-delay: 60ms">
+  <article class="match reference" data-lg="英冠" style="animation-delay: 360ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">英冠 · 英冠</span>
@@ -624,6 +1271,7 @@
       
       
       <span class="chip">优势 Draw <b>+1.8%</b></span>
+      
       
       
       
@@ -751,7 +1399,7 @@
     
   </article>
   
-  <article class="match skip" data-lg="英冠" style="animation-delay: 120ms">
+  <article class="match skip" data-lg="英冠" style="animation-delay: 420ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">英冠 · 英冠</span>
@@ -852,6 +1500,7 @@
       
       
       <span class="chip">优势 Draw <b>+2.5%</b></span>
+      
       
       <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型46% vs 市场59% (-13%)</span>
       <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 主胜(45%) 冲突, 已强制降级为结论不可用</span>
@@ -979,7 +1628,7 @@
     
   </article>
   
-  <article class="match reference" data-lg="英冠" style="animation-delay: 180ms">
+  <article class="match reference" data-lg="英冠" style="animation-delay: 480ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">英冠 · 英冠</span>
@@ -1080,6 +1729,7 @@
       
       
       <span class="chip">优势 Draw <b>+2.7%</b></span>
+      
       
       <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型35% vs 市场47% (-12%)</span>
       
@@ -1207,7 +1857,7 @@
     
   </article>
   
-  <article class="match reference" data-lg="英冠" style="animation-delay: 240ms">
+  <article class="match reference" data-lg="英冠" style="animation-delay: 540ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">英冠 · 英冠</span>
@@ -1308,6 +1958,7 @@
       
       
       <span class="chip">优势 Home <b>+4.3%</b></span>
+      
       
       <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型36% vs 市场52% (-16%)</span>
       
@@ -1435,7 +2086,7 @@
     
   </article>
   
-  <article class="match skip" data-lg="英冠" style="animation-delay: 300ms">
+  <article class="match skip" data-lg="英冠" style="animation-delay: 600ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">英冠 · 英冠</span>
@@ -1536,6 +2187,7 @@
       
       
       <span class="chip">优势 Draw <b>+2.2%</b></span>
+      
       
       <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型40% vs 市场52% (-12%)</span>
       <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 客胜(37%) 冲突, 已强制降级为结论不可用</span>
@@ -1663,7 +2315,7 @@
     
   </article>
   
-  <article class="match reference" data-lg="英冠" style="animation-delay: 360ms">
+  <article class="match reference" data-lg="英冠" style="animation-delay: 660ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">英冠 · 英冠</span>
@@ -1764,6 +2416,7 @@
       
       
       <span class="chip">优势 Draw <b>+1.9%</b></span>
+      
       
       
       
@@ -1891,7 +2544,7 @@
     
   </article>
   
-  <article class="match skip" data-lg="英冠" style="animation-delay: 420ms">
+  <article class="match skip" data-lg="英冠" style="animation-delay: 720ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">英冠 · 英冠</span>
@@ -1992,6 +2645,7 @@
       
       
       <span class="chip">优势 Draw <b>+2.2%</b></span>
+      
       
       <span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ 小2.5 模型41% vs 市场57% (-16%)</span>
       <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 主胜(36%) 冲突, 已强制降级为结论不可用</span>
@@ -2119,7 +2773,7 @@
     
   </article>
   
-  <article class="match skip" data-lg="英冠" style="animation-delay: 480ms">
+  <article class="match skip" data-lg="英冠" style="animation-delay: 780ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">英冠 · 英冠</span>
@@ -2220,6 +2874,7 @@
       
       
       <span class="chip">优势 Draw <b>+2.1%</b></span>
+      
       
       
       <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 客胜(45%) 冲突, 已强制降级为结论不可用</span>
@@ -2347,7 +3002,7 @@
     
   </article>
   
-  <article class="match skip" data-lg="非五大" style="animation-delay: 540ms">
+  <article class="match skip" data-lg="非五大" style="animation-delay: 840ms">
     <header class="m-head">
       <div class="m-teams">
         <span class="m-league">UNK · 非五大</span>
@@ -2448,6 +3103,7 @@
       
       
       <span class="chip">优势 Away <b>+1.9%</b></span>
+      
       
       
       <span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ 最可能比分 1-1(平局) 与最高概率方向 主胜(51%) 冲突, 已强制降级为结论不可用</span>

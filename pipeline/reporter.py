@@ -252,9 +252,29 @@ def generate_report(
         backtest_brier = _load_backtest_brier(output_dir)
 
     # 构建模板上下文
+    # 结论轨迹 (早→午→终): 渲染侧读存档JSON, 不消耗任何LLM token
+    traj_map: dict = {}
+    for _st in ("morning", "midday"):
+        _np = os.path.join(output_dir, f"analysis_notes_{_st}_{today}.json")
+        if os.path.exists(_np):
+            try:
+                with open(_np, "r", encoding="utf-8") as _f:
+                    for _k, _v in json.load(_f).items():
+                        try:
+                            _obj = json.loads(_v)
+                            _ds = _obj.get("方向分")
+                            _lbl = None
+                            if isinstance(_ds, (int, float)):
+                                _lbl = "看主" if _ds >= 0.8 else ("看客" if _ds <= -0.8 else "观望")
+                        except Exception:
+                            _lbl = None
+                        traj_map.setdefault(_k, {})[_st] = _lbl
+            except Exception:
+                pass
+
     match_cards = []
     for p in predictions:
-        card = _build_match_card(p, analyst_notes)
+        card = _build_match_card(p, analyst_notes, traj_map)
         match_cards.append(card)
 
     # Summary stats
@@ -392,6 +412,7 @@ def _local_time(p: dict, league_code: str) -> str:
 def _build_match_card(
     p: dict,
     analyst_notes: dict[str, str] | None = None,
+    traj_map: dict | None = None,
 ) -> dict[str, Any]:
     """Build template context for a single match card."""
     model = p.get("model", {})
@@ -761,6 +782,19 @@ def _build_match_card(
             })
         triggers_list = struct.get("触发器") or []
 
+    # 结论轨迹 (早→午→终): 至少有一个早期阶段才展示
+    trajectory = None
+    _mk = f"{home_team_en} vs {away_team_en}"
+    _tm = (traj_map or {}).get(_mk) or {}
+    _tp = []
+    if _tm.get("morning"):
+        _tp.append(f"早盘:{_tm['morning']}")
+    if _tm.get("midday"):
+        _tp.append(f"午盘:{_tm['midday']}")
+    if _tp:
+        _tp.append(f"终盘:{pick}")
+        trajectory = " → ".join(_tp)
+
     # 自检结论 (审计行在JSON之外, 单独提取显示)
     audit_txt = None
     if analyst_note:
@@ -800,6 +834,7 @@ def _build_match_card(
         "cs_text": cs_text,
         "ou_text": ou_text,
         "ou_range": ou_range,
+        "trajectory": trajectory,
         "std_text": std_text,
         "std_form": std_form,
         "form_h": form_h,

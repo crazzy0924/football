@@ -354,6 +354,20 @@ def cmd_predict(args):
         home = normalize_team_name(home)
         away = normalize_team_name(away)
 
+        # 联赛代码缺失(UNK)兜底: 从已训练模型 team_league 反查 (体彩漏联赛代码时)
+        if league in ("", "UNK", None):
+            for _lg in ("PL", "PD", "BL1", "SA", "FL1", "ELC"):
+                _tl_path = os.path.join(state_dir, "models", _lg, "team_league.json")
+                if os.path.exists(_tl_path):
+                    try:
+                        with open(_tl_path, "r", encoding="utf-8") as _f:
+                            _tl = json.load(_f)
+                        if home in _tl and away in _tl:
+                            league = _lg
+                            break
+                    except Exception:
+                        pass
+
         # ── 市场驱动冷启动: 把市场赔率传给DC ──
         market = m.get("odds") or m.get("market_odds")
         anchor_from_ah = False

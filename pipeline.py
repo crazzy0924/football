@@ -346,8 +346,11 @@ def cmd_predict(args):
         if not home or not away:
             continue
 
-        # 队名标准化为CSV规范形式
+        # 队名标准化为CSV规范形式 (体彩中文名先转英文, 否则次级联赛永远冷启动)
         from pipeline.data_loader import normalize_team_name
+        from pipeline.team_names import CN_TO_EN_TEAM
+        home = CN_TO_EN_TEAM.get(home, home)
+        away = CN_TO_EN_TEAM.get(away, away)
         home = normalize_team_name(home)
         away = normalize_team_name(away)
 

@@ -22,7 +22,7 @@ if hasattr(sys.stdout, "buffer"):
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # 五大联赛 football-data.co.uk 代码 + 当前赛季目录
-FOCUS_DIVS = {"E0": "英超", "SP1": "西甲", "D1": "德甲", "I1": "意甲", "F1": "法甲"}
+FOCUS_DIVS = {"E0": "英超", "SP1": "西甲", "D1": "德甲", "I1": "意甲", "F1": "法甲", "E1": "英冠"}
 BASE_URL = "https://www.football-data.co.uk/mmz4281/{season}/{div}.csv"
 CURRENT_SEASON = "2627"
 

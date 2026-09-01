@@ -184,6 +184,16 @@ CN_TO_EN_TEAM.update({
     '诺丁汉森林': "Nott'm Forest", '诺丁汉': "Nott'm Forest",
     '桑德兰': 'Sunderland', '热刺': 'Tottenham',
     '狼队': 'Wolves',
+    # ── 英冠 ELC ──
+    '斯旺西': 'Swansea', '沃特福德': 'Watford', '朴次茅斯': 'Portsmouth',
+    '德比郡': 'Derby', '林肯城': 'Lincoln', '普雷斯顿': 'Preston',
+    '布里斯托尔城': 'Bristol City', '谢菲尔德联': 'Sheffield United', '谢菲联': 'Sheffield United',
+    '博尔顿': 'Bolton', '伯明翰': 'Birmingham', '南安普敦': 'Southampton',
+    '斯托克城': 'Stoke', '诺维奇': 'Norwich', '西布朗': 'West Brom',
+    '考文垂': 'Coventry', '米尔沃尔': 'Millwall', '卡迪夫城': 'Cardiff',
+    '赫尔城': 'Hull', '卢顿': 'Luton', '伯恩利': 'Burnley',
+    '米德尔斯堡': 'Middlesbrough', '牛津联': 'Oxford', '谢周三': 'Sheffield Weds',
+    '普利茅斯': 'Plymouth', '查尔顿': 'Charlton', '雷克瑟姆': 'Wrexham',
     # ── 西甲 PD ──
     '毕尔巴鄂竞技': 'Ath Bilbao', '毕尔巴鄂': 'Ath Bilbao',
     '马德里竞技': 'Ath Madrid', '马竞': 'Ath Madrid',

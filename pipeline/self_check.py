@@ -62,12 +62,12 @@ def main() -> None:
     snaps = glob.glob(os.path.join("data", "state", "odds_snapshots", f"snapshot_{date_str}_*.json"))
     add("B1", "赔率快照留档", len(snaps) >= 2, f"{len(snaps)} 个快照", hard=False)
 
-    # 口径对齐: 终盘页只渲染聚焦联赛场次, JSON是合并式(含非五大); C1/C2/C8 只对聚焦场次自检
+    # 口径对齐: 终盘页只渲染聚焦联赛+英冠(ELC)场次, JSON是合并式(含其余非五大); C1/C2/C8 只对聚焦+英冠自检
     try:
         pred_path = os.path.join("data", "output", f"predictions_{date_str}.json")
         with open(pred_path, "r", encoding="utf-8") as f:
             preds = json.load(f)
-        focus_preds = [p for p in preds if p.get("league_code") in ("PL", "PD", "BL1", "SA", "FL1")]
+        focus_preds = [p for p in preds if p.get("league_code") in ("PL", "PD", "BL1", "SA", "FL1", "ELC")]
         fp_path = os.path.join("data", "output", f"predictions_{date_str}.html")
         ph = ""
         if os.path.exists(fp_path):

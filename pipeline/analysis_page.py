@@ -295,7 +295,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
     league = (market or {}).get("league_name", "") or p.get("league_code", "")
     # 非五大联赛标记 (模型覆盖弱, 市场定价为主)
     if p.get("league_code") not in FOCUS_LEAGUES:
-        league = league + " · 非五大"
+        league = league + (" · 英冠" if p.get("league_code") == "ELC" else " · 非五大")
 
     cold = p.get("cold_start", False)
     cross_lg = p.get("cross_league", False)
@@ -378,7 +378,7 @@ def _build_match_card(p, market, move, note, intel_text) -> str:
         if p.get("anchor_from_ah"):
             cold_tag += " (市场锚点=让球盘反推)"
         if league_code_here not in ("PL", "PD", "BL1", "SA", "FL1"):
-            cold_tag += " (非五大·仅观察)"
+            cold_tag += (" (英冠·仅观察)" if league_code_here == "ELC" else " (非五大·仅观察)")
         pick_html = (f'<div class="pick-line">🎯 最可能: <b>{_esc(labels[best_i])}</b> '
                      f'({prob_triple[best_i]:.1%}){_esc(top_score_txt)}{_esc(cold_tag)}</div>')
 

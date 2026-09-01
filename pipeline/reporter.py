@@ -277,7 +277,7 @@ def generate_report(
 
     # 左侧联赛导航分组 (只列出当天有比赛的联赛)
     league_groups = []
-    for _g in ("英超", "西甲", "德甲", "意甲", "法甲", "非五大"):
+    for _g in ("英超", "西甲", "德甲", "意甲", "法甲", "英冠", "非五大"):
         if any(m["league_group"] == _g for m in match_cards):
             league_groups.append(_g)
 
@@ -369,6 +369,8 @@ def _league_group(league_code: str) -> str:
     """联赛分组键: 五大联赛各自一组, 其余归"非五大" (左侧导航用)"""
     if league_code in ("PL", "PD", "BL1", "SA", "FL1"):
         return {"PL": "英超", "PD": "西甲", "BL1": "德甲", "SA": "意甲", "FL1": "法甲"}[league_code]
+    if league_code == "ELC":
+        return "英冠"
     return "非五大"
 
 
@@ -406,11 +408,11 @@ def _build_match_card(
     try:
         from config import FOCUS_LEAGUES
         if league_code not in FOCUS_LEAGUES:
-            league_name = league_name + " · 非五大"
+            league_name = league_name + (" · 英冠" if league_code == "ELC" else " · 非五大")
     except Exception:
         # 直接跑脚本时 config 不在路径, 按已知五大联赛兜底
         if league_code not in ("PL", "PD", "BL1", "SA", "FL1"):
-            league_name = league_name + " · 非五大"
+            league_name = league_name + (" · 英冠" if league_code == "ELC" else " · 非五大")
     cold_start = p.get("cold_start", False)
     cross_league = p.get("cross_league", False)
     # 下注门禁统一: 冷启动 或 跨级先验 都不下注
@@ -484,11 +486,13 @@ def _build_match_card(
             _bd_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}[_bd]
             if _top_out and _bd_cn != _top_out and _bd_cn != _max_cn and _top_out != _max_cn:
                 conflict = True
-    # 纪律: 仅五大联赛场次可出方向信号, 非五大联赛一律仅观察
+    # 纪律: 五大联赛+英冠(ELC) 可出方向信号, 其余非五大联赛仅观察
     non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1")
+    # 2026-09-01 用户指令: 英冠(ELC) 出下注信号 (次级联赛模型, 门禁照旧), 其余非五大仍仅观察
+    secondary_bet = league_code == "ELC"
 
     # 推荐等级 (纪律: 冲突场/非五大场一律skip, 不得绿色高亮不得计入推荐)
-    if conflict or non_focus:
+    if conflict or (non_focus and not secondary_bet):
         recommendation = "skip"
     elif confidence == "high" and not no_bet:
         recommendation = "recommended"
@@ -518,7 +522,7 @@ def _build_match_card(
     if conflict:
         bet_pick = "结论不可用(方向-比分冲突)"
         bet_class = "conflict"
-    elif non_focus:
+    elif non_focus and not secondary_bet:
         bet_pick = "非五大仅观察"
         bet_class = "skip"
     elif no_signal:
@@ -582,7 +586,7 @@ def _build_match_card(
         # 冷启动纪律: 冷启动场次让球盘也不出"看好", 只展示盘口覆盖
         # 一致性裁决: 方向-比分冲突场次让球盘同样不出"看好", 只展示覆盖比例
         # 纪律: 非五大联赛让球盘同样不出"看好"
-        if bp in ("home", "away") and ev >= 0.05 and not no_bet and not conflict and not non_focus:
+        if bp in ("home", "away") and ev >= 0.05 and not no_bet and not conflict and (not non_focus or secondary_bet):
             dir_cn = "主队" if bp == "home" else "客队"
             ah_pick = f"让球看好{dir_cn} (+{ev:.1%})"
             if bet_class != "bet":
@@ -625,8 +629,43 @@ def _build_match_card(
     ou_v = p.get("ou_value")
     ou_text = None
     if ou_v:
-        ou_text = f"{ou_v['side']} 模型{ou_v['model']:.0%} vs 市场{ou_v['market']:.0%} ({ou_v['edge']:+.0%})"
+        _ou_edge = ou_v.get("edge") or 0
+        if abs(_ou_edge) >= 0.10:
+            ou_text = f"{ou_v['side']} 模型{ou_v['model']:.0%} vs 市场{ou_v['market']:.0%} ({_ou_edge:+.0%})"
+        else:
+            ou_text = "无差异信号 (模型与市场差不足10%)"
 
+    # 总进球区间 (80%覆盖, 借鉴阿珺研究包"区间代替点概率"; 资料不足则省略)
+    ou_range = None
+    _sd = model.get("score_distribution") or {}
+    if _sd:
+        _tot = {}
+        for _sc, _pr in _sd.items():
+            try:
+                _h0, _a0 = (int(x) for x in _sc.split("-"))
+                _tot[_h0 + _a0] = _tot.get(_h0 + _a0, 0.0) + _pr
+            except Exception:
+                continue
+        if _tot:
+            _best = None
+            _keys = sorted(_tot)
+            for _a1 in _keys:
+                _cov = 0.0
+                for _b1 in _keys:
+                    if _b1 < _a1:
+                        continue
+                    _cov += _tot[_b1]
+                    if _cov >= 0.80:
+                        _cand = (_b1 - _a1, -_cov, _a1, _b1)
+                        if _best is None or _cand < _best:
+                            _best = _cand
+                        break
+            if _best:
+                _, _, _x, _y = _best
+                _span = _y - _x
+                _rc = "高" if _span <= 2 else ("中" if _span <= 4 else "低")
+                _rng = f"{_x}-{_y}球" if _x != _y else f"{_x}球"
+                ou_range = f"总进球 {_rng} (80%覆盖·置信度{_rc})"
     # 积分榜快照 (Phase 7)
     std = p.get("standings") or {}
     std_text = None
@@ -760,6 +799,7 @@ def _build_match_card(
         "odds_move": odds_move,
         "cs_text": cs_text,
         "ou_text": ou_text,
+        "ou_range": ou_range,
         "std_text": std_text,
         "std_form": std_form,
         "form_h": form_h,

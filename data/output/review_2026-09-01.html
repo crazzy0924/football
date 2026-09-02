@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>复盘报告 — 2026-09-01</title>
+<style>
+  :root {
+    --bg: #0b0f1a; --bg2: #0e1424; --card: #121a2c; --line: #1e2a42;
+    --txt: #e9eef8; --dim: #8d99b0;
+    --green: #34d399; --amber: #fbbf24; --blue: #5ea8ff;
+    --violet: #a78bfa; --pink: #f472b6; --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, sans-serif;
+    background:
+      radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%),
+      radial-gradient(800px 400px at 90% -20%, rgba(167,139,250,.10), transparent 60%),
+      var(--bg);
+    color: var(--txt);
+    min-height: 100vh;
+    padding: 28px 16px 40px;
+    line-height: 1.55;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  .header { text-align: center; padding: 30px 10px 22px; }
+  .header h1 {
+    font-size: 2rem; font-weight: 800;
+    background: linear-gradient(90deg, #e9eef8, #9ec4ff 60%, #c4b5fd);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .header .meta { color: var(--dim); font-size: .85rem; margin-top: 8px; }
+
+  .scorecard { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 4px 0 24px; }
+  .sc {
+    background: linear-gradient(180deg, var(--card), #101725);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 6px; text-align: center;
+    transition: transform .15s;
+  }
+  .sc:hover { transform: translateY(-2px); }
+  .sc .value { font-size: 1.35rem; font-weight: 800; }
+  .sc .label { font-size: .72rem; color: var(--dim); margin-top: 3px; }
+  .sc.good .value { color: var(--green); }
+  .sc.bad .value { color: var(--red); }
+  .sc.warn .value { color: var(--amber); }
+
+  .direction-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; margin: 10px 0 18px; background: #0a0f1c; }
+  .seg-home { background: linear-gradient(90deg, #2f6fd8, #5ea8ff); }
+  .seg-draw { background: linear-gradient(90deg, #47506a, #7c86a3); }
+  .seg-away { background: linear-gradient(90deg, #d97706, #fbbf24); }
+
+  .match-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px; margin-bottom: 8px;
+    background: linear-gradient(180deg, var(--card), #0f1727);
+    border: 1px solid var(--line); border-radius: 12px;
+    font-size: .85rem;
+    transition: transform .15s;
+  }
+  .match-row:hover { transform: translateX(3px); border-color: #2c3d63; }
+  .match-row.hit { border-left: 3px solid var(--green); }
+  .match-row.miss { border-left: 3px solid var(--red); }
+  .match-row.push { border-left: 3px solid var(--amber); }
+
+  .mr-teams { flex: 2; min-width: 0; font-weight: 600; }
+  .mr-teams .vs { color: var(--dim); margin: 0 6px; font-weight: 400; }
+  .mr-result { flex: 0 0 56px; text-align: center; font-weight: 800; font-size: 1.05rem; }
+  .mr-pred { flex: 1; text-align: center; font-size: .76rem; color: var(--dim); }
+  .mr-prob { flex: 0 0 66px; text-align: right; font-weight: 600; }
+  .mr-bet { flex: 0 0 76px; text-align: right; font-weight: 700; }
+  .mr-bet.won { color: var(--green); }
+  .mr-bet.lost { color: var(--red); }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: .7rem; }
+  .badge.hit { background: rgba(52,211,153,.15); color: #6ee7b7; }
+  .badge.miss { background: rgba(248,113,113,.15); color: #fca5a5; }
+  .badge.push { background: rgba(251,191,36,.15); color: #fcd34d; }
+
+  .section-title {
+    font-size: .95rem; font-weight: 800; letter-spacing: .5px;
+    margin: 26px 0 10px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+    color: #b8cdf5;
+  }
+
+  .dim-box {
+    background: #0e1524; border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; font-size: .78rem; line-height: 1.8;
+    white-space: pre-wrap; font-family: 'JetBrains Mono', Consolas, monospace;
+    color: #cbd5e8;
+  }
+
+  .cal-table { width: 100%; font-size: .8rem; border-collapse: collapse; margin-bottom: 16px; }
+  .cal-table th, .cal-table td { padding: 7px 10px; text-align: center; border-bottom: 1px solid var(--line); }
+  .cal-table th { color: var(--dim); font-weight: 600; }
+
+  .footer { text-align: center; padding: 26px 0 10px; color: var(--dim); font-size: .72rem; }
+
+  @media (max-width: 640px) {
+    .scorecard { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>赛后复盘</h1>
+    <div class="meta">2026-09-01 — 匹配 7/7 场</div>
+  </div>
+
+  <!-- 指标卡片 -->
+  <div class="scorecard">
+    <div class="sc good">
+      <div class="value">0.2098</div>
+      <div class="label">Brier 分数</div>
+    </div>
+    <div class="sc good">
+      <div class="value">42.9%</div>
+      <div class="label">准确率</div>
+    </div>
+    <div class="sc bad">
+      <div class="value">1.0414</div>
+      <div class="label">对数损失</div>
+    </div>
+    <div class="sc good">
+      <div class="value">+0.05u</div>
+      <div class="label">盈亏 (单位)</div>
+    </div>
+    <div class="sc good">
+      <div class="value">+0.8%</div>
+      <div class="label">回报率</div>
+    </div>
+  </div>
+
+  <!-- 方向准确率 -->
+  <div class="section-title">方向分解</div>
+  <div style="display:flex;gap:20px;font-size:0.82rem;margin-bottom:8px">
+    <span>主胜: 3/3 (100.0%)</span>
+    <span>平局: 0/2 (0.0%)</span>
+    <span>客胜: 0/2 (0.0%)</span>
+  </div>
+  <div class="direction-bar">
+    <div class="seg-home" style="width:43%"></div>
+    <div class="seg-draw" style="width:29%"></div>
+    <div class="seg-away" style="width:29%"></div>
+  </div>
+
+  <!-- 多维度复盘 -->
+  
+  <div class="section-title">多维度复盘 (5维度独立计分)</div>
+  <pre class="dim-box">维度复盘 (门禁: 模型Brier < 气候基线):
+--------------------------------------------------------
+  1X2    胜平负 (3-way)          今日7场 Brier 0.2098 vs 基线0.2484 ✅有技能
+        累计175场 Brier 0.1869 vs 基线0.2456 命中57% ✅
+  OU25   大小球2.5 (2-way)       今日7场 Brier 0.3102 vs 基线0.2498 ❌无技能
+        累计175场 Brier 0.2311 vs 基线0.2456 命中62% ✅
+  OU35   大小球3.5 (2-way)       今日7场 Brier 0.2644 vs 基线0.2191 ❌无技能
+        累计175场 Brier 0.206 vs 基线0.2222 命中69% ✅
+  BTTS   双方进球 (2-way)         今日7场 Brier 0.3021 vs 基线0.2498 ❌无技能
+        累计175场 Brier 0.2489 vs 基线0.2489 命中56% ❌
+  AH     让球盘 (2-way)          今日7场 Brier 0.1104 vs 基线0.2498 ✅有技能
+        累计134场 Brier 0.1763 vs 基线0.2497 命中62% ✅</pre>
+  
+
+  <!-- 投注结算 P&L (Phase 5) -->
+  
+  <div class="section-title">投注结算 (P&L 账本)</div>
+  <pre class="dim-box">今日无投注单，P&L 不结算。</pre>
+  
+
+  <!-- 比赛结果 -->
+  <div class="section-title">比赛结果</div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      斯旺西 <span class="vs">vs</span> 沃特福德
+      
+    </div>
+    <div class="mr-result">
+      
+      2-0
+      
+    </div>
+    <div class="mr-pred">
+      预测: 46.8% / 28.8% / 24.4%
+    </div>
+    <div class="mr-prob">
+      28.8%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.003u
+      
+    </div>
+    <span class="badge push">△ 走水</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      朴次茅斯 <span class="vs">vs</span> 德比郡
+      
+    </div>
+    <div class="mr-result">
+      
+      0-2
+      
+    </div>
+    <div class="mr-pred">
+      预测: 37.7% / 28.0% / 34.3%
+    </div>
+    <div class="mr-prob">
+      34.3%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.080u
+      
+    </div>
+    <span class="badge hit">✓ 命中</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      林肯城 <span class="vs">vs</span> 布莱克本
+      
+    </div>
+    <div class="mr-result">
+      
+      0-0
+      
+    </div>
+    <div class="mr-pred">
+      预测: 30.0% / 28.3% / 41.7%
+    </div>
+    <div class="mr-prob">
+      41.7%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.023u
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      普雷斯顿 <span class="vs">vs</span> 布里斯托尔城
+      
+    </div>
+    <div class="mr-result">
+      
+      1-3
+      
+    </div>
+    <div class="mr-pred">
+      预测: 36.5% / 29.4% / 34.1%
+    </div>
+    <div class="mr-prob">
+      36.5%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.007u
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      谢菲尔德联 <span class="vs">vs</span> 博尔顿
+      
+    </div>
+    <div class="mr-result">
+      
+      3-2
+      
+    </div>
+    <div class="mr-pred">
+      预测: 44.7% / 39.8% / 15.5%
+    </div>
+    <div class="mr-prob">
+      39.8%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.048u
+      
+    </div>
+    <span class="badge push">△ 走水</span>
+  </div>
+  
+  <div class="match-row miss">
+    <div class="mr-teams">
+      伯明翰 <span class="vs">vs</span> 南安普敦
+      
+    </div>
+    <div class="mr-result">
+      
+      1-1
+      
+    </div>
+    <div class="mr-pred">
+      预测: 33.7% / 27.0% / 39.4%
+    </div>
+    <div class="mr-prob">
+      39.4%
+    </div>
+    <div class="mr-bet ">
+      
+    </div>
+    <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      斯托克城 <span class="vs">vs</span> 诺维奇
+      
+    </div>
+    <div class="mr-result">
+      
+      1-0
+      
+    </div>
+    <div class="mr-pred">
+      预测: 36.5% / 28.1% / 35.3%
+    </div>
+    <div class="mr-prob">
+      36.5%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.050u
+      
+    </div>
+    <span class="badge hit">✓ 命中</span>
+  </div>
+  
+
+  <!-- ELO更新 -->
+  
+  <div class="section-title">ELO 更新</div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    斯旺西: 1502.1 → 1512.0
+    <span style="color:var(--green)">
+      (+9.9)
+    </span>
+    <span style="font-size:0.65rem"> — 2-0 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    沃特福德: 1349.1 → 1339.2
+    <span style="color:var(--red)">
+      (-9.9)
+    </span>
+    <span style="font-size:0.65rem"> — 0-2 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    朴次茅斯: 1417.1 → 1387.0
+    <span style="color:var(--red)">
+      (-30.1)
+    </span>
+    <span style="font-size:0.65rem"> — 0-2 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    德比郡: 1409.0 → 1439.1
+    <span style="color:var(--green)">
+      (+30.1)
+    </span>
+    <span style="font-size:0.65rem"> — 2-0 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    林肯城: 1474.7 → 1467.9
+    <span style="color:var(--red)">
+      (-6.8)
+    </span>
+    <span style="font-size:0.65rem"> — 0-0 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    布莱克本: 1399.6 → 1406.4
+    <span style="color:var(--green)">
+      (+6.8)
+    </span>
+    <span style="font-size:0.65rem"> — 0-0 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    普雷斯顿: 1313.8 → 1289.9
+    <span style="color:var(--red)">
+      (-23.9)
+    </span>
+    <span style="font-size:0.65rem"> — 1-3 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    布里斯托尔城: 1397.7 → 1421.6
+    <span style="color:var(--green)">
+      (+23.9)
+    </span>
+    <span style="font-size:0.65rem"> — 3-1 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    谢菲尔德联: 1436.6 → 1451.0
+    <span style="color:var(--green)">
+      (+14.4)
+    </span>
+    <span style="font-size:0.65rem"> — 3-2 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    博尔顿: 1483.3 → 1468.9
+    <span style="color:var(--red)">
+      (-14.4)
+    </span>
+    <span style="font-size:0.65rem"> — 2-3 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    伯明翰: 1457.6 → 1459.9
+    <span style="color:var(--green)">
+      (+2.3)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    南安普敦: 1590.8 → 1588.5
+    <span style="color:var(--red)">
+      (-2.3)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    斯托克城: 1271.0 → 1292.4
+    <span style="color:var(--green)">
+      (+21.4)
+    </span>
+    <span style="font-size:0.65rem"> — 1-0 胜</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    诺维奇: 1475.4 → 1454.0
+    <span style="color:var(--red)">
+      (-21.4)
+    </span>
+    <span style="font-size:0.65rem"> — 0-1 负</span>
+  </div>
+  
+  
+
+  <div class="footer">
+    足球预测模型 v3.0 · 复盘 2026-09-01
+    · 赛果自动更新ELO
+  </div>
+</div>
+</body>
+</html>

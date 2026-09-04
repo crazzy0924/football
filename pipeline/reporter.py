@@ -614,6 +614,18 @@ def _build_match_card(
                 bet_pick = ah_pick
                 bet_class = "bet"
 
+    # 1X2-AH 口径背离自动解释 (2026-09-04 用户指正: "主胜+客受让"并存非矛盾, 属小胜结构, 必须亮明数学)
+    ah_explain = None
+    try:
+        if ah and line is not None and hc > 0 and ac > 0 and not conflict:
+            _mx = max(p_home, p_draw, p_away)
+            if _mx == p_home and ac > hc:
+                ah_explain = f"主胜{_mx:.0%}中约一半为1球小胜: 让球主{line:+.1f}赢盘仅{hc:.0%}(走水{pu:.0%}) — 与主胜不矛盾(小胜结构)"
+            elif _mx == p_away and hc > ac:
+                ah_explain = f"客胜{_mx:.0%}中约一半为1球小胜: 让球主{line:+.1f}客队赢盘仅{ac:.0%}(走水{pu:.0%}) — 与客胜不矛盾(小胜结构)"
+    except Exception:
+        ah_explain = None
+
     # Market odds
     market_odds_str = None
     if odds_data:
@@ -830,6 +842,7 @@ def _build_match_card(
         "bet_class": bet_class,
         "ah_text": ah_text,
         "ah_pick": ah_pick,
+        "ah_explain": ah_explain,
         "odds_move": odds_move,
         "cs_text": cs_text,
         "ou_text": ou_text,

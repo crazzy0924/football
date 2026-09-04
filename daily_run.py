@@ -167,6 +167,12 @@ def cmd_predict(args) -> None:
     except Exception as e:
         print("[警告] 情报采集跳过: " + str(e))
 
+    # 3b) 英超伤停 (官方 FPL API, 免费无key, 仅英超场次)
+    try:
+        _run([sys.executable, "pipeline/intel_fetcher_fpl.py", date_str])
+    except Exception as e:
+        print("[警告] FPL 伤停采集跳过: " + str(e))
+
     # 4) 预测 (可选 LLM 分析; 早盘/午盘只出七维分析存档页, 终盘出预测页)
     cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json", "--stage", args.stage]
     if not args.no_llm:

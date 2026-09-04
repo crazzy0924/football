@@ -491,6 +491,12 @@ def main() -> None:
     if os.path.exists(intel_path):
         with open(intel_path, "r", encoding="utf-8") as f:
             intel_text = f.read().strip()
+    fpl_path = os.path.join("data", "intel", f"fpl_{date_str}.txt")
+    if os.path.exists(fpl_path):
+        with open(fpl_path, "r", encoding="utf-8") as f:
+            fpl_text = f.read().strip()
+        if fpl_text:
+            intel_text = (intel_text + chr(10) + chr(10) + fpl_text).strip() if intel_text else fpl_text
     generate_analysis_page(date_str, stage, predictions, notes, intel_text)
 
 

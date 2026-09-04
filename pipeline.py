@@ -1088,7 +1088,7 @@ def _consistency_flags(pred: dict, jt: list | None) -> dict:
             top_out = "主胜" if h > a else ("平局" if h == a else "客胜")
             max_i = max(range(3), key=lambda i: probs[i])
             labels = ("主胜", "平局", "客胜")
-            if top_out != labels[max_i] and probs[max_i] >= 0.35:
+            if top_out != labels[max_i] and probs[max_i] < 0.50:
                 flags["direction_score_conflict"] = (f"最可能比分 {_top_score}({top_out}) 与最高概率方向 "
                                                     f"{labels[max_i]}({probs[max_i]:.0%}) 冲突, 已强制降级为结论不可用")
         except Exception:

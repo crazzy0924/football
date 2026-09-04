@@ -481,32 +481,16 @@ def _build_match_card(
         signal_text = SIGNAL_TEXTS.get(confidence, "SKIP")
 
     conflict = bool((p.get("flags") or {}).get("direction_score_conflict"))
-    # 三向校验第三腿: 凯利/edge方向 与 比分方向、概率最高方向 三者互异 → 同样降级
+    # 价值-概率背离提示 (2026-09-04 修正: edge方向是"价值"信号, 与模型概率方向不同属正常价值注, 不再当冲突降级)
+    divergence_note = None
     if not conflict:
         _bd = value.get("best_direction")
         if _bd in ("home", "draw", "away"):
-            _jt = p.get("joint_top_scores")
-            _top_out = None
-            if _jt:
-                try:
-                    _h, _a = (int(x) for x in _jt[0]["score"].split("-"))
-                    _top_out = "主胜" if _h > _a else ("平局" if _h == _a else "客胜")
-                except Exception:
-                    pass
-            else:
-                _sd0 = (p.get("model") or {}).get("score_distribution") or {}
-                if _sd0:
-                    try:
-                        _best0 = max(_sd0.items(), key=lambda kv: kv[1])[0]
-                        _h, _a = (int(x) for x in _best0.split("-"))
-                        _top_out = "主胜" if _h > _a else ("平局" if _h == _a else "客胜")
-                    except Exception:
-                        pass
+            _bd_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}[_bd]
             _max_p = max(p_home, p_draw, p_away)
             _max_cn = "主胜" if _max_p == p_home else ("平局" if _max_p == p_draw else "客胜")
-            _bd_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}[_bd]
-            if _top_out and _bd_cn != _top_out and _bd_cn != _max_cn and _top_out != _max_cn:
-                conflict = True
+            if _bd_cn != _max_cn:
+                divergence_note = f"价值方向{_bd_cn}≠概率方向{_max_cn}"
     # 纪律: 五大联赛+英冠(ELC) 可出方向信号, 其余非五大联赛仅观察
     non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1")
     # 2026-09-01 用户指令: 英冠(ELC) 出下注信号 (次级联赛模型, 门禁照旧), 其余非五大仍仅观察
@@ -573,6 +557,9 @@ def _build_match_card(
     else:
         bet_pick = "观望"
         bet_class = "skip"
+
+    if divergence_note and bet_class == "bet":
+        bet_pick = f"{bet_pick} (⚠ {divergence_note})"
 
     # 赔率变动 (早盘→最新快照, 资金流向参考)
     try:
@@ -663,10 +650,25 @@ def _build_match_card(
     ou_text = None
     if ou_v:
         _ou_edge = ou_v.get("edge") or 0
+        _ou_side = ou_v.get("side") or ""
+        _ou_m = ou_v.get("model", 0)
+        _ou_k = ou_v.get("market", 0)
+        if _ou_side == "小2.5":
+            _ou_m, _ou_k = 1.0 - _ou_m, 1.0 - _ou_k
         if abs(_ou_edge) >= 0.10:
-            ou_text = f"{ou_v['side']} 模型{ou_v['model']:.0%} vs 市场{ou_v['market']:.0%} ({_ou_edge:+.0%})"
+            ou_text = f"{ou_v['side']} 模型{_ou_m:.0%} vs 市场{_ou_k:.0%} (差{abs(_ou_edge):.0%})"
         else:
             ou_text = "无差异信号 (模型与市场差不足10%)"
+
+    # 大小球下注信号 (2026-09-04 用户要求: 下注市场不止胜平负, 大小球同样可下注; 独立于方向冲突)
+    ou_bet = None
+    if ou_v and not no_bet and (not non_focus or secondary_bet) and bet_class != "bet":
+        _oe = ou_v.get("edge") or 0
+        if abs(_oe) >= 0.05:
+            ou_bet = f"{ou_v['side']} 模型{_ou_m:.0%} vs 市场{_ou_k:.0%} (差{abs(_oe):.0%})"
+            _pre = "[胜平负: %s] " % bet_pick if bet_class == "conflict" else ""
+            bet_pick = _pre + ou_bet
+            bet_class = "bet"
 
     # 总进球区间 (80%覆盖, 借鉴阿珺研究包"区间代替点概率"; 资料不足则省略)
     ou_range = None

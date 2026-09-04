@@ -161,19 +161,22 @@ def try_fetch_results_apifootball(date_str: str) -> list[dict] | None:
             return None
         import httpx
         headers = {
-            "x-rapidapi-key": FOOTBALL_RAPIDAPI_KEY,
-            "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+            "x-apisports-key": FOOTBALL_RAPIDAPI_KEY,
         }
         with httpx.Client(timeout=20) as c:
             r = c.get(
-                "https://api-football-v1.p.rapidapi.com/v3/fixtures",
+                "https://v3.football.api-sports.io/fixtures",
                 params={"date": date_str, "timezone": "Asia/Shanghai"},
                 headers=headers,
             )
         if r.status_code != 200:
             print(f"  [赛果] API-Football fixtures: HTTP {r.status_code}")
             return None
-        results = _parse_apifootball_fixtures(r.json())
+        data = r.json()
+        if data.get("errors"):
+            print("  [赛果] API-Football key 无效: " + str(data.get("errors"))[:100])
+            return None
+        results = _parse_apifootball_fixtures(data)
         print(f"  [赛果] API-Football 拿到 {len(results)} 场完赛")
         return _normalize_results(results) if results else None
     except Exception as e:

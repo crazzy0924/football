@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config import FOOTBALL_RAPIDAPI_KEY  # noqa: E402
 
-RAPID_HOST = "api-football-v1.p.rapidapi.com"
+API_HOST = "v3.football.api-sports.io"  # api-football.com 直连 (RapidAPI 页面在部分地区打不开, 改自家平台)
 TEAM_CACHE = "data/state/rapidapi_teams.json"
 INJ_CACHE = "data/state/rapidapi_injuries.json"
 DAILY_BUDGET = 60
@@ -42,19 +42,21 @@ def _get(path: str, params: dict) -> dict | None:
     try:
         import httpx
         headers = {
-            "x-rapidapi-key": FOOTBALL_RAPIDAPI_KEY,
-            "x-rapidapi-host": RAPID_HOST,
+            "x-apisports-key": FOOTBALL_RAPIDAPI_KEY,
         }
         _requests_used += 1
         with httpx.Client(timeout=15) as c:
-            r = c.get(f"https://{RAPID_HOST}{path}", params=params, headers=headers)
+            r = c.get(f"https://{API_HOST}{path}", params=params, headers=headers)
         if r.status_code == 429 or r.status_code == 403:
             print(f"  [限流/未订阅] {path}: HTTP {r.status_code}")
             return None
         if r.status_code != 200:
             print(f"  [警告] {path}: HTTP {r.status_code} {r.text[:100]}")
             return None
-        return r.json()
+        data = r.json()
+        if data.get("errors"):  # api-sports.io 对无效 key 也回 200 + errors 体
+            return None
+        return data
     except Exception as e:
         print(f"  [警告] 请求失败 {path}: {e}")
         return None
@@ -81,7 +83,7 @@ def _team_id(name: str) -> int | None:
     cache = _load_cache(TEAM_CACHE)
     if name in cache:
         return cache[name]
-    j = _get("/v3/teams", {"search": name})
+    j = _get("/teams", {"search": name})
     teams = (j or {}).get("response", [])
     if not teams:
         cache[name] = None
@@ -111,7 +113,7 @@ def fetch_team_injuries(name: str) -> list[str]:
     if not tid:
         return []
     season = date.today().year  # 当前赛季
-    j = _get("/v3/injuries", {"team": tid, "season": str(season)})
+    j = _get("/injuries", {"team": tid, "season": str(season)})
     items = []
     for inj in (j or {}).get("response", []):
         p = inj.get("player", {})
@@ -157,22 +159,25 @@ def _check_key() -> bool:
     try:
         import httpx
         headers = {
-            "x-rapidapi-key": FOOTBALL_RAPIDAPI_KEY,
-            "x-rapidapi-host": RAPID_HOST,
+            "x-apisports-key": FOOTBALL_RAPIDAPI_KEY,
         }
         with httpx.Client(timeout=15) as c:
-            r = c.get(f"https://{RAPID_HOST}/v3/status", headers=headers)
+            r = c.get(f"https://{API_HOST}/status", headers=headers)
         if r.status_code == 200:
             j = r.json()
-            acc = (j.get("account") or {}).get("firstname", "?")
-            sub = (j.get("subscription") or {}).get("plan", "?")
-            req = j.get("requests") or {}
-            print(f"[OK] API-Football 可用: 账户{acc}, 套餐{sub}, 今日剩余 {req.get('remaining', '?')}/{req.get('limit_day', '?')}")
+            if j.get("errors"):
+                print("[密钥预检失败] key 无效或未订阅 — " + str(j.get("errors"))[:140])
+                print("请确认: 1) 在 https://www.api-football.com/ 注册, Dashboard 里有 16 位 API key")
+                print("        2) .env 里 FOOTBALL_RAPIDAPI_KEY 去掉开头的 # 并填入真实 key (现在是占位符 xxxxxxxx...)")
+                return False
+            resp = j.get("response") or {}
+            acc = (resp.get("account") or {}).get("firstname", "?")
+            sub = (resp.get("subscription") or {}).get("plan", "?")
+            req = resp.get("requests") or {}
+            print(f"[OK] API-Football 可用: 账户{acc}, 套餐{sub}, 今日 {req.get('current', '?')}/{req.get('limit_day', '?')}")
             return True
         if r.status_code == 403:
-            print("[密钥预检失败] HTTP 403 — RapidAPI 提示: " + r.text[:120])
-            print("请确认: 1) 在 https://rapidapi.com/api-sports/api/api-football 已点订阅")
-            print("        2) key 与订阅属于同一个账号 (从该页面的 Code Snippets 复制 key)")
+            print("[密钥预检失败] HTTP 403 — " + r.text[:120])
             return False
         print(f"[密钥预检失败] HTTP {r.status_code} — {r.text[:120]}")
         return False

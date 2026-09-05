@@ -1,23 +1,33 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>每日归档 · 交叉把关</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>最新预测 · 交叉把关</title>
 <style>
   :root{--bg:#0a120b;--card:#101a11;--line:#22352a;--txt:#e8f2e9;--dim:#8aa892;--green:#4ade80;}
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);line-height:1.6;padding:24px 14px 50px;}
+  body{font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(800px 380px at 20% -10%,rgba(74,222,128,.12),transparent 60%),var(--bg);color:var(--txt);line-height:1.6;padding:26px 14px 50px;}
   .wrap{max-width:720px;margin:0 auto;}
-  .topbar{display:flex;gap:10px;align-items:center;margin-bottom:22px;flex-wrap:wrap;}
+  .topbar{display:flex;gap:10px;align-items:center;margin-bottom:20px;}
   .topbar a{color:var(--dim);text-decoration:none;font-size:.8rem;border:1px solid var(--line);padding:5px 12px;border-radius:999px;}
   .topbar a.on{color:#06281c;background:var(--green);border-color:var(--green);font-weight:700;}
   .topbar .brand{font-weight:800;color:var(--green);margin-right:auto;}
-  h1{font-size:1.4rem;margin:14px 0 6px;}
-  .sub{color:var(--dim);font-size:.82rem;margin-bottom:22px;}
+  .latest{background:linear-gradient(135deg,#0b3018,#122a1a);border:2px solid var(--green);border-radius:16px;padding:24px;text-align:center;margin-bottom:22px;}
+  .latest .lab{color:var(--dim);font-size:.8rem;letter-spacing:1px;}
+  .latest .dt{font-size:1.7rem;font-weight:800;color:var(--green);margin:8px 0 14px;}
+  .btn{display:inline-block;background:linear-gradient(135deg,#4ade80,#86efac);color:#06281c;font-weight:800;font-size:1.05rem;padding:12px 30px;border-radius:999px;text-decoration:none;}
+  .btn:hover{filter:brightness(1.1);}
+  .tip{color:var(--dim);font-size:.72rem;margin-top:12px;}
+  #newver{display:none;background:var(--amber,transparent);border-radius:10px;padding:8px 12px;margin-bottom:14px;font-size:.85rem;}
+  h1{font-size:1.15rem;color:#b9f0c8;margin:20px 0 4px;}
+  .sub{color:var(--dim);font-size:.78rem;margin-bottom:14px;}
   .row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px;}
-  .row .date{font-weight:800;color:var(--green);min-width:88px;}
-  .row a{color:var(--txt);text-decoration:none;font-size:.92rem;}
+  .row .date{font-weight:800;color:var(--green);min-width:92px;}
+  .row a{color:var(--txt);text-decoration:none;}
   .row a:hover{color:var(--green);}
   .row .tag{font-size:.7rem;color:var(--dim);border:1px solid var(--line);padding:2px 8px;border-radius:999px;}
   .footer{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);color:var(--dim);font-size:.72rem;text-align:center;}
@@ -27,22 +37,47 @@
 <div class="wrap">
 <div class="topbar">
   <span class="brand">🛡️ 交叉把关</span>
-  <a href="latest.html">最新预测</a>
-  <a class="on" href="index.html">每日归档</a>
+  <a class="on" href="index.html">最新&归档</a>
   <a href="../index.html" target="_blank">sky 主页 ↗</a>
 </div>
-<h1>每日归档</h1>
-<div class="sub">我的全维度预测历史（胜平负/比分/大小球v3/让球/BTTS/半全场）。次日复盘口径以推送时版本为准。</div>
 
-<div class="row"><span class="date">2026-09-05</span><a href="predictions_2026-09-05.html">周六 18 场大夜（含已开球10场补录）</a><span class="tag">18场</span></div>
-<div class="row"><span class="date">2026-09-04</span><a href="predictions_2026-09-04.html">周五 6 场（贝蒂斯-皇马改判、巴黎-摩纳哥）</a><span class="tag">6场</span></div>
-<div class="row"><span class="date">2026-09-03</span><a href="predictions_2026-09-03.html">周四 2 场（低价值夜）</a><span class="tag">2场</span></div>
-<div class="row"><span class="date">2026-09-01</span><a href="predictions_2026-09-01.html">周二 10 场（低价值夜，仅3场出方向）</a><span class="tag">3/10</span></div>
-<div class="row"><span class="date">2026-08-31</span><a href="predictions_2026-08-31.html">周一 5 场（与sky全同向）</a><span class="tag">5场</span></div>
-<div class="row"><span class="date">2026-08-30</span><a href="predictions_2026-08-30.html">周日 9 场</a><span class="tag">9场</span></div>
-<div class="row"><span class="date">2026-08-29</span><a href="predictions_2026-08-29.html">周六 17 场大夜</a><span class="tag">17场</span></div>
+<div id="newver">🔄 <b>检测到 sky 可能已推送新版</b> —— <a href="latest.html" id="newverlink">点此查看最新</a></div>
 
-<div class="footer">仅用于 AI 学习与公开数据研究，不构成投注建议，不承诺比赛结果。</div>
+<div class="latest">
+  <div class="lab">📌 最新一期预测</div>
+  <div class="dt">2026-09-05</div>
+  <a class="btn" href="predictions_2026-09-05.html">→ 打开今天最新预测</a>
+  <div class="tip">推送后约 60-90 秒部署完成；本页每 60 秒自动检查版本</div>
 </div>
+
+<h1>📚 每日归档</h1>
+<div class="sub">历史预测。点日期进入当天页面。</div>
+<div class="row"><span class="date">2026-09-05</span><a href="predictions_2026-09-05.html">2026-09-05 棰勬祴</a></div>
+<div class="row"><span class="date">2026-09-04</span><a href="predictions_2026-09-04.html">2026-09-04 棰勬祴</a></div>
+<div class="row"><span class="date">2026-09-03</span><a href="predictions_2026-09-03.html">2026-09-03 棰勬祴</a></div>
+<div class="row"><span class="date">2026-09-01</span><a href="predictions_2026-09-01.html">2026-09-01 棰勬祴</a></div>
+<div class="row"><span class="date">2026-08-31</span><a href="predictions_2026-08-31.html">2026-08-31 棰勬祴</a></div>
+<div class="row"><span class="date">2026-08-30</span><a href="predictions_2026-08-30.html">2026-08-30 棰勬祴</a></div>
+<div class="row"><span class="date">2026-08-29</span><a href="predictions_2026-08-29.html">2026-08-29 棰勬祴</a></div>
+<div class="row"><span class="date">2026-08-28</span><a href="predictions_2026-08-28.html">2026-08-28 棰勬祴</a></div>
+<div class="row"><span class="date">2026-08-27</span><a href="predictions_2026-08-27.html">2026-08-27 棰勬祴</a></div>
+<div class="row"><span class="date">2026-08-26</span><a href="predictions_2026-08-26.html">2026-08-26 棰勬祴</a></div>
+<div class="row"><span class="date">2026-08-25</span><a href="predictions_2026-08-25.html">2026-08-25 棰勬祴</a></div>
+
+
+<div class="footer">仅用于 AI 学习与公开数据研究，不构成投注建议，不承诺比赛结果。<br>自动生成 · 2026-09-05 23:00</div>
+</div>
+
+<script>
+// 每 60 秒探测 latest.html 的生成时间戳，若比本页记录的新则提示刷新
+var known = "2026-09-05 22:59";
+setInterval(function(){
+  fetch("latest.html", {cache:"no-store"}).then(function(r){return r.text();}).then(function(h){
+    var m = h.match(/最后更新：([0-9:\s\-年月日]+)/);
+    if(m && m[1] !== known){ document.getElementById("newver").style.display="block"; }
+  }).catch(function(){});
+}, 60000);
+</script>
 </body>
 </html>
+

@@ -230,5 +230,11 @@ CN_TO_EN_TEAM.update({
     '南特': 'Nantes', '尼斯': 'Nice', '巴黎FC': 'Paris FC',
     '巴黎圣日耳曼': 'Paris SG', '雷恩': 'Rennes',
     '斯特拉斯堡': 'Strasbourg', '图卢兹': 'Toulouse',
+    # ── 2026-09-06 补 (复盘对账缺失的体彩中文名变体/升班马) ──
+    '曼彻斯特联': 'Man United', '托特纳姆热刺': 'Tottenham', '托特纳姆': 'Tottenham',
+    '伊普斯维奇': 'Ipswich', '云达不来梅': 'Werder Bremen',
+    '埃尔沃斯堡': 'Elversberg', '帕德博恩': 'Paderborn',
+    '沙尔克04': 'Schalke 04', '沙尔克': 'Schalke 04',
+    '蒙扎': 'Monza', '特鲁瓦': 'Troyes', '巴伦西亚': 'Valencia',
 })
 

@@ -896,6 +896,8 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
         h += '<div class="pred-divider"></div>';
         h += '<div class="stat-row"><span>O2.5 大 ' + ou + '%</span><span>BTTS ' + btts + '%</span><span class="agree">' + pick + '</span></div>';
         el.innerHTML = h;
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', function(){ location.href = 'detail.html'; });
       })
       .catch(function(){ if(demo) demo.textContent = '今日暂无数据'; });
   }
@@ -938,7 +940,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
 
   // CTA 按钮 → 真实链接
   var btns = document.querySelectorAll('.btn-primary');
-  if(btns[0]) btns[0].addEventListener('click', function(){ location.href = 'data/output/predictions_' + today + '.html'; });
+  for(var bi=0; bi<btns.length; bi++){ btns[bi].addEventListener('click', function(){ location.href = 'detail.html'; }); }
   var ghosts = document.querySelectorAll('.btn-ghost');
   if(ghosts[0]) ghosts[0].addEventListener('click', function(){ location.href = 'archive.html'; });
 })();

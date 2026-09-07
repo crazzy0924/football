@@ -1,0 +1,1536 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0A0B" />
+<title>预测详情 · 2026-09-07 · 足球大模型</title>
+
+<!-- Fonts: Noto Sans SC for Chinese, Geist Mono for numbers/IDs -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* =========================================================
+   Design Tokens — shared with landing/index.html
+   Any agent can read these variables and use them in code.
+   ========================================================= */
+:root {
+  /* Canvas */
+  --bg-canvas:    #0A0A0B;
+  --bg-panel:     #141417;
+  --bg-elevated:  #0F0F11;
+  --bg-chip:      #1C1C20;
+
+  /* Card backgrounds used in detail page */
+  --bg-stat:      #141417;
+  --bg-signal:    #0F2A14;   /* green-tinted signal card */
+
+  /* Borders / dividers */
+  --border-subtle:    #27272A;
+  --border-strong:    #3F3F46;
+  --border-signal:    #3CCF4E;
+
+  /* Text */
+  --text-primary:   #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --text-tertiary:  #71717A;
+  --text-dim:       #52525B;
+
+  /* Signal colors */
+  --accent-green:  #3CCF4E; /* Ready / On */
+  --accent-amber:  #F5A623; /* Building / 参考 */
+  --accent-muted:  #52525B; /* Queued / Draw segment */
+
+  /* Type */
+  --font-sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  /* Radii */
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-pill: 999px;
+
+  /* Spacing scale */
+  --s-2:  4px;
+  --s-3:  8px;
+  --s-4: 12px;
+  --s-5: 16px;
+  --s-6: 20px;
+  --s-7: 24px;
+  --s-8: 32px;
+  --s-9: 40px;
+  --s-10: 48px;
+  --s-12: 64px;
+  --s-15: 80px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+.mono { font-family: var(--font-mono); }
+
+/* =========================================================
+   Page wrapper — same width as landing
+   ========================================================= */
+.page {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-canvas);
+}
+
+/* =========================================================
+   Topbar — brand + LIVE indicator + date
+   ========================================================= */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--s-9);
+  height: 56px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.brand-logo {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--accent-green);
+  border-radius: 50%;
+  position: relative;
+}
+.brand-logo::after {
+  content: "";
+  position: absolute;
+  inset: 4px 7px;
+  border-left: 1.5px solid var(--accent-green);
+  border-bottom: 1.5px solid var(--accent-green);
+  border-bottom-left-radius: 100%;
+}
+.brand-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-left: 2px;
+}
+.status-group {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 0 4px rgba(60,207,78,0.15);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(60,207,78,0.15); }
+  50%      { box-shadow: 0 0 0 6px rgba(60,207,78,0.05); }
+}
+.live-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.topbar-date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* =========================================================
+   Breadcrumb bar
+   ========================================================= */
+.breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: 0 var(--s-9);
+  height: 40px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.bc-home {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+.bc-arrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.bc-current {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.bc-spacer { flex: 1; }
+.bc-model {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+}
+.bc-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 var(--s-3);
+  background: var(--bg-chip);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-left: var(--s-5);
+}
+
+/* =========================================================
+   Stats row — 4 KPI cards + a distribution strip
+   ========================================================= */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 1.6fr;
+  gap: var(--s-4);
+  padding: var(--s-9) 120px;
+}
+.stat-card {
+  background: var(--bg-stat);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+}
+.stat-value.green { color: var(--accent-green); }
+.stat-value.amber { color: var(--accent-amber); }
+.stat-value.muted { color: var(--text-tertiary); }
+.stat-value.white { color: var(--text-primary); }
+.stat-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* The distribution card spans the right side and shows the W/D/L bar */
+.dist-card {
+  background: var(--bg-stat);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dist-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.dist-bar {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--border-subtle);
+}
+.dist-bar > span { height: 100%; }
+.dist-bar .win  { background: var(--accent-green); }
+.dist-bar .draw { background: var(--accent-amber); }
+.dist-bar .lose { background: var(--text-dim); }
+.dist-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* =========================================================
+   Signal section — 今日看好
+   ========================================================= */
+.signal-section {
+  padding: 0 120px var(--s-8);
+}
+.signal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s-4);
+}
+.signal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.signal-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.signal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4);
+}
+.signal-card {
+  background: var(--bg-signal);
+  border: 1px solid var(--border-signal);
+  border-radius: var(--r-md);
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.signal-tag-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.signal-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--accent-green);
+  background: rgba(60,207,78,0.12);
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+}
+.signal-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.signal-line {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.signal-line .green { color: var(--accent-green); }
+.signal-line .amber { color: var(--accent-amber); }
+.signal-line .white { color: var(--text-primary); }
+.signal-foot {
+  font-size: 11px;
+  color: var(--accent-green);
+}
+
+/* =========================================================
+   Match card
+   ========================================================= */
+.match-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  padding: 0 120px var(--s-12);
+}
+.match-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.match-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: var(--s-6) var(--s-7);
+  gap: var(--s-5);
+}
+.match-side {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.match-side.left  { align-items: flex-end; text-align: right; }
+.match-side.right { align-items: flex-start; text-align: left; }
+.match-vs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 120px;
+}
+.match-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+}
+.pill-ready   { color: var(--accent-green); background: rgba(60,207,78,0.12); }
+.pill-ref     { color: var(--accent-amber); background: rgba(245,166,35,0.12); }
+.pill-queued  { color: var(--text-tertiary); background: var(--bg-chip); }
+.pill-conflict{ color: var(--text-tertiary); background: var(--bg-chip); }
+.match-vs-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.match-vs-divider {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-dim);
+  margin: 0 8px;
+}
+.match-side .team-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.match-side .team-elo {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+.match-side .team-form {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+.form-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.form-w { background: rgba(60,207,78,0.18); color: var(--accent-green); }
+.form-d { background: rgba(245,166,35,0.18); color: var(--accent-amber); }
+.form-l { background: rgba(239,68,68,0.18);  color: #EF4444; }
+
+.match-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.match-meta .rank {
+  background: var(--bg-chip);
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+  color: var(--text-secondary);
+}
+
+.match-divider {
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* ----- Body: 2 columns (predictions | xG & scores) ----- */
+.match-body {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 0;
+}
+.col {
+  padding: var(--s-6) var(--s-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+.col + .col { border-left: 1px solid var(--border-subtle); }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+/* Win/Draw/Lose segmented bar (used inside the prediction column) */
+.wdl-bar {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--border-subtle);
+  margin: 6px 0 4px;
+}
+.wdl-bar > span { height: 100%; }
+.wdl-bar .win  { background: var(--accent-green); }
+.wdl-bar .draw { background: var(--accent-amber); }
+.wdl-bar .lose { background: var(--text-dim); }
+.wdl-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.wdl-labels .lbl { color: var(--text-tertiary); }
+.wdl-labels .val { color: var(--text-primary); font-weight: 500; }
+.wdl-labels .val.green { color: var(--accent-green); }
+.wdl-labels .val.amber { color: var(--accent-amber); }
+.wdl-labels .val.muted { color: var(--text-tertiary); }
+
+/* Sub-block: 亚盘 (Asian handicap) and 大小球 (O/U) */
+.sub-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sub-block-title {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.sub-block-title .marker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+.sub-stats {
+  display: flex;
+  gap: var(--s-4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+.sub-stats .pair { display: flex; gap: 4px; }
+.sub-stats .pair .k { color: var(--text-tertiary); }
+.sub-stats .pair .v { color: var(--text-primary); }
+.sub-stats .pair .v.green { color: var(--accent-green); }
+.sub-stats .pair .v.amber { color: var(--accent-amber); }
+.sub-note {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* xG block */
+.xg-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.xg-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--s-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.xg-team {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.xg-team.left  { align-items: flex-end; }
+.xg-team.right { align-items: flex-start; }
+.xg-team .label { color: var(--text-tertiary); font-size: 10px; }
+.xg-team .val   { color: var(--text-primary); font-size: 16px; font-weight: 600; }
+.xg-mid {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.xg-mid .diff {
+  color: var(--accent-green);
+  font-size: 12px;
+  font-weight: 600;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Score probabilities table */
+.score-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.score-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 56px;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.score-row .score {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.score-row .bar {
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.score-row .bar > span {
+  display: block;
+  height: 100%;
+  background: var(--text-secondary);
+}
+.score-row .pct {
+  color: var(--text-primary);
+  text-align: right;
+}
+.score-row .pct.green { color: var(--accent-green); }
+
+/* Conclusion trail (footer of each match card) */
+.conclusion {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-7);
+  background: rgba(255,255,255,0.01);
+}
+.conclusion-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+}
+.conclusion-trail {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.conclusion-trail .arrow {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.conclusion-trail .step {
+  padding: 2px 8px;
+  background: var(--bg-chip);
+  border-radius: var(--r-sm);
+  color: var(--text-primary);
+  font-size: 11px;
+}
+.conclusion-trail .step.amber {
+  background: rgba(245,166,35,0.12);
+  color: var(--accent-amber);
+}
+.conclusion-trail .step.green {
+  background: rgba(60,207,78,0.12);
+  color: var(--accent-green);
+}
+.conclusion-spacer { flex: 1; }
+.conclusion-right {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.conclusion-right .k { color: var(--text-tertiary); }
+.conclusion-right .v { color: var(--text-primary); }
+.conclusion-right .v.green { color: var(--accent-green); }
+.conclusion-right .v.amber { color: var(--accent-amber); }
+.conclusion-right .v.muted { color: var(--text-tertiary); }
+
+/* =========================================================
+   Footer
+   ========================================================= */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s-9) 120px;
+  border-top: 1px solid var(--border-subtle);
+}
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.footer-brand {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+.footer-disclaimer {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--s-7);
+}
+.back-link {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-green);
+  cursor: pointer;
+}
+.footer-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent-green);
+  letter-spacing: 0.04em;
+}
+
+/* =========================================================
+   Responsive — scale side padding down for narrow screens
+   ========================================================= */
+@media (max-width: 1200px) {
+  .stats-row, .signal-section, .match-list, .footer { padding-left: 64px; padding-right: 64px; }
+}
+@media (max-width: 900px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .signal-grid { grid-template-columns: 1fr; }
+  .match-body { grid-template-columns: 1fr; }
+  .col + .col { border-left: 0; border-top: 1px solid var(--border-subtle); }
+  .match-header { grid-template-columns: 1fr; text-align: center; }
+  .match-side { align-items: center !important; text-align: center !important; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============== Topbar ============== -->
+  <div class="topbar">
+    <div class="brand">
+      <span class="brand-logo" aria-hidden="true"></span>
+      <span class="brand-name">足球大模型</span>
+      <span class="brand-tag">FC-BRAIN</span>
+    </div>
+    <div class="status-group">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span class="live-text">LIVE · 数据链路正常</span>
+      <span class="topbar-date">2026-09-07 MON · UTC+8</span>
+    </div>
+  </div>
+
+  <!-- ============== Breadcrumb bar ============== -->
+  <div class="breadcrumb-bar">
+    <a class="bc-home" href="./index.html">首页</a>
+    <span class="bc-arrow">›</span>
+    <span class="bc-current">预测报告 · 2026-09-07</span>
+    <span class="bc-spacer"></span>
+    <span class="bc-model">DIXON-COLES × ELO × BAYESIAN MARKET</span>
+    <span class="bc-chip">BRIER 0.5954</span>
+  </div>
+
+  <!-- ============== Stats Row ============== -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-value white">4</span>
+      <span class="stat-label">今日场次</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value green">0</span>
+      <span class="stat-label">推荐下注</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value amber">1</span>
+      <span class="stat-label">仅供参考</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value muted">0</span>
+      <span class="stat-label">冷启动</span>
+    </div>
+    <div class="dist-card">
+      <span class="dist-label">推荐方向分布</span>
+      <div class="dist-bar">
+        <span class="win"  style="width: 0%"></span>
+        <span class="draw" style="width: 25%"></span>
+        <span class="lose" style="width: 75%"></span>
+      </div>
+      <span class="dist-meta">0 胜 / 1 平 / 3 负</span>
+    </div>
+  </div>
+
+  <!-- ============== Signal Section ============== -->
+  <div class="signal-section">
+    <div class="signal-header">
+      <span class="signal-title">今日看好</span>
+      <span class="signal-count">2 个方向</span>
+    </div>
+    <div class="signal-grid">
+      <div class="signal-card">
+        <div class="signal-tag-row">
+          <span class="signal-tag">02.5 · 小球信号</span>
+        </div>
+        <span class="signal-name">卡利亚里 vs 莱切</span>
+        <div class="signal-line">
+          <span>小2.5</span> <span class="green">68%</span> <span class="white">市场</span> <span>57%</span> <span class="white">差</span> <span class="green">11%</span>
+        </div>
+        <span class="signal-foot">推平局概率不破指数(市场反应未跟上)</span>
+      </div>
+      <div class="signal-card">
+        <div class="signal-tag-row">
+          <span class="signal-tag">02.5 · 小球信号</span>
+        </div>
+        <span class="signal-name">埃尔切 vs 皇家社会</span>
+        <div class="signal-line">
+          <span>小2.5</span> <span class="green">57%</span> <span class="white">市场</span> <span>44%</span> <span class="white">差</span> <span class="green">13%</span>
+        </div>
+        <span class="signal-foot">拉开防守阵型</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== Match List ============== -->
+  <div class="match-list">
+
+    <!-- ---------- Match 1 ---------- -->
+    <article class="match-card">
+      <div class="match-header">
+        <div class="match-side left">
+          <span class="team-name">卡利亚里</span>
+          <span class="team-elo">ELO 1513 · 主场</span>
+          <span class="team-form">
+            <span class="form-dot form-l">L</span>
+            <span class="form-dot form-w">W</span>
+          </span>
+        </div>
+        <div class="match-vs">
+          <span class="match-pill pill-conflict">意甲 · 冲突</span>
+          <div>
+            <span class="match-vs-name">卡利亚里</span>
+            <span class="match-vs-divider">vs</span>
+            <span class="match-vs-name">莱切</span>
+          </div>
+        </div>
+        <div class="match-side right">
+          <span class="team-name">莱切</span>
+          <span class="team-elo">1511 · (+2)</span>
+          <span class="team-form">
+            <span class="form-dot form-l">L</span>
+            <span class="form-dot form-w">W</span>
+          </span>
+        </div>
+      </div>
+      <div class="match-divider"></div>
+      <div class="match-body">
+        <!-- Left column: WDL + 亚盘 + 大小球 -->
+        <div class="col">
+          <div>
+            <span class="section-label">胜平负</span>
+            <div class="wdl-bar">
+              <span class="win"  style="width: 39.4%"></span>
+              <span class="draw" style="width: 33.2%"></span>
+              <span class="lose" style="width: 27.5%"></span>
+            </div>
+            <div class="wdl-labels">
+              <span><span class="lbl">主胜</span> <span class="val green">39.4%</span></span>
+              <span><span class="lbl">平</span> <span class="val amber">33.2%</span></span>
+              <span><span class="lbl">客胜</span> <span class="val muted">27.5%</span></span>
+            </div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">亚盘</span>
+              <span>让球(主-1.0)</span>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">主</span><span class="v">16%</span></span>
+              <span class="pair"><span class="k">走</span><span class="v">24%</span></span>
+              <span class="pair"><span class="k">客</span><span class="v">60%</span></span>
+            </div>
+            <div class="sub-note">主胜39%中仅16%为让球赢盘,小胜结构</div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">大小球</span>
+              <span>2.5</span>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">大2.5</span><span class="v">32.5%</span></span>
+              <span class="pair"><span class="k">小2.5</span><span class="v green">68%</span></span>
+            </div>
+            <div class="sub-note">模型68% vs 市场57% (差11%)</div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">结论</span>
+              <span>方向-比分冲突,强制降级</span>
+            </div>
+          </div>
+        </div>
+        <!-- Right column: xG + 比分概率 -->
+        <div class="col">
+          <div>
+            <span class="section-label">比分概率(进球数 2.0)</span>
+            <div class="score-list" style="margin-top: 8px">
+              <div class="score-row"><span class="score">1-0</span><span class="bar"><span style="width: 100%"></span></span><span class="pct">15.5%</span></div>
+              <div class="score-row"><span class="score">0-1</span><span class="bar"><span style="width: 84%"></span></span><span class="pct">13.0%</span></div>
+              <div class="score-row"><span class="score">0-0</span><span class="bar"><span style="width: 82%"></span></span><span class="pct">12.7%</span></div>
+              <div class="score-row"><span class="score">1-1</span><span class="bar"><span style="width: 82%"></span></span><span class="pct">12.7%</span></div>
+              <div class="score-row"><span class="score">2-0</span><span class="bar"><span style="width: 52%"></span></span><span class="pct">8.0%</span></div>
+            </div>
+          </div>
+          <div class="xg-block">
+            <span class="section-label">预期进球</span>
+            <div class="xg-row">
+              <div class="xg-team left">
+                <span class="label">主队</span>
+                <span class="val">1.09</span>
+              </div>
+              <div class="xg-mid">
+                —
+                <span class="diff">客队Away +6.2%</span>
+              </div>
+              <div class="xg-team right">
+                <span class="label">客队</span>
+                <span class="val">0.92</span>
+              </div>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">市场</span><span class="v">1.83 / 3.05 / 3.95</span></span>
+              <span class="pair"><span class="k">凯利</span><span class="v">1.11%</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="match-divider"></div>
+      <div class="conclusion">
+        <span class="conclusion-label">推论轨迹</span>
+        <div class="conclusion-trail">
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step amber">客胜</span>
+        </div>
+        <span class="conclusion-spacer"></span>
+        <div class="conclusion-right">
+          <span><span class="k">主</span> <span class="v">11</span></span>
+          <span><span class="k">客</span> <span class="v">1</span></span>
+          <span><span class="k">主</span> <span class="v green">胜</span></span>
+          <span><span class="k">把握</span> <span class="v">11.4%</span></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ---------- Match 2 ---------- -->
+    <article class="match-card">
+      <div class="match-header">
+        <div class="match-side left">
+          <span class="team-name">赫塔费</span>
+          <span class="team-elo">ELO 1535 · 主场</span>
+          <span class="team-form">
+            <span class="form-dot form-l">L</span>
+            <span class="form-dot form-w">W</span>
+            <span class="form-dot form-l">L</span>
+          </span>
+        </div>
+        <div class="match-vs">
+          <span class="match-pill pill-queued">西甲 · 观望</span>
+          <div>
+            <span class="match-vs-name">赫塔费</span>
+            <span class="match-vs-divider">vs</span>
+            <span class="match-vs-name">塞尔塔</span>
+          </div>
+        </div>
+        <div class="match-side right">
+          <span class="team-name">塞尔塔</span>
+          <span class="team-elo">1556 · (-20)</span>
+          <span class="team-form">
+            <span class="form-dot form-d">D</span>
+            <span class="form-dot form-l">L</span>
+            <span class="form-dot form-l">L</span>
+            <span class="form-dot form-d">D</span>
+          </span>
+        </div>
+      </div>
+      <div class="match-divider"></div>
+      <div class="match-body">
+        <div class="col">
+          <div>
+            <span class="section-label">胜平负</span>
+            <div class="wdl-bar">
+              <span class="win"  style="width: 38.3%"></span>
+              <span class="draw" style="width: 32.1%"></span>
+              <span class="lose" style="width: 29.5%"></span>
+            </div>
+            <div class="wdl-labels">
+              <span><span class="lbl">主胜</span> <span class="val green">38.3%</span></span>
+              <span><span class="lbl">平</span> <span class="val amber">32.1%</span></span>
+              <span><span class="lbl">客胜</span> <span class="val muted">29.5%</span></span>
+            </div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">亚盘</span>
+              <span>让球(主-1.0)</span>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">主</span><span class="v">16%</span></span>
+              <span class="pair"><span class="k">走</span><span class="v">24%</span></span>
+              <span class="pair"><span class="k">客</span><span class="v">59%</span></span>
+            </div>
+            <div class="sub-note">主胜38%中仅16%为让球赢盘,小胜结构</div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">大小球</span>
+              <span>2.5</span>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">大2.5</span><span class="v">34.4%</span></span>
+              <span class="pair"><span class="k">小2.5</span><span class="v">65.6%</span></span>
+            </div>
+            <div class="sub-note">主胜38%中约一半为1球小胜</div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">结论</span>
+              <span>观望,模型与市场不冲突</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <span class="section-label">比分概率(进球数 2.0)</span>
+            <div class="score-list" style="margin-top: 8px">
+              <div class="score-row"><span class="score">1-0</span><span class="bar"><span style="width: 100%"></span></span><span class="pct">15.2%</span></div>
+              <div class="score-row"><span class="score">0-1</span><span class="bar"><span style="width: 84%"></span></span><span class="pct">12.7%</span></div>
+              <div class="score-row"><span class="score">1-1</span><span class="bar"><span style="width: 82%"></span></span><span class="pct">12.5%</span></div>
+              <div class="score-row"><span class="score">0-0</span><span class="bar"><span style="width: 76%"></span></span><span class="pct">11.6%</span></div>
+              <div class="score-row"><span class="score">2-0</span><span class="bar"><span style="width: 52%"></span></span><span class="pct">7.9%</span></div>
+            </div>
+          </div>
+          <div class="xg-block">
+            <span class="section-label">预期进球</span>
+            <div class="xg-row">
+              <div class="xg-team left">
+                <span class="label">主队</span>
+                <span class="val">1.12</span>
+              </div>
+              <div class="xg-mid">
+                —
+                <span class="diff">客队Away +1.0%</span>
+              </div>
+              <div class="xg-team right">
+                <span class="label">客队</span>
+                <span class="val">0.95</span>
+              </div>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">市场</span><span class="v">2.34 / 2.65 / 3.08</span></span>
+              <span class="pair"><span class="k">BTTS</span><span class="v">40.5%</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="match-divider"></div>
+      <div class="conclusion">
+        <span class="conclusion-label">推论轨迹</span>
+        <div class="conclusion-trail">
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step amber">客胜</span>
+        </div>
+        <span class="conclusion-spacer"></span>
+        <div class="conclusion-right">
+          <span><span class="k">主</span> <span class="v">11</span></span>
+          <span><span class="k">客</span> <span class="v">1</span></span>
+          <span><span class="k">主</span> <span class="v muted">观望</span></span>
+          <span><span class="k">把握</span> <span class="v">11.0%</span></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ---------- Match 3 ---------- -->
+    <article class="match-card">
+      <div class="match-header">
+        <div class="match-side left">
+          <span class="team-name">乌迪内斯</span>
+          <span class="team-elo">ELO 1579 · 主场</span>
+          <span class="team-form">
+            <span class="form-dot form-w">W</span>
+            <span class="form-dot form-d">D</span>
+          </span>
+        </div>
+        <div class="match-vs">
+          <span class="match-pill pill-conflict">意甲 · 冲突</span>
+          <div>
+            <span class="match-vs-name">乌迪内斯</span>
+            <span class="match-vs-divider">vs</span>
+            <span class="match-vs-name">拉齐奥</span>
+          </div>
+        </div>
+        <div class="match-side right">
+          <span class="team-name">拉齐奥</span>
+          <span class="team-elo">1620 · (-41)</span>
+          <span class="team-form">
+            <span class="form-dot form-w">W</span>
+            <span class="form-dot form-w">W</span>
+          </span>
+        </div>
+      </div>
+      <div class="match-divider"></div>
+      <div class="match-body">
+        <div class="col">
+          <div>
+            <span class="section-label">胜平负</span>
+            <div class="wdl-bar">
+              <span class="win"  style="width: 30.8%"></span>
+              <span class="draw" style="width: 29.6%"></span>
+              <span class="lose" style="width: 39.6%"></span>
+            </div>
+            <div class="wdl-labels">
+              <span><span class="lbl">主胜</span> <span class="val green">30.8%</span></span>
+              <span><span class="lbl">平</span> <span class="val amber">29.6%</span></span>
+              <span><span class="lbl">客胜</span> <span class="val muted">39.6%</span></span>
+            </div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">亚盘</span>
+              <span>让球(主+1.0)</span>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">主</span><span class="v">57%</span></span>
+              <span class="pair"><span class="k">走</span><span class="v">23%</span></span>
+              <span class="pair"><span class="k">客</span><span class="v">20%</span></span>
+            </div>
+            <div class="sub-note">客胜40%中让球赢盘仅20%</div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">大小球</span>
+              <span>2.5</span>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">大2.5</span><span class="v">46.8%</span></span>
+              <span class="pair"><span class="k">小2.5</span><span class="v">53.2%</span></span>
+            </div>
+            <div class="sub-note">模型与市场一致,中位预期</div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">结论</span>
+              <span>方向-比分冲突,强制降级</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <span class="section-label">比分概率(进球数 2.5)</span>
+            <div class="score-list" style="margin-top: 8px">
+              <div class="score-row"><span class="score">1-1</span><span class="bar"><span style="width: 100%"></span></span><span class="pct">11.9%</span></div>
+              <div class="score-row"><span class="score">0-1</span><span class="bar"><span style="width: 97%"></span></span><span class="pct">11.6%</span></div>
+              <div class="score-row"><span class="score">1-0</span><span class="bar"><span style="width: 82%"></span></span><span class="pct">9.7%</span></div>
+              <div class="score-row"><span class="score">1-2</span><span class="bar"><span style="width: 73%"></span></span><span class="pct">8.7%</span></div>
+              <div class="score-row"><span class="score">0-2</span><span class="bar"><span style="width: 62%"></span></span><span class="pct">7.4%</span></div>
+            </div>
+          </div>
+          <div class="xg-block">
+            <span class="section-label">预期进球</span>
+            <div class="xg-row">
+              <div class="xg-team left">
+                <span class="label">主队</span>
+                <span class="val">1.17</span>
+              </div>
+              <div class="xg-mid">
+                —
+                <span class="diff">客队Away +2.9%</span>
+              </div>
+              <div class="xg-team right">
+                <span class="label">客队</span>
+                <span class="val">1.38</span>
+              </div>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">市场</span><span class="v">2.75 / 2.90 / 2.38</span></span>
+              <span class="pair"><span class="k">BTTS</span><span class="v">50.9%</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="match-divider"></div>
+      <div class="conclusion">
+        <span class="conclusion-label">推论轨迹</span>
+        <div class="conclusion-trail">
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step amber">客胜</span>
+        </div>
+        <span class="conclusion-spacer"></span>
+        <div class="conclusion-right">
+          <span><span class="k">主</span> <span class="v">11</span></span>
+          <span><span class="k">客</span> <span class="v">1</span></span>
+          <span><span class="k">主</span> <span class="v muted">观望</span></span>
+          <span><span class="k">把握</span> <span class="v">8.5%</span></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ---------- Match 4 ---------- -->
+    <article class="match-card">
+      <div class="match-header">
+        <div class="match-side left">
+          <span class="team-name">埃尔切</span>
+          <span class="team-elo">ELO 1518 · 主场</span>
+          <span class="team-form">
+            <span class="form-dot form-l">L</span>
+            <span class="form-dot form-l">L</span>
+            <span class="form-dot form-d">D</span>
+          </span>
+        </div>
+        <div class="match-vs">
+          <span class="match-pill pill-ref">西甲 · 参考</span>
+          <div>
+            <span class="match-vs-name">埃尔切</span>
+            <span class="match-vs-divider">vs</span>
+            <span class="match-vs-name">皇家社会</span>
+          </div>
+        </div>
+        <div class="match-side right">
+          <span class="team-name">皇家社会</span>
+          <span class="team-elo">1514 · (+4)</span>
+          <span class="team-form">
+            <span class="form-dot form-d">D</span>
+            <span class="form-dot form-w">W</span>
+            <span class="form-dot form-l">L</span>
+            <span class="form-dot form-l">L</span>
+          </span>
+        </div>
+      </div>
+      <div class="match-divider"></div>
+      <div class="match-body">
+        <div class="col">
+          <div>
+            <span class="section-label">胜平负</span>
+            <div class="wdl-bar">
+              <span class="win"  style="width: 31.2%"></span>
+              <span class="draw" style="width: 28.7%"></span>
+              <span class="lose" style="width: 40.1%"></span>
+            </div>
+            <div class="wdl-labels">
+              <span><span class="lbl">主胜</span> <span class="val green">31.2%</span></span>
+              <span><span class="lbl">平</span> <span class="val amber">28.7%</span></span>
+              <span><span class="lbl">客胜</span> <span class="val muted">40.1%</span></span>
+            </div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">亚盘</span>
+              <span>让球(主+1.0)</span>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">主</span><span class="v">58%</span></span>
+              <span class="pair"><span class="k">走</span><span class="v">23%</span></span>
+              <span class="pair"><span class="k">客</span><span class="v">18%</span></span>
+            </div>
+            <div class="sub-note">客胜40%中约一半为1球小胜,小胜结构</div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">大小球</span>
+              <span>2.5</span>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">大2.5</span><span class="v">42.8%</span></span>
+              <span class="pair"><span class="k">小2.5</span><span class="v green">57.2%</span></span>
+            </div>
+            <div class="sub-note">模型57% vs 市场44% (差13%)</div>
+          </div>
+          <div class="sub-block">
+            <div class="sub-block-title">
+              <span class="marker">结论</span>
+              <span>仅供参考 · 小球方向看好</span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <span class="section-label">比分概率(进球数 2.0)</span>
+            <div class="score-list" style="margin-top: 8px">
+              <div class="score-row"><span class="score">0-1</span><span class="bar"><span style="width: 100%"></span></span><span class="pct">12.9%</span></div>
+              <div class="score-row"><span class="score">1-1</span><span class="bar"><span style="width: 94%"></span></span><span class="pct">12.1%</span></div>
+              <div class="score-row"><span class="score">1-0</span><span class="bar"><span style="width: 84%"></span></span><span class="pct">10.8%</span></div>
+              <div class="score-row"><span class="score">1-2</span><span class="bar"><span style="width: 65%"></span></span><span class="pct">8.4%</span></div>
+              <div class="score-row"><span class="score">0-0</span><span class="bar"><span style="width: 64%"></span></span><span class="pct">8.3%</span></div>
+            </div>
+          </div>
+          <div class="xg-block">
+            <span class="section-label">预期进球</span>
+            <div class="xg-row">
+              <div class="xg-team left">
+                <span class="label">主队</span>
+                <span class="val">1.10</span>
+              </div>
+              <div class="xg-mid">
+                —
+                <span class="diff">平局 +2.3%</span>
+              </div>
+              <div class="xg-team right">
+                <span class="label">客队</span>
+                <span class="val">1.29</span>
+              </div>
+            </div>
+            <div class="sub-stats">
+              <span class="pair"><span class="k">市场</span><span class="v">2.75 / 3.30 / 2.16</span></span>
+              <span class="pair"><span class="k">BTTS</span><span class="v">47.5%</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="match-divider"></div>
+      <div class="conclusion">
+        <span class="conclusion-label">推论轨迹</span>
+        <div class="conclusion-trail">
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step">平局</span>
+          <span class="arrow">›</span>
+          <span class="step green">平局</span>
+        </div>
+        <span class="conclusion-spacer"></span>
+        <div class="conclusion-right">
+          <span><span class="k">主</span> <span class="v">11</span></span>
+          <span><span class="k">客</span> <span class="v">1</span></span>
+          <span><span class="k">主</span> <span class="v amber">参考</span></span>
+          <span><span class="k">把握</span> <span class="v">11.0%</span></span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ============== Footer ============== -->
+  <div class="footer">
+    <div class="footer-left">
+      <span class="footer-brand">足球预测模型 v3.0 · 生成于 2026-09-07</span>
+      <span class="footer-disclaimer">仅供参考,历史表现不代表未来结果</span>
+    </div>
+    <div class="footer-right">
+      <a class="back-link" href="./index.html">← 返回首页</a>
+      <span class="footer-status">ALL MODELS OPERATIONAL</span>
+    </div>
+  </div>
+
+</div>
+<script>
+(function(){
+  var CN = {};
+  var F = window.FOOT_FILES || { predictions: [] };
+  function pad(n){ return String(n).padStart(2,'0'); }
+  var d = new Date();
+  var today = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+  var WD = ['SUN','MON','TUE','WED','THU','FRI','SAT'][d.getDay()];
+  function cn(n){ return CN[n] || n; }
+  function pc(x){ return Math.round((x||0)*1000)/10; }
+
+  // 日期
+  var tde = document.querySelector('.topbar-date');
+  if(tde) tde.textContent = today + ' ' + WD + ' · UTC+8';
+  var bcc = document.querySelector('.bc-current');
+  if(bcc) bcc.textContent = '预测报告 · ' + today;
+
+  function pillClass(klass){
+    if(klass === 'bet') return 'pill-recommended';
+    if(klass === 'conflict') return 'pill-conflict';
+    if(klass === 'cold') return 'pill-conflict';
+    return 'pill-queued';
+  }
+  function pillText(p){
+    var lg = (p.league_code||'');
+    if(p.bet_class === 'bet') return lg + ' · 推荐';
+    if(p.bet_class === 'conflict') return lg + ' · 冲突';
+    if(p.cold_start) return lg + ' · 冷启动';
+    return lg + ' · 观望';
+  }
+
+  function formDots(form){
+    if(!form) return '';
+    var s = String(form).replace(/[^WDL]/gi,'').slice(-5);
+    var h = '';
+    for(var i=0;i<s.length;i++){
+      var c = s[i].toUpperCase();
+      var cls = c==='W' ? 'form-w' : (c==='L' ? 'form-l' : 'form-d');
+      h += '<span class="form-dot ' + cls + '">' + c + '</span>';
+    }
+    return h;
+  }
+
+  function renderMatch(p){
+    var m = p.model || {};
+    var hw = pc(m.home_win), dr = pc(m.draw), aw = pc(m.away_win);
+    var home = cn(p.home_team), away = cn(p.away_team);
+    var eloH = Math.round(p.elo_home||0), eloA = Math.round(p.elo_away||0);
+    // 亚盘
+    var ah = p.ah_handicap;
+    var ahHtml = '';
+    if(ah){
+      var gl = ah.goal_line;
+      var glt = (gl>0?'+'+(+gl):(''+gl));
+      ahHtml = '<div class="sub-block"><div class="sub-block-title"><span class="marker">亚盘</span><span>让球(主' + glt + ')</span></div>';
+      ahHtml += '<div class="sub-stats"><span class="pair"><span class="k">主</span><span class="v">' + pc(ah.home_cover) + '%</span></span><span class="pair"><span class="k">走</span><span class="v">' + pc(ah.push) + '%</span></span><span class="pair"><span class="k">客</span><span class="v">' + pc(ah.away_cover) + '%</span></span></div></div>';
+    }
+    // 大小球
+    var ou = p.ou_value;
+    var ouHtml = '';
+    if(ou){
+      ouHtml = '<div class="sub-block"><div class="sub-block-title"><span class="marker">大小球</span><span>2.5</span></div>';
+      ouHtml += '<div class="sub-stats"><span class="pair"><span class="k">大2.5</span><span class="v">' + pc(1 - (ou.model||0)) + '%</span></span><span class="pair"><span class="k">' + (ou.side||'') + '</span><span class="v green">' + pc(ou.model||0) + '%</span></span></div>';
+      ouHtml += '<div class="sub-note">模型' + pc(ou.model||0) + '% vs 市场' + pc(ou.market||0) + '% (差' + pc(Math.abs(ou.edge||0)) + '%)</div></div>';
+    } else if(m.over_25 != null){
+      ouHtml = '<div class="sub-block"><div class="sub-block-title"><span class="marker">大小球</span><span>2.5</span></div><div class="sub-stats"><span class="pair"><span class="k">大2.5</span><span class="v">' + pc(m.over_25) + '%</span></span><span class="pair"><span class="k">小2.5</span><span class="v">' + pc(1-m.over_25) + '%</span></span></div></div>';
+    }
+    // 结论
+    var concl = p.bet_pick || '观望';
+    // 比分概率 Top5
+    var scores = (m.top_5_scores||[]).slice(0,5);
+    var scoreHtml = '';
+    if(scores.length){
+      var maxP = scores[0][1] || 0;
+      for(var i=0;i<scores.length;i++){
+        var sc = scores[i][0], pr = scores[i][1]||0;
+        var w = maxP>0 ? Math.round(pr/maxP*100) : 0;
+        scoreHtml += '<div class="score-row"><span class="score">' + sc + '</span><span class="bar"><span style="width:' + w + '%"></span></span><span class="pct">' + pc(pr) + '%</span></div>';
+      }
+    }
+    // xG + 赔率 + 凯利
+    var od = p.odds || {};
+    var kelly = (p.value && p.value.kelly) || 0;
+    var lambdaH = m.lambda_home != null ? (Math.round(m.lambda_home*100)/100) : '—';
+    var lambdaA = m.lambda_away != null ? (Math.round(m.lambda_away*100)/100) : '—';
+    var oddStr = od.home ? (od.home + ' / ' + (od.draw||'') + ' / ' + (od.away||'')) : '—';
+
+    var h = '';
+    h += '<article class="match-card">';
+    // header
+    h += '<div class="match-header"><div class="match-side left"><span class="team-name">' + home + '</span><span class="team-elo">ELO ' + eloH + ' · 主场</span><span class="team-form">' + formDots((p.standings&&p.standings.home&&p.standings.home.form)||'') + '</span></div>';
+    h += '<div class="match-vs"><span class="match-pill ' + pillClass(p.bet_class) + '">' + pillText(p) + '</span><div><span class="match-vs-name">' + home + '</span><span class="match-vs-divider">vs</span><span class="match-vs-name">' + away + '</span></div></div>';
+    h += '<div class="match-side right"><span class="team-name">' + away + '</span><span class="team-elo">' + eloA + ' · (+' + (eloA-eloH) + ')</span><span class="team-form">' + formDots((p.standings&&p.standings.away&&p.standings.away.form)||'') + '</span></div></div>';
+    h += '<div class="match-divider"></div>';
+    // body
+    h += '<div class="match-body">';
+    // left
+    h += '<div class="col"><div><span class="section-label">胜平负</span>';
+    h += '<div class="wdl-bar"><span class="win" style="width:' + hw + '%"></span><span class="draw" style="width:' + dr + '%"></span><span class="lose" style="width:' + aw + '%"></span></div>';
+    h += '<div class="wdl-labels"><span><span class="lbl">主胜</span> <span class="val green">' + hw + '%</span></span><span><span class="lbl">平</span> <span class="val amber">' + dr + '%</span></span><span><span class="lbl">客胜</span> <span class="val muted">' + aw + '%</span></span></div></div>';
+    h += ahHtml + ouHtml;
+    h += '<div class="sub-block"><div class="sub-block-title"><span class="marker">结论</span><span>' + concl + '</span></div></div>';
+    h += '</div>';
+    // right
+    h += '<div class="col"><div><span class="section-label">比分概率</span><div class="score-list" style="margin-top:8px">' + scoreHtml + '</div></div>';
+    h += '<div class="xg-block"><span class="section-label">预期进球</span>';
+    h += '<div class="xg-row"><div class="xg-team left"><span class="label">主队</span><span class="val">' + lambdaH + '</span></div><div class="xg-mid">—</div><div class="xg-team right"><span class="label">客队</span><span class="val">' + lambdaA + '</span></div></div>';
+    h += '<div class="sub-stats"><span class="pair"><span class="k">市场</span><span class="v">' + oddStr + '</span></span><span class="pair"><span class="k">凯利</span><span class="v">' + pc(kelly*100) + '%</span></span></div></div></div>';
+    h += '</div>';
+    h += '<div class="match-divider"></div>';
+    // conclusion trail
+    var dir = hw>=dr && hw>=aw ? '主胜' : (dr>=aw ? '平局' : '客胜');
+    var kellyC = kelly>0 ? 'green' : 'muted';
+    h += '<div class="conclusion"><span class="conclusion-label">推论轨迹</span><div class="conclusion-trail"><span class="step">' + dir + '</span><span class="arrow">›</span><span class="step">' + dir + '</span><span class="arrow">›</span><span class="step">' + dir + '</span><span class="arrow">›</span><span class="step ' + (p.bet_class==='bet'?'green':'amber') + '">' + concl + '</span></div><span class="conclusion-spacer"></span><div class="conclusion-right"><span><span class="k">把握</span> <span class="v ' + kellyC + '">' + pc(kelly*100) + '%</span></span></div></div>';
+    h += '</article>';
+    return h;
+  }
+
+  function renderStats(preds){
+    var el = document.querySelector('.stats-row');
+    if(!el) return;
+    var rec = 0, ref = 0, cold = 0, win=0, draw=0, lose=0;
+    preds.forEach(function(p){
+      if(p.bet_class === 'bet') rec++;
+      else if(p.cold_start) cold++;
+      else if(p.bet_class === 'conflict') ref++;
+      var m = p.model||{};
+      if(m.home_win>=m.draw && m.home_win>=m.away_win) win++;
+      else if(m.draw>=m.away_win) draw++;
+      else lose++;
+    });
+    var tot = preds.length;
+    var wP = tot?Math.round(win/tot*100):0, dP = tot?Math.round(draw/tot*100):0, lP = tot?Math.round(lose/tot*100):0;
+    el.innerHTML = '<div class="stat-card"><span class="stat-value white">' + tot + '</span><span class="stat-label">今日场次</span></div>' +
+      '<div class="stat-card"><span class="stat-value green">' + rec + '</span><span class="stat-label">推荐下注</span></div>' +
+      '<div class="stat-card"><span class="stat-value amber">' + ref + '</span><span class="stat-label">仅供参考</span></div>' +
+      '<div class="stat-card"><span class="stat-value muted">' + cold + '</span><span class="stat-label">冷启动</span></div>' +
+      '<div class="dist-card"><span class="dist-label">推荐方向分布</span><div class="dist-bar"><span class="win" style="width:' + wP + '%"></span><span class="draw" style="width:' + dP + '%"></span><span class="lose" style="width:' + lP + '%"></span></div><span class="dist-meta">' + win + ' 胜 / ' + draw + ' 平 / ' + lose + ' 负</span></div>';
+  }
+
+  function renderSignals(preds){
+    var sec = document.querySelector('.signal-section');
+    if(!sec) return;
+    var sigs = [];
+    preds.forEach(function(p){
+      if(p.ou_value && Math.abs(p.ou_value.edge||0) >= 0.05){
+        sigs.push({name: cn(p.home_team) + ' vs ' + cn(p.away_team), side: p.ou_value.side, model: pc(p.ou_value.model), market: pc(p.ou_value.market), diff: pc(Math.abs(p.ou_value.edge||0))});
+      } else if(p.bet_class === 'bet'){
+        sigs.push({name: cn(p.home_team) + ' vs ' + cn(p.away_team), side: p.bet_pick, model: null, market: null, diff: null});
+      }
+    });
+    if(!sigs.length){ sec.style.display='none'; return; }
+    var h = '<div class="signal-header"><span class="signal-title">今日看好</span><span class="signal-count">' + sigs.length + ' 个方向</span></div><div class="signal-grid">';
+    sigs.forEach(function(s){
+      h += '<div class="signal-card"><div class="signal-tag-row"><span class="signal-tag">' + (s.diff!=null ? ('02.5 · ' + (s.side==='小2.5'?'小球信号':'大球信号')) : '方向信号') + '</span></div><span class="signal-name">' + s.name + '</span>';
+      if(s.diff!=null){ h += '<div class="signal-line"><span>' + s.side + '</span> <span class="green">' + s.model + '%</span> <span class="white">市场</span> <span>' + s.market + '%</span> <span class="white">差</span> <span class="green">' + s.diff + '%</span></div>'; }
+      else { h += '<div class="signal-line"><span class="green">' + s.side + '</span></div>'; }
+      h += '</div>';
+    });
+    h += '</div>';
+    sec.innerHTML = h;
+  }
+
+  function load(){
+    Promise.all([
+      fetch('data/output/predictions_' + today + '.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }),
+      fetch('data/output/team_cn.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; })
+    ]).then(function(res){
+      var preds = res[0]; CN = res[1];
+      if(!preds.length) return;
+      renderStats(preds);
+      renderSignals(preds);
+      var ml = document.querySelector('.match-list');
+      if(ml){ var cards=''; preds.forEach(function(p){ cards += renderMatch(p); }); ml.innerHTML = cards; }
+    });
+  }
+  load();
+})();
+</script>
+</body>
+</html>

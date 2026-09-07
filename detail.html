@@ -355,6 +355,18 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
   gap: var(--s-5);
   padding: 0 120px var(--s-12);
 }
+.league-nav {
+  display: flex; gap: var(--s-3); flex-wrap: wrap;
+  padding: 0 120px var(--s-5);
+}
+.league-nav .ln-btn {
+  background: var(--bg-panel); border: 1px solid var(--border-subtle);
+  color: var(--text-secondary); border-radius: var(--r-md);
+  padding: 6px 14px; font-size: 12px; font-family: var(--font-mono);
+  cursor: pointer; transition: border-color .15s, color .15s;
+}
+.league-nav .ln-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.league-nav .ln-btn.active { border-color: var(--accent-green); color: var(--accent-green); }
 .match-card {
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
@@ -812,6 +824,9 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
       </div>
     </div>
   </div>
+
+  <!-- ============== League Nav ============== -->
+  <div class="league-nav" id="league-nav"></div>
 
   <!-- ============== Match List ============== -->
   <div class="match-list">
@@ -1401,6 +1416,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
     var hw = pc(m.home_win), dr = pc(m.draw), aw = pc(m.away_win);
     var home = cn(p.home_team), away = cn(p.away_team);
     var eloH = Math.round(p.elo_home||0), eloA = Math.round(p.elo_away||0);
+    var lg = p.league_code || '';
     // 亚盘
     var ah = p.ah_handicap;
     var ahHtml = '';
@@ -1441,7 +1457,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
     var oddStr = od.home ? (od.home + ' / ' + (od.draw||'') + ' / ' + (od.away||'')) : '—';
 
     var h = '';
-    h += '<article class="match-card">';
+    h += '<article class="match-card" data-league="' + lg + '">';
     // header
     h += '<div class="match-header"><div class="match-side left"><span class="team-name">' + home + '</span><span class="team-elo">ELO ' + eloH + ' · 主场</span><span class="team-form">' + formDots((p.standings&&p.standings.home&&p.standings.home.form)||'') + '</span></div>';
     h += '<div class="match-vs"><span class="match-pill ' + pillClass(p.bet_class) + '">' + pillText(p) + '</span><div><span class="match-vs-name">' + home + '</span><span class="match-vs-divider">vs</span><span class="match-vs-name">' + away + '</span></div></div>';
@@ -1516,6 +1532,27 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
     sec.innerHTML = h;
   }
 
+  var LEAGUE_CN = {'PL':'英超','PD':'西甲','BL1':'德甲','SA':'意甲','FL1':'法甲','ELC':'英冠'};
+  function buildLeagueNav(preds){
+    var nav = document.getElementById('league-nav');
+    if(!nav) return;
+    var lgs = [];
+    preds.forEach(function(p){ var l = p.league_code||''; if(lgs.indexOf(l) < 0) lgs.push(l); });
+    var h = '<button class="ln-btn active" data-lg="*">全部</button>';
+    lgs.forEach(function(l){ h += '<button class="ln-btn" data-lg="' + l + '">' + (LEAGUE_CN[l]||l) + '</button>'; });
+    nav.innerHTML = h;
+    var cards = document.querySelectorAll('.match-card');
+    nav.querySelectorAll('.ln-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        nav.querySelectorAll('.ln-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        var lg2 = btn.getAttribute('data-lg');
+        cards.forEach(function(c){
+          c.style.display = (lg2 === '*' || c.getAttribute('data-league') === lg2) ? '' : 'none';
+        });
+      });
+    });
+  }
   function load(){
     Promise.all([
       fetch('data/output/predictions_' + today + '.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }),
@@ -1527,6 +1564,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
       renderSignals(preds);
       var ml = document.querySelector('.match-list');
       if(ml){ var cards=''; preds.forEach(function(p){ cards += renderMatch(p); }); ml.innerHTML = cards; }
+      buildLeagueNav(preds);
     });
   }
   load();

@@ -73,8 +73,8 @@ body {
   background: var(--bg-canvas);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 15.5px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -409,8 +409,9 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
 .pill-queued  { color: var(--text-tertiary); background: var(--bg-chip); }
 .pill-conflict{ color: var(--text-tertiary); background: var(--bg-chip); }
 .match-vs-name {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   color: var(--text-primary);
 }
 .match-vs-divider {
@@ -420,8 +421,8 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
   margin: 0 8px;
 }
 .match-side .team-name {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text-primary);
 }
 .match-side .team-elo {
@@ -495,8 +496,8 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
 /* Win/Draw/Lose segmented bar (used inside the prediction column) */
 .wdl-bar {
   display: flex;
-  height: 6px;
-  border-radius: 3px;
+  height: 14px;
+  border-radius: 8px;
   overflow: hidden;
   background: var(--border-subtle);
   margin: 6px 0 4px;
@@ -680,6 +681,21 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
 .conclusion-right .v.green { color: var(--accent-green); }
 .conclusion-right .v.amber { color: var(--accent-amber); }
 .conclusion-right .v.muted { color: var(--text-tertiary); }
+
+/* Detailed analysis (老界面八维分析, 折叠展示) */
+.analysis { border-top: 1px solid var(--border-subtle); padding: var(--s-5) var(--s-7); }
+.analysis-toggle { font-family: var(--font-mono); font-size: 12px; color: var(--accent-green); cursor: pointer; }
+.analysis-body { margin-top: var(--s-4); display: none; }
+.analysis-summary { font-size: 13px; color: var(--text-secondary); line-height: 1.7; background: var(--bg-chip); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 10px 12px; margin-bottom: 10px; }
+.analysis-dims { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.analysis-dim { background: var(--bg-chip); border: 1px solid var(--border-subtle); border-radius: var(--r-md); padding: 8px 10px; }
+.analysis-dim .dim-name { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.analysis-dim .dim-score { font-family: var(--font-mono); font-size: 11px; margin-left: 6px; }
+.analysis-dim .dim-score.pos { color: var(--accent-green); }
+.analysis-dim .dim-score.neg { color: var(--accent-amber); }
+.analysis-dim .dim-judge { font-size: 12px; color: var(--text-secondary); margin-top: 3px; line-height: 1.55; }
+.analysis-reverse { font-size: 12px; color: var(--text-tertiary); margin-top: 10px; }
+@media (max-width: 900px) { .analysis-dims { grid-template-columns: 1fr; } }
 
 /* =========================================================
    Footer
@@ -1483,6 +1499,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
     var dir = hw>=dr && hw>=aw ? '主胜' : (dr>=aw ? '平局' : '客胜');
     var kellyC = kelly>0 ? 'green' : 'muted';
     h += '<div class="conclusion"><span class="conclusion-label">推论轨迹</span><div class="conclusion-trail"><span class="step">' + dir + '</span><span class="arrow">›</span><span class="step">' + dir + '</span><span class="arrow">›</span><span class="step">' + dir + '</span><span class="arrow">›</span><span class="step ' + (p.bet_class==='bet'?'green':'amber') + '">' + concl + '</span></div><span class="conclusion-spacer"></span><div class="conclusion-right"><span><span class="k">把握</span> <span class="v ' + kellyC + '">' + pc(kelly*100) + '%</span></span></div></div>';
+    h += renderAnalysis(p);
     h += '</article>';
     return h;
   }
@@ -1553,12 +1570,45 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
       });
     });
   }
+  var NOTES = {};
+  function toggleAnalysis(btn){
+    var body = btn.nextElementSibling;
+    if(body){
+      var open = body.style.display === 'block';
+      body.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? '详细分析 · 展开' : '详细分析 · 收起';
+    }
+  }
+  window.toggleAnalysis = toggleAnalysis;
+  function renderAnalysis(p){
+    var note = NOTES[p.home_team + ' vs ' + p.away_team];
+    if(!note) return '';
+    var data = null;
+    try { data = JSON.parse(note); } catch(e){ return ''; }
+    if(!data || typeof data !== 'object') return '';
+    var h = '<div class="analysis"><button class="analysis-toggle" onclick="toggleAnalysis(this)">详细分析 · 展开</button><div class="analysis-body">';
+    if(data['摘要']) h += '<div class="analysis-summary">' + data['摘要'] + '</div>';
+    if(data['八维'] && data['八维'].length){
+      h += '<div class="analysis-dims">';
+      data['八维'].forEach(function(dim){
+        var sc = dim['优势分'] || 0;
+        var scTxt = sc > 0 ? ('+' + sc) : ('' + sc);
+        var scCls = sc > 0 ? 'pos' : (sc < 0 ? 'neg' : '');
+        h += '<div class="analysis-dim"><span class="dim-name">' + (dim['维度']||'') + '</span><span class="dim-score ' + scCls + '">' + scTxt + '</span><div class="dim-judge">' + (dim['研判']||'') + '</div></div>';
+      });
+      h += '</div>';
+    }
+    if(data['反向验证']) h += '<div class="analysis-reverse">反向验证：' + data['反向验证'] + '</div>';
+    h += '</div></div>';
+    return h;
+  }
   function load(){
     Promise.all([
       fetch('data/output/predictions_' + today + '.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }),
-      fetch('data/output/team_cn.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; })
+      fetch('data/output/team_cn.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; }),
+      fetch('data/output/analysis_notes_final_' + today + '.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; })
     ]).then(function(res){
-      var preds = res[0]; CN = res[1];
+      var preds = res[0]; CN = res[1]; NOTES = res[2] || {};
       if(!preds.length) return;
       renderStats(preds);
       renderSignals(preds);

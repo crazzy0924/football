@@ -1603,12 +1603,20 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
     return h;
   }
   function load(){
+    function notes(stage){
+      return fetch('data/output/analysis_notes_' + stage + '_' + today + '.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; });
+    }
     Promise.all([
       fetch('data/output/predictions_' + today + '.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }),
       fetch('data/output/team_cn.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; }),
-      fetch('data/output/analysis_notes_final_' + today + '.json', {cache:'no-store'}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; })
+      notes('final'),
+      notes('midday'),
+      notes('morning')
     ]).then(function(res){
-      var preds = res[0]; CN = res[1]; NOTES = res[2] || {};
+      var preds = res[0]; CN = res[1];
+      NOTES = res[4] || {};
+      Object.assign(NOTES, res[3] || {});
+      Object.assign(NOTES, res[2] || {});
       if(!preds.length) return;
       renderStats(preds);
       renderSignals(preds);

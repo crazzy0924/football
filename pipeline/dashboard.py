@@ -119,7 +119,7 @@ daily_html = "".join(
     for d, m, a, b, p in daily_rows
 )
 elc_html = "".join(
-    f"<tr><td>{h} vs {a2}</td><td>{sc}</td><td>{act}</td><td>{pk}</td><td style='color:{'#34d399' if st=='命中' else ('#f87171' if st=='未中' else '#8d99b0')}'>{st}</td></tr>"
+    f"<tr><td>{h} vs {a2}</td><td>{sc}</td><td>{act}</td><td>{pk}</td><td style='color:{'#00d4a8' if st=='命中' else ('#f2877e' if st=='未中' else '#8896b3')}'>{st}</td></tr>"
     for h, a2, sc, act, pk, st in elc_rows
 )
 viol_html = "".join(f"<li>{v}</li>" for v in violations) if violations else "<li>全部通过</li>"
@@ -135,15 +135,15 @@ if ledger:
 html = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>复盘看板 · 足球大模型</title><style>
-body{{font-family:"Microsoft YaHei",sans-serif;background:radial-gradient(900px 400px at 20% -10%,rgba(94,168,255,.12),transparent 60%),#0b0f1a;color:#e9eef8;margin:0;padding:28px 16px 48px;line-height:1.6}}
-.wrap{{max-width:960px;margin:0 auto}} h1{{font-size:1.7rem;margin:8px 0 2px}} .sub{{color:#8d99b0;font-size:.85rem;margin-bottom:18px}}
-.card{{background:#121a2c;border:1px solid #1e2a42;border-radius:12px;padding:16px 18px;margin:14px 0}}
-h2{{font-size:1.05rem;color:#9ec4ff;margin:0 0 10px;border-bottom:1px solid #1e2a42;padding-bottom:6px}}
-table{{width:100%;border-collapse:collapse;font-size:.88rem}} th,td{{padding:6px 8px;border-bottom:1px solid #1e2a42;text-align:left}}
-th{{color:#8d99b0;font-weight:600}} .kpi{{display:flex;flex-wrap:wrap;gap:10px}} .k{{flex:1;min-width:120px;background:#0f172a;border:1px solid #1e2a42;border-radius:10px;padding:12px}}
-.k b{{display:block;font-size:1.25rem;color:#34d399}} .k span{{color:#8d99b0;font-size:.75rem}}
-.warn{{color:#fbbf24}} .bad{{color:#f87171}} .ok{{color:#34d399}} ul{{margin:6px 0;padding-left:20px}} li{{margin:5px 0;font-size:.88rem}}
-a{{color:#5ea8ff;text-decoration:none}} .foot{{color:#64748b;font-size:.78rem;text-align:center;margin-top:22px}}
+body{{font-family:"Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#0a1929 0%,#132a45 55%,#0e2036 100%);color:#eef2ff;margin:0;padding:28px 16px 48px;line-height:1.6}}
+.wrap{{max-width:960px;margin:0 auto}} h1{{font-size:1.7rem;margin:8px 0 2px}} .sub{{color:#8896b3;font-size:.85rem;margin-bottom:18px}}
+.card{{background:#0f2037;border:1px solid #1d3049;border-radius:12px;padding:16px 18px;margin:14px 0}}
+h2{{font-size:1.05rem;color:#a8d4ff;margin:0 0 10px;border-bottom:1px solid #1d3049;padding-bottom:6px}}
+table{{width:100%;border-collapse:collapse;font-size:.88rem}} th,td{{padding:6px 8px;border-bottom:1px solid #1d3049;text-align:left}}
+th{{color:#8896b3;font-weight:600}} .kpi{{display:flex;flex-wrap:wrap;gap:10px}} .k{{flex:1;min-width:120px;background:#12263f;border:1px solid #1d3049;border-radius:10px;padding:12px}}
+.k b{{display:block;font-size:1.25rem;color:#00d4a8}} .k span{{color:#8896b3;font-size:.75rem}}
+.warn{{color:#f6b73c}} .bad{{color:#f2877e}} .ok{{color:#00d4a8}} ul{{margin:6px 0;padding-left:20px}} li{{margin:5px 0;font-size:.88rem}}
+a{{color:#6ea8fe;text-decoration:none}} .foot{{color:#8896b3;font-size:.78rem;text-align:center;margin-top:22px}}
 </style></head><body><div class="wrap">
 <h1>📊 复盘看板</h1>
 <div class="sub">生成于 {now} 北京时间 · 数据来源: 每日复盘/维度台账/自检 · <a href="../index.html">返回首页</a></div>
@@ -155,12 +155,12 @@ a{{color:#5ea8ff;text-decoration:none}} .foot{{color:#64748b;font-size:.78rem;te
 <div class="k"><span>Brier</span><b>{daily_rows[-1][3] if daily_rows else "—"}</b></div>
 <div class="k"><span>盈亏</span><b>{daily_rows[-1][4] if daily_rows else "—"}</b></div>
 </div>
-<p style="font-size:.85rem;color:#8d99b0;margin:10px 0 0">方向分解: 主胜 3/3 (100%) · 平局 0/2 · 客胜 0/2 — 客胜方向全军覆没, 含昨晚唯一英冠注单(西汉姆客胜)实际 4-2 主胜未中; 大2.5 极端信号(模型92%)命中 6 球。</p>
+<p style="font-size:.85rem;color:#8896b3;margin:10px 0 0">方向分解: 主胜 3/3 (100%) · 平局 0/2 · 客胜 0/2 — 客胜方向全军覆没, 含昨晚唯一英冠注单(西汉姆客胜)实际 4-2 主胜未中; 大2.5 极端信号(模型92%)命中 6 球。</p>
 </div>
 
 <div class="card"><h2>英冠首日逐场对账 (09-01)</h2>
 <table><tr><th>对阵</th><th>赛果</th><th>实际方向</th><th>预测方向</th><th>判定</th></tr>{elc_html}</table>
-<p style="font-size:.8rem;color:#8d99b0;margin:8px 0 0">注: 西汉姆vs狼队未进复盘(队名全称匹配失败), 此处以结果文件补录; 系统投注单未记(建议¥20未落地), P&amp;L 账本显示"今日无投注单"。</p>
+<p style="font-size:.8rem;color:#8896b3;margin:8px 0 0">注: 西汉姆vs狼队未进复盘(队名全称匹配失败), 此处以结果文件补录; 系统投注单未记(建议¥20未落地), P&amp;L 账本显示"今日无投注单"。</p>
 </div>
 
 <div class="card"><h2>逐日复盘趋势</h2>

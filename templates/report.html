@@ -6,26 +6,27 @@
 <title>足球预测报告 — {{ date }}</title>
 <style>
   :root {
-    --bg: #0b0f1a;
-    --bg2: #0e1424;
-    --card: #121a2c;
-    --line: #1e2a42;
-    --txt: #e9eef8;
-    --dim: #8d99b0;
-    --green: #34d399;
-    --amber: #fbbf24;
-    --blue: #5ea8ff;
-    --violet: #a78bfa;
-    --pink: #f472b6;
-    --red: #f87171;
+    --bg: #0a1929;
+    --bg2: #11263d;
+    --card: #0f2037;
+    --line: #1d3049;
+    --txt: #eef2ff;
+    --dim: #8896b3;
+    --teal: #00d4a8;
+    --green: #00d4a8;
+    --amber: #f6b73c;
+    --blue: #6ea8fe;
+    --violet: #9aa6e8;
+    --pink: #f48fb1;
+    --red: #f2877e;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     background:
-      radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%),
-      radial-gradient(800px 400px at 90% -20%, rgba(167,139,250,.10), transparent 60%),
-      var(--bg);
+      radial-gradient(1100px 520px at 12% -12%, rgba(0,212,168,.10), transparent 55%),
+      radial-gradient(900px 460px at 90% -18%, rgba(110,168,254,.12), transparent 55%),
+      linear-gradient(135deg, #0a1929 0%, #132a45 55%, #0e2036 100%);
     color: var(--txt);
     min-height: 100vh;
     padding: 28px 16px 40px;
@@ -44,8 +45,9 @@
   }
   .hero h1 {
     font-size: 2rem; font-weight: 800; margin-top: 14px;
-    background: linear-gradient(90deg, #e9eef8, #9ec4ff 60%, #c4b5fd);
+    background: linear-gradient(92deg, #eef2ff 0%, #a8d4ff 48%, #5eead4 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
+    letter-spacing: .5px;
   }
   .hero-sub { color: var(--dim); font-size: .85rem; margin-top: 8px; }
 
@@ -80,7 +82,7 @@
     content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
     background: var(--line);
   }
-  .match.recommended::before { background: linear-gradient(180deg, var(--green), #0d9488); }
+  .match.recommended::before { background: linear-gradient(180deg, var(--green), #009e8a); }
   .match.reference::before { background: linear-gradient(180deg, var(--amber), #d97706); }
   .match.skip { opacity: .72; }
   .match:hover {
@@ -106,8 +108,8 @@
   }
   .m-pick.bet {
     color: #06281c;
-    background: linear-gradient(135deg, #34d399, #6ee7b7);
-    box-shadow: 0 4px 18px rgba(52, 211, 153, .35);
+    background: linear-gradient(135deg, #00d4a8, #5eead4);
+    box-shadow: 0 4px 18px rgba(0, 212, 168, .35);
   }
   .m-pick.skip { color: var(--dim); background: rgba(141,153,176,.10); border: 1px solid var(--line); }
   .m-pick.cold { color: var(--pink); background: rgba(244,114,182,.10); border: 1px solid rgba(244,114,182,.3); }
@@ -137,7 +139,7 @@
     border: 1px solid var(--line); padding: 4px 11px; border-radius: 999px;
   }
   .chip b { color: var(--txt); }
-  .chip.kelly { border-color: rgba(52,211,153,.4); }
+  .chip.kelly { border-color: rgba(0,212,168,.4); }
   .chip.kelly.neg { border-color: rgba(248,113,113,.4); }
   .chip.kelly.neg b { color: var(--red); }
   .chip.kelly.pos b { color: var(--green); }
@@ -159,7 +161,7 @@
   .report-a { margin-top: 12px; background: rgba(94,168,255,.05); border: 1px solid rgba(94,168,255,.22); border-radius: 12px; padding: 12px 14px; }
   .a-meta { font-size: .78rem; color: var(--dim); margin-bottom: 6px; }
   .a-dir { font-size: .85rem; margin-bottom: 6px; }
-  .dir-h { color: #6ee7b7; } .dir-a { color: #fbbf24; } .dir-z { color: var(--dim); }
+  .dir-h { color: #5eead4; } .dir-a { color: #fbbf24; } .dir-z { color: var(--dim); }
   .a-summary { font-size: .86rem; color: #cfe0ff; background: rgba(94,168,255,.08); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
   .tb-wrap { overflow-x: auto; }
   .dims-table, .paths-table { width: 100%; border-collapse: collapse; font-size: .75rem; margin-top: 8px; min-width: 560px; }
@@ -173,19 +175,19 @@
   .a-audit { font-size: .8rem; color: #a78bfa; margin-top: 8px; background: rgba(167,139,250,.08); border-radius: 8px; padding: 6px 10px; }
   .a-tactics { font-size: .82rem; color: #b9c7e2; margin-top: 8px; background: rgba(94,168,255,.06); border-radius: 8px; padding: 8px 12px; }
   .a-tactics b { color: #9ec4ff; }
-  .a-ext { font-size: .82rem; color: #a8c7f0; margin-top: 8px; background: rgba(52,211,153,.06); border-radius: 8px; padding: 8px 12px; }
+  .a-ext { font-size: .82rem; color: #a8c7f0; margin-top: 8px; background: rgba(0,212,168,.06); border-radius: 8px; padding: 8px 12px; }
   .a-missing { font-size: .75rem; color: #8d99b0; margin-top: 8px; }
 
   /* ── 今日看好速览 ── */
   .picks-strip {
     display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
     padding: 14px 16px; border-radius: 16px;
-    background: linear-gradient(135deg, rgba(52,211,153,.10), rgba(94,168,255,.06));
-    border: 1px solid rgba(52,211,153,.35);
+    background: linear-gradient(135deg, rgba(0,212,168,.10), rgba(94,168,255,.06));
+    border: 1px solid rgba(0,212,168,.35);
   }
-  .picks-title { width: 100%; font-size: .85rem; font-weight: 800; color: #6ee7b7; letter-spacing: 1px; }
+  .picks-title { width: 100%; font-size: .85rem; font-weight: 800; color: #5eead4; letter-spacing: 1px; }
   .pick-card {
-    background: #0f1a28; border: 1px solid rgba(52,211,153,.4); border-radius: 12px;
+    background: #0f1a28; border: 1px solid rgba(0,212,168,.4); border-radius: 12px;
     padding: 8px 14px; min-width: 200px; flex: 1;
   }
   .pc-teams { font-size: .82rem; font-weight: 700; color: var(--txt); }
@@ -198,7 +200,7 @@
     display: inline-flex; width: 17px; height: 17px; align-items: center; justify-content: center;
     border-radius: 5px; font-size: .62rem; font-weight: 800;
   }
-  .f-letters span.f-W { background: rgba(52,211,153,.18); color: #6ee7b7; }
+  .f-letters span.f-W { background: rgba(0,212,168,.18); color: #5eead4; }
   .f-letters span.f-D { background: rgba(141,153,176,.15); color: #a5b0c5; }
   .f-letters span.f-L { background: rgba(248,113,113,.18); color: #fca5a5; }
 
@@ -388,11 +390,11 @@
       {% if m.edge_direction %}<span class="chip">优势 {{ m.edge_direction }} <b>+{{ m.edge_pct }}</b></span>{% endif %}
       {% if m.odds_move %}<span class="chip" style="border-color: rgba(251,191,36,.45)">📈 {{ m.odds_move }}</span>{% endif %}
       {% if m.trajectory %}<span class="chip" style="border-color: rgba(94,168,255,.45)">🧭 结论轨迹: {{ m.trajectory }}</span>{% endif %}
-      {% if m.ou_text and not m.ou_text.startswith('无差异') %}<span class="chip" style="border-color: rgba(52,211,153,.45)">⚽ {{ m.ou_text }}</span>{% endif %}
+      {% if m.ou_text and not m.ou_text.startswith('无差异') %}<span class="chip" style="border-color: rgba(0,212,168,.45)">⚽ {{ m.ou_text }}</span>{% endif %}
       {% if m.flag_texts %}<span class="chip" style="border-color: rgba(251,191,36,.6)">⚠️ {{ m.flag_texts }}</span>{% endif %}
       {% if m.cs_text %}<span class="chip" style="border-color: rgba(167,139,250,.45)">🎯 波胆价值: {{ m.cs_text }}</span>{% endif %}
       {% if m.ah_text %}<span class="chip">盘口 <b>{{ m.ah_text }}</b></span>{% endif %}
-      {% if m.ah_pick %}<span class="chip" style="border-color: rgba(52,211,153,.5)">🏆 {{ m.ah_pick }}</span>{% endif %}
+      {% if m.ah_pick %}<span class="chip" style="border-color: rgba(0,212,168,.5)">🏆 {{ m.ah_pick }}</span>{% endif %}
     </div>
     {% if m.std_text %}
     <div class="chips" style="margin-top:8px">

@@ -589,6 +589,14 @@ def cmd_predict(args):
             html_path = generate_analysis_page(today_str, stage, predictions, analyst_notes, intel_text)
         else:
             html_path = generate_report(predictions, output_dir, analyst_notes=analyst_notes)
+            # 透明哈希链账本: 终盘赛前冻结当日预测 (存证)
+            try:
+                from pipeline.transparency import freeze as _tp_freeze, generate_page as _tp_page
+                _h = _tp_freeze(today_str, predictions)
+                if _h:
+                    _tp_page()
+            except Exception:
+                pass
         print(f"HTML报告: {html_path}")
     except Exception as e:
         print(f"HTML报告生成失败: {e}")
@@ -863,6 +871,17 @@ def cmd_review(args):
         print(f"[复盘分析] {ra_path}")
     except Exception as e:
         print(f"[复盘分析] 生成失败: {e}")
+
+    # ---- 透明哈希链账本: 赛后结算回填 ----
+    try:
+        from pipeline.transparency import settle as _tp_settle, generate_page as _tp_page
+        _res = [{"home_team": m.get("home_team"), "away_team": m.get("away_team"),
+                 "home_goals": m.get("home_goals"), "away_goals": m.get("away_goals")} for m in matched]
+        if _tp_settle(date_str, _res):
+            print(f"[透明账本] 已结算 {date_str} {len(_res)} 场")
+            _tp_page()
+    except Exception as e:
+        print(f"[透明账本] 结算失败: {e}")
 
     # ---- 打印总结 (Phase 1 A2: 无信号场次不计入准确率) ----
     sig = [m for m in matched if not m.get("no_signal")]

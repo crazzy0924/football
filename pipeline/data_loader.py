@@ -36,6 +36,7 @@ DIV_TO_LEAGUE = {
     "B1": "BPL",  # Belgium Pro League
     "T1": "TUR",  # Turkey Super Lig
     "G1": "GRE",  # Greece Super League
+    "CL": "CL",   # UEFA Champions League (欧冠正赛)
 }
 
 # 抽取的赔率列 (博彩商前缀 → 输出键)

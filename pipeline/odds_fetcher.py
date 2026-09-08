@@ -41,6 +41,7 @@ DEFAULT_SPORT_KEYS = [
     "soccer_germany_liga3",
     # Continental
     "soccer_uefa_champs_league_qualification",
+    "soccer_uefa_champs_league",
     "soccer_uefa_nations_league",
     "soccer_conmebol_copa_libertadores",
     "soccer_conmebol_copa_sudamericana",
@@ -87,6 +88,7 @@ LEAGUE_MAP = {
     "copa libertadores": "LIB",
     "copa sudamericana": "SUD",
     "champions league qualification": "UCLQ",
+    "champions league": "CL",
     "nations league": "UNL",
     "leagues cup": "LCUP",
     "superettan": "SWE2",

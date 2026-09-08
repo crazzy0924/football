@@ -491,10 +491,9 @@ def _build_match_card(
             _max_cn = "主胜" if _max_p == p_home else ("平局" if _max_p == p_draw else "客胜")
             if _bd_cn != _max_cn:
                 divergence_note = f"价值方向{_bd_cn}≠概率方向{_max_cn}"
-    # 纪律: 五大联赛+英冠(ELC) 可出方向信号, 其余非五大联赛仅观察
-    non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1")
-    # 2026-09-01 用户指令: 英冠(ELC) 出下注信号 (次级联赛模型, 门禁照旧), 其余非五大仍仅观察
-    secondary_bet = league_code == "ELC"
+    # 纪律 (2026-09-09 用户拍板): 只做五大联赛+欧冠, 其余一律不参与; 英冠(ELC)下注解锁已作废
+    non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1", "UCL")
+    secondary_bet = False
 
     # 推荐等级 (纪律: 冲突场/非五大场一律skip, 不得绿色高亮不得计入推荐)
     if conflict or (non_focus and not secondary_bet):

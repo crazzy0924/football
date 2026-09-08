@@ -224,6 +224,12 @@ v2.0 中 5场让球>1.0深盘仅1场穿盘，经验保留：
 - 自检 C1/C2/C8 口径同步覆盖 ELC。
 - 英冠模型为次级联赛模型, 信号置信度天然低于五大联赛, 下注仓位建议按 1/4 凯利执行。
 
+## 2026-09-09 范围纪律 (用户拍板: 只做五大联赛+欧冠)
+- 任务范围收窄为: 五大联赛(PL/PD/BL1/SA/FL1) + 欧冠(UCL)。其他联赛(含英冠ELC/荷甲/沙职/英联赛杯/解放者杯/次级联赛)一律不预测、不展示、不下注。
+- 上一条「2026-09-01 英冠(ELC)下注解锁」作废。
+- 代码落实: config.py PREDICT_LEAGUES + pipeline.py 加载后过滤 + reporter.py 下注门禁(欧冠纳入可下注, 非五大剔除)。
+- 欧冠(UCL)纳入可下注范围, 但模型稀疏(503场/63队), 强强对话模型易失真, 门禁照旧(edge>=5%+Kelly>=1%+非冷启动+三向一致), 复盘重点统计欧冠命中率。
+
 ## 2026-09-03 情报流程加固 (用户指令: 一步一步)
 - 每天 19:00 自动分工: 主代理派 1-2 个子代理做当晚全部场次(含欧冠)的伤停/首发/出线形势/裁判侦察 (web_search 标题级, 每条标来源+链接+访问日期), 写入 data/intel/YYYY-MM-DD.txt (替换空模板), 终盘 21:00 前必须完成。
 - 侦察铁律: 严格区分确认缺阵/出战成疑/预计首发/官方首发; 查不到写「缺失」; 禁止编造; 无赔率盘口内容。
@@ -243,7 +249,7 @@ v2.0 中 5场让球>1.0深盘仅1场穿盘，经验保留：
 - odds-api.io (ODDS_API_IO_KEY 64位): Kambi 备用
 
 ### 赛果
-- football-data.org (FOOTBALL_DATA_API_KEY) + football-data.co.uk CSV (csv_refresh.py) + 体彩
+- 赛果源: football-data.org 官方API (密钥FOOTBALL_DATA_API_KEY) + football-data.co.uk 历史CSV (脚本csv_refresh.py) + 体彩
 
 ### 伤停/首发 (唯一缺口, 已部分解决)
 - 英超: 官方 FPL API (pipeline/intel_fetcher_fpl.py, 免费无key, 名单级) → daily_run 自动跑, 合并进证据账本

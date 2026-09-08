@@ -186,6 +186,13 @@ def cmd_predict(args):
         print("无比赛可预测。请提供 --matches-json 或确认赔率API可用。")
         sys.exit(1)
 
+    # 范围纪律 (2026-09-09 用户拍板): 只预测五大联赛+欧冠, 其他一律不参与
+    from config import PREDICT_LEAGUES
+    _before_n = len(matches)
+    matches = [m for m in matches if (m.get("league_code") or m.get("league", "")) in PREDICT_LEAGUES]
+    if len(matches) < _before_n:
+        print(f"[范围] 剔除 {_before_n - len(matches)} 场非五大/欧冠比赛 (只保留五大联赛+欧冠)")
+
     # API赔率合并进JSON比赛(队名模糊匹配)
     if api_matches and args.matches_json:
         def _clean(s):

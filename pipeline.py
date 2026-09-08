@@ -44,7 +44,7 @@ def cmd_train(args):
     matches = load_all_matches(csv_dir)
     # 训练数据 (2026-08-20 起): 五大联赛 + 次级联赛 (升班马跨级先验样本)
     from config import FOCUS_LEAGUES, SECOND_TIER_LEAGUES
-    train_leagues = list(FOCUS_LEAGUES) + list(SECOND_TIER_LEAGUES) + ["CL"]  # 欧冠正赛单独训练
+    train_leagues = list(FOCUS_LEAGUES) + list(SECOND_TIER_LEAGUES) + ["UCL"]  # 欧冠正赛单独训练
     matches = [m for m in matches if m["league_code"] in train_leagues]
     print(f"训练样本 {len(matches)} 场 ({train_leagues}), 来自 {len(set(m['season'] for m in matches))} 个赛季")
     # 球队所属层级: 次级联赛球队=跨级先验 (预测顶级联赛时降权)

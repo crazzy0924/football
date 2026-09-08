@@ -88,7 +88,7 @@ LEAGUE_MAP = {
     "copa libertadores": "LIB",
     "copa sudamericana": "SUD",
     "champions league qualification": "UCLQ",
-    "champions league": "CL",
+    "champions league": "UCL",
     "nations league": "UNL",
     "leagues cup": "LCUP",
     "superettan": "SWE2",

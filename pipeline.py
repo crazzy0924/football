@@ -533,7 +533,7 @@ def cmd_predict(args):
 
     # 保存JSON (与当日已有预测按场次合并: 终盘不再覆盖早盘已踢场次, 保证复盘完整)
     os.makedirs(output_dir, exist_ok=True)
-    today_str = _today_str()
+    today_str = args.date or _today_str()
     out_path = os.path.join(output_dir, f"predictions_{today_str}.json")
     merged_preds: dict = {}
     if os.path.exists(out_path):
@@ -626,7 +626,7 @@ def cmd_predict(args):
             from pipeline.analysis_page import generate_analysis_page
             html_path = generate_analysis_page(today_str, stage, predictions, analyst_notes, intel_text)
         else:
-            html_path = generate_report(predictions, output_dir, analyst_notes=analyst_notes)
+            html_path = generate_report(predictions, output_dir, output_name=f"predictions_{today_str}.html", analyst_notes=analyst_notes)
             # 透明哈希链账本: 终盘赛前冻结当日预测 (存证)
             try:
                 from pipeline.transparency import freeze as _tp_freeze, generate_page as _tp_page
@@ -1339,6 +1339,7 @@ Examples:
                           help="Add LLM qualitative analysis")
     p_predict.add_argument("--stage", choices=["morning", "midday", "final"], default="final",
                           help="早盘/午盘只出七维分析存档页, 终盘出预测页并注入存档")
+    p_predict.add_argument("--date", default=None, help="日期 YYYY-MM-DD (默认今天; 复盘补跑/跨零点重跑用)")
 
     # review
     p_review = subparsers.add_parser("review", help="Evaluate predictions vs results")

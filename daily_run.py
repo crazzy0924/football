@@ -173,6 +173,14 @@ def cmd_predict(args) -> None:
     except Exception as e:
         print("[警告] FPL 伤停采集跳过: " + str(e))
 
+    # 3c) SofaScore 盘口 (仅终盘; 真实动态大小球线 + 1X2 + 亚盘, Playwright+Edge 过反爬)
+    if args.stage == "final":
+        try:
+            print("[盘口] SofaScore 抓取...")
+            _run([sys.executable, "pipeline/odds_fetcher_sofascore.py"])
+        except Exception as e:
+            print("[警告] SofaScore 盘口跳过: " + str(e))
+
     # 4) 预测 (可选 LLM 分析; 早盘/午盘只出七维分析存档页, 终盘出预测页)
     cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json", "--stage", args.stage]
     if not args.no_llm:

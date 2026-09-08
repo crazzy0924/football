@@ -336,6 +336,18 @@ def cmd_predict(args):
 
     from datetime import datetime, timedelta
 
+    # 加载 SofaScore 盘口 (真实动态大小球线 + 1X2 + 亚盘, 2026-09-08)
+    _sofascore = {}
+    try:
+        _sp = os.path.join("data", "state", "sofascore_odds.json")
+        if os.path.exists(_sp):
+            with open(_sp, "r", encoding="utf-8") as _f:
+                _sofascore = json.load(_f)
+        if _sofascore:
+            print(f"SofaScore 盘口: {len(_sofascore)} 场已加载")
+    except Exception:
+        pass
+
     # 逐场预测
     predictions = []
     for m in matches:
@@ -353,6 +365,32 @@ def cmd_predict(args):
         away = CN_TO_EN_TEAM.get(away, away)
         home = normalize_team_name(home)
         away = normalize_team_name(away)
+
+        # SofaScore 盘口匹配(模糊): 补市场赔率(欧冠无体彩) + 动态大小球公平线
+        if _sofascore:
+            _hl = home.lower(); _al = away.lower()
+            for _sk, _sv in _sofascore.items():
+                _sh = (_sv.get("home") or "").lower()
+                _sa = (_sv.get("away") or "").lower()
+                if _sh and _sa and (_sh in _hl or _hl in _sh) and (_sa in _al or _al in _sa):
+                    _so = _sv.get("odds") or {}
+                    if (not m.get("odds")) and _so.get("home") and _so.get("away"):
+                        m["odds"] = {"home": _so["home"], "draw": _so["draw"], "away": _so["away"]}
+                    _ou = _so.get("ou") or {}
+                    _bl, _bd = None, 999
+                    for _ln, _lv in _ou.items():
+                        _o = _lv.get("Over"); _u = _lv.get("Under")
+                        if _o and _u and abs(_o - _u) < _bd:
+                            _bd = abs(_o - _u); _bl = _ln
+                    if _bl and _ou.get(_bl):
+                        _lv = _ou[_bl]
+                        try:
+                            m["ou_line"] = float(_bl)
+                            m["over_odds"] = _lv.get("Over")
+                            m["under_odds"] = _lv.get("Under")
+                        except Exception:
+                            pass
+                    break
 
         # 联赛代码缺失(UNK)兜底: 从已训练模型 team_league 反查 (体彩漏联赛代码时)
         if league in ("", "UNK", None):
@@ -1212,7 +1250,7 @@ def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None) -> li
 
 
 def _ou_value(pred: dict, m: dict):
-    """大小球价值检测: 模型 over25 vs 市场大小球赔率 (Phase 10)"""
+    """大小球价值检测: 模型在该线(2.5/3.0等动态线)的 over 概率 vs 市场大小球赔率 (Phase 10)"""
     over_odds = m.get("over_odds")
     under_odds = m.get("under_odds")
     if not over_odds or not under_odds:
@@ -1223,16 +1261,27 @@ def _ou_value(pred: dict, m: dict):
     if total <= 0:
         return None
     fair_over = over_imp / total
-    model_over = pred.get("over_25", 0.0)
+    line = m.get("ou_line", 2.5)
+    # 模型在该线的 over 概率: 从比分分布求和 P(总进球 > line)
+    sd = pred.get("score_distribution") or {}
+    model_over = 0.0
+    for score, pr in sd.items():
+        try:
+            h, a = map(int, score.split("-"))
+        except Exception:
+            continue
+        if h + a > line:
+            model_over += pr
     edge = model_over - fair_over
     if abs(edge) < 0.05:
         return None
-    side = "大2.5" if edge > 0 else "小2.5"
+    side = ("大" + str(line)) if edge > 0 else ("小" + str(line))
     return {
         "side": side,
         "model": round(model_over, 4),
         "market": round(fair_over, 4),
         "edge": round(edge, 4),
+        "line": line,
     }
 
 

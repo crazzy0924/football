@@ -151,6 +151,21 @@ def structural_flags(pred: dict) -> list[str]:
     return flags
 
 
+def _model_over(pred: dict, line: float) -> float:
+    """模型在该盘口线的 over 概率: 优先用进球分布, 回退 over_25/over_35"""
+    gd = (pred.get("model") or {}).get("goals_distribution") or {}
+    if gd:
+        def _i(k):
+            return 7 if k == "7+" else int(k)
+        return sum(p for k, p in gd.items() if _i(k) > line)
+    m = pred.get("model") or {}
+    if line <= 2.5:
+        return m.get("over_25", 0)
+    if line <= 3.5:
+        return m.get("over_35", 0)
+    return 0.0
+
+
 def build_cross_prompt(pred: dict, note: str, flags: list[str]) -> str:
     home = pred.get("home_team", "?")
     away = pred.get("away_team", "?")
@@ -173,7 +188,17 @@ def build_cross_prompt(pred: dict, note: str, flags: list[str]) -> str:
     post = (bayes or {}).get("posterior")
     if post:
         lines.append(f"贝叶斯后验: 主{post.get('home', 0):.1%} 平{post.get('draw', 0):.1%} 客{post.get('away', 0):.1%}")
-    lines.append(f"大小球: 大2.5 {model.get('over_25', 0):.1%} | 大3.5 {model.get('over_35', 0):.1%} | BTTS {model.get('btts', 0):.1%}")
+    # 外围大小球实际盘口 (SofaScore 动态线), 模型在该线的 over 概率 (不写死 2.5)
+    _ou_line = pred.get("ou_line")
+    _btts = model.get("btts", 0)
+    if _ou_line is not None:
+        _o = pred.get("over_odds")
+        _u = pred.get("under_odds")
+        _mo = _model_over(pred, _ou_line)
+        _ou_txt = f"大小球: 线{_ou_line:g} 大@{_o}/小@{_u} (模型大{_mo:.1%}) | BTTS {_btts:.1%}"
+    else:
+        _ou_txt = f"大小球: 大2.5 {model.get('over_25', 0):.1%} | 大3.5 {model.get('over_35', 0):.1%} | BTTS {_btts:.1%}"
+    lines.append(_ou_txt)
     top5 = model.get("top_5_scores", [])
     if top5:
         lines.append("最可能比分: " + ", ".join(f"{s[0]}({s[1]:.1%})" for s in top5[:3]))
@@ -197,7 +222,7 @@ def build_cross_prompt(pred: dict, note: str, flags: list[str]) -> str:
             "只输出一个合法 JSON 对象(不要代码块标记、不要概率数字、不要投注建议):\n"
             '{"判定":"同意|保留|反对", "方向":"主胜|主不败|平局|客不败|客胜|跳过", '
             '"置信度":"高|中|低", "问题等级":"P0|P1|P2|无", "首选比分":"如2-1", '
-            '"大小球":"大2.5|小2.5|跳过", "理由":"一句话", "交叉要点":"分歧或共识说明"}\n\n')
+            '"大小球":"大或小+实际盘口线(如大2.5/小3.5)或跳过", "理由":"一句话", "交叉要点":"分歧或共识说明"}\n\n')
 
     return head + "\n".join(lines) + "\n\n克劳德审计输出:"
 

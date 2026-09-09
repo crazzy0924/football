@@ -531,6 +531,10 @@ def cmd_predict(args):
             # Phase 10: 波胆价值 + 大小球价值 (模型 vs 市场多维度 edge)
             "cs_value": _cs_value(pred, m),
             "ou_value": _ou_v,
+            # 外围大小球实际盘口线 + 赔率 (SofaScore动态线, 供克劳德按真实开盘数据判断)
+            "ou_line": m.get("ou_line"),
+            "over_odds": m.get("over_odds"),
+            "under_odds": m.get("under_odds"),
             # 进球数区间: 总进球分布最可能区间 (替代固定 2.5 视角)
             "goals_range": _goals_range(pred, m),
             # 联合约束校验: 最可能比分必须同时满足让球盘+大小球倾向 (消除维度间矛盾)

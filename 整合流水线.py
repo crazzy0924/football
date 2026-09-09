@@ -225,30 +225,30 @@ def merge(date: str, verdicts: list[dict]) -> str:
 
 # ---------- 第四步: 渲染 + 推送 ----------
 def push_my_preds(date: str) -> bool:
-    """把「我的预测」HTML 从 D 盘(SSH canonical)推送到 GitHub Pages.
+    """把「我的预测」HTML 推送到 sky 路径 (data/output/predictions_*.html), 整合后唯一预测.
 
     死规矩②: 推送前必须跑 pre_push_check 汉化检查, 不通过不 push。
     """
     import shutil
-    src = MY / "html"
-    dst = SKY_LIVE / "my_preds"
-    if not dst.exists():
-        print(f"[推送] 目标目录不存在: {dst}")
+    src = MY / "html" / f"predictions_{date}.html"
+    dst = SKY_LIVE / "data" / "output" / f"predictions_{date}.html"
+    if not src.exists():
+        print(f"[推送] 未找到 {src}")
         return False
-    for f in src.glob("*.html"):
-        shutil.copyfile(f, dst / f.name)
-    _run(["git", "add", "my_preds"], cwd=SKY_LIVE)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(src, dst)
+    _run(["git", "add", f"data/output/predictions_{date}.html"], cwd=SKY_LIVE)
     rc = _run(["python", "pre_push_check.py"], cwd=SKY_LIVE)
     if rc != 0:
         print("[推送] 汉化检查未通过, 跳过推送 (已留本地)")
         return False
-    rc = _run(["git", "commit", "-m", f"我的预测: {date} (克劳德交叉 sky4.0) 推送"], cwd=SKY_LIVE)
+    rc = _run(["git", "commit", "-m", f"预测: {date} (整合 sky4.0+克劳德) 推送"], cwd=SKY_LIVE)
     if rc not in (0, 1):
         print("[推送] 提交失败")
         return False
     rc = _run(["git", "push", "origin", "master"], cwd=SKY_LIVE)
     if rc == 0:
-        print("[推送] 已推送 https://crazzy0924.github.io/football/my_preds/latest.html")
+        print(f"[推送] 已推送 https://crazzy0924.github.io/football/data/output/predictions_{date}.html")
         return True
     print("[推送] 推送失败(网络/凭据), 文件已留本地")
     return False

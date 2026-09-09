@@ -163,38 +163,26 @@ def _ou_relation(v: dict) -> str:
 
 
 def _relation_label(v: dict) -> str:
-    """「与sky4.0」列标签: 严格区分「方向分歧」vs「大小球分歧」(不混为一谈)"""
+    """「与sky4.0」列标签: 带绿勾/红叉/黄标, 一眼看清「下不下」+ 区分方向/大小球分歧"""
     dr = _dir_relation(v)      # 同路/分歧/跳过
     ou = _ou_relation(v)       # 同路/分歧/跳过
     level = v.get("问题等级", "")
     verdict = v.get("判定", "")
 
-    # 1) 方向反向 (P0): 模型方向与市场全反向, 优先于一切
-    if level == "P0":
-        base = "方向反向(P0)"
-        if ou == "分歧":
-            base += "·大小球分歧"
-        return base
-    # 2) 方向分歧 (克劳德方向 != sky方向)
-    if dr == "分歧":
-        base = "方向分歧"
-        if ou == "分歧":
-            base += "·大小球分歧"
-        return base
-    # 3) 大小球分歧 (方向同路, 仅大小球相反)
+    # 红叉: 方向反向(P0)/方向分歧 → 不跟
+    if level == "P0" or dr == "分歧":
+        label = "方向反向" if level == "P0" else "方向分歧"
+        return "❌ " + label + (" · 大小球分歧" if ou == "分歧" else "")
+    # 黄标: 大小球分歧 → 方向跟, 大小球反
     if ou == "分歧":
-        return "大小球分歧"
-    # 4) 方向跳过 (克劳德没给方向)
+        return "⚠️ 大小球分歧"
+    # 灰: 方向跳过 → 没给判断
     if dr == "跳过":
-        if ou == "分歧":
-            return "大小球分歧"
-        if ou == "同路":
-            return "方向跳过"
-        return "跳过"
-    # 5) 方向同路
+        return "— 方向跳过" if ou == "同路" else "— 跳过"
+    # 方向同路: 绿勾=可跟; 黄标=冷启动保守
     if verdict == "保留":
-        return "同路·保守"
-    return "同路"
+        return "⚠️ 同路·保守"
+    return "✅ 同路"
 
 
 def load_team_cn() -> dict:

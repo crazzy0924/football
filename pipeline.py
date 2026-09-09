@@ -186,6 +186,13 @@ def cmd_predict(args):
         print("无比赛可预测。请提供 --matches-json 或确认赔率API可用。")
         sys.exit(1)
 
+    # 范围纪律 (2026-09-09 用户拍板): 只预测五大联赛+欧冠, 其他一律不参与
+    from config import PREDICT_LEAGUES
+    _before_n = len(matches)
+    matches = [m for m in matches if (m.get("league_code") or m.get("league", "")) in PREDICT_LEAGUES]
+    if len(matches) < _before_n:
+        print(f"[范围] 剔除 {_before_n - len(matches)} 场非五大/欧冠比赛 (只保留五大联赛+欧冠)")
+
     # API赔率合并进JSON比赛(队名模糊匹配)
     if api_matches and args.matches_json:
         def _clean(s):
@@ -195,18 +202,27 @@ def cmd_predict(args):
         api_lookup = {}
         for am in api_matches:
             key = (_clean(am['home_team']), _clean(am['away_team']))
-            api_lookup[key] = am.get('odds')
+            api_lookup[key] = am
         merged = 0
+        ou_merged = 0
         for m in matches:
-            if m.get('odds'):
-                continue  # already has odds
             h = m.get('home_team',''); a = m.get('away_team','')
             k = (_clean(h), _clean(a))
-            if k in api_lookup:
-                m['odds'] = api_lookup[k]
+            am = api_lookup.get(k)
+            if not am:
+                continue
+            # 胜平负 (仅当体彩无欧赔时补)
+            if not m.get('odds') and am.get('odds'):
+                m['odds'] = am['odds']
                 merged += 1
-        if merged > 0:
-            print(f"合并赔率: {merged}/{len(matches)} 场")
+            # 外围大小球: 真实盘口线+赔率, 覆盖体彩硬编码 2.5
+            if am.get('over_odds') and am.get('under_odds'):
+                m['ou_line'] = am.get('ou_line')
+                m['over_odds'] = am['over_odds']
+                m['under_odds'] = am['under_odds']
+                ou_merged += 1
+        if merged > 0 or ou_merged > 0:
+            print(f"合并外围赔率: 胜平负{merged}场 / 大小球{ou_merged}场 / 共{len(matches)}场")
 
     if not matches:
         print("无比赛可预测。")
@@ -515,6 +531,12 @@ def cmd_predict(args):
             # Phase 10: 波胆价值 + 大小球价值 (模型 vs 市场多维度 edge)
             "cs_value": _cs_value(pred, m),
             "ou_value": _ou_v,
+            # 外围大小球实际盘口线 + 赔率 (SofaScore动态线, 供克劳德按真实开盘数据判断)
+            "ou_line": m.get("ou_line"),
+            "over_odds": m.get("over_odds"),
+            "under_odds": m.get("under_odds"),
+            # 进球数区间: 总进球分布最可能区间 (替代固定 2.5 视角)
+            "goals_range": _goals_range(pred, m),
             # 联合约束校验: 最可能比分必须同时满足让球盘+大小球倾向 (消除维度间矛盾)
             "joint_top_scores": _jt_scores,
             "ht_ft_odds": m.get("ht_ft_odds") or {},
@@ -533,7 +555,7 @@ def cmd_predict(args):
 
     # 保存JSON (与当日已有预测按场次合并: 终盘不再覆盖早盘已踢场次, 保证复盘完整)
     os.makedirs(output_dir, exist_ok=True)
-    today_str = _today_str()
+    today_str = args.date or _today_str()
     out_path = os.path.join(output_dir, f"predictions_{today_str}.json")
     merged_preds: dict = {}
     if os.path.exists(out_path):
@@ -626,7 +648,13 @@ def cmd_predict(args):
             from pipeline.analysis_page import generate_analysis_page
             html_path = generate_analysis_page(today_str, stage, predictions, analyst_notes, intel_text)
         else:
-            html_path = generate_report(predictions, output_dir, analyst_notes=analyst_notes)
+            html_path = generate_report(predictions, output_dir, output_name=f"predictions_{today_str}.html", analyst_notes=analyst_notes)
+            # 并存(整合后): 详细八维报告另存 analysis_final_*.html; predictions_*.html 留给整合汇总覆盖
+            try:
+                import shutil as _sh, os as _os
+                _sh.copyfile(html_path, _os.path.join(output_dir, f"analysis_final_{today_str}.html"))
+            except Exception as _e:
+                print(f"[并存] 详细报告另存失败: {_e}")
             # 透明哈希链账本: 终盘赛前冻结当日预测 (存证)
             try:
                 from pipeline.transparency import freeze as _tp_freeze, generate_page as _tp_page
@@ -1249,6 +1277,40 @@ def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None) -> li
     return [{"score": s, "prob": round(p, 4)} for s, p in cands[:3]]
 
 
+def _goals_range(pred: dict, m: dict):
+    """进球数区间: 从模型总进球分布推最可能区间, 并对照市场分布 (替代固定 2.5 视角)"""
+    md = pred.get("goals_distribution") or {}
+    if not md:
+        return None
+
+    def _i(k):
+        return 7 if k == "7+" else int(k)
+
+    top = max(md, key=lambda k: md[k])
+    ti = _i(top)
+    adj = [k for k in md if abs(_i(k) - ti) == 1]
+    second = max(adj, key=lambda k: md[k]) if adj else None
+    lo = hi = ti
+    if second is not None:
+        lo, hi = min(ti, _i(second)), max(ti, _i(second))
+    rp = sum(p for k, p in md.items() if lo <= _i(k) <= hi)
+    mk = m.get("market_goals_distribution") or {}
+    mp = sum(p for k, p in mk.items() if lo <= _i(k) <= hi) if mk else None
+    if hi >= 7:
+        label = f"{lo}球以上"
+    elif lo == hi:
+        label = f"{lo}球"
+    else:
+        label = f"{lo}-{hi}球"
+    return {
+        "range": label,
+        "range_prob": round(rp, 4),
+        "market_range_prob": round(mp, 4) if mp is not None else None,
+        "model_distribution": md,
+        "market_distribution": mk,
+    }
+
+
 def _ou_value(pred: dict, m: dict):
     """大小球价值检测: 模型在该线(2.5/3.0等动态线)的 over 概率 vs 市场大小球赔率 (Phase 10)"""
     over_odds = m.get("over_odds")
@@ -1339,6 +1401,7 @@ Examples:
                           help="Add LLM qualitative analysis")
     p_predict.add_argument("--stage", choices=["morning", "midday", "final"], default="final",
                           help="早盘/午盘只出七维分析存档页, 终盘出预测页并注入存档")
+    p_predict.add_argument("--date", default=None, help="日期 YYYY-MM-DD (默认今天; 复盘补跑/跨零点重跑用)")
 
     # review
     p_review = subparsers.add_parser("review", help="Evaluate predictions vs results")

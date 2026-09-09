@@ -217,6 +217,8 @@ content_files = [f for f in staged if f.exists() and f.suffix.lower() in
     ('.html', '.py', '.json', '.md', '.txt')]
 content_files = [f for f in content_files if '__pycache__' not in str(f)]
 content_files = [f for f in content_files if 'data/state/' not in str(f).replace(chr(92), '/')]
+# 模型数学代码豁免 — 纯计算代码(英文注释来自原作者), 非用户可见内容
+content_files = [f for f in content_files if 'models/' not in str(f).replace(chr(92), '/')]
 # 自检豁免
 content_files = [f for f in content_files if f.name not in ('pre_push_check.py',)]
 # JSON数据文件豁免 — 机器内部数据(队名/联赛代码必须英文才能匹配ELO)
@@ -224,7 +226,7 @@ content_files = [f for f in content_files if f.name not in ('pre_push_check.py',
 content_files = [f for f in content_files if not (f.suffix == '.json' and (
     'today.json' in f.name or 'pinnacle_odds_' in f.name
     or 'predictions_' in f.name or 'kambi_' in f.name or 'local_match_db' in f.name
-    or 'results_' in f.name or 'analysis_notes_' in f.name))]
+    or 'results_' in f.name or 'analysis_notes_' in f.name or 'transparency_ledger' in f.name))]
 
 print(f'🔎 检查 {len(content_files)} 个内容文件...')
 print()

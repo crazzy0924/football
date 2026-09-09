@@ -54,6 +54,9 @@ FOCUS_LEAGUES = [x.strip() for x in get("FOCUS_LEAGUES", "PL,PD,BL1,SA,FL1").spl
 # 次级联赛 (升班马跨级先验样本: 纳入训练, 顶级联赛出战时降权, 不直接平移)
 SECOND_TIER_LEAGUES = ["PD2", "ELC", "BL2", "SB", "FL2"]
 
+# 预测/下注范围: 只做五大联赛+欧冠, 其他一律不参与 (2026-09-09 用户拍板)
+PREDICT_LEAGUES = list(FOCUS_LEAGUES) + ["UCL"]
+
 # 投注资金池 (元) — 看好栏建议注额 = 资金池 × 凯利 ÷ 4
 BANKROLL = float(get("BANKROLL", "1000"))
 

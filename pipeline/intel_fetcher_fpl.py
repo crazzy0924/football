@@ -96,6 +96,33 @@ def _chance_label(c):
     return "出战成疑 %d%%" % c
 
 
+_POS_CN = {1: "门将", 2: "后卫", 3: "中场", 4: "前锋"}
+
+
+def _impact(points_per_game, element_type, chance):
+    """量化缺阵折损: 重要性(points_per_game) × 缺阵程度(chance) → (分数, 等级).
+
+    借鉴球小策"伤停阵容折损权重"思路: 核心主力(高场均得分)缺阵折损高, 替补缺阵折损低。
+    """
+    ppg = points_per_game or 0
+    imp = 1.5 if ppg >= 5.0 else (1.0 if ppg >= 3.0 else 0.5)
+    if element_type == 1:
+        imp *= 1.2  # 主力门将缺阵影响大
+    elif element_type == 4:
+        imp *= 1.1  # 前锋
+    if chance is None:
+        deg = 0.5
+    elif chance == 0:
+        deg = 1.0  # 完全缺阵
+    elif chance < 50:
+        deg = 0.7  # 大概率缺阵
+    else:
+        deg = 0.3  # 出战成疑
+    score = imp * deg
+    level = "高" if score >= 1.2 else ("中" if score >= 0.6 else "低")
+    return score, level
+
+
 def team_injuries(team_name, data, teams_by_name, teams_by_short):
     tobj = _resolve(team_name, teams_by_name, teams_by_short)
     if not tobj:
@@ -109,8 +136,15 @@ def team_injuries(team_name, data, teams_by_name, teams_by_short):
         chance = e.get("chance_of_playing_next_round")
         if news or (chance is not None and chance < 100):
             wname = e.get("web_name") or e.get("second_name") or "?"
-            reason = news if news else "状态存疑"
-            items.append("%s (%s, %s)" % (wname, reason, _chance_label(chance)))
+            pos = _POS_CN.get(e.get("element_type"), "?")
+            _, level = _impact(e.get("points_per_game"), e.get("element_type"), chance)
+            items.append({
+                "player": wname,
+                "pos": pos,
+                "news": news if news else "状态存疑",
+                "chance": chance,
+                "impact": level,
+            })
     return items
 
 
@@ -138,7 +172,12 @@ def build_intel(matches, max_matches=30):
             fpl_name = (obj or {}).get("name", tn)
             inj = team_injuries(tn, data, teams_by_name, teams_by_short)
             if inj:
-                lines.append("  %s伤停: %s" % (fpl_name, "; ".join(inj[:8])))
+                _order = {"高": 0, "中": 1, "低": 2}
+                inj.sort(key=lambda x: _order.get(x["impact"], 9))
+                _parts = []
+                for it in inj[:8]:
+                    _parts.append(f"{it['player']}[{it['pos']}·折损{it['impact']}·{_chance_label(it['chance'])}]")
+                lines.append("  %s伤停: %s" % (fpl_name, "; ".join(_parts)))
             else:
                 lines.append("  %s: 无公开伤停标记" % fpl_name)
         lines.append("")

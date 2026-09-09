@@ -118,6 +118,8 @@ TEAM_CN = {
     "Paris SG": "巴黎圣日尔曼",
     "Paris Saint-Germain": "巴黎圣日尔曼",
     "Aston Villa": "阿斯顿维拉",
+    "Inter": "国际米兰",
+    "Inter Milan": "国际米兰",
     "Coquimbo Unido": "科金博联",
     "Cerro Porteno": "波特诺山丘",
     "Platense": "普拉滕斯",
@@ -491,10 +493,9 @@ def _build_match_card(
             _max_cn = "主胜" if _max_p == p_home else ("平局" if _max_p == p_draw else "客胜")
             if _bd_cn != _max_cn:
                 divergence_note = f"价值方向{_bd_cn}≠概率方向{_max_cn}"
-    # 纪律: 五大联赛+英冠(ELC) 可出方向信号, 其余非五大联赛仅观察
-    non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1")
-    # 2026-09-01 用户指令: 英冠(ELC) 出下注信号 (次级联赛模型, 门禁照旧), 其余非五大仍仅观察
-    secondary_bet = league_code == "ELC"
+    # 纪律 (2026-09-09 用户拍板): 只做五大联赛+欧冠, 其余一律不参与; 英冠(ELC)下注解锁已作废
+    non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1", "UCL")
+    secondary_bet = False
 
     # 推荐等级 (纪律: 冲突场/非五大场一律skip, 不得绿色高亮不得计入推荐)
     if conflict or (non_focus and not secondary_bet):
@@ -701,6 +702,14 @@ def _build_match_card(
                 _rc = "高" if _span <= 2 else ("中" if _span <= 4 else "低")
                 _rng = f"{_x}-{_y}球" if _x != _y else f"{_x}球"
                 ou_range = f"总进球 {_rng} (80%覆盖·置信度{_rc})"
+    # 进球数区间 (模态区间: 模型最可能总进球, 对照市场分布; 2026-09-09 借鉴球小策"进球数区间"思路)
+    goals_range_text = None
+    _gr = p.get("goals_range") or {}
+    if _gr.get("range"):
+        if _gr.get("market_range_prob") is not None:
+            goals_range_text = f"进球数 {_gr['range']} (模型{_gr['range_prob']:.0%} / 市场{_gr['market_range_prob']:.0%})"
+        else:
+            goals_range_text = f"进球数 {_gr['range']} (模型{_gr['range_prob']:.0%})"
     # 积分榜快照 (Phase 7)
     std = p.get("standings") or {}
     std_text = None
@@ -849,6 +858,7 @@ def _build_match_card(
         "cs_text": cs_text,
         "ou_text": ou_text,
         "ou_range": ou_range,
+        "goals_range_text": goals_range_text,
         "trajectory": trajectory,
         "std_text": std_text,
         "std_form": std_form,

@@ -80,6 +80,14 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
         f"大2.5: {model.get('over_25', 0):.1%} | BTTS: {model.get('btts', 0):.1%} (周复盘修正: BTTS累计52%≈抛硬币, 不作独立信号)",
     ])
 
+    # 进球数区间 (替代固定 2.5 视角: 模型 vs 市场总进球分布)
+    gr = prediction.get("goals_range") or {}
+    if gr.get("range"):
+        if gr.get("market_range_prob") is not None:
+            lines.append(f"进球数区间: {gr['range']} (模型区间概率 {gr['range_prob']:.1%} / 市场 {gr['market_range_prob']:.1%})")
+        else:
+            lines.append(f"进球数区间: {gr['range']} (模型区间概率 {gr['range_prob']:.1%})")
+
     # 全天赔率变动信号 (复盘经验库规则1: 变动≥0.05即独立信号)
     drift = prediction.get("odds_drift")
     if drift:
@@ -198,7 +206,7 @@ def build_analyst_prompt(evidence: str) -> str:
 
 1. 市场视角: 亚盘/欧赔/大小球反映资金流向; 模型与市场分歧大时警惕模型盲区
 2. 状态与攻防: 模型概率/预期进球/ELO差 反映实力与近期状态
-3. 阵容与伤停: 必须区分核心主力与替补; 情报未提及伤停时明确说明, 不得编造
+3. 阵容与伤停: 必须区分核心主力与替补; 情报含"折损高/中/低"时按其量化影响(折损高=核心主力缺阵, 失球或进攻受损明显; 折损低=替补缺阵, 影响有限); 情报未提及伤停时明确说明, 不得编造
 4. 交锋与克制: 参考"近3年交锋"; 必须结合双方阵容变化程度解读 — 阵容稳定则参考价值高, 阵容大换血/换帅则降权; 情报含转会/新援/离队信息时据此判断
 5. 赛程与体能: 7天场次密度、双线作战、轮换概率
 6. 天气与场地: 情报含天气才评; 没有就写"情报未提及, 权重记0"

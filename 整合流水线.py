@@ -111,55 +111,22 @@ def structural_fallback(date: str, include_elc: bool) -> list[dict]:
                           and sky != mkt and fav and fav <= 1.8)
         diverge = (sky in ("home", "away", "draw") and mkt in ("home", "away", "draw")
                    and sky != mkt)
-        if reverse_strong:
-            verdict, level = "反对", "P0"       # 方向反向 + 市场强 → 反向错误
-        elif diverge:
-            verdict, level = "反对", "无"        # 方向分歧(市场不强) → 分歧
-        else:
-            verdict = "保留" if cold else "同意"  # 方向同路; 冷启动保守
-            level = "无"
 
-        direction = DIR_CN.get(mkt, "跳过") if mkt in DIR_CN else "跳过"
+        # 死规矩⑤⑥: 冷启动永不投注 → 不给方向, 标「跳过·冷启动」
+        if cold:
+            verdict, level, direction, conf = "保留", "无", "跳过", "冷启动"
+        elif reverse_strong:
+            verdict, level, direction, conf = "反对", "P0", DIR_CN.get(mkt, "跳过"), "低"
+        elif diverge:
+            verdict, level, direction, conf = "反对", "无", DIR_CN.get(mkt, "跳过"), "低"
+        else:
+            verdict, level, direction, conf = "同意", "无", DIR_CN.get(mkt, "跳过"), "低"
+
         out.append({
             "home": p.get("home_team", "?"), "away": p.get("away_team", "?"),
             "league": p.get("league_code", ""),
             "判定": verdict, "方向": direction,
-            "置信度": "低", "问题等级": level,
-            "首选比分": "", "大小球": "跳过",
-            "理由": "[结构化兜底: 克劳德LLM不可用, 方向取市场锚]",
-            "交叉要点": f"sky看好{sky} vs 市场{mkt}" + (("; " + "; ".join(flags)) if flags else ""),
-            "structural_flags": flags,
-        })
-    return out
-    out = []
-    for p in preds:
-        if p.get("league_code") not in FOCUS_CODES:
-            continue
-        odds = p.get("odds") or {}
-        mkt = market_direction(odds)          # 克劳德方向锚 = 市场 (方向信市场)
-        sky = pick_direction(p)               # sky4.0 显示的看好方向
-        cold = p.get("cold_start", False)
-        flags = structural_flags(p)
-
-        fav = odds.get(mkt, 0) if mkt in ("home", "away") else 0
-        reverse_strong = (mkt in ("home", "away") and sky in ("home", "away")
-                          and sky != mkt and fav and fav <= 1.8)
-        diverge = (sky in ("home", "away", "draw") and mkt in ("home", "away", "draw")
-                   and sky != mkt)
-        if reverse_strong:
-            verdict, level = "反对", "P0"       # 方向反向 + 市场强 → 反向错误
-        elif diverge:
-            verdict, level = "反对", "无"        # 方向分歧(市场不强) → 分歧
-        else:
-            verdict = "保留" if cold else "同意"  # 方向同路; 冷启动保守
-            level = "无"
-
-        direction = DIR_CN.get(mkt, "跳过") if mkt in DIR_CN else "跳过"
-        out.append({
-            "home": p.get("home_team", "?"), "away": p.get("away_team", "?"),
-            "league": p.get("league_code", ""),
-            "判定": verdict, "方向": direction,
-            "置信度": "低", "问题等级": level,
+            "置信度": conf, "问题等级": level,
             "首选比分": "", "大小球": "跳过",
             "理由": "[结构化兜底: 克劳德LLM不可用, 方向取市场锚]",
             "交叉要点": f"sky看好{sky} vs 市场{mkt}" + (("; " + "; ".join(flags)) if flags else ""),

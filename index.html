@@ -881,7 +881,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
       var t = href ? ('<a href="' + href + '">' + title + '</a>') : title;
       return '<div class="report-row"><span class="report-date">' + dd + '</span><span class="report-tag">' + tag + '</span><span class="report-title">' + t + '</span><span class="report-status ' + cls + '">' + st + '</span></div>';
     }
-    if(F.predictions && F.predictions.indexOf(today) >= 0){ rows += row(pad(d.getMonth()+1)+'-'+pad(d.getDate()), '预测', '今日终盘预测', '已发布', 'published', 'data/output/predictions_' + today + '.html'); }
+    if(F.predictions && F.predictions.indexOf(today) >= 0){ rows += row(pad(d.getMonth()+1)+'-'+pad(d.getDate()), '预测', '整合预测(汇总)', '已发布', 'published', 'data/output/predictions_' + today + '.html'); rows += row(pad(d.getMonth()+1)+'-'+pad(d.getDate()), '八维', '详细八维分析', '已发布', 'published', 'data/output/analysis_final_' + today + '.html'); }
     if(F.reviews && F.reviews.indexOf(today) >= 0){ rows += row(pad(d.getMonth()+1)+'-'+pad(d.getDate()), '复盘', '今日赛后复盘', '已发布', 'published', 'data/output/review_' + today + '.html'); }
     var y = new Date(d); y.setDate(y.getDate()-1);
     var ys = y.getFullYear() + '-' + pad(y.getMonth()+1) + '-' + pad(y.getDate());

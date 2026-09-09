@@ -634,6 +634,12 @@ def cmd_predict(args):
             html_path = generate_analysis_page(today_str, stage, predictions, analyst_notes, intel_text)
         else:
             html_path = generate_report(predictions, output_dir, output_name=f"predictions_{today_str}.html", analyst_notes=analyst_notes)
+            # 并存(整合后): 详细八维报告另存 analysis_final_*.html; predictions_*.html 留给整合汇总覆盖
+            try:
+                import shutil as _sh, os as _os
+                _sh.copyfile(html_path, _os.path.join(output_dir, f"analysis_final_{today_str}.html"))
+            except Exception as _e:
+                print(f"[并存] 详细报告另存失败: {_e}")
             # 透明哈希链账本: 终盘赛前冻结当日预测 (存证)
             try:
                 from pipeline.transparency import freeze as _tp_freeze, generate_page as _tp_page

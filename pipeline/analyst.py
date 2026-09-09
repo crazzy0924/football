@@ -80,6 +80,14 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
         f"大2.5: {model.get('over_25', 0):.1%} | BTTS: {model.get('btts', 0):.1%} (周复盘修正: BTTS累计52%≈抛硬币, 不作独立信号)",
     ])
 
+    # 进球数区间 (替代固定 2.5 视角: 模型 vs 市场总进球分布)
+    gr = prediction.get("goals_range") or {}
+    if gr.get("range"):
+        if gr.get("market_range_prob") is not None:
+            lines.append(f"进球数区间: {gr['range']} (模型区间概率 {gr['range_prob']:.1%} / 市场 {gr['market_range_prob']:.1%})")
+        else:
+            lines.append(f"进球数区间: {gr['range']} (模型区间概率 {gr['range_prob']:.1%})")
+
     # 全天赔率变动信号 (复盘经验库规则1: 变动≥0.05即独立信号)
     drift = prediction.get("odds_drift")
     if drift:

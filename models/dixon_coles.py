@@ -89,6 +89,7 @@ def dc_marginals(
     hw = dr = aw = 0.0
     over25 = over35 = btts = 0.0
     scores_list = []
+    goals_dist = {**{str(g): 0.0 for g in range(7)}, "7+": 0.0}  # 总进球分布 (0..6, 7+)
 
     for score, prob in dist.items():
         h, a = map(int, score.split("-"))
@@ -104,6 +105,8 @@ def dc_marginals(
             over35 += prob
         if h > 0 and a > 0:
             btts += prob
+        _tg = h + a
+        goals_dist[str(_tg) if _tg < 7 else "7+"] += prob
         scores_list.append((score, prob))
 
     scores_list.sort(key=lambda x: x[1], reverse=True)
@@ -117,6 +120,7 @@ def dc_marginals(
         "over_25": round(over25, 4),
         "over_35": round(over35, 4),
         "btts": round(btts, 4),
+        "goals_distribution": {k: round(v, 4) for k, v in goals_dist.items()},
         "top_5_scores": scores_list[:5],
         "concentration": round(conc, 4),
         "diagnostics": {

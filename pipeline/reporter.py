@@ -702,6 +702,14 @@ def _build_match_card(
                 _rc = "高" if _span <= 2 else ("中" if _span <= 4 else "低")
                 _rng = f"{_x}-{_y}球" if _x != _y else f"{_x}球"
                 ou_range = f"总进球 {_rng} (80%覆盖·置信度{_rc})"
+    # 进球数区间 (模态区间: 模型最可能总进球, 对照市场分布; 2026-09-09 借鉴球小策"进球数区间"思路)
+    goals_range_text = None
+    _gr = p.get("goals_range") or {}
+    if _gr.get("range"):
+        if _gr.get("market_range_prob") is not None:
+            goals_range_text = f"进球数 {_gr['range']} (模型{_gr['range_prob']:.0%} / 市场{_gr['market_range_prob']:.0%})"
+        else:
+            goals_range_text = f"进球数 {_gr['range']} (模型{_gr['range_prob']:.0%})"
     # 积分榜快照 (Phase 7)
     std = p.get("standings") or {}
     std_text = None
@@ -850,6 +858,7 @@ def _build_match_card(
         "cs_text": cs_text,
         "ou_text": ou_text,
         "ou_range": ou_range,
+        "goals_range_text": goals_range_text,
         "trajectory": trajectory,
         "std_text": std_text,
         "std_form": std_form,

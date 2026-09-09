@@ -522,6 +522,8 @@ def cmd_predict(args):
             # Phase 10: 波胆价值 + 大小球价值 (模型 vs 市场多维度 edge)
             "cs_value": _cs_value(pred, m),
             "ou_value": _ou_v,
+            # 进球数区间: 总进球分布最可能区间 (替代固定 2.5 视角)
+            "goals_range": _goals_range(pred, m),
             # 联合约束校验: 最可能比分必须同时满足让球盘+大小球倾向 (消除维度间矛盾)
             "joint_top_scores": _jt_scores,
             "ht_ft_odds": m.get("ht_ft_odds") or {},
@@ -1260,6 +1262,40 @@ def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None) -> li
         return None
     cands.sort(key=lambda kv: -kv[1])
     return [{"score": s, "prob": round(p, 4)} for s, p in cands[:3]]
+
+
+def _goals_range(pred: dict, m: dict):
+    """进球数区间: 从模型总进球分布推最可能区间, 并对照市场分布 (替代固定 2.5 视角)"""
+    md = pred.get("goals_distribution") or {}
+    if not md:
+        return None
+
+    def _i(k):
+        return 7 if k == "7+" else int(k)
+
+    top = max(md, key=lambda k: md[k])
+    ti = _i(top)
+    adj = [k for k in md if abs(_i(k) - ti) == 1]
+    second = max(adj, key=lambda k: md[k]) if adj else None
+    lo = hi = ti
+    if second is not None:
+        lo, hi = min(ti, _i(second)), max(ti, _i(second))
+    rp = sum(p for k, p in md.items() if lo <= _i(k) <= hi)
+    mk = m.get("market_goals_distribution") or {}
+    mp = sum(p for k, p in mk.items() if lo <= _i(k) <= hi) if mk else None
+    if hi >= 7:
+        label = f"{lo}球以上"
+    elif lo == hi:
+        label = f"{lo}球"
+    else:
+        label = f"{lo}-{hi}球"
+    return {
+        "range": label,
+        "range_prob": round(rp, 4),
+        "market_range_prob": round(mp, 4) if mp is not None else None,
+        "model_distribution": md,
+        "market_distribution": mk,
+    }
 
 
 def _ou_value(pred: dict, m: dict):

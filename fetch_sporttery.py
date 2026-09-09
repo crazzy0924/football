@@ -183,6 +183,13 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
                 tg_odds[k] = float(ttg[k])
         entry['total_goals_odds'] = tg_odds
 
+        # 市场进球分布 (去水): 从 8 档总进球赔率 → 0/1/2/3/4/5/6/7+ 球概率
+        _key_map = {'s0': '0', 's1': '1', 's2': '2', 's3': '3', 's4': '4', 's5': '5', 's6': '6', 's7': '7+'}
+        _tg_imp = {_key_map[k]: 1.0 / v for k, v in tg_odds.items() if k in _key_map}
+        _tg_total = sum(_tg_imp.values())
+        if _tg_total > 0:
+            entry['market_goals_distribution'] = {k: round(v / _tg_total, 4) for k, v in _tg_imp.items()}
+
         # 大小2.5推导: 大 = P(3球以上) = s3+s4+s5+s6+s7
         # 先去水: 计算原始隐含概率
         total_prob = sum(1/o for o in tg_odds.values())

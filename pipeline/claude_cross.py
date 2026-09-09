@@ -78,37 +78,69 @@ def dedupe_predictions(preds: list[dict]) -> list[dict]:
 
 
 def market_direction(odds: dict) -> str:
-    """市场方向: 最低赔率方 = 市场最看好 (方向信市场纪律)"""
+    """市场方向: 最低赔率方 = 市场最看好 (方向信市场纪律).
+
+    兼容两种格式: 十进制赔率(>1) 或 隐含概率(0-1, 三项之和≈1)。
+    """
     if not odds or not odds.get("home") or not odds.get("draw") or not odds.get("away"):
         return "none"
-    return _argmax({"home": 1 / odds["home"], "draw": 1 / odds["draw"], "away": 1 / odds["away"]})
+    if odds["home"] > 1.0:
+        # 十进制赔率: 1/赔率 = 隐含概率, 取最大即最被看好
+        return _argmax({"home": 1 / odds["home"], "draw": 1 / odds["draw"], "away": 1 / odds["away"]})
+    # 已是隐含概率: 直接取最大即最被看好
+    return _argmax({"home": odds["home"], "draw": odds["draw"], "away": odds["away"]})
+
+
+def market_fav_prob(odds: dict) -> float:
+    """市场最看好方的隐含概率 (兼容十进制赔率与隐含概率两种格式)."""
+    if not odds or not odds.get("home") or not odds.get("draw") or not odds.get("away"):
+        return 0.0
+    mkt = market_direction(odds)
+    if mkt == "none":
+        return 0.0
+    v = odds.get(mkt, 0)
+    return (1 / v) if v > 1.0 else v
+
+
+def _direction(probs: dict, margin: float = 0.05) -> str:
+    """方向=概率最高者, 但仅当领先第二名 >= margin 才算「有方向」;
+    三向接近(差值<margin)视为模型无方向, 不算反向, 信市场。"""
+    if not probs:
+        return "none"
+    h = probs.get("home", 0)
+    d = probs.get("draw", 0)
+    a = probs.get("away", 0)
+    vals = sorted((h, d, a), reverse=True)
+    top = vals[0]
+    if top <= 0:
+        return "none"
+    if top - vals[1] < margin:
+        return "none"
+    return _argmax({"home": h, "draw": d, "away": a})
 
 
 def model_direction(model: dict) -> str:
     if not model:
         return "none"
-    return _argmax({"home": model.get("home_win", 0), "draw": model.get("draw", 0),
-                    "away": model.get("away_win", 0)})
+    return _direction({"home": model.get("home_win", 0), "draw": model.get("draw", 0),
+                       "away": model.get("away_win", 0)})
 
 
 def bayes_direction(bayes: dict) -> str:
     post = (bayes or {}).get("posterior")
     if not post:
         return "none"
-    return _argmax({"home": post.get("home", 0), "draw": post.get("draw", 0),
-                    "away": post.get("away", 0)})
+    return _direction({"home": post.get("home", 0), "draw": post.get("draw", 0),
+                       "away": post.get("away", 0)})
 
 
 def pick_direction(pred: dict) -> str:
-    """sky4.0 最终显示的看好方向 (bayesian.pick), 归一为 home/draw/away/none"""
-    pick = ((pred.get("bayesian") or {}).get("pick") or "").strip().lower()
-    if pick.startswith("home"):
-        return "home"
-    if pick.startswith("away"):
-        return "away"
-    if pick.startswith("draw"):
-        return "draw"
-    return bayes_direction(pred.get("bayesian") or {})
+    """sky4.0 最终显示的看好方向 (bayesian.pick), 归一为 home/draw/away/none。
+
+    pick 本质是贝叶斯后验 argmax 的产物; 当后验三向接近(边际<5pp)时 pick 无意义,
+    直接返回边际门槛版 bayes_direction (此时为 none), 避免把「无方向」误当成反向。"""
+    b = pred.get("bayesian") or {}
+    return bayes_direction(b)
 
 
 def structural_flags(pred: dict) -> list[str]:
@@ -124,15 +156,13 @@ def structural_flags(pred: dict) -> list[str]:
     value = pred.get("value") or {}
 
     # P0 候选: 模型/贝叶斯方向 与 市场方向 全反向 (方向信市场)
-    if mkt in ("home", "away") and m_dir in ("home", "away") and m_dir != mkt:
-        # 只有市场赔率明显一边倒 (<=1.8) 才判强反向
-        fav = odds.get(mkt, 0)
-        if fav and fav <= 1.8:
-            flags.append(f"P0候选: 模型方向({m_dir})与市场方向({mkt}@{fav:.2f})反向")
-    if mkt in ("home", "away") and b_dir in ("home", "away") and b_dir != mkt and m_dir == b_dir:
-        fav = odds.get(mkt, 0)
-        if fav and fav <= 1.8:
-            flags.append(f"P0候选: 模型+贝叶斯同向({b_dir})均与市场({mkt}@{fav:.2f})反向")
+    # 只有市场明显一边倒 (隐含概率>=0.55) 且模型方向已过边际门槛(margin>=5pp)才判强反向
+    fp = market_fav_prob(odds)
+    if fp >= 0.55:
+        if mkt in ("home", "away") and m_dir in ("home", "away") and m_dir != mkt:
+            flags.append(f"P0候选: 模型方向({m_dir})与市场方向({mkt}@{fp:.1%})反向")
+        if mkt in ("home", "away") and b_dir in ("home", "away") and b_dir != mkt and m_dir == b_dir:
+            flags.append(f"P0候选: 模型+贝叶斯同向({b_dir})均与市场({mkt}@{fp:.1%})反向")
 
     # 冷启动提示
     if cold:
@@ -142,11 +172,13 @@ def structural_flags(pred: dict) -> list[str]:
         if not odds.get("home"):
             flags.append("P1候选: 非冷启动但无赔率, 数据口径可疑")
 
-    # edge / kelly 提示
+    # edge / kelly 提示 (Kelly<=0 时无价值注, 不得渲染成「看好」误导反向判断)
     best = value.get("best_direction", "none")
     kelly = value.get("kelly", 0) or 0
-    if best != "none":
+    if best != "none" and kelly > 0:
         flags.append(f"sky看好: {best} (Kelly {kelly:.2%})")
+    elif best != "none" and kelly <= 0:
+        flags.append(f"sky无价值注: edge方向{best}但Kelly {kelly:.2%}(不构成看好, 不判方向反向)")
 
     return flags
 
@@ -180,11 +212,21 @@ def build_cross_prompt(pred: dict, note: str, flags: list[str]) -> str:
     if odds.get("home"):
         odds_str = f"欧赔: 主{odds['home']:.2f}/平{odds['draw']:.2f}/客{odds['away']:.2f}"
 
+    m_dir = model_direction(model)
+    mkt_dir = market_direction(odds)
+    # 明确方向概览: 让克劳德直接看结论, 不自己从三个数字里硬挑最高
+    dir_labels = {"home": "主胜", "draw": "平局", "away": "客胜", "none": "无明确方向"}
+    m_txt = dir_labels.get(m_dir, "none")
+    mkt_txt = dir_labels.get(mkt_dir, "none")
+    if m_dir == "none":
+        m_txt = "无明确方向(三向接近)" if (model.get("home_win") or 0) > 0 else "无明确方向"
     lines = [
         f"=== {home} vs {away} ({league}) ===",
         odds_str,
-        f"模型概率: 主{model.get('home_win', 0):.1%} 平{model.get('draw', 0):.1%} 客{model.get('away_win', 0):.1%}",
+        f"模型概率: 主{model.get('home_win', 0):.1%} 平{model.get('draw', 0):.1%} 客{model.get('away_win', 0):.1%} → 模型方向={m_txt}",
     ]
+    if mkt_dir != "none":
+        lines.append(f"市场方向={mkt_txt} (隐含概率{market_fav_prob(odds):.1%})")
     post = (bayes or {}).get("posterior")
     if post:
         lines.append(f"贝叶斯后验: 主{post.get('home', 0):.1%} 平{post.get('draw', 0):.1%} 客{post.get('away', 0):.1%}")
@@ -206,16 +248,24 @@ def build_cross_prompt(pred: dict, note: str, flags: list[str]) -> str:
     if value:
         edges = {d: value.get(f"{d}_edge", 0) or 0 for d in ["home", "draw", "away"]}
         lines.append("edge: " + " ".join(f"{d}={edges[d]:+.1%}" for d in ["home", "draw", "away"]))
-        lines.append(f"sky看好: {value.get('best_direction', 'none')} (Kelly {value.get('kelly', 0) or 0:.2%})")
+        _kelly = value.get("kelly", 0) or 0
+        _best = value.get("best_direction", "none")
+        if _best != "none" and _kelly > 0:
+            lines.append(f"sky看好(价值方向=edge方向, 非概率方向): {_best} (Kelly {_kelly:.2%})")
+        else:
+            lines.append(f"sky价值注: edge方向={_best} 但 Kelly {_kelly:.2%} → 无价值注, 不构成方向看好")
     if flags:
         lines.append("结构化预检信号: " + " | ".join(flags))
+    # 硬指令: 模型无明确方向时, 锁定输出, 禁止判 P0 反向 (方向信市场)
+    if m_dir == "none":
+        lines.append("⚠️ 本场模型三向接近、无明确方向 → 不存在「方向反向」。问题等级必须=\"无\", 判定只能=\"同意\"或\"保留\", 方向信市场(主胜/客胜/平局)。")
     if note:
         lines.append("\n=== sky4.0 八维分析笔记 ===")
         lines.append(note[:1500])
 
     head = ("你是独立定性交叉分析师「克劳德」。sky4.0 已给出量化预测, 你要独立审计它, 不要因为出自同类模型就默认正确。\n\n"
             "审计要点:\n"
-            "① 反向错误(P0): sky 方向与市场方向是否全反向? 方向信市场, 结构信模型, 交叉地带谁都不信则跳过。\n"
+            "① 反向错误(P0): 只看「模型概率方向」(主/客/平 概率最高者) 与「市场方向」(欧赔最低方) 是否全反向, 方向信市场。注意: sky看好的「价值方向」(edge方向) 可能跟概率方向相反, 那是价值注(edge注), 不是方向反向, 不要据此判P0。另: 若模型三项概率接近(最高与次高差<5个百分点), 视为「无方向」, 不算反向, 直接信市场, 不判P0。\n"
             "② 冷启动失真(P1): 冷启动标记与模型实际数据是否矛盾? 欧冠/升班马跨级先验要降权。\n"
             "③ 大小球分歧(P2): 大小球方向与最可能比分是否自洽? 与 sky 判断是否分歧? 大小球线必须用证据里的实际线(如线3.5/4.5), 禁止默认2.5。\n"
             "④ 三向冲突: 概率最高方向 / 最可能比分 / 凯利推荐 三方不一致时标结论不可用。\n\n"

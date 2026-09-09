@@ -202,18 +202,27 @@ def cmd_predict(args):
         api_lookup = {}
         for am in api_matches:
             key = (_clean(am['home_team']), _clean(am['away_team']))
-            api_lookup[key] = am.get('odds')
+            api_lookup[key] = am
         merged = 0
+        ou_merged = 0
         for m in matches:
-            if m.get('odds'):
-                continue  # already has odds
             h = m.get('home_team',''); a = m.get('away_team','')
             k = (_clean(h), _clean(a))
-            if k in api_lookup:
-                m['odds'] = api_lookup[k]
+            am = api_lookup.get(k)
+            if not am:
+                continue
+            # 胜平负 (仅当体彩无欧赔时补)
+            if not m.get('odds') and am.get('odds'):
+                m['odds'] = am['odds']
                 merged += 1
-        if merged > 0:
-            print(f"合并赔率: {merged}/{len(matches)} 场")
+            # 外围大小球: 真实盘口线+赔率, 覆盖体彩硬编码 2.5
+            if am.get('over_odds') and am.get('under_odds'):
+                m['ou_line'] = am.get('ou_line')
+                m['over_odds'] = am['over_odds']
+                m['under_odds'] = am['under_odds']
+                ou_merged += 1
+        if merged > 0 or ou_merged > 0:
+            print(f"合并外围赔率: 胜平负{merged}场 / 大小球{ou_merged}场 / 共{len(matches)}场")
 
     if not matches:
         print("无比赛可预测。")

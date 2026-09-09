@@ -140,7 +140,7 @@ def fetch_today_matches(
                 params = {
                     "apiKey": api_key,
                     "regions": "eu",
-                    "markets": "h2h",
+                    "markets": "h2h,totals",
                     "bookmakers": bookmakers,
                     "oddsFormat": "decimal",
                     "dateFormat": "iso",
@@ -181,11 +181,12 @@ def fetch_today_matches(
                     if not home or not away:
                         continue
 
-                    # 从第一家博彩商提取胜平负赔率
+                    # 从第一家博彩商提取胜平负(h2h) + 大小球(totals)赔率
                     h2h_odds = None
+                    ou_odds = None
                     for bm in e.get("bookmakers", []):
                         for mkt in bm.get("markets", []):
-                            if mkt.get("key") == "h2h":
+                            if mkt.get("key") == "h2h" and h2h_odds is None:
                                 outcomes = mkt.get("outcomes", [])
                                 if len(outcomes) >= 3:
                                     # 结果顺序: 主胜, 平局, 客胜
@@ -194,8 +195,21 @@ def fetch_today_matches(
                                         "draw": outcomes[1]["price"],
                                         "away": outcomes[2]["price"],
                                     }
-                                break
-                        if h2h_odds:
+                            elif mkt.get("key") == "totals" and ou_odds is None:
+                                outcomes = mkt.get("outcomes", [])
+                                over = under = None
+                                for o in outcomes:
+                                    if o.get("name") == "Over":
+                                        over = o
+                                    elif o.get("name") == "Under":
+                                        under = o
+                                if over and under and over.get("point") is not None:
+                                    ou_odds = {
+                                        "ou_line": float(over.get("point")),
+                                        "over_odds": float(over.get("price")),
+                                        "under_odds": float(under.get("price")),
+                                    }
+                        if h2h_odds and ou_odds:
                             break
 
                     if not h2h_odds:
@@ -203,7 +217,7 @@ def fetch_today_matches(
 
                     league_code = _map_league(sport_title)
 
-                    all_matches.append({
+                    _entry = {
                         "home_team": home,
                         "away_team": away,
                         "league_code": league_code,
@@ -211,7 +225,10 @@ def fetch_today_matches(
                         "odds": h2h_odds,
                         "kickoff": ct,
                         "source": "the-odds-api.com",
-                    })
+                    }
+                    if ou_odds:
+                        _entry.update(ou_odds)
+                    all_matches.append(_entry)
 
         # Phase 1 A1: the-odds-api 无结果或配额耗尽 → odds-api.io v3 兜底
         if not all_matches or quota_exhausted:

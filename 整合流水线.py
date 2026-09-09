@@ -112,9 +112,11 @@ def structural_fallback(date: str, include_elc: bool) -> list[dict]:
         diverge = (sky in ("home", "away", "draw") and mkt in ("home", "away", "draw")
                    and sky != mkt)
 
-        # 死规矩⑤⑥: 冷启动永不投注 → 不给方向, 标「跳过·冷启动」
+        # 死规矩⑤: 冷启动永不投注, 但方向照给 (用户确认: 保持给方向, 标「低·冷启动」)
         if cold:
-            verdict, level, direction, conf = "保留", "无", "跳过", "冷启动"
+            verdict, level = "保留", "无"
+            direction = DIR_CN.get(mkt, "跳过") if mkt in DIR_CN else "跳过"
+            conf = "低·冷启动"
         elif reverse_strong:
             verdict, level, direction, conf = "反对", "P0", DIR_CN.get(mkt, "跳过"), "低"
         elif diverge:
@@ -151,8 +153,23 @@ def _relation_label(v: dict) -> str:
     return "同路"
 
 
+def load_team_cn() -> dict:
+    """从活系统加载 英文→中文 队名映射 (全中文纪律)"""
+    sys.path.insert(0, str(active_sky()))
+    try:
+        from pipeline.reporter import TEAM_CN
+        return TEAM_CN
+    except Exception:
+        return {}
+
+
 def merge(date: str, verdicts: list[dict]) -> str:
-    """把克劳德交叉结果 + sky 终盘, 合并为 我的预测/latest.md 内容"""
+    """把克劳德交叉结果 + sky 终盘, 合并为 我的预测/latest.md 内容 (队名汉化)"""
+    cn_map = load_team_cn()
+
+    def cn(name):
+        return cn_map.get(name, name)
+
     preds = json.loads((active_sky() / "data" / "output" / f"predictions_{date}.json").read_text(encoding="utf-8"))
     kick = {f"{p.get('home_team', '?')} vs {p.get('away_team', '?')}": p.get("kickoff_time", "") for p in preds}
 
@@ -170,7 +187,7 @@ def merge(date: str, verdicts: list[dict]) -> str:
     p0_list, p1_list, p2_list, diverge_list, agree_list = [], [], [], [], []
     for v in verdicts:
         ko = _fmt_ko(v)
-        match_name = f"{v.get('home')} vs {v.get('away')}" + (f" {ko}" if ko else "")
+        match_name = f"{cn(v.get('home', '?'))} 对 {cn(v.get('away', '?'))}" + (f" {ko}" if ko else "")
         direction = f"{v.get('方向', '跳过')}（{v.get('置信度', '低')}）"
         score = v.get("首选比分") or "—"
         ou = v.get("大小球") or "跳过"
@@ -178,14 +195,15 @@ def merge(date: str, verdicts: list[dict]) -> str:
         lines.append(f"| {match_name} | {direction} | {score} | {ou} | {rel} |")
 
         level = v.get("问题等级", "")
+        cn_pair = f"{cn(v.get('home', '?'))} 对 {cn(v.get('away', '?'))}"
         if level == "P0":
-            p0_list.append(f"{v.get('home')} vs {v.get('away')}：{v.get('交叉要点') or v.get('理由', '')}")
+            p0_list.append(f"{cn_pair}：{v.get('交叉要点') or v.get('理由', '')}")
         elif level == "P1":
-            p1_list.append(f"{v.get('home')} vs {v.get('away')}：{v.get('交叉要点') or v.get('理由', '')}")
+            p1_list.append(f"{cn_pair}：{v.get('交叉要点') or v.get('理由', '')}")
         elif level == "P2":
-            p2_list.append(f"{v.get('home')} vs {v.get('away')}：{v.get('交叉要点') or v.get('理由', '')}")
+            p2_list.append(f"{cn_pair}：{v.get('交叉要点') or v.get('理由', '')}")
         elif v.get("判定") == "反对":
-            diverge_list.append(f"{v.get('home')} vs {v.get('away')}：{v.get('交叉要点') or v.get('理由', '')}")
+            diverge_list.append(f"{cn_pair}：{v.get('交叉要点') or v.get('理由', '')}")
         if v.get("判定") in ("同意", "保留"):
             agree_list.append(v.get("方向", ""))
 
@@ -206,11 +224,42 @@ def merge(date: str, verdicts: list[dict]) -> str:
 
 
 # ---------- 第四步: 渲染 + 推送 ----------
+def push_my_preds(date: str) -> bool:
+    """把「我的预测」HTML 从 D 盘(SSH canonical)推送到 GitHub Pages.
+
+    死规矩②: 推送前必须跑 pre_push_check 汉化检查, 不通过不 push。
+    """
+    import shutil
+    src = MY / "html"
+    dst = SKY_LIVE / "my_preds"
+    if not dst.exists():
+        print(f"[推送] 目标目录不存在: {dst}")
+        return False
+    for f in src.glob("*.html"):
+        shutil.copyfile(f, dst / f.name)
+    _run(["git", "add", "my_preds"], cwd=SKY_LIVE)
+    rc = _run(["python", "pre_push_check.py"], cwd=SKY_LIVE)
+    if rc != 0:
+        print("[推送] 汉化检查未通过, 跳过推送 (已留本地)")
+        return False
+    rc = _run(["git", "commit", "-m", f"我的预测: {date} (克劳德交叉 sky4.0) 推送"], cwd=SKY_LIVE)
+    if rc not in (0, 1):
+        print("[推送] 提交失败")
+        return False
+    rc = _run(["git", "push", "origin", "master"], cwd=SKY_LIVE)
+    if rc == 0:
+        print("[推送] 已推送 https://crazzy0924.github.io/football/my_preds/latest.html")
+        return True
+    print("[推送] 推送失败(网络/凭据), 文件已留本地")
+    return False
+
+
 def render_and_push(date: str) -> bool:
-    for ps in ("render_predictions.ps1", "build_index.ps1", "push_predictions.ps1"):
+    for ps in ("render_predictions.ps1", "build_index.ps1"):
         rc = _run(["powershell", "-ExecutionPolicy", "Bypass", "-File", str(MY / ps)])
         if rc != 0:
-            print(f"[渲染/推送] {ps} 退出码 {rc} (继续)")
+            print(f"[渲染] {ps} 退出码 {rc} (继续)")
+    push_my_preds(date)
     latest = MY / "html" / f"predictions_{date}.html"
     return latest.exists()
 

@@ -118,6 +118,8 @@ TEAM_CN = {
     "Paris SG": "巴黎圣日尔曼",
     "Paris Saint-Germain": "巴黎圣日尔曼",
     "Aston Villa": "阿斯顿维拉",
+    "Inter": "国际米兰",
+    "Inter Milan": "国际米兰",
     "Coquimbo Unido": "科金博联",
     "Cerro Porteno": "波特诺山丘",
     "Platense": "普拉滕斯",

@@ -847,7 +847,9 @@ class DixonColesModel:
         result["home_defense"] = def_h
         result["away_attack"] = att_a
         result["away_defense"] = def_a
-        result["cold_start"] = home_cold or away_cold
+        # 冷启动判定: 仅「无市场反解、纯联赛均值盲猜」才算真冷启动;
+        # 有市场赔率反解 λ 的场次(欧冠等)按正常预测处理(命中率已验证 OK)
+        result["cold_start"] = (home_cold or away_cold) and not market_informed
         result["cross_league"] = is_cross
         result["cold_start_detail"] = {
             "home_cold": home_cold,

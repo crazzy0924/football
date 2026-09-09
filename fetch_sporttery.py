@@ -190,21 +190,23 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
         if _tg_total > 0:
             entry['market_goals_distribution'] = {k: round(v / _tg_total, 4) for k, v in _tg_imp.items()}
 
-        # 大小2.5推导: 大 = P(3球以上) = s3+s4+s5+s6+s7
-        # 先去水: 计算原始隐含概率
-        total_prob = sum(1/o for o in tg_odds.values())
-        over_raw = sum(1/tg_odds[k] for k in ['s3', 's4', 's5', 's6', 's7'] if k in tg_odds)
-        under_raw = sum(1/tg_odds[k] for k in ['s0', 's1', 's2'] if k in tg_odds)
+        # 主盘线推导 (动态): 从 8 档分布找 over 概率最接近 50% 的线, 不再固定 2.5
+        if _tg_total > 0:
+            _dist = entry['market_goals_distribution']
 
-        if total_prob > 0:
-            devig_factor = 1.0 / total_prob
-            fair_over_prob = over_raw * devig_factor
-            fair_under_prob = under_raw * devig_factor
-            # 公平概率转回十进制赔率
-            if fair_over_prob > 0:
-                entry['ou_line'] = 2.5
-                entry['over_odds'] = round(1.0 / fair_over_prob, 2)
-                entry['under_odds'] = round(1.0 / fair_under_prob, 2) if fair_under_prob > 0 else 99.0
+            def _gk(k):
+                return 7 if k == '7+' else int(k)
+
+            _best_n, _best_d = 3, 999
+            for _n in range(1, 8):
+                _ov = sum(p for k, p in _dist.items() if _gk(k) >= _n)
+                _d = abs(_ov - 0.5)
+                if _d < _best_d:
+                    _best_d, _best_n = _d, _n
+            _ov = sum(p for k, p in _dist.items() if _gk(k) >= _best_n)
+            entry['ou_line'] = _best_n - 0.5
+            entry['over_odds'] = round(1.0 / _ov, 2) if _ov > 0 else 99.0
+            entry['under_odds'] = round(1.0 / (1.0 - _ov), 2) if _ov < 1 else 99.0
 
     # 波胆 (比分) 赔率
     crs = m.get('crs', {})

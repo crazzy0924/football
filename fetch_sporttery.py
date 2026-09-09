@@ -252,13 +252,13 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
     if entry.get('ou_line'):
         print(f'  大小(O/U 2.5): 大{entry["over_odds"]:.2f} / 小{entry["under_odds"]:.2f}')
 
-# 聚焦联赛过滤 (默认只关注五大联赛; --all 时纳入体彩开盘全部比赛)
+# 聚焦联赛过滤 (默认五大联赛+欧冠; --all 时纳入体彩开盘全部比赛)
 try:
-    from config import FOCUS_LEAGUES
+    from config import PREDICT_LEAGUES
     before = len(today)
     if not include_all:
-        today = [m for m in today if m.get('league_code') in FOCUS_LEAGUES]
-        print(f'聚焦联赛过滤: {before} → {len(today)} 场 (保留 {FOCUS_LEAGUES})')
+        today = [m for m in today if m.get('league_code') in PREDICT_LEAGUES]
+        print(f'聚焦联赛过滤: {before} → {len(today)} 场 (保留 {PREDICT_LEAGUES})')
     else:
         print(f'全量模式: 保留体彩开盘全部 {before} 场 (含非五大联赛, 分析为主)')
 except Exception as e:

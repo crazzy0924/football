@@ -351,6 +351,12 @@ def cross_check_matches(predictions: list[dict], notes: dict[str, str],
 
         if verdict:
             verdict["structural_flags"] = flags
+            # 记录 sky4.0 的方向 + 大小球, 供合并时区分「方向分歧」vs「大小球分歧」
+            verdict["sky_direction"] = pick_direction(pred)            # home/away/draw
+            # sky 大小球方向: 模型在该盘口线的 over 概率 (大>50% / 小<50%), 而非 edge 信号
+            _ln = pred.get("ou_line") or 2.5
+            _mo = _model_over(pred, _ln)
+            verdict["sky_ou"] = "大" if _mo > 0.5 else ("小" if _mo < 0.5 else None)
             verdicts.append(verdict)
             print(f"    -> {verdict.get('判定')} / {verdict.get('方向')} / {verdict.get('问题等级')}")
     return verdicts

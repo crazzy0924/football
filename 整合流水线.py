@@ -138,16 +138,60 @@ def structural_fallback(date: str, include_elc: bool) -> list[dict]:
 
 
 # ---------- 第三步: 同路/分歧合并 ----------
+def _dir_relation(v: dict) -> str:
+    """方向关系: 克劳德方向 vs sky方向 → 同路/分歧/跳过"""
+    cd = v.get("方向", "跳过")
+    sd = v.get("sky_direction", "none")
+    c = {"主胜": "home", "主不败": "home", "平局": "draw",
+         "客胜": "away", "客不败": "away"}.get(cd, "none")
+    if c == "none" or sd == "none":
+        return "跳过"
+    return "同路" if c == sd else "分歧"
+
+
+def _ou_relation(v: dict) -> str:
+    """大小球关系: 克劳德大小球 vs sky大小球 → 同路/分歧/跳过"""
+    co = v.get("大小球", "跳过") or ""
+    so = v.get("sky_ou") or ""
+    if not so or co == "跳过":
+        return "跳过"
+    c_side = co[0] if co else ""
+    s_side = so[0] if so else ""
+    if not c_side or not s_side:
+        return "跳过"
+    return "同路" if c_side == s_side else "分歧"
+
+
 def _relation_label(v: dict) -> str:
-    """判定 + 问题等级 → 「与sky4.0」列标签"""
-    verdict = v.get("判定", "")
+    """「与sky4.0」列标签: 严格区分「方向分歧」vs「大小球分歧」(不混为一谈)"""
+    dr = _dir_relation(v)      # 同路/分歧/跳过
+    ou = _ou_relation(v)       # 同路/分歧/跳过
     level = v.get("问题等级", "")
+    verdict = v.get("判定", "")
+
+    # 1) 方向反向 (P0): 模型方向与市场全反向, 优先于一切
     if level == "P0":
-        return "分歧·P0"
-    if verdict == "反对":
-        return "分歧"
-    if level == "P2":
-        return "同路·OU分歧"
+        base = "方向反向(P0)"
+        if ou == "分歧":
+            base += "·大小球分歧"
+        return base
+    # 2) 方向分歧 (克劳德方向 != sky方向)
+    if dr == "分歧":
+        base = "方向分歧"
+        if ou == "分歧":
+            base += "·大小球分歧"
+        return base
+    # 3) 大小球分歧 (方向同路, 仅大小球相反)
+    if ou == "分歧":
+        return "大小球分歧"
+    # 4) 方向跳过 (克劳德没给方向)
+    if dr == "跳过":
+        if ou == "分歧":
+            return "大小球分歧"
+        if ou == "同路":
+            return "方向跳过"
+        return "跳过"
+    # 5) 方向同路
     if verdict == "保留":
         return "同路·保守"
     return "同路"

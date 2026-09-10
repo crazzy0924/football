@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>看板组件演示 — 2026-09-10 欧冠</title>
+<link rel="stylesheet" href="kanban.css">
+<style>
+  :root{
+    --bg:#0a1929; --bg2:#11263d; --card:#0f2037; --line:#1d3049;
+    --txt:#eef2ff; --dim:#8896b3; --teal:#00d4a8; --amber:#f6b73c;
+    --blue:#6ea8fe; --violet:#9aa6e8; --red:#f2877e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:linear-gradient(135deg,#0a1929 0%,#132a45 55%,#0e2036 100%);color:var(--txt);
+    min-height:100vh;padding:26px 18px 40px;line-height:1.55}
+  h1{font-size:1.15rem;font-weight:600;margin-bottom:4px}
+  .sub{font-size:.78rem;color:var(--dim);margin-bottom:18px}
+  .wrap{max-width:1180px;margin:0 auto}
+  .hint{font-size:.74rem;color:var(--dim);margin-top:14px;padding:10px 12px;
+    border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.02)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>看板组件演示</h1>
+  <div class="sub">2026-09-10 欧冠 · 数据来自 predictions_2026-09-10.json · 可拖拽卡片(演示 onMove 回显)</div>
+  <div id="board"></div>
+  <div class="hint" id="log">拖动卡片试试 —— 落位会在这里回显。</div>
+</div>
+
+<script src="vendor/sortable.min.js"></script>
+<script src="kanban.js"></script>
+<script>
+var columns = [
+  {
+    id: "early", title: "00:45 早场", color: "#f6b73c",
+    cards: [
+      { id: "FEN-ROM", title: "费内巴切 vs Roma", meta: ["融合 主24.7% / 平23.9% / 客51.4%", "小2.5 · 最可能 0-1"],
+        tags: [{text:"客胜",kind:"away"},{text:"两队冷启动",kind:"warn"}] }
+    ]
+  },
+  {
+    id: "late", title: "03:00 晚场", color: "#00d4a8",
+    cards: [
+      { id: "BAY-BOD", title: "拜仁 vs 博德闪耀", meta: ["融合 主70.5% / 平16.0% / 客13.5%", "大2.5 · 最可能 3-0"],
+        tags: [{text:"主胜",kind:"home"},{text:"数据齐",kind:"mute"}] },
+      { id: "SLA-LEN", title: "布拉格斯拉维亚 vs 朗斯", meta: ["融合 主33.9% / 平27.7% / 客38.4%", "小2.5 · 最可能 0-1"],
+        tags: [{text:"客胜",kind:"away"},{text:"数据齐",kind:"mute"}] },
+      { id: "COM-RBL", title: "科莫 vs RB莱比锡", meta: ["融合 主49.2% / 平21.7% / 客29.2%", "最可能 1-1"],
+        tags: [{text:"主胜",kind:"home"},{text:"比分冲突·已降级",kind:"warn"}] },
+      { id: "MUN-SAB", title: "曼联 vs 萨巴赫", meta: ["融合 主34.2% / 平33.3% / 客32.5%", "最可能 0-0"],
+        tags: [{text:"结论不可用",kind:"warn"},{text:"两队冷启动",kind:"warn"}] }
+    ]
+  },
+  {
+    id: "watch", title: "观察 / 撤下", color: "#8896b3",
+    cards: []
+  }
+];
+
+DSHKanban.mount(document.getElementById("board"), {
+  columns: columns,
+  sortable: true,
+  onMove: function (cardId, from, to) {
+    document.getElementById("log").textContent = "已移动: " + cardId + "  " + from + " → " + to;
+  }
+});
+</script>
+</body>
+</html>

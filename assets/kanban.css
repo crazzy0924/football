@@ -1,0 +1,29 @@
+/* ═══════════════════════════════════════════════════════
+   足球系统 · 看板组件 (kanban.css)
+   配合 assets/vendor/sortable.min.js 使用
+   配色沿用报告页 CSS 变量(--bg/--card/--line/--teal...), 未定义时有兜底
+   ═══════════════════════════════════════════════════════ */
+.kb-board{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:thin}
+.kb-col{flex:0 0 268px;background:var(--card,#0f2037);border:1px solid var(--line,#1d3049);
+  border-radius:12px;display:flex;flex-direction:column;max-height:78vh}
+.kb-col-head{display:flex;align-items:center;gap:8px;padding:11px 13px 9px;border-bottom:1px solid var(--line,#1d3049)}
+.kb-col-dot{width:8px;height:8px;border-radius:50%;background:var(--teal,#00d4a8);flex:none}
+.kb-col-title{flex:1;font-weight:600;font-size:.86rem;letter-spacing:.2px}
+.kb-col-count{font-size:.72rem;color:var(--dim,#8896b3);background:rgba(255,255,255,.05);
+  border-radius:999px;padding:1px 8px;font-variant-numeric:tabular-nums}
+.kb-col-body{padding:10px;display:flex;flex-direction:column;gap:9px;overflow-y:auto;min-height:56px}
+.kb-col-body.kb-over{background:rgba(0,212,168,.06);outline:1px dashed rgba(0,212,168,.4);outline-offset:-5px;border-radius:9px}
+.kb-card{background:var(--bg2,#11263d);border:1px solid var(--line,#1d3049);border-radius:10px;
+  padding:10px 11px;cursor:grab;transition:border-color .15s,transform .15s,box-shadow .15s}
+.kb-card:hover{border-color:rgba(0,212,168,.45);transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.kb-card.kb-drag{opacity:.45;border-style:dashed}
+.kb-card.kb-ghost{opacity:.9;box-shadow:0 8px 26px rgba(0,0,0,.45);border-color:var(--teal,#00d4a8)}
+.kb-card-title{font-size:.83rem;font-weight:600;line-height:1.4;margin-bottom:5px}
+.kb-card-meta{font-size:.72rem;color:var(--dim,#8896b3);display:flex;flex-wrap:wrap;gap:4px 10px}
+.kb-card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.kb-tag{font-size:.68rem;padding:1.5px 7px;border-radius:999px;border:1px solid currentColor;opacity:.9;white-space:nowrap}
+.kb-tag.kb-home{color:var(--teal,#00d4a8)} .kb-tag.kb-draw{color:var(--amber,#f6b73c)}
+.kb-tag.kb-away{color:var(--blue,#6ea8fe)}   .kb-tag.kb-warn{color:var(--red,#f2877e)}
+.kb-tag.kb-mute{color:var(--dim,#8896b3)}
+.kb-empty{font-size:.72rem;color:var(--dim,#8896b3);text-align:center;padding:14px 6px;opacity:.7}
+@media(max-width:640px){.kb-col{flex:0 0 84vw}}

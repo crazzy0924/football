@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>复盘报告 — 2026-09-08</title>
+<title>复盘报告 — 2026-09-07</title>
 <style>
   :root {
     --bg: #0a1929; --bg2: #11263d; --card: #0f2037; --line: #1d3049;
@@ -109,29 +109,29 @@
 
   <div class="header">
     <h1>赛后复盘</h1>
-    <div class="meta">2026-09-08 — 匹配 6/6 场</div>
+    <div class="meta">2026-09-07 — 匹配 4/4 场</div>
   </div>
 
   <!-- 指标卡片 -->
   <div class="scorecard">
     <div class="sc good">
-      <div class="value">0.1754</div>
+      <div class="value">0.1976</div>
       <div class="label">Brier 分数</div>
     </div>
-    <div class="sc warn">
-      <div class="value">50.0%</div>
+    <div class="sc bad">
+      <div class="value">75.0%</div>
       <div class="label">准确率</div>
     </div>
     <div class="sc bad">
-      <div class="value">0.9018</div>
+      <div class="value">0.9906</div>
       <div class="label">对数损失</div>
     </div>
-    <div class="sc bad">
-      <div class="value">-0.06u</div>
+    <div class="sc ">
+      <div class="value">-0.00u</div>
       <div class="label">盈亏 (单位)</div>
     </div>
     <div class="sc bad">
-      <div class="value">-2.9%</div>
+      <div class="value">-0.1%</div>
       <div class="label">回报率</div>
     </div>
   </div>
@@ -139,13 +139,13 @@
   <!-- 方向准确率 -->
   <div class="section-title">方向分解</div>
   <div style="display:flex;gap:20px;font-size:0.82rem;margin-bottom:8px">
-    <span>主胜: 3/3 (100.0%)</span>
-    <span>平局: 0/0 (N/A)</span>
-    <span>客胜: 0/3 (0.0%)</span>
+    <span>主胜: 1/1 (100.0%)</span>
+    <span>平局: 0/1 (0.0%)</span>
+    <span>客胜: 2/2 (100.0%)</span>
   </div>
   <div class="direction-bar">
-    <div class="seg-home" style="width:50%"></div>
-    <div class="seg-draw" style="width:0%"></div>
+    <div class="seg-home" style="width:25%"></div>
+    <div class="seg-draw" style="width:25%"></div>
     <div class="seg-away" style="width:50%"></div>
   </div>
 
@@ -154,16 +154,16 @@
   <div class="section-title">多维度复盘 (5维度独立计分)</div>
   <pre class="dim-box">维度复盘 (门禁: 模型Brier < 气候基线):
 --------------------------------------------------------
-  1X2    胜平负 (3-way)          今日3场 Brier 0.1224 vs 基线0.2479 ✅有技能
-        累计224场 Brier 0.1889 vs 基线0.2456 命中56% ✅
-  OU25   大小球2.5 (2-way)       今日3场 Brier 0.2682 vs 基线0.1837 ❌无技能
-        累计224场 Brier 0.2303 vs 基线0.1956 命中62% ❌
-  OU35   大小球3.5 (2-way)       今日3场 Brier 0.3614 vs 基线0.2479 ❌无技能
-        累计224场 Brier 0.2237 vs 基线0.2489 命中66% ✅
-  BTTS   双方进球 (2-way)         今日3场 Brier 0.2945 vs 基线0.1983 ❌无技能
-        累计224场 Brier 0.248 vs 基线0.21 命中57% ❌
-  AH     让球盘 (2-way)          今日3场 Brier 0.0434 vs 基线0.2314 ✅有技能
-        累计183场 Brier 0.1819 vs 基线0.2322 命中59% ✅</pre>
+  1X2    胜平负 (3-way)          今日4场 Brier 0.1976 vs 基线0.2465 ✅有技能
+        累计213场 Brier 0.1907 vs 基线0.2456 命中56% ✅
+  OU25   大小球2.5 (2-way)       今日4场 Brier 0.2084 vs 基线0.2284 ✅有技能
+        累计213场 Brier 0.228 vs 基线0.2222 命中62% ❌
+  OU35   大小球3.5 (2-way)       今日4场 Brier 0.1796 vs 基线0.2465 ✅有技能
+        累计213场 Brier 0.215 vs 基线0.2489 命中67% ✅
+  BTTS   双方进球 (2-way)         今日4场 Brier 0.2561 vs 基线0.2284 ❌无技能
+        累计213场 Brier 0.2452 vs 基线0.2322 命中58% ❌
+  AH     让球盘 (2-way)          今日4场 Brier 0.0513 vs 基线0.2189 ✅有技能
+        累计172场 Brier 0.178 vs 基线0.2164 命中61% ✅</pre>
   
 
   <!-- 投注结算 P&L (Phase 5) -->
@@ -175,11 +175,9 @@
   <!-- 比赛结果 -->
   <div class="section-title">比赛结果</div>
   
-  <div class="match-row hit">
+  <div class="match-row push">
     <div class="mr-teams">
-      雅典AEK <span class="vs">vs</span> LASK林茨
-      
-      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
+      卡利亚里 <span class="vs">vs</span> 莱切
       
     </div>
     <div class="mr-result">
@@ -188,137 +186,87 @@
       
     </div>
     <div class="mr-pred">
-      预测: 58.0% / 21.8% / 20.2%
+      预测: 37.3% / 34.1% / 28.6%
     </div>
     <div class="mr-prob">
-      58.0%
+      28.6%
     </div>
-    <div class="mr-bet ">
+    <div class="mr-bet lost">
+      
+      -0.010u
       
     </div>
-    <span class="badge hit">✓ 命中</span>
-  </div>
-  
-  <div class="match-row hit">
-    <div class="mr-teams">
-      布鲁日 <span class="vs">vs</span> 阿斯顿维拉
-      
-      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
-      
-    </div>
-    <div class="mr-result">
-      
-      2-3
-      
-    </div>
-    <div class="mr-pred">
-      预测: 37.9% / 25.6% / 36.5%
-    </div>
-    <div class="mr-prob">
-      36.5%
-    </div>
-    <div class="mr-bet ">
-      
-    </div>
-    <span class="badge hit">✓ 命中</span>
-  </div>
-  
-  <div class="match-row hit">
-    <div class="mr-teams">
-      皇家马德里 <span class="vs">vs</span> 国际米兰
-      
-      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
-      
-    </div>
-    <div class="mr-result">
-      
-      2-1
-      
-    </div>
-    <div class="mr-pred">
-      预测: 63.7% / 19.2% / 17.1%
-    </div>
-    <div class="mr-prob">
-      63.7%
-    </div>
-    <div class="mr-bet ">
-      
-    </div>
-    <span class="badge hit">✓ 命中</span>
-  </div>
-  
-  <div class="match-row hit">
-    <div class="mr-teams">
-      多特蒙德 <span class="vs">vs</span> 比利亚雷亚尔
-      
-      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
-      
-    </div>
-    <div class="mr-result">
-      
-      3-2
-      
-    </div>
-    <div class="mr-pred">
-      预测: 78.4% / 12.1% / 9.5%
-    </div>
-    <div class="mr-prob">
-      78.4%
-    </div>
-    <div class="mr-bet won">
-      
-      +0.088u
-      
-    </div>
-    <span class="badge hit">✓ 命中</span>
-  </div>
-  
-  <div class="match-row hit">
-    <div class="mr-teams">
-      里尔 <span class="vs">vs</span> 皇家贝蒂斯
-      
-      <span class="badge miss" style="font-size:0.6rem">冷启动</span>
-      
-    </div>
-    <div class="mr-result">
-      
-      2-3
-      
-    </div>
-    <div class="mr-pred">
-      预测: 45.6% / 28.2% / 26.1%
-    </div>
-    <div class="mr-prob">
-      26.1%
-    </div>
-    <div class="mr-bet ">
-      
-    </div>
-    <span class="badge hit">✓ 命中</span>
+    <span class="badge push">△ 走水</span>
   </div>
   
   <div class="match-row miss">
     <div class="mr-teams">
-      波尔图 <span class="vs">vs</span> 曼城
+      赫塔费 <span class="vs">vs</span> 塞尔塔
       
     </div>
     <div class="mr-result">
       
-      0-2
+      1-1
       
     </div>
     <div class="mr-pred">
-      预测: 66.9% / 16.9% / 16.2%
+      预测: 38.5% / 31.8% / 29.7%
     </div>
     <div class="mr-prob">
-      66.9%
+      29.7%
     </div>
-    <div class="mr-bet lost">
-      
-      -0.146u
+    <div class="mr-bet ">
       
     </div>
     <span class="badge miss">✗ 失误</span>
+  </div>
+  
+  <div class="match-row hit">
+    <div class="mr-teams">
+      乌迪内斯 <span class="vs">vs</span> 拉齐奥
+      
+    </div>
+    <div class="mr-result">
+      
+      1-2
+      
+    </div>
+    <div class="mr-pred">
+      预测: 30.5% / 29.4% / 40.1%
+    </div>
+    <div class="mr-prob">
+      40.1%
+    </div>
+    <div class="mr-bet won">
+      
+      +0.013u
+      
+    </div>
+    <span class="badge hit">✓ 命中</span>
+  </div>
+  
+  <div class="match-row push">
+    <div class="mr-teams">
+      埃尔切 <span class="vs">vs</span> 皇家社会
+      
+    </div>
+    <div class="mr-result">
+      
+      2-3
+      
+    </div>
+    <div class="mr-pred">
+      预测: 30.9% / 29.1% / 39.9%
+    </div>
+    <div class="mr-prob">
+      30.9%
+    </div>
+    <div class="mr-bet lost">
+      
+      -0.005u
+      
+    </div>
+    <span class="badge push">△ 走水</span>
   </div>
   
 
@@ -327,49 +275,65 @@
   <div class="section-title">ELO 更新</div>
   
   <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
-    皇家马德里: 1815.2 → 1828.8
+    卡利亚里: 1510.3 → 1524.1
     <span style="color:var(--green)">
-      (+13.6)
+      (+13.8)
     </span>
-    <span style="font-size:0.65rem"> — 2-1 胜</span>
+    <span style="font-size:0.65rem"> — 1-0 胜</span>
   </div>
   
   <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
-    国际米兰: 1860.7 → 1847.1
+    莱切: 1506.9 → 1493.1
     <span style="color:var(--red)">
-      (-13.6)
+      (-13.8)
+    </span>
+    <span style="font-size:0.65rem"> — 0-1 负</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    赫塔费: 1531.5 → 1528.0
+    <span style="color:var(--red)">
+      (-3.5)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    塞尔塔: 1551.5 → 1555.0
+    <span style="color:var(--green)">
+      (+3.5)
+    </span>
+    <span style="font-size:0.65rem"> — 1-1 平</span>
+  </div>
+  
+  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
+    乌迪内斯: 1575.4 → 1559.2
+    <span style="color:var(--red)">
+      (-16.2)
     </span>
     <span style="font-size:0.65rem"> — 1-2 负</span>
   </div>
   
   <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
-    多特蒙德: 1720.2 → 1730.0
+    拉齐奥: 1616.3 → 1632.5
     <span style="color:var(--green)">
-      (+9.8)
+      (+16.2)
     </span>
-    <span style="font-size:0.65rem"> — 3-2 胜</span>
+    <span style="font-size:0.65rem"> — 2-1 胜</span>
   </div>
   
   <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
-    比利亚雷亚尔: 1676.7 → 1666.9
+    埃尔切: 1514.4 → 1493.9
     <span style="color:var(--red)">
-      (-9.8)
+      (-20.5)
     </span>
     <span style="font-size:0.65rem"> — 2-3 负</span>
   </div>
   
   <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
-    里尔: 1693.0 → 1671.2
-    <span style="color:var(--red)">
-      (-21.8)
-    </span>
-    <span style="font-size:0.65rem"> — 2-3 负</span>
-  </div>
-  
-  <div style="font-size:0.78rem;color:var(--text-dim);padding:2px 0">
-    皇家贝蒂斯: 1660.9 → 1682.7
+    皇家社会: 1509.8 → 1530.3
     <span style="color:var(--green)">
-      (+21.8)
+      (+20.5)
     </span>
     <span style="font-size:0.65rem"> — 3-2 胜</span>
   </div>
@@ -377,7 +341,7 @@
   
 
   <div class="footer">
-    足球预测模型 v3.0 · 复盘 2026-09-08
+    足球预测模型 v3.0 · 复盘 2026-09-07
     · 赛果自动更新ELO
   </div>
 </div>

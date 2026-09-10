@@ -234,6 +234,34 @@ def _resolve_team_name(name: str, known_teams: dict) -> str:
         "Fortaleza EC": "Fortaleza", "Sao Paulo FC": "Sao Paulo",
         # Japan J1 (openfootball)
         "Kyoto Sanga FC": "Kyoto Sanga",
+        # ── 欧冠 UCL (2026-09-10 补) ──
+        # 训练库(openfootball)存的是全名("SSC Napoli"/"Liverpool FC"), 而预测走的是
+        # 规范短名("Napoli"/"Liverpool") → 解析不到就误判冷启动。
+        # 这里做双向桥接: 短名 → 模型全名。
+        "Napoli": "SSC Napoli", "Liverpool": "Liverpool FC", "Barcelona": "FC Barcelona",
+        "Stuttgart": "VfB Stuttgart", "Lens": "Racing Club de Lens",
+        "Sp Lisbon": "Sporting Clube de Portugal", "Man United": "Manchester United FC",
+        "Bodo Glimt": "FK Bodø/Glimt", "加拉塔萨雷": "Galatasaray SK",
+        "布拉格斯拉维亚": "SK Slavia Praha", "布拉迪斯拉发": "ŠK Slovan Bratislava",
+        "Feyenoord": "Feyenoord Rotterdam", "Lille": "Lille OSC",
+        "Real Madrid": "Real Madrid CF", "Villarreal": "Villarreal CF",
+        "Lazio": "SS Lazio", "Inter": "FC Internazionale Milano",
+        "Juventus": "Juventus FC", "Leverkusen": "Bayer 04 Leverkusen",
+        "Bayer Leverkusen": "Bayer 04 Leverkusen", "Tottenham": "Tottenham Hotspur FC",
+        "Newcastle": "Newcastle United FC", "Sevilla": "Sevilla FC",
+        "Sociedad": "Real Sociedad de Fútbol", "Brest": "Stade Brestois 29",
+        "Marseille": "Olympique de Marseille", "Monaco": "AS Monaco FC",
+        "Sp Braga": "Sporting Clube de Braga", "Braga": "Sporting Clube de Braga",
+        "Salzburg": "FC Red Bull Salzburg", "Kobenhavn": "FC København",
+        "Dinamo Zagreb": "GNK Dinamo Zagreb", "Young Boys": "BSC Young Boys",
+        "Sturm Graz": "SK Sturm Graz", "Crvena Zvezda": "FK Crvena Zvezda",
+        "Shakhtar Donetsk": "FK Shakhtar Donetsk", "Qarabag": "Qarabağ Ağdam FK",
+        "Olympiakos": "PAE Olympiakos SFP", "Antwerp": "Royal Antwerp FC",
+        "Union SG": "Royale Union Saint-Gilloise", "Kairat": "FK Kairat",
+        "Paphos": "Paphos FC", "Celtic": "Celtic FC", "Sparta Praha": "AC Sparta Praha",
+        "Union Berlin": "1. FC Union Berlin", "Bologna": "Bologna FC 1909",
+        "Chelsea": "Chelsea FC", "Club Brugge": "Club Brugge KV",
+        "Aston Villa": "Aston Villa FC", "Ajax": "AFC Ajax",
     }
     if name in aliases:
         resolved = aliases[name]

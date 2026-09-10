@@ -458,13 +458,17 @@ def _teams_match(a: str, b: str) -> bool:
         return True
     # 中英桥接: 任一方为中文名时, 用映射表翻译成英文再比 (原名大小写查表)
     try:
-        from pipeline.team_names import CN_TO_EN_TEAM
+        from pipeline.team_names import CN_TO_EN_TEAM, resolve_team_alias
         for x, y in ((a_orig, b), (b_orig, a)):
             en = CN_TO_EN_TEAM.get(x)
             if en:
                 en = _fold(en)
                 if en == y or en in y or y in en:
                     return True
+        # 别名桥接: 两侧都命中别名表 → 比较中性规范名 (2026-09-10 加, 修欧冠赛果匹配)
+        ca, cb = resolve_team_alias(a_orig), resolve_team_alias(b_orig)
+        if ca and cb and _fold(ca) == _fold(cb):
+            return True
     except Exception:
         pass
     return False

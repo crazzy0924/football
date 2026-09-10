@@ -240,3 +240,58 @@ CN_TO_EN_TEAM.update({
     '蒙扎': 'Monza', '特鲁瓦': 'Troyes', '巴伦西亚': 'Valencia',
 })
 
+
+# ═══════════════════════════════════════════════════════
+# 英文别名 → 中性规范名 (2026-09-10 · 赛果源桥接)
+# 背景: 复盘改用 football-data.org 做赛果源后, 其队名("Sporting CP"/"PAE AEK"/
+# "Paris Saint-Germain FC")与本系统规范名("Sp Lisbon"/"雅典AEK"/"Paris SG")
+# 对不上 → 匹配失败。此表把两侧都归一到同一个中性名再比较。
+# ═══════════════════════════════════════════════════════
+def _alias_key(s: str) -> str:
+    """别名查表键: 去重音 + 小写 + 去空格/点/撇号。"""
+    import unicodedata
+    s = unicodedata.normalize('NFKD', s or '')
+    s = ''.join(c for c in s if not unicodedata.combining(c))
+    return s.lower().replace(' ', '').replace('.', '').replace("'", '')
+
+
+_EN_ALIAS_RAW = {
+    # 雅典AEK
+    '雅典AEK': 'AEK Athens', 'PAE AEK': 'AEK Athens', 'AEK Athens': 'AEK Athens',
+    # 里斯本竞技
+    'Sp Lisbon': 'Sporting Lisbon', 'Sporting CP': 'Sporting Lisbon',
+    'Sporting Lisbon': 'Sporting Lisbon', 'Sporting Clube de Portugal': 'Sporting Lisbon',
+    # 巴黎圣日耳曼
+    'Paris SG': 'Paris Saint-Germain', 'Paris Saint-Germain FC': 'Paris Saint-Germain',
+    'Paris Saint-Germain': 'Paris Saint-Germain',
+    # 布拉迪斯拉发
+    '布拉迪斯拉发': 'Slovan Bratislava', 'SK Slovan Bratislava': 'Slovan Bratislava',
+    'Slovan Bratislava': 'Slovan Bratislava',
+    # 欧冠常见对手 (2026-09-10 复盘用)
+    '加拉塔萨雷': 'Galatasaray', 'Galatasaray SK': 'Galatasaray',
+    '费内巴切': 'Fenerbahce', 'Fenerbahce SK': 'Fenerbahce',
+    '萨巴赫': 'Sabah', 'Sabah FK': 'Sabah',
+    '布拉格斯拉维亚': 'Slavia Prague', 'SK Slavia Praha': 'Slavia Prague',
+    '朗斯': 'Lens', 'RC Lens': 'Lens',
+    '科莫': 'Como', 'Como 1907': 'Como',
+    '莱比锡红牛': 'RB Leipzig', '博德闪耀': 'Bodo Glimt', 'Bodo/Glimt': 'Bodo Glimt',
+    # 常见前后缀变体(football-data.org 全名 → 本系统规范名)
+    'FC Internazionale Milano': 'Inter', 'Internazionale': 'Inter',
+    'Club Brugge KV': 'Club Brugge', 'Bayern Munchen': 'Bayern Munich',
+    'Manchester City FC': 'Man City', 'Manchester United FC': 'Man United',
+    'Villarreal CF': 'Villarreal', 'Real Betis Balompie': 'Betis',
+    'Lille OSC': 'Lille', 'FC Porto': 'Porto', 'FC Barcelona': 'Barcelona',
+    'SSC Napoli': 'Napoli', 'Arsenal FC': 'Arsenal', 'Liverpool FC': 'Liverpool',
+    'VfB Stuttgart': 'Stuttgart', 'Feyenoord Rotterdam': 'Feyenoord',
+    'Sport Lisboa e Benfica': 'Benfica',
+}
+
+EN_TEAM_ALIASES = {_alias_key(k): v for k, v in _EN_ALIAS_RAW.items()}
+
+
+def resolve_team_alias(name: str) -> str | None:
+    """查英文别名表, 命中返回中性规范名, 否则 None。"""
+    if not name:
+        return None
+    return EN_TEAM_ALIASES.get(_alias_key(name))
+

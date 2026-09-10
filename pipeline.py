@@ -728,25 +728,27 @@ def cmd_review(args):
             results = load_results_from_json(args.results_json)
             print(f"加载 {len(results)} 条赛果，来自 {args.results_json}")
 
-    # 3) Try auto-fetch
-    if not results:
-        results = try_fetch_results(date_str)
-        if results:
-            print(f"从API拉取 {len(results)} 条赛果")
-
-    # 3.5) API-Football 赛果 (Phase 6, 覆盖最全)
-    if not results:
-        from pipeline.result_fetcher import try_fetch_results_apifootball
-        results = try_fetch_results_apifootball(date_str)
-        if results:
-            print(f"从API-Football拉取 {len(results)} 条赛果")
-
-    # 3.6) football-data.org 赛果 (Phase 6b, 注册即用)
+    # 3) football-data.org 赛果 — 权威源, 免费档覆盖五大联赛+欧冠正赛
+    #    2026-09-10 提到首位: 此前通用源先返回(且混入青年队), 导致本步从未被调用,
+    #    欧冠正赛拿不到赛果 → 复盘只能拿 U19 比分错配。
     if not results:
         from pipeline.result_fetcher import try_fetch_results_footballdata
         results = try_fetch_results_footballdata(date_str)
         if results:
             print(f"从football-data.org拉取 {len(results)} 条赛果")
+
+    # 3.5) 通用源 (odds-api.io / CSV) — 兜底
+    if not results:
+        results = try_fetch_results(date_str)
+        if results:
+            print(f"从API拉取 {len(results)} 条赛果")
+
+    # 3.6) API-Football 赛果 (Phase 6, 覆盖最全)
+    if not results:
+        from pipeline.result_fetcher import try_fetch_results_apifootball
+        results = try_fetch_results_apifootball(date_str)
+        if results:
+            print(f"从API-Football拉取 {len(results)} 条赛果")
 
     # 4) 兜底: 查找默认赛果文件
     default_results = os.path.join(output_dir, f"results_{date_str}.json")

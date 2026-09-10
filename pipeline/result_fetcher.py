@@ -8,9 +8,41 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import Any
 
 from pipeline.data_loader import normalize_team_name
+
+
+# ── 级别标记护栏 (2026-09-10) ──────────────────────────────────────────────
+# 事故: 赛果源混入欧足联青年联赛(U19)赛程, 而 _teams_match 用双向子串匹配,
+# 于是 "Napoli" 命中 "Napoli U19" 的青年队比分, 错误结算并污染 ELO。
+# 对策: 提取队名的"级别标记", 只有标记完全一致才允许匹配; 入库时丢弃青年赛程。
+_LEVEL_TAG_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("age", re.compile(r"\bU\s?(\d{1,2})\b", re.I)),       # U19 / U21 / U23 ...
+    ("youth", re.compile(r"\b(YOUTH|PRIMAVERA|JONG|ACADEMY|JUVENIL)\b", re.I)),
+    ("reserve", re.compile(r"\b(RESERVES?|II)\b", re.I)),   # 二队/预备队
+    ("women", re.compile(r"\b(WOMEN|WOMENS|FEMENIL|FEMININE|FEMENINA|W)\b", re.I)),
+)
+
+
+def _level_tags(name: str) -> frozenset[str]:
+    """提取队名里的级别标记(青年/预备队/女足)。
+
+    "Napoli" -> frozenset() | "Napoli U19" -> {"age:U19"} | "England U20 W" -> {"age:U20","women"}
+    """
+    if not name:
+        return frozenset()
+    tags: set[str] = set()
+    for kind, pat in _LEVEL_TAG_PATTERNS:
+        for m in pat.finditer(name):
+            tags.add(f"age:{m.group(1).upper()}" if kind == "age" else kind)
+    return frozenset(tags)
+
+
+def _level_kinds(name: str) -> set[str]:
+    """只取级别种类(不带年龄数字), 用于判断是否属于"青年/预备队"这类应过滤的赛程。"""
+    return {t.split(":")[0] for t in _level_tags(name)}
 
 
 def load_results_from_json(path: str) -> list[dict]:
@@ -287,11 +319,17 @@ def try_fetch_results_footballdata(date_str: str) -> list[dict] | None:
 def _normalize_results(data: list[dict]) -> list[dict]:
     """Normalize and validate results data."""
     results = []
+    dropped_level = 0
     for item in data:
         # 标准化字段名
         home = item.get("home_team") or item.get("home", "")
         away = item.get("away_team") or item.get("away", "")
         if not home or not away:
+            continue
+
+        # 丢弃青年队/预备队赛程 — 与成年队同名会造成误配(2026-09-10 事故)
+        if (_level_kinds(home) | _level_kinds(away)) & {"age", "youth", "reserve"}:
+            dropped_level += 1
             continue
 
         home = normalize_team_name(home)
@@ -319,6 +357,9 @@ def _normalize_results(data: list[dict]) -> list[dict]:
             "away_goals": int(ag) if ag is not None else None,
             "result": result,
         })
+
+    if dropped_level:
+        print(f"  [赛果] 已丢弃 {dropped_level} 场青年队/预备队赛程(防止误配)")
 
     return results
 
@@ -399,6 +440,9 @@ def match_predictions_to_results(
 def _teams_match(a: str, b: str) -> bool:
     """模糊队名匹配 + 中英文桥接 + 重音符折叠"""
     if not a or not b:
+        return False
+    # 级别护栏: 一侧是青年队/预备队/女足而另一侧不是 → 直接拒绝(2026-09-10 事故)
+    if _level_tags(a) != _level_tags(b):
         return False
     import unicodedata
 

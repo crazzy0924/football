@@ -52,6 +52,11 @@ for pool in ['HAD', 'HHAD', 'TTG', 'CRS', 'HAFU']:
                     'away': m['awayTeamAllName'],
                     'home_abb': m.get('homeTeamAbbName', ''),
                     'away_abb': m.get('awayTeamAbbName', ''),
+                    # 体彩稳定主键 + 英文3字母码 (2026-09-10: 以TeamId为准, 不再只靠中文名)
+                    'home_id': m.get('homeTeamId', ''),
+                    'away_id': m.get('awayTeamId', ''),
+                    'home_code': m.get('homeTeamAbbEnName', ''),
+                    'away_code': m.get('awayTeamAbbEnName', ''),
                     'league_name': league_name,
                     'league_id': m.get('leagueId', ''),
                     'match_num': m.get('matchNumCode', ''),
@@ -113,7 +118,7 @@ LEAGUE_CN_TO_CODE = {
 }
 
 # 中文→英文队名映射(常见球队)
-from pipeline.team_names import CN_TO_EN_TEAM
+from pipeline.team_names import CN_TO_EN_TEAM, resolve_team, load_team_id_map, save_team_id_map
 
 # 兜底: 先按联赛名子串匹配, 再按队名
 def guess_league_code(name, home, away):
@@ -137,6 +142,7 @@ def guess_league_code(name, home, away):
     return 'UNK'
 
 today = []
+_unresolved = []
 for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', '')):
     had = m.get('had', {})
     hhad = m.get('hhad', {})
@@ -144,13 +150,20 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
 
     home_cn = m['home']
     away_cn = m['away']
-    home = CN_TO_EN_TEAM.get(home_cn, home_cn)
-    away = CN_TO_EN_TEAM.get(away_cn, away_cn)
+    # 以体彩TeamId为主键解析规范英文名(命中ID表→中文映射→原名兜底)
+    home, home_src = resolve_team(home_cn, m.get('home_id'), m.get('home_code', ''))
+    away, away_src = resolve_team(away_cn, m.get('away_id'), m.get('away_code', ''))
+    if home_src == 'unresolved':
+        _unresolved.append(f"{home_cn}(id={m.get('home_id')})")
+    if away_src == 'unresolved':
+        _unresolved.append(f"{away_cn}(id={m.get('away_id')})")
     lc = guess_league_code(m.get('league_name', ''), home_cn, away_cn)
 
     entry = {
         'home_team': home,
         'away_team': away,
+        'home_team_id': m.get('home_id', ''),
+        'away_team_id': m.get('away_id', ''),
         'league_code': lc,
         'league_name': m.get('league_name', ''),
         'match_num': m.get('match_num', ''),
@@ -265,6 +278,15 @@ try:
         print(f'全量模式: 保留体彩开盘全部 {before} 场 (含非五大联赛, 分析为主)')
 except Exception as e:
     print(f'聚焦联赛过滤跳过: {e}')
+
+# 体彩TeamId → 规范名 映射表落盘 (学到的绑定永久生效)
+try:
+    save_team_id_map()
+    print(f'体彩队名映射表: {len(load_team_id_map())} 支 → data/state/team_id_map.json')
+except Exception as _e:
+    print(f'映射表落盘失败: {_e}')
+if _unresolved:
+    print(f'⚠ 未收录队名 {len(_unresolved)} 个(需补 CN_TO_EN_TEAM): ' + ', '.join(sorted(set(_unresolved))))
 
 # Save
 pathlib.Path('data/today.json').write_text(json.dumps(today, ensure_ascii=False, indent=2), encoding='utf-8')

@@ -238,6 +238,10 @@ CN_TO_EN_TEAM.update({
     '埃尔沃斯堡': 'Elversberg', '帕德博恩': 'Paderborn',
     '沙尔克04': 'Schalke 04', '沙尔克': 'Schalke 04',
     '蒙扎': 'Monza', '特鲁瓦': 'Troyes', '巴伦西亚': 'Valencia',
+    # ── 欧冠补漏 (2026-09-10, 体彩中文名) ──
+    '布拉格斯拉维亚': 'Slavia Prague', '斯拉维亚': 'Slavia Prague',
+    '莱比锡红牛': 'RB Leipzig', '科莫': 'Como', '朗斯': 'Lens',
+    '萨巴赫': 'Sabah',
 })
 
 
@@ -272,6 +276,7 @@ _EN_ALIAS_RAW = {
     '费内巴切': 'Fenerbahce', 'Fenerbahce SK': 'Fenerbahce',
     '萨巴赫': 'Sabah', 'Sabah FK': 'Sabah',
     '布拉格斯拉维亚': 'Slavia Prague', 'SK Slavia Praha': 'Slavia Prague',
+    'Slavia Prague': 'Slavia Prague', '斯拉维亚': 'Slavia Prague',
     '朗斯': 'Lens', 'RC Lens': 'Lens',
     '科莫': 'Como', 'Como 1907': 'Como',
     '莱比锡红牛': 'RB Leipzig', '博德闪耀': 'Bodo Glimt', 'Bodo/Glimt': 'Bodo Glimt',
@@ -294,4 +299,81 @@ def resolve_team_alias(name: str) -> str | None:
     if not name:
         return None
     return EN_TEAM_ALIASES.get(_alias_key(name))
+
+
+# ═══════════════════════════════════════════════════════
+# 体彩 TeamId 主键映射 (2026-09-10 · 治本方案)
+# 背景: 体彩给的中文名是缩写且会变("布拉格斯拉维亚"→"斯拉维亚",
+# "莱比锡红牛"→"莱红牛"), 靠名字翻译必然漏; 但体彩每队都给稳定的数字
+# TeamId。故以 TeamId 为主键, 维护"体彩TeamId → 本系统规范英文名",
+# 一旦学会就永久绑定, 中文名再变也不影响。
+# ═══════════════════════════════════════════════════════
+import json as _json
+import os as _os
+
+_TEAM_ID_MAP_PATH = _os.path.join(
+    _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))),
+    "data", "state", "team_id_map.json",
+)
+
+_TEAM_ID_MAP: dict[str, str] | None = None
+
+
+def load_team_id_map() -> dict:
+    """读取体彩TeamId→规范英文名映射(带缓存)。"""
+    global _TEAM_ID_MAP
+    if _TEAM_ID_MAP is None:
+        try:
+            with open(_TEAM_ID_MAP_PATH, "r", encoding="utf-8") as f:
+                _TEAM_ID_MAP = _json.load(f)
+        except Exception:
+            _TEAM_ID_MAP = {}
+    return _TEAM_ID_MAP
+
+
+def save_team_id_map() -> None:
+    """落盘映射表(按ID排序, 便于人工维护)。"""
+    m = load_team_id_map()
+    _os.makedirs(_os.path.dirname(_TEAM_ID_MAP_PATH), exist_ok=True)
+    with open(_TEAM_ID_MAP_PATH, "w", encoding="utf-8") as f:
+        _json.dump({k: m[k] for k in sorted(m, key=lambda x: int(x))}, f, ensure_ascii=False, indent=1)
+
+
+def _has_cjk(s: str) -> bool:
+    """判断字符串是否含中文(即尚未翻译)。"""
+    return any("\u4e00" <= c <= "\u9fff" for c in (s or ""))
+
+
+def resolve_team(cn_name: str, team_id=None, en_code: str = "") -> tuple[str, str]:
+    """体彩队名 → 本系统规范英文名。
+
+    优先级: ① TeamId 命中映射表(最稳) ② 中文名映射(命中则学习到ID) ③ 原名兜底。
+    自愈: 若ID上绑的还是中文(先前未收录), 而现已补了中文映射, 就地订正。
+    返回 (规范名, 来源标签), 来源标签用于统计漏配率。
+    """
+    m = load_team_id_map()
+    key = str(team_id) if team_id not in (None, "", 0, "0") else ""
+    cn = (cn_name or "").strip()
+
+    if key and key in m:
+        cur = m[key]
+        if _has_cjk(cur) and cn in CN_TO_EN_TEAM:
+            m[key] = CN_TO_EN_TEAM[cn]      # 订正历史脏绑定
+            return m[key], "id-fix"
+        return cur, "id"
+    if cn in CN_TO_EN_TEAM:
+        canonical = CN_TO_EN_TEAM[cn]
+        if key:
+            m[key] = canonical
+        return canonical, "cn"
+
+    # 英文名原样(体彩偶尔直接给英文)
+    if cn and not _has_cjk(cn):
+        if key:
+            m[key] = cn
+        return cn, "en"
+
+    if key and key not in m:
+        m[key] = cn  # 先绑定原名, 后续人工订正映射表即可永久生效
+    return cn, "unresolved"
 

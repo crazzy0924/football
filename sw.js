@@ -1,6 +1,6 @@
 // 足球大模型 PWA Service Worker
-// 策略 (v3): 首页与报告数据一律网络优先(在线永远最新), 离线回退缓存; 静态图标缓存优先
-const CACHE = "football-pwa-v3";
+// 策略 (v4): 首页 / 报告数据 / 我的预测页 一律网络优先(在线永远最新), 离线回退缓存; 静态图标缓存优先
+const CACHE = "football-pwa-v4";
 const SHELL = ["./", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./archive.html"];
 
 self.addEventListener("install", (e) => {
@@ -44,7 +44,8 @@ self.addEventListener("fetch", (e) => {
   const path = url.pathname;
   const isHome = path.endsWith("/") || path.endsWith("/index.html");
   const isData = path.includes("/data/output/") || path.includes("/files.js");
-  if (isHome || isData) {
+  const isMyPreds = path.includes("/my_preds/");  // 我的预测页: 必须网络优先, 否则卡在首次缓存的旧版
+  if (isHome || isData || isMyPreds) {
     // 首页与报告数据: 网络优先 (内容天天更新, 在线时必须最新)
     e.respondWith(networkFirst(e.request));
   } else {

@@ -301,6 +301,8 @@ class DixonColesModel:
         self.league_avg_goals: dict[str, float] = {}
         self._fitted = False
         self._league_medians_cache: dict | None = None
+        self._cross_index: dict | None = None      # 跨联赛参数索引(欧冠收缩用)
+        self._cross_blend_applied: dict | None = None
 
     # ================================================================
     # Simple fitting (analytical approach — no scipy needed initially)
@@ -729,6 +731,37 @@ class DixonColesModel:
 
         return round(best_lam[0], 4), round(best_lam[1], 4)
 
+    def _cross_blend(self, team: str, att: float, def_: float,
+                     prior_strength: float = 30.0) -> tuple:
+        """把欧冠球队的攻防参数向其在五大联赛估的参数收缩。
+
+        欧冠 63 队里 50 队样本 <20 场(最薄 6 场), 单靠欧冠数据估的强度噪声极大。
+        该队在所属五大联赛通常有 150~190 场 —— 用那份参数做收缩:
+            att = w*att_ucl + (1-w)*att_dom,   w = n_ucl/(n_ucl+prior_strength)
+
+        prior_strength=30 来自回测 (纯欧冠 Brier 0.1733 → 0.1412)。
+        若该队没有五大参数, 原样返回。
+        """
+        if not getattr(self, "_cross_index", None):
+            return (att, def_), None
+        ent = self._cross_index.get(team) or []
+        ucl = next((e for e in ent if e.get("league") == "UCL"), None)
+        dom = next((e for e in ent if e.get("league") in
+                    ("PL", "PD", "BL1", "SA", "FL1")), None)
+        if not dom or not dom.get("attack") or not dom.get("defense"):
+            return (att, def_), None
+        n = max(0, int((ucl or {}).get("n") or 0))
+        # n=0 是"统计不到"(CSV 队名没对上), 不等于"真的没踢过" —— 按已知最薄的
+        # 6 场保守处理, 否则 w=0 会把欧冠信息完全丢掉。
+        n_eff = n if n > 0 else 6
+        w = n_eff / (n_eff + prior_strength)
+        new_att = round(w * att + (1 - w) * dom["attack"], 4)
+        new_def = round(w * def_ + (1 - w) * dom["defense"], 4)
+        return (new_att, new_def), {
+            "source_league": dom["league"], "n_ucl": n, "w_ucl": round(w, 3),
+            "ucl": [att, def_], "domestic": [dom["attack"], dom["defense"]],
+        }
+
     def predict(
         self,
         home_team: str,
@@ -761,6 +794,23 @@ class DixonColesModel:
         def_h = self.team_defense.get(home_resolved, 1.0)
         att_a = self.team_attack.get(away_resolved, 1.0)
         def_a = self.team_defense.get(away_resolved, 1.0)
+
+        # ── 跨联赛收缩 (2026-09-11, 针对欧冠样本薄) ──────────────────────
+        # 欧冠 63 支球队里 50 支样本 <20 场(最薄的只有 6 场), 单靠欧冠数据估
+        # 攻防强度噪声极大。用该队在所属五大联赛估好的参数做收缩:
+        #     att = w*att_ucl + (1-w)*att_dom,  w = n/(n+K)
+        # 回测(10 场已开赛欧冠中 6 场可对齐): Brier 0.1733 -> 0.1412 (-18%),
+        # 大小球偏差 +3.2pp -> -1.7pp。
+        # 只对 UCL 生效 —— 五大联赛本身样本充足(60~130 场/队), 不需要也不该动。
+        # 只对 UCL 生效 —— 五大本身样本充足(60~130 场/队), 不需要也不该动。
+        # 冷启动标记是按"队是否在 self.team_attack 里"判断的, 与参数值无关,
+        # 所以在这里改参数值不会影响后面的冷启动判定。
+        self._cross_blend_applied = None
+        if league_code == "UCL":
+            (att_h, def_h), info_h = self._cross_blend(home_resolved, att_h, def_h)
+            (att_a, def_a), info_a = self._cross_blend(away_resolved, att_a, def_a)
+            if info_h or info_a:
+                self._cross_blend_applied = {"home": info_h, "away": info_a}
 
         # Cold start detection
         home_cold = home_resolved not in self.team_attack
@@ -897,6 +947,8 @@ class DixonColesModel:
         # 有市场赔率反解 λ 的场次(欧冠等)按正常预测处理(命中率已验证 OK)
         result["cold_start"] = (home_cold or away_cold) and not market_informed
         result["cross_league"] = is_cross
+        # 跨联赛收缩记录 (2026-09-11): 欧冠球队向五大参数收缩的明细, 供复盘审计
+        result["cross_blend"] = getattr(self, "_cross_blend_applied", None)
         result["cold_start_detail"] = {
             "home_cold": home_cold,
             "away_cold": away_cold,
@@ -971,6 +1023,17 @@ class DixonColesModel:
         if os.path.exists(team_league_path):
             with open(team_league_path, "r", encoding="utf-8") as f:
                 self.team_league = json.load(f)
+
+        # 跨联赛参数索引 (2026-09-11): 欧冠球队向所属五大联赛参数收缩时用。
+        # 由 tools/build_cross_league.py 生成; 缺失时静默跳过(不影响原有行为)。
+        self._cross_index = None
+        cross_path = os.path.join(dir_path, "cross_league_params.json")
+        if os.path.exists(cross_path):
+            try:
+                with open(cross_path, "r", encoding="utf-8") as f:
+                    self._cross_index = json.load(f)
+            except Exception:
+                self._cross_index = None
 
         self._league_medians_cache = None  # reset cache on load
         self._fitted = True

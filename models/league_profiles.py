@@ -24,12 +24,12 @@ class LeagueProfile:
     code: str
     region: str = "europe"
 
-    # Goal characteristics
+    # 进球特征
     avg_home_goals: float = 1.50
     avg_away_goals: float = 1.15
     avg_total_goals: float = 2.65
 
-    # Win/draw/loss distribution
+    # 胜平负分布
     home_win_rate: float = 0.45
     draw_rate: float = 0.25
     away_win_rate: float = 0.30
@@ -59,11 +59,14 @@ class LeagueProfile:
 
 
 # ============================================================
-# League Profile Database (duplicate keys FIXED)
+# 硬编码兜底表 (2026-09-11 起仅作 fallback)
+# 真正生效的是 data/state/league_profiles.json —— 由 tools/build_league_profiles.py
+# 从历史 CSV 实测生成。手写表的问题: 数值陈旧(意甲主场写成 0.30, 实测 0.149),
+# 且**没有 UCL 条目** → get_profile("UCL") 会落到通用默认, 与"欧冠有欧冠的特点"冲突。
 # ============================================================
 
-LEAGUE_PROFILES: dict[str, LeagueProfile] = {
-    # ---- Big 5 European Leagues ----
+_HARDCODED: dict[str, LeagueProfile] = {
+    # ---- 五大联赛 (手写兜底值, 实测版见 league_profiles.json) ----
     "PL": LeagueProfile(
         name="Premier League", code="PL", region="europe",
         avg_home_goals=1.62, avg_away_goals=1.22, avg_total_goals=2.84,
@@ -128,6 +131,47 @@ LEAGUE_PROFILES: dict[str, LeagueProfile] = {
         style="physical",
     ),
 }
+
+
+def _load_data_profiles() -> dict[str, LeagueProfile]:
+    """从 data/state/league_profiles.json 载入实测画像 (tools/build_league_profiles.py 生成)。"""
+    import json as _json
+    import os as _os
+    root = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    p = _os.path.join(root, 'data', 'state', 'league_profiles.json')
+    out: dict[str, LeagueProfile] = {}
+    try:
+        with open(p, encoding='utf-8') as fh:
+            doc = _json.load(fh)
+    except Exception:
+        return out
+    for code, d in doc.items():
+        try:
+            out[code] = LeagueProfile(
+                name=code, code=code,
+                avg_home_goals=d.get('avg_home_goals', 1.50),
+                avg_away_goals=d.get('avg_away_goals', 1.15),
+                avg_total_goals=d.get('avg_total_goals', 2.65),
+                home_win_rate=d.get('home_win_rate', 0.45),
+                draw_rate=d.get('draw_rate', 0.25),
+                away_win_rate=d.get('away_win_rate', 0.30),
+                home_advantage_elo=round((d.get('home_goal_boost') or 0.30) * 300),
+                home_goal_boost=d.get('home_goal_boost', 0.30),
+                over_25_rate=d.get('over_25_rate', 0.50),
+                btts_rate=d.get('btts_rate', 0.52),
+                avg_corners=d.get('avg_corners') or 9.8,
+                corner_home_share=d.get('corner_home_share') or 0.55,
+                style=d.get('style', ''),
+                multi_season=d.get('multi_season') or [],
+            )
+        except Exception:
+            continue
+    return out
+
+
+# 实测优先, 手写兜底 —— 缺失的联赛(如新加的)才用 _HARDCODED / 通用默认
+LEAGUE_PROFILES: dict[str, LeagueProfile] = dict(_HARDCODED)
+LEAGUE_PROFILES.update(_load_data_profiles())
 
 
 def get_profile(league_code: str) -> LeagueProfile:

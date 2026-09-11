@@ -52,6 +52,11 @@ for pool in ['HAD', 'HHAD', 'TTG', 'CRS', 'HAFU']:
                     'away': m['awayTeamAllName'],
                     'home_abb': m.get('homeTeamAbbName', ''),
                     'away_abb': m.get('awayTeamAbbName', ''),
+                    # 体彩稳定主键 + 英文3字母码 (2026-09-10: 以TeamId为准, 不再只靠中文名)
+                    'home_id': m.get('homeTeamId', ''),
+                    'away_id': m.get('awayTeamId', ''),
+                    'home_code': m.get('homeTeamAbbEnName', ''),
+                    'away_code': m.get('awayTeamAbbEnName', ''),
                     'league_name': league_name,
                     'league_id': m.get('leagueId', ''),
                     'match_num': m.get('matchNumCode', ''),
@@ -113,7 +118,7 @@ LEAGUE_CN_TO_CODE = {
 }
 
 # 中文→英文队名映射(常见球队)
-from pipeline.team_names import CN_TO_EN_TEAM
+from pipeline.team_names import CN_TO_EN_TEAM, resolve_team, load_team_id_map, save_team_id_map
 
 # 兜底: 先按联赛名子串匹配, 再按队名
 def guess_league_code(name, home, away):
@@ -137,6 +142,7 @@ def guess_league_code(name, home, away):
     return 'UNK'
 
 today = []
+_unresolved = []
 for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', '')):
     had = m.get('had', {})
     hhad = m.get('hhad', {})
@@ -144,13 +150,20 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
 
     home_cn = m['home']
     away_cn = m['away']
-    home = CN_TO_EN_TEAM.get(home_cn, home_cn)
-    away = CN_TO_EN_TEAM.get(away_cn, away_cn)
+    # 以体彩TeamId为主键解析规范英文名(命中ID表→中文映射→原名兜底)
+    home, home_src = resolve_team(home_cn, m.get('home_id'), m.get('home_code', ''))
+    away, away_src = resolve_team(away_cn, m.get('away_id'), m.get('away_code', ''))
+    if home_src == 'unresolved':
+        _unresolved.append(f"{home_cn}(id={m.get('home_id')})")
+    if away_src == 'unresolved':
+        _unresolved.append(f"{away_cn}(id={m.get('away_id')})")
     lc = guess_league_code(m.get('league_name', ''), home_cn, away_cn)
 
     entry = {
         'home_team': home,
         'away_team': away,
+        'home_team_id': m.get('home_id', ''),
+        'away_team_id': m.get('away_id', ''),
         'league_code': lc,
         'league_name': m.get('league_name', ''),
         'match_num': m.get('match_num', ''),
@@ -190,23 +203,13 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
         if _tg_total > 0:
             entry['market_goals_distribution'] = {k: round(v / _tg_total, 4) for k, v in _tg_imp.items()}
 
-        # 主盘线推导 (动态): 从 8 档分布找 over 概率最接近 50% 的线, 不再固定 2.5
-        if _tg_total > 0:
-            _dist = entry['market_goals_distribution']
-
-            def _gk(k):
-                return 7 if k == '7+' else int(k)
-
-            _best_n, _best_d = 3, 999
-            for _n in range(1, 8):
-                _ov = sum(p for k, p in _dist.items() if _gk(k) >= _n)
-                _d = abs(_ov - 0.5)
-                if _d < _best_d:
-                    _best_d, _best_n = _d, _n
-            _ov = sum(p for k, p in _dist.items() if _gk(k) >= _best_n)
-            entry['ou_line'] = _best_n - 0.5
-            entry['over_odds'] = round(1.0 / _ov, 2) if _ov > 0 else 99.0
-            entry['under_odds'] = round(1.0 / (1.0 - _ov), 2) if _ov < 1 else 99.0
+        # 大小球盘口 (ou_line / over_odds / under_odds) 【2026-09-11 起不再从体彩取】
+        # 用户拍板: 大小球数据来源不再用体彩。原先这里从体彩 8 档总进球赔率反推一条
+        # "over 概率最接近 50%" 的线, 只有单线、且国内外盘口口径不同。
+        # 现在大小球盘口统一由 SofaScore 提供 (pipeline/odds_fetcher_sofascore.py),
+        # 那里能给 0.5~10.5 的完整阶梯, 且只覆盖五大+欧冠。
+        # 保留 total_goals_odds / market_goals_distribution 作为"市场总进球视角"参考,
+        # 供 goals_range 与市场分布对照 (它不是盘口, 不参与盘口判定)。
 
     # 波胆 (比分) 赔率
     crs = m.get('crs', {})
@@ -265,6 +268,15 @@ try:
         print(f'全量模式: 保留体彩开盘全部 {before} 场 (含非五大联赛, 分析为主)')
 except Exception as e:
     print(f'聚焦联赛过滤跳过: {e}')
+
+# 体彩TeamId → 规范名 映射表落盘 (学到的绑定永久生效)
+try:
+    save_team_id_map()
+    print(f'体彩队名映射表: {len(load_team_id_map())} 支 → data/state/team_id_map.json')
+except Exception as _e:
+    print(f'映射表落盘失败: {_e}')
+if _unresolved:
+    print(f'⚠ 未收录队名 {len(_unresolved)} 个(需补 CN_TO_EN_TEAM): ' + ', '.join(sorted(set(_unresolved))))
 
 # Save
 pathlib.Path('data/today.json').write_text(json.dumps(today, ensure_ascii=False, indent=2), encoding='utf-8')

@@ -234,6 +234,36 @@ def _resolve_team_name(name: str, known_teams: dict) -> str:
         "Fortaleza EC": "Fortaleza", "Sao Paulo FC": "Sao Paulo",
         # Japan J1 (openfootball)
         "Kyoto Sanga FC": "Kyoto Sanga",
+        # ── 欧冠 UCL (2026-09-10 补) ──
+        # 训练库(openfootball)存的是全名("SSC Napoli"/"Liverpool FC"), 而预测走的是
+        # 规范短名("Napoli"/"Liverpool") → 解析不到就误判冷启动。
+        # 这里做双向桥接: 短名 → 模型全名。
+        "Napoli": "SSC Napoli", "Liverpool": "Liverpool FC", "Barcelona": "FC Barcelona",
+        "Stuttgart": "VfB Stuttgart", "Lens": "Racing Club de Lens",
+        "Sp Lisbon": "Sporting Clube de Portugal", "Man United": "Manchester United FC",
+        "Bodo Glimt": "FK Bodø/Glimt", "加拉塔萨雷": "Galatasaray SK",
+        "布拉格斯拉维亚": "SK Slavia Praha", "Slavia Prague": "SK Slavia Praha",
+        "斯拉维亚": "SK Slavia Praha",
+        "布拉迪斯拉发": "ŠK Slovan Bratislava",
+        "Feyenoord": "Feyenoord Rotterdam", "Lille": "Lille OSC",
+        "Real Madrid": "Real Madrid CF", "Villarreal": "Villarreal CF",
+        "Lazio": "SS Lazio", "Inter": "FC Internazionale Milano",
+        "Juventus": "Juventus FC", "Leverkusen": "Bayer 04 Leverkusen",
+        "Bayer Leverkusen": "Bayer 04 Leverkusen", "Tottenham": "Tottenham Hotspur FC",
+        "Newcastle": "Newcastle United FC", "Sevilla": "Sevilla FC",
+        "Sociedad": "Real Sociedad de Fútbol", "Brest": "Stade Brestois 29",
+        "Marseille": "Olympique de Marseille", "Monaco": "AS Monaco FC",
+        "Sp Braga": "Sporting Clube de Braga", "Braga": "Sporting Clube de Braga",
+        "Salzburg": "FC Red Bull Salzburg", "Kobenhavn": "FC København",
+        "Dinamo Zagreb": "GNK Dinamo Zagreb", "Young Boys": "BSC Young Boys",
+        "Sturm Graz": "SK Sturm Graz", "Crvena Zvezda": "FK Crvena Zvezda",
+        "Shakhtar Donetsk": "FK Shakhtar Donetsk", "Qarabag": "Qarabağ Ağdam FK",
+        "Olympiakos": "PAE Olympiakos SFP", "Antwerp": "Royal Antwerp FC",
+        "Union SG": "Royale Union Saint-Gilloise", "Kairat": "FK Kairat",
+        "Paphos": "Paphos FC", "Celtic": "Celtic FC", "Sparta Praha": "AC Sparta Praha",
+        "Union Berlin": "1. FC Union Berlin", "Bologna": "Bologna FC 1909",
+        "Chelsea": "Chelsea FC", "Club Brugge": "Club Brugge KV",
+        "Aston Villa": "Aston Villa FC", "Ajax": "AFC Ajax",
     }
     if name in aliases:
         resolved = aliases[name]
@@ -254,6 +284,13 @@ class DixonColesModel:
         model.save("data/state/")   # persist
         pred = model.predict("Liverpool", "Arsenal", "PL")
     """
+
+    # 冷启动反解 λ 时的「总进球锚」权重 (2026-09-11 修复)。
+    # 见 _market_implied_lambda: 只拟合 1X2 无法约束总进球, 会把 λ 压到约 2.0 球。
+    # 调大 → 总量更贴近联赛基准; 调 0 → 退回修复前的行为。
+    # 实测(93 场): 0.0/0.01/0.02 的偏差 +8.6/+8.4/+8.4pp, Brier 0.2217/0.2231/0.2235,
+    # 差异在噪声内 (±1.5 个标准误)。取 0.01 保守值: 该缺陷真实存在, 但不指望它带来整体改善。
+    MARKET_LAMBDA_TOTAL_WEIGHT = 0.01
 
     def __init__(self):
         self.team_attack: dict[str, float] = {}
@@ -647,21 +684,36 @@ class DixonColesModel:
 
         Returns (lam_h, lam_a).
         """
+        # ── 总进球锚 (2026-09-11 修复) ──────────────────────────────
+        # 只拟合 1X2 三个数**无法约束"总共几个球"**: 1X2 只决定胜负平怎么分配,
+        # 而泊松族在该约束下的 KL 会在低总量处取到最小 (复刻实测: 约 2.0 球),
+        # 于是反解出的 λ 系统性偏低 —— UCL 实测反解 2.5 球, 而联赛基准
+        # avg_goals=3.27、实际打出 3.30, 直接导致模型天天喊"小2.5"、
+        # 众数比分挤到 0-0/1-1, 进而触发「方向冲突 → 结论不可用」。
+        # 这里把本来就传进来、却没被使用的 avg_goals 作为总量锚, 偏离即二次惩罚。
+        # 权重 0.02: 偏离 0.5 球罚 0.005, 与 1X2 的典型 KL 量级相当;
+        # 偏离 1.3 球罚 0.03, 已足以压过低总量解。
+        total_weight = getattr(self, "MARKET_LAMBDA_TOTAL_WEIGHT", 0.02)
+
+        def _objective(lh: float, la: float) -> float:
+            result = dc_marginals(lh, la, max_g=6, rho=rho)
+            kl = 0.0
+            for i, key in enumerate(["home_win", "draw", "away_win"]):
+                p = result[key]
+                q = market_probs[i]
+                if p > 0 and q > 0:
+                    kl += q * math.log(q / p)
+            return kl + total_weight * (lh + la - avg_goals) ** 2
+
         best_kl = float("inf")
         best_lam = (1.2, 1.0)
 
         # Coarse grid
         for lh in [x / 10 for x in range(3, 41)]:  # 0.3 to 4.0
             for la in [x / 10 for x in range(3, 41)]:
-                result = dc_marginals(lh, la, max_g=6, rho=rho)
-                kl = 0.0
-                for i, key in enumerate(["home_win", "draw", "away_win"]):
-                    p = result[key]
-                    q = market_probs[i]
-                    if p > 0 and q > 0:
-                        kl += q * math.log(q / p)
-                if kl < best_kl:
-                    best_kl = kl
+                obj = _objective(lh, la)
+                if obj < best_kl:
+                    best_kl = obj
                     best_lam = (lh, la)
 
         # Fine grid around best
@@ -670,15 +722,9 @@ class DixonColesModel:
             for la in [la0 + x * 0.02 for x in range(-10, 11)]:
                 if lh < 0.2 or la < 0.2:
                     continue
-                result = dc_marginals(lh, la, max_g=6, rho=rho)
-                kl = 0.0
-                for i, key in enumerate(["home_win", "draw", "away_win"]):
-                    p = result[key]
-                    q = market_probs[i]
-                    if p > 0 and q > 0:
-                        kl += q * math.log(q / p)
-                if kl < best_kl:
-                    best_kl = kl
+                obj = _objective(lh, la)
+                if obj < best_kl:
+                    best_kl = obj
                     best_lam = (lh, la)
 
         return round(best_lam[0], 4), round(best_lam[1], 4)

@@ -220,6 +220,9 @@ def cmd_predict(args):
                 m['ou_line'] = am.get('ou_line')
                 m['over_odds'] = am['over_odds']
                 m['under_odds'] = am['under_odds']
+                # 降级链第 2 级: the-odds-api (配额耗尽时返回空, 自然降级)
+                # 后面 SofaScore 会覆盖它 —— 优先级 SofaScore > the-odds-api
+                m['ou_source'] = 'the-odds-api'
                 ou_merged += 1
         if merged > 0 or ou_merged > 0:
             print(f"合并外围赔率: 胜平负{merged}场 / 大小球{ou_merged}场 / 共{len(matches)}场")
@@ -384,29 +387,47 @@ def cmd_predict(args):
 
         # SofaScore 盘口匹配(模糊): 补市场赔率(欧冠无体彩) + 动态大小球公平线
         if _sofascore:
-            _hl = home.lower(); _al = away.lower()
+            # token 打分匹配 (2026-09-11): 子串匹配会漏掉 "Man United" vs
+            # "Manchester United" 这类同队异名, 导致该场拿不到大小球盘口。
+            from pipeline.team_names import canonical_of as _canon
+            _best, _best_sc = None, 0
             for _sk, _sv in _sofascore.items():
-                _sh = (_sv.get("home") or "").lower()
-                _sa = (_sv.get("away") or "").lower()
-                if _sh and _sa and (_sh in _hl or _hl in _sh) and (_sa in _al or _al in _sa):
-                    _so = _sv.get("odds") or {}
-                    if (not m.get("odds")) and _so.get("home") and _so.get("away"):
-                        m["odds"] = {"home": _so["home"], "draw": _so["draw"], "away": _so["away"]}
-                    _ou = _so.get("ou") or {}
-                    _bl, _bd = None, 999
-                    for _ln, _lv in _ou.items():
-                        _o = _lv.get("Over"); _u = _lv.get("Under")
-                        if _o and _u and abs(_o - _u) < _bd:
-                            _bd = abs(_o - _u); _bl = _ln
-                    if _bl and _ou.get(_bl):
-                        _lv = _ou[_bl]
-                        try:
-                            m["ou_line"] = float(_bl)
-                            m["over_odds"] = _lv.get("Over")
-                            m["under_odds"] = _lv.get("Under")
-                        except Exception:
-                            pass
-                    break
+                _sh = _sv.get("home") or ""
+                _sa = _sv.get("away") or ""
+                if not _sh or not _sa:
+                    continue
+                _sc = _team_score(home, _sh) + _team_score(away, _sa)
+                # 总表优先 (2026-09-11): 两边归到同一规范名 → 直接压倒性加分。
+                # 表由 tools/build_team_map.py 生成且人工确认过, 比 token 打分可靠。
+                if _canon(home) and _canon(home) == _canon(_sh):
+                    _sc += 10
+                if _canon(away) and _canon(away) == _canon(_sa):
+                    _sc += 10
+                if _sc > _best_sc:
+                    _best_sc, _best = _sc, _sv
+            # 两侧各至少命中一个 token 才认 (避免只凭一个词错配到别的队)
+            if _best and _team_score(home, _best.get("home") or "") >= 1 \
+                     and _team_score(away, _best.get("away") or "") >= 1:
+                _sv = _best
+                _so = _sv.get("odds") or {}
+                if (not m.get("odds")) and _so.get("home") and _so.get("away"):
+                    m["odds"] = {"home": _so["home"], "draw": _so["draw"], "away": _so["away"]}
+                # 大小球: 取"最均衡"的那条线 (|大-小| 最小), 并记录来源供审计
+                _ou = _so.get("ou") or {}
+                _bl, _bd = None, 999
+                for _ln, _lv in _ou.items():
+                    _o = _lv.get("Over"); _u = _lv.get("Under")
+                    if _o and _u and abs(_o - _u) < _bd:
+                        _bd = abs(_o - _u); _bl = _ln
+                if _bl and _ou.get(_bl):
+                    _lv = _ou[_bl]
+                    try:
+                        m["ou_line"] = float(_bl)
+                        m["over_odds"] = _lv.get("Over")
+                        m["under_odds"] = _lv.get("Under")
+                        m["ou_source"] = "sofascore"
+                    except Exception:
+                        pass
 
         # 联赛代码缺失(UNK)兜底: 从已训练模型 team_league 反查 (体彩漏联赛代码时)
         if league in ("", "UNK", None):
@@ -497,8 +518,8 @@ def cmd_predict(args):
 
         # 一致性校验 (复盘经验库规则 6/8): 方向-比分冲突 + BTTS-波胆交叉校验
         _ou_v = _ou_value(pred, m)
-        _jt_scores = _joint_top_scores(pred, ah_pred, _ou_v)
-        _flags = _consistency_flags(pred, _jt_scores)
+        _jt_scores = _joint_top_scores(pred, ah_pred, _ou_v, bayes)
+        _flags = _consistency_flags(pred, _jt_scores, bayes)
 
         predictions.append({
             "home_team": home,
@@ -535,6 +556,9 @@ def cmd_predict(args):
             "ou_line": m.get("ou_line"),
             "over_odds": m.get("over_odds"),
             "under_odds": m.get("under_odds"),
+            # 大小球盘口来源 (2026-09-11 起只认 sofascore; 体彩已停用)
+            # 无值 = 该场没取到盘口, 便于事后审计"哪场漏了"
+            "ou_source": m.get("ou_source"),
             # 进球数区间: 总进球分布最可能区间 (替代固定 2.5 视角)
             "goals_range": _goals_range(pred, m),
             # 联合约束校验: 最可能比分必须同时满足让球盘+大小球倾向 (消除维度间矛盾)
@@ -552,6 +576,16 @@ def cmd_predict(args):
             },
             "h2h_recent": _recent_h2h(home, away, _db),
         })
+
+    # 大小球盘口覆盖统计 (2026-09-11): 让"哪场没拿到盘口"一目了然, 便于事后审计
+    if predictions:
+        _ou_src: dict = {}
+        for _pp in predictions:
+            _k = _pp.get("ou_source") or "无盘口"
+            _ou_src[_k] = _ou_src.get(_k, 0) + 1
+        print("大小球盘口覆盖: " + " / ".join(
+            "%s %d 场" % (k, v) for k, v in sorted(_ou_src.items(), key=lambda kv: -kv[1]))
+            + "  (共 %d 场)" % len(predictions))
 
     # 保存JSON (与当日已有预测按场次合并: 终盘不再覆盖早盘已踢场次, 保证复盘完整)
     os.makedirs(output_dir, exist_ok=True)
@@ -728,25 +762,27 @@ def cmd_review(args):
             results = load_results_from_json(args.results_json)
             print(f"加载 {len(results)} 条赛果，来自 {args.results_json}")
 
-    # 3) Try auto-fetch
-    if not results:
-        results = try_fetch_results(date_str)
-        if results:
-            print(f"从API拉取 {len(results)} 条赛果")
-
-    # 3.5) API-Football 赛果 (Phase 6, 覆盖最全)
-    if not results:
-        from pipeline.result_fetcher import try_fetch_results_apifootball
-        results = try_fetch_results_apifootball(date_str)
-        if results:
-            print(f"从API-Football拉取 {len(results)} 条赛果")
-
-    # 3.6) football-data.org 赛果 (Phase 6b, 注册即用)
+    # 3) football-data.org 赛果 — 权威源, 免费档覆盖五大联赛+欧冠正赛
+    #    2026-09-10 提到首位: 此前通用源先返回(且混入青年队), 导致本步从未被调用,
+    #    欧冠正赛拿不到赛果 → 复盘只能拿 U19 比分错配。
     if not results:
         from pipeline.result_fetcher import try_fetch_results_footballdata
         results = try_fetch_results_footballdata(date_str)
         if results:
             print(f"从football-data.org拉取 {len(results)} 条赛果")
+
+    # 3.5) 通用源 (odds-api.io / CSV) — 兜底
+    if not results:
+        results = try_fetch_results(date_str)
+        if results:
+            print(f"从API拉取 {len(results)} 条赛果")
+
+    # 3.6) API-Football 赛果 (Phase 6, 覆盖最全)
+    if not results:
+        from pipeline.result_fetcher import try_fetch_results_apifootball
+        results = try_fetch_results_apifootball(date_str)
+        if results:
+            print(f"从API-Football拉取 {len(results)} 条赛果")
 
     # 4) 兜底: 查找默认赛果文件
     default_results = os.path.join(output_dir, f"results_{date_str}.json")
@@ -1154,10 +1190,19 @@ def _derive_spf_from_ah(m: dict, pred: dict) -> dict | None:
     return {"home": round(p_home / s, 4), "draw": round(p_draw / s, 4), "away": round(p_away / s, 4)}
 
 
-def _consistency_flags(pred: dict, jt: list | None) -> dict:
-    """一致性校验 (复盘经验库规则6/8): 方向-比分冲突 + BTTS-波胆交叉校验"""
+def _consistency_flags(pred: dict, jt: list | None, bayes: dict | None = None) -> dict:
+    """一致性校验 (复盘经验库规则6/8): 方向-比分冲突 + BTTS-波胆交叉校验
+
+    2026-09-11: 方向口径改为与页面一致 (贝叶斯后验优先), 并与 _joint_top_scores 同源。
+    补了方向硬约束后本项基本不会再触发, 留作 score_distribution 缺失时的兜底。
+    """
     flags: dict = {}
-    probs = [pred.get("home_win", 0), pred.get("draw", 0), pred.get("away_win", 0)]
+    probs = None
+    if bayes and isinstance(bayes.get("posterior"), dict):
+        po = bayes["posterior"]
+        probs = [po.get("home", 0), po.get("draw", 0), po.get("away", 0)]
+    if not probs or sum(probs) <= 0:
+        probs = [pred.get("home_win", 0), pred.get("draw", 0), pred.get("away_win", 0)]
     # 比分方向来源: 联合约束修正后比分; 无大小球数据(jt空)回退模型分布最高单格 (2026-08-28纪律复查员发现阿拉维斯三向漏网)
     _top_score = None
     if jt:
@@ -1231,16 +1276,45 @@ def _build_drift_map(date_str: str) -> dict:
     return out
 
 
-def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None) -> list | None:
-    """联合约束校验 (2026-08-20):
+# 队名模糊匹配统一在 pipeline/team_names.py (team_tokens / team_score),
+# 与 result_fetcher 的赛果匹配共用同一套逻辑, 避免两处口径漂移。
+from pipeline.team_names import team_score as _team_score  # noqa: E402
 
-    在同时满足「让球盘倾向」与「大小球倾向」的比分中取概率最高者。
+
+def _direction_from(pred: dict, bayes: dict | None) -> str:
+    """页面显示的胜平负方向 ('H'/'D'/'A')。
+
+    页面渲染用的是贝叶斯后验 (reporter.py:445), 所以比分约束必须跟它同源,
+    否则会出现"页面写主胜、首选比分却是 1-1"这种视觉矛盾。
+    """
+    probs = None
+    if bayes and isinstance(bayes.get("posterior"), dict):
+        po = bayes["posterior"]
+        probs = [po.get("home", 0), po.get("draw", 0), po.get("away", 0)]
+    if not probs or sum(probs) <= 0:
+        probs = [pred.get("home_win", 0), pred.get("draw", 0), pred.get("away_win", 0)]
+    return ("H", "D", "A")[max(range(3), key=lambda i: probs[i])]
+
+
+def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None,
+                      bayes: dict | None = None) -> list | None:
+    """联合约束校验 (2026-08-20; 2026-09-11 补「胜平负方向」硬约束)。
+
+    在同时满足「胜平负方向」「让球盘倾向」「大小球倾向」的比分中取概率最高者。
     例: 主-1赢盘 ∩ 小2.5 → 唯一自洽比分 2-0; 若单格最高是 1-0 则属于维度间矛盾, 修正为 2-0。
-    无有效约束或无交集时返回 None (沿用原始最可能比分)。
+
+    2026-09-11 修复: 旧版只约束让球盘+大小球, **完全没管胜平负方向**, 且两个约束都没有
+    edge 时直接 return None 回退原始众数。结果 305 场里 111 场 (36.4%) 出现
+    "众数 1-1(平局) 但方向是主胜/客胜"的假矛盾, 被 _consistency_flags 打成「结论不可用」。
+    那不是模型矛盾, 是**展示口径矛盾**: 单格众数 vs 区域求和, 两者本来就可以不一致。
+    补上方向约束后比分与方向永不冲突, 语义也更明确:
+    **「在概率最高的结果前提下, 最可能的具体比分」**。
+    方向候选为空时(让球盘与方向互相排斥)自动放宽为"只按方向", 保证始终有解。
     """
     sd = pred.get("score_distribution") or {}
     if not sd:
         return None
+    want = _direction_from(pred, bayes)
     gl = None
     pick = None
     if ah_pred and ah_pred.get("edge") and abs(ah_pred["edge"].get("edge", 0)) >= 0.05:
@@ -1249,10 +1323,8 @@ def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None) -> li
     ou_side = None
     if ou_v and abs(ou_v.get("edge", 0)) >= 0.05:
         ou_side = ou_v.get("side")
-    if pick is None and ou_side is None:
-        return None
 
-    def _ok(h: int, a: int) -> bool:
+    def _ok_extra(h: int, a: int) -> bool:
         if pick == "home" and gl is not None and (h - a) + gl <= 0:
             return False
         if pick == "away" and gl is not None and (h - a) + gl >= 0:
@@ -1263,14 +1335,22 @@ def _joint_top_scores(pred: dict, ah_pred: dict | None, ou_v: dict | None) -> li
             return False
         return True
 
-    cands = []
-    for s, p in sd.items():
-        try:
-            h, a = s.split("-")
-            if _ok(int(h), int(a)):
-                cands.append((s, p))
-        except Exception:
-            pass
+    def _collect(with_extras: bool):
+        out = []
+        for s, p in sd.items():
+            try:
+                h, a = s.split("-")
+                h, a = int(h), int(a)
+            except Exception:
+                continue
+            if ("H" if h > a else ("D" if h == a else "A")) != want:
+                continue
+            if with_extras and not _ok_extra(h, a):
+                continue
+            out.append((s, p))
+        return out
+
+    cands = _collect(True) or _collect(False)
     if not cands:
         return None
     cands.sort(key=lambda kv: -kv[1])

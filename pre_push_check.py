@@ -221,6 +221,10 @@ content_files = [f for f in content_files if 'data/state/' not in str(f).replace
 content_files = [f for f in content_files if 'models/' not in str(f).replace(chr(92), '/')]
 # 自检豁免
 content_files = [f for f in content_files if f.name not in ('pre_push_check.py',)]
+# 透明账本页豁免 (2026-09-11): 页面里的队名来自**已冻结的 picks**, 且哈希链
+# 覆盖 {date, picks} —— 改成中文会直接破坏存证校验。这是审计留痕, 不是给人读的
+# 内容, 8 月初那批记录的英文队名必须原样保留。
+content_files = [f for f in content_files if f.name != 'transparency.html']
 # JSON数据文件豁免 — 机器内部数据(队名/联赛代码必须英文才能匹配ELO)
 # 注意: pinnacle_bets_ 是投注单(用户可见) → 不豁免, 队名必须中文 (8-14修正)
 content_files = [f for f in content_files if not (f.suffix == '.json' and (

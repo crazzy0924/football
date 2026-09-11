@@ -381,8 +381,8 @@ def resolve_team(cn_name: str, team_id=None, en_code: str = "") -> tuple[str, st
 # 队名模糊匹配 (2026-09-11)
 # 统一给 pipeline.py 的 SofaScore 盘口匹配、result_fetcher 的赛果匹配使用。
 # 只认 token 精确相同 —— 放开子串会造成假配对:
-#   Sevilla       ↔ Aston Villa      (villa ⊂ sevilla)
-#   Stade Rennais ↔ Stade Brestois   (stade)
+#   反例一: Sevilla ↔ Aston Villa   —— villa 是 sevilla 的子串
+#   反例二: Stade Rennais ↔ Stade Brestois —— 共享 stade
 # 假配对比匹配不上危险得多: 会把别场的盘口/比分挂到这一场。
 # ================================================================
 

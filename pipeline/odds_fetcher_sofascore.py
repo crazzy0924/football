@@ -111,6 +111,22 @@ def parse_odds(body):
         elif mg == 'Asian Handicap':
             names = [c.get('name') for c in m.get('choices', [])]
             o['ah'] = names
+        elif mg == 'Both teams to score':
+            # 2026-09-11 新增: 体彩没有双进球玩法(只有 HAD/HHAD/TTG/CRS/HAFU),
+            # 只有外围有。漏了这个市场就没法做"模型 BTTS vs 市场 BTTS"的 edge 对比。
+            d = o.setdefault('btts', {})
+            for c in m.get('choices', []):
+                n = (c.get('name') or '').strip().lower()
+                if n in ('yes', 'no'):
+                    d[n] = _frac(c.get('fractionalValue'))
+        elif mg == 'Double chance':
+            d = o.setdefault('dc', {})
+            for c in m.get('choices', []):
+                d[(c.get('name') or '').strip()] = _frac(c.get('fractionalValue'))
+        elif mg == 'Draw no bet':
+            d = o.setdefault('dnb', {})
+            for c in m.get('choices', []):
+                d[(c.get('name') or '').strip()] = _frac(c.get('fractionalValue'))
     return o
 
 

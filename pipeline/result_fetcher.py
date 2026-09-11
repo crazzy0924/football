@@ -446,7 +446,19 @@ def match_predictions_to_results(
 
 
 def _teams_match(a: str, b: str) -> bool:
-    """模糊队名匹配 + 中英文桥接 + 重音符折叠"""
+    """模糊队名匹配 + 中英文桥接 + 重音符折叠 + token 打分。
+
+    2026-09-11 改:
+      (1) 补 token 打分。原先只做"折叠后子串包含", 导致三组队名全漏:
+            Bayern Munich  vs FC Bayern München    (Munich / München 是不同词)
+            Bodo Glimt     vs FK Bodø/Glimt        (重音 + 斜杠)
+            Man United     vs Manchester United FC (缩写)
+          后果: 09-10 欧冠 5 场只结算 3 场, Bayern 与 Man United 的 ELO 没更新。
+      (2) 去掉裸子串判断。折叠后 "sevilla"(Sevilla) 是 "astonvilla"(Aston Villa)
+          的子串 → 假命中; 假配对比匹配不上危险(会把别场比分挂到这一场)。
+          子串原本想处理的 "队名+FC" 这类后缀, token 打分已经能覆盖。
+      匹配器与 pipeline.py 的盘口匹配同源 (pipeline/team_names.py)。
+    """
     if not a or not b:
         return False
     # 级别护栏: 一侧是青年队/预备队/女足而另一侧不是 → 直接拒绝(2026-09-10 事故)
@@ -462,8 +474,15 @@ def _teams_match(a: str, b: str) -> bool:
     a_orig, b_orig = a, b
     a = _fold(a)
     b = _fold(b)
-    if a == b or a in b or b in a:
+    if a == b:
         return True
+    # token 打分: 共享 ≥1 个有区分度的 token 即认定同队
+    try:
+        from pipeline.team_names import team_score
+        if team_score(a_orig, b_orig) >= 1:
+            return True
+    except Exception:
+        pass
     # 中英桥接: 任一方为中文名时, 用映射表翻译成英文再比 (原名大小写查表)
     try:
         from pipeline.team_names import CN_TO_EN_TEAM, resolve_team_alias

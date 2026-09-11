@@ -377,3 +377,49 @@ def resolve_team(cn_name: str, team_id=None, en_code: str = "") -> tuple[str, st
         m[key] = cn  # 先绑定原名, 后续人工订正映射表即可永久生效
     return cn, "unresolved"
 
+# ================================================================
+# 队名模糊匹配 (2026-09-11)
+# 统一给 pipeline.py 的 SofaScore 盘口匹配、result_fetcher 的赛果匹配使用。
+# 只认 token 精确相同 —— 放开子串会造成假配对:
+#   Sevilla       ↔ Aston Villa      (villa ⊂ sevilla)
+#   Stade Rennais ↔ Stade Brestois   (stade)
+# 假配对比匹配不上危险得多: 会把别场的盘口/比分挂到这一场。
+# ================================================================
+
+# 无区分度词: 俱乐部后缀 + 通用前缀。
+# 刻意不含 racing/union/city —— 它们在 Racing Santander / Union Berlin 里是识别词。
+TEAM_STOP = frozenset({
+    'fc', 'cf', 'sc', 'afc', 'sk', 'fk', 'ac', 'as', 'ss', 'cd', 'sv', 'us',
+    'vfb', 'vfl', 'tsg', 'bsc', 'osc', 'club', 'de', 'cp', 'acf', 'ssc', 'rc',
+    'real', 'stade', 'deportivo', 'olympique', 'atletico', 'athletic', 'sporting',
+})
+
+# 非拉丁字母显式转写 (NFKD 不会把 ø 拆成 o)
+_TEAM_TRANSLIT = {
+    'ø': 'o', 'Ø': 'o', 'đ': 'd', 'ð': 'd', 'ł': 'l', 'ß': 'ss',
+    'æ': 'ae', 'œ': 'oe', 'þ': 'th', 'ı': 'i', 'ŋ': 'n',
+}
+
+
+def team_tokens(name: str) -> frozenset[str]:
+    """队名 → 模糊匹配用 token 集合 (转写/去重音/去通用词/去数字)。
+
+    覆盖: Man United↔Manchester United、Dortmund↔Borussia Dortmund、
+          Bodo Glimt↔FK Bodø/Glimt、Bayern Munich↔FC Bayern München
+    """
+    import re as _re
+    import unicodedata as _ud
+    s = str(name or '')
+    for _k, _v in _TEAM_TRANSLIT.items():
+        s = s.replace(_k, _v)
+    s = _ud.normalize('NFKD', s.lower())
+    s = ''.join(c for c in s if not _ud.combining(c))
+    s = _re.sub(r'[^a-z ]', ' ', s)
+    return frozenset(t for t in s.split() if len(t) >= 3 and t not in TEAM_STOP)
+
+
+def team_score(a: str, b: str) -> int:
+    """两个队名的共享 token 数 (只认精确相同)。"""
+    return len(team_tokens(a) & team_tokens(b))
+
+

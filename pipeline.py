@@ -1269,45 +1269,9 @@ def _build_drift_map(date_str: str) -> dict:
     return out
 
 
-# 队名里的"无区分度"词: 俱乐部后缀 + 通用前缀。
-# 不含 racing/as/union/city 等——它们在"Racing Santander"/"Union Berlin"里是识别词。
-_TEAM_STOP = {
-    'fc', 'cf', 'sc', 'afc', 'sk', 'fk', 'ac', 'as', 'ss', 'cd', 'sv', 'us',
-    'vfb', 'vfl', 'tsg', 'bsc', 'osc', 'club', 'de', 'cp', 'acf', 'ssc', 'rc',
-    'real', 'stade', 'deportivo', 'olympique', 'atletico', 'athletic', 'sporting',
-}
-
-
-def _team_tokens(name: str) -> set:
-    """队名 → 模糊匹配用 token 集合 (去重音/去通用词/去数字)。
-
-    用于把 SofaScore 的全称 (Liverpool FC / 1. FC Union Berlin / Borussia
-    M'gladbach) 对齐到我们内部的简称 (Liverpool / Union Berlin / M'gladbach)。
-    子串匹配在 "Man United" vs "Manchester United"、"Real Racing Club" vs
-    "Racing Santander" 这类会漏, token 打分不会。
-    """
-    import re as _re
-    import unicodedata as _ud
-    s = _ud.normalize('NFKD', str(name or '').lower())
-    s = ''.join(c for c in s if ord(c) < 128)
-    s = _re.sub(r'[^a-z ]', ' ', s)
-    return {t for t in s.split() if len(t) >= 3 and t not in _TEAM_STOP}
-
-
-def _team_score(a: str, b: str) -> int:
-    """两个队名的共享 token 数 (只认精确相同)。
-
-    2026-09-11 实测教训: 放开"长度>=5 的子串匹配"会造成假配对 ——
-      Sevilla  ↔ Aston Villa (villa ⊂ sevilla)
-      Stade Rennais ↔ Stade Brestois (stade)
-    假配对比配不上危险得多: 会把**别场**的盘口挂到这一场上。
-    精确 token 已经足够覆盖真实需求:
-      Man United ↔ Manchester United (united)
-      Dortmund   ↔ Borussia Dortmund (dortmund)
-      M'gladbach ↔ Borussia M'gladbach (gladbach)
-    """
-    ta, tb = _team_tokens(a), _team_tokens(b)
-    return len(ta & tb)
+# 队名模糊匹配统一在 pipeline/team_names.py (team_tokens / team_score),
+# 与 result_fetcher 的赛果匹配共用同一套逻辑, 避免两处口径漂移。
+from pipeline.team_names import team_score as _team_score  # noqa: E402
 
 
 def _direction_from(pred: dict, bayes: dict | None) -> str:

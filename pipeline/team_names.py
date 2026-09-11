@@ -484,10 +484,22 @@ def load_team_name_map(path: str | None = None) -> dict:
 
 
 def canonical_of(name: str) -> str | None:
-    """把任意一侧的名字归到我们的规范名; 查不到返回 None。"""
+    """把任意一侧的名字归到我们的规范名; 查不到返回 None。
+
+    2026-09-11: 加 strip 防御。表是精确匹配, 一个尾随空格就会失效 ——
+    而 token 匹配不受影响, 于是表现为"大部分场次能配上、个别场次莫名配不上"
+    (Rennes vs Stade Rennais 就是这样: 两队无共享 token, 全靠这张表)。
+    """
     if not name:
         return None
-    return load_team_name_map().get(name)
+    idx = load_team_name_map()
+    key = str(name).strip()
+    if key in idx:
+        return idx[key]
+    for cand in (key.title(), key.lower()):
+        if cand in idx:
+            return idx[cand]
+    return None
 
 
 

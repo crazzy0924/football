@@ -422,4 +422,72 @@ def team_score(a: str, b: str) -> int:
     """两个队名的共享 token 数 (只认精确相同)。"""
     return len(team_tokens(a) & team_tokens(b))
 
+# ================================================================
+# 队名总表 (2026-09-11)
+# data/state/team_name_map.json: 体彩中文名 <-> SofaScore 名 <-> 我们的规范名
+# 由 tools/build_team_map.py 生成。匹配时**优先查表**, 查不到才退回 token 打分 ——
+# 表是人工确认过的, 比任何模糊算法都可靠。
+# ================================================================
+
+_TEAM_MAP_CACHE: dict | None = None
+
+
+def load_team_name_map(path: str | None = None) -> dict:
+    """加载总表 → {任意一侧的名字: 我们的规范名}。"""
+    global _TEAM_MAP_CACHE
+    if _TEAM_MAP_CACHE is not None and path is None:
+        return _TEAM_MAP_CACHE
+    import json as _json
+    import os as _os
+    root = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    p = path or _os.path.join(root, 'data', 'state', 'team_name_map.json')
+    idx: dict = {}
+    try:
+        with open(p, encoding='utf-8') as fh:
+            doc = _json.load(fh)
+        rows = doc.get('rows') or []
+        # 别名归一: SofaScore 名单里同一队可能有两行 (RC Lens / Racing Club de Lens),
+        # 先把别名指向的主名收集起来, 保证每个名字最终都归到同一个规范名。
+        alias_of: dict = {}
+        for r in rows:
+            c = r.get('canonical')
+            if not c:
+                continue
+            for a in r.get('canonical_aliases') or []:
+                if a != c:
+                    alias_of[a] = c
+
+        def _norm(c: str) -> str:
+            seen = set()
+            while c in alias_of and c not in seen:
+                seen.add(c)
+                c = alias_of[c]
+            return c
+
+        for r in rows:
+            c = r.get('canonical')
+            if not c:
+                continue
+            c = _norm(c)
+            if r.get('sofascore'):
+                idx[r['sofascore']] = c
+            for a in r.get('canonical_aliases') or []:
+                idx[a] = c
+        # 赛果/预测侧的写法 (FC Bayern München / Fenerbahçe SK ...)
+        for nm, c in (doc.get('result_names') or {}).items():
+            idx.setdefault(nm, _norm(c))
+    except Exception:
+        pass
+    if path is None:
+        _TEAM_MAP_CACHE = idx
+    return idx
+
+
+def canonical_of(name: str) -> str | None:
+    """把任意一侧的名字归到我们的规范名; 查不到返回 None。"""
+    if not name:
+        return None
+    return load_team_name_map().get(name)
+
+
 

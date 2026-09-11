@@ -389,6 +389,7 @@ def cmd_predict(args):
         if _sofascore:
             # token 打分匹配 (2026-09-11): 子串匹配会漏掉 "Man United" vs
             # "Manchester United" 这类同队异名, 导致该场拿不到大小球盘口。
+            from pipeline.team_names import canonical_of as _canon
             _best, _best_sc = None, 0
             for _sk, _sv in _sofascore.items():
                 _sh = _sv.get("home") or ""
@@ -396,6 +397,12 @@ def cmd_predict(args):
                 if not _sh or not _sa:
                     continue
                 _sc = _team_score(home, _sh) + _team_score(away, _sa)
+                # 总表优先 (2026-09-11): 两边归到同一规范名 → 直接压倒性加分。
+                # 表由 tools/build_team_map.py 生成且人工确认过, 比 token 打分可靠。
+                if _canon(home) and _canon(home) == _canon(_sh):
+                    _sc += 10
+                if _canon(away) and _canon(away) == _canon(_sa):
+                    _sc += 10
                 if _sc > _best_sc:
                     _best_sc, _best = _sc, _sv
             # 两侧各至少命中一个 token 才认 (避免只凭一个词错配到别的队)

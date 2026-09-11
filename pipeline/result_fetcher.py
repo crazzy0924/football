@@ -476,6 +476,22 @@ def _teams_match(a: str, b: str) -> bool:
     b = _fold(b)
     if a == b:
         return True
+    # 总表权威 (2026-09-11): 只要两侧都能查到规范名, 就以表的结论为准, **不再回退模糊**。
+    # 否则 "Manchester City" 与 "Manchester United FC" 会因为共享 "manchester"
+    # 被 token 打分判成同一队 —— 这正是总表要消灭的错配。
+    try:
+        from pipeline.team_names import canonical_of
+        ca, cb = canonical_of(a_orig), canonical_of(b_orig)
+        if ca and cb:
+            if ca == cb:
+                return True
+            # 一边中文一边英文时, 表里查到的可能只是各自的自登记名, 不能据此否定 ——
+            # 放行给下面的中英桥接再判一次 (费内巴切 ↔ Fenerbahçe SK 就是这类)
+            has_cjk = any('一' <= ch <= '鿿' for ch in str(a_orig) + str(b_orig))
+            if not has_cjk:
+                return False
+    except Exception:
+        pass
     # token 打分: 共享 ≥1 个有区分度的 token 即认定同队
     try:
         from pipeline.team_names import team_score

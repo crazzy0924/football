@@ -68,6 +68,7 @@ python pre_push_check.py
 2. ✅ `python pre_push_check.py` ← 🚨 推送前汉化检查（不通过不push）
 3. ✅ `git add -A && git commit -m "中文说明" && git push origin master`
 4. ✅ 确认 push 成功才结束任务; 失败立即注册补推(10分钟自愈)
+5. ✅ 首页 `index.html` 必须保留「克劳德交叉预测」入口（`my_preds/latest.html`，hero「查看最新预测」旁 + 页脚）；`pre_push_check.py` 会幂等自动补回（`pipeline/ensure_home_entry.py`），改版/重写首页时不要删。
 
 ### 每次复盘必须:
 

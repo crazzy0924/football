@@ -192,6 +192,14 @@ def check_staged_file(filepath: Path):
 
 # ===== MAIN =====
 print('🔍 推送前汉化检查...')
+
+# 0. 首页入口保底: 确保「克劳德交叉预测」入口始终在 (2026-09-11)
+try:
+    from pipeline.ensure_home_entry import ensure as _ensure_home
+    if _ensure_home():
+        print('🔗 首页入口缺失 → 已自动补回「克劳德交叉预测」')
+except Exception as _e:
+    print(f'  ⚠ 首页入口保底失败: {_e}')
 print()
 
 # 1. 检查已暂存(staged)的文件

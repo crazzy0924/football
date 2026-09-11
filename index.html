@@ -803,5 +803,9 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
   for(var bi=0; bi<btns.length; bi++){ btns[bi].addEventListener('click', function(){ location.href = ctaHref; }); }
 })();
 </script>
+<script>
+// 克劳德交叉预测入口: 每次加载追加时间戳, 彻底绕过缓存
+(function(){var ts=Date.now();var a=document.querySelectorAll('a[href^="my_preds/latest.html"]');for(var i=0;i<a.length;i++){a[i].href='my_preds/latest.html?t='+ts;}})();
+</script>
 </body>
 </html>

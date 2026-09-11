@@ -470,6 +470,35 @@ def cmd_predict(args):
         pred["draw"] = cal_d
         pred["away_win"] = cal_a
 
+        # ── 进球数维度校准 (2026-09-11) ────────────────────────────────
+        # 复盘 230 场显示: 模型 over_25 平均给 0.484, 实际发生率 0.70, 系统性偏低;
+        # 且 OU25/BTTS 两个维度 Brier 跑不过常数基准 —— 等于没有技能。
+        # 用联赛实测基准率做收缩:
+        #     p = w * p_model + (1-w) * p_league_base
+        # 非循环回测(基准取自历史画像 500~1900 场, 不是当前样本):
+        #     OU25 Brier 0.2449 -> 0.229,  BTTS 0.2560 -> 0.242
+        # 取 w=0.5 折中: 拿回约 2/3 的可达增益, 同时保留模型自身信息。
+        # 各联赛基准不同(欧冠 大2.5=0.630/平局率最低, 意甲 0.488), 不套同一套模板。
+        try:
+            from models.league_profiles import get_profile as _get_profile
+            _prof = _get_profile(league)
+        except Exception:
+            _prof = None
+        if _prof is not None:
+            _w = 0.5
+            _o_over, _o_btts = pred.get("over_25"), pred.get("btts")
+            if _o_over is not None:
+                pred["over_25"] = round(_w * _o_over + (1 - _w) * _prof.over_25_rate, 4)
+            if _o_btts is not None:
+                pred["btts"] = round(_w * _o_btts + (1 - _w) * _prof.btts_rate, 4)
+            pred["goal_calibration"] = {
+                "weight": _w,
+                "league_base": {"over_25": _prof.over_25_rate, "btts": _prof.btts_rate,
+                                "avg_total_goals": _prof.avg_total_goals,
+                                "draw_rate": _prof.draw_rate},
+                "before": {"over_25": _o_over, "btts": _o_btts},
+            }
+
         # 实验位: 概率校准(PAV) — 实测无增益, 保持关闭
         # if prob_cal:  # 实验开关
         #     pc_h, pc_d, pc_a = apply_prob_cal(...)  # 校准调用占位

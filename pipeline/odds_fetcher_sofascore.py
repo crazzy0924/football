@@ -114,8 +114,15 @@ def parse_odds(body):
     return o
 
 
-def list_matchday(pg, tid, code, day):
-    """某联赛在指定日期的比赛 [(event_id, home, away, ts)]"""
+def list_matchday(pg, tid, code, days):
+    """某联赛在指定日期(可多天)的比赛 [(event_id, home, away, ts)]。
+
+    2026-09-11 修复: 原先只查单日。但 21:00 的终盘预测的是**次日凌晨**的比赛
+    (欧洲晚上 = 北京次日 02:30~03:00), 单日查询会把整批五大联赛全漏掉 ——
+    当天实测只抓到 6 场欧冠, 五大一场没有。改成日期窗口即可覆盖交界情况。
+    """
+    if isinstance(days, str):
+        days = {days}
     seasons = (_j(pg, '%s/unique-tournament/%d/seasons' % (API, tid)) or {}).get('seasons') or []
     if not seasons:
         print('  %s: 拿不到赛季列表' % code)
@@ -128,7 +135,7 @@ def list_matchday(pg, tid, code, day):
             ts = e.get('startTimestamp')
             if not ts:
                 continue
-            if datetime.fromtimestamp(ts).strftime('%Y-%m-%d') != day:
+            if datetime.fromtimestamp(ts).strftime('%Y-%m-%d') not in days:
                 continue
             h = (e.get('homeTeam') or {}).get('name', '')
             a = (e.get('awayTeam') or {}).get('name', '')
@@ -177,8 +184,15 @@ def main():
     ap.add_argument('date', nargs='?', default=datetime.now().strftime('%Y-%m-%d'))
     ap.add_argument('--stage', default='manual', choices=['midday', 'final', 'manual'],
                     help='抓取节点, 用于留档区分 (午盘/终盘)')
+    ap.add_argument('--window', type=int, default=1,
+                    help='日期窗口(天): 前后各取 N 天, 覆盖"欧洲晚上=北京次日凌晨"的交界 (默认1)')
     a = ap.parse_args()
     day, stage = a.date, a.stage
+    # 日期窗口: 终盘预测的常是次日凌晨的比赛, 只看当天会整批漏掉
+    base = datetime.strptime(day, '%Y-%m-%d')
+    days = {(base + timedelta(days=d)).strftime('%Y-%m-%d')
+            for d in range(-a.window, a.window + 1)}
+    print('日期窗口: %s' % ' '.join(sorted(days)))
 
     out = {}
     skipped_youth = 0
@@ -193,8 +207,8 @@ def main():
 
         total_matches = 0
         for tid, code, name in TOURNAMENTS:
-            games = list_matchday(pg, tid, code, day)
-            print('%s %s: 当日 %d 场' % (code, name, len(games)))
+            games = list_matchday(pg, tid, code, days)
+            print('%s %s: 窗口内 %d 场' % (code, name, len(games)))
             total_matches += len(games)
             for eid, home, away, ts in games:
                 if is_youth_or_reserve(home, away):

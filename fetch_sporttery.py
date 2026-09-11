@@ -203,23 +203,13 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
         if _tg_total > 0:
             entry['market_goals_distribution'] = {k: round(v / _tg_total, 4) for k, v in _tg_imp.items()}
 
-        # 主盘线推导 (动态): 从 8 档分布找 over 概率最接近 50% 的线, 不再固定 2.5
-        if _tg_total > 0:
-            _dist = entry['market_goals_distribution']
-
-            def _gk(k):
-                return 7 if k == '7+' else int(k)
-
-            _best_n, _best_d = 3, 999
-            for _n in range(1, 8):
-                _ov = sum(p for k, p in _dist.items() if _gk(k) >= _n)
-                _d = abs(_ov - 0.5)
-                if _d < _best_d:
-                    _best_d, _best_n = _d, _n
-            _ov = sum(p for k, p in _dist.items() if _gk(k) >= _best_n)
-            entry['ou_line'] = _best_n - 0.5
-            entry['over_odds'] = round(1.0 / _ov, 2) if _ov > 0 else 99.0
-            entry['under_odds'] = round(1.0 / (1.0 - _ov), 2) if _ov < 1 else 99.0
+        # 大小球盘口 (ou_line / over_odds / under_odds) 【2026-09-11 起不再从体彩取】
+        # 用户拍板: 大小球数据来源不再用体彩。原先这里从体彩 8 档总进球赔率反推一条
+        # "over 概率最接近 50%" 的线, 只有单线、且国内外盘口口径不同。
+        # 现在大小球盘口统一由 SofaScore 提供 (pipeline/odds_fetcher_sofascore.py),
+        # 那里能给 0.5~10.5 的完整阶梯, 且只覆盖五大+欧冠。
+        # 保留 total_goals_odds / market_goals_distribution 作为"市场总进球视角"参考,
+        # 供 goals_range 与市场分布对照 (它不是盘口, 不参与盘口判定)。
 
     # 波胆 (比分) 赔率
     crs = m.get('crs', {})

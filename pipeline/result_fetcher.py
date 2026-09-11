@@ -257,7 +257,7 @@ def try_fetch_fixtures_footballdata(date_str: str) -> list[dict] | None:
     只覆盖五大联赛等官方数据源联赛; 其他联赛返回 None → 页面显示球场未获取。
     """
     try:
-        from config import FOOTBALL_DATA_API_KEY
+        from config import FOOTBALL_DATA_API_KEY, FOOTBALL_DATA_COMPETITIONS
         if not FOOTBALL_DATA_API_KEY:
             return None
         import httpx
@@ -267,7 +267,11 @@ def try_fetch_fixtures_footballdata(date_str: str) -> list[dict] | None:
         with httpx.Client(timeout=20) as c:
             r = c.get(
                 "https://api.football-data.org/v4/matches",
-                params={"dateFrom": date_str, "dateTo": end_str},
+                params={
+                    "dateFrom": date_str,
+                    "dateTo": end_str,
+                    "competitions": FOOTBALL_DATA_COMPETITIONS,  # 只拉 五大+欧冠
+                },
                 headers=headers,
             )
         if r.status_code == 429:
@@ -288,7 +292,7 @@ def try_fetch_results_footballdata(date_str: str) -> list[dict] | None:
     覆盖欧洲主流联赛+部分其他地区; 失败返回 None, 调用方回退手动赛果。
     """
     try:
-        from config import FOOTBALL_DATA_API_KEY
+        from config import FOOTBALL_DATA_API_KEY, FOOTBALL_DATA_COMPETITIONS
         if not FOOTBALL_DATA_API_KEY:
             return None
         import httpx
@@ -299,7 +303,11 @@ def try_fetch_results_footballdata(date_str: str) -> list[dict] | None:
         with httpx.Client(timeout=20) as c:
             r = c.get(
                 "https://api.football-data.org/v4/matches",
-                params={"dateFrom": date_str, "dateTo": end_str},
+                params={
+                    "dateFrom": date_str,
+                    "dateTo": end_str,
+                    "competitions": FOOTBALL_DATA_COMPETITIONS,  # 只拉 五大+欧冠
+                },
                 headers=headers,
             )
         if r.status_code == 429:

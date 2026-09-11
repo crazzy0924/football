@@ -192,15 +192,56 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
 }
 
 /* =========================================================
-   Hero — copy + CTA on left, prediction panel on right
+   Hero — 左文案 + 右「数据档案」概览卡
+   概览卡数字由 data/output/files.js 实时统计, 取不到就显示占位符, 不编造
    ========================================================= */
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 460px;
-  gap: var(--s-9);
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: center;
+  gap: var(--s-10);
   padding: var(--s-15) 120px;
 }
 .hero-copy { min-width: 0; display: flex; flex-direction: column; gap: var(--s-7); align-items: flex-start; }
+
+/* 数据档案概览卡 */
+.hero-stats {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: var(--s-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+.hs-head { display: flex; align-items: center; justify-content: space-between; }
+.hs-chip {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: .08em; color: var(--text-tertiary);
+}
+.hs-live {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  font-family: var(--font-mono); font-size: 10px; color: var(--accent-green);
+}
+.hs-live .dot { width: 5px; height: 5px; border-radius: var(--r-pill); background: var(--accent-green); }
+.hs-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5);
+  padding-bottom: var(--s-6);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.hs-item { display: flex; flex-direction: column; gap: var(--s-2); }
+.hs-num {
+  font-family: var(--font-mono); font-size: 30px; font-weight: 600;
+  line-height: 1; letter-spacing: -.02em;
+}
+.hs-label { font-size: 11px; color: var(--text-tertiary); }
+.hs-rows { display: flex; flex-direction: column; gap: var(--s-4); }
+.hs-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); }
+.hs-k { font-size: 12px; color: var(--text-tertiary); flex-shrink: 0; }
+.hs-v {
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);
+  text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .engine-chip {
   display: inline-flex;
   align-items: center;
@@ -258,149 +299,18 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
   background: var(--accent-green);
   color: var(--bg-canvas);
 }
-.btn-ghost {
-  background: var(--bg-panel);
-  color: var(--text-primary);
-  border: 1px solid var(--border-strong);
-}
 
 .meta-line {
   font-size: 12px;
   color: var(--text-tertiary);
 }
 
-/* Prediction panel */
-.prediction {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--r-lg);
-  padding: var(--s-7);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-6);
-}
-.pred-head {
-  display: flex; justify-content: space-between; align-items: center;
-}
-.pred-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-tertiary);
-}
-.pred-demo {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--accent-green);
-}
-.match-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-}
-.match-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-tertiary);
-  margin: var(--s-2) 0 0;
-}
-.legend {
-  display: flex;
-  align-items: center;
-  gap: var(--s-5);
-}
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-.legend-swatch {
-  width: 8px; height: 8px; border-radius: 2px;
-}
-.swatch-home { background: var(--accent-green); }
-.swatch-draw { background: var(--accent-muted); }
-.swatch-away { background: var(--accent-amber); }
-
-/* Stacked probability bar */
-.stack-bar {
-  display: flex;
-  width: 100%;
-  height: 8px;
-  border-radius: var(--r-sm);
-  overflow: hidden;
-  background: var(--bg-elevated);
-}
-.seg-home  { background: var(--accent-green); }
-.seg-draw  { background: var(--accent-muted); }
-.seg-away  { background: var(--accent-amber); }
-
-.pred-divider {
-  height: 1px;
-  background: var(--border-subtle);
-}
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-}
-.stat-row span {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-primary);
-}
-.stat-row .agree { color: var(--accent-green); }
-
-/* =========================================================
-   Engine Cards — Dixon-Coles × ELO × Bayesian
-   ========================================================= */
-.engines {
-  padding: 0 120px;
-}
-.engines-panel {
-  display: grid;
-  grid-template-columns: 1fr 1px 1fr 1px 1fr;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--r-lg);
-}
-.engine-divider {
-  background: var(--border-subtle);
-  width: 1px;
-  align-self: stretch;
-}
-.engine-card {
-  padding: var(--s-7);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-}
-.engine-tag {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--accent-green);
-}
-.engine-name {
-  font-family: var(--font-mono);
-  font-size: 15px;
-  font-weight: 600;
-  margin: 0;
-}
-.engine-desc {
-  font-size: 12px;
-  line-height: 1.66;
-  color: var(--text-secondary);
-  margin: 0;
-}
 
 /* =========================================================
    Reports + PWA — 4-row table on the left, install card on the right
    ========================================================= */
 .reports-section {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: var(--s-7);
-  padding: var(--s-12) 120px;
+  padding: 0 120px var(--s-12);
 }
 .reports-panel,
 .pwa-card {
@@ -431,142 +341,103 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
   color: var(--text-tertiary);
 }
 
-.report-row {
-  display: flex;
-  align-items: center;
-  gap: var(--s-5);
-  padding: var(--s-4) 0;
+/* ---- 历史预测归档: 月份一级菜单 + 按日期的报告清单 ---- */
+.archive-months {
+  display: flex; flex-wrap: wrap; gap: var(--s-2);
+  padding-bottom: var(--s-4);
+  border-bottom: 1px solid var(--border-subtle);
 }
-.report-row + .report-row { border-top: 1px solid var(--border-subtle); }
-.report-date {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-tertiary);
-  width: 48px; flex-shrink: 0;
-}
-.report-tag {
-  font-size: 11px;
-  font-weight: 500;
+.archive-month {
+  font-family: var(--font-mono); font-size: 12px;
   color: var(--text-secondary);
-  width: 64px; flex-shrink: 0;
+  background: var(--bg-chip);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-sm);
+  padding: 5px 12px; cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
 }
-.report-title {
-  font-size: 13px;
-  color: var(--text-primary);
-  flex: 1; min-width: 0;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+.archive-month:hover { color: var(--text-primary); border-color: var(--border-strong); }
+.archive-month.active {
+  color: var(--bg-canvas); background: var(--accent-green);
+  border-color: var(--accent-green); font-weight: 600;
 }
-.report-status {
-  font-size: 11px;
-  font-weight: 500;
+.archive-month .cnt { opacity: .62; margin-left: 6px; font-size: 11px; }
+.archive-summary {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-tertiary);
+  padding: var(--s-3) 0 var(--s-1);
 }
-.report-status.published { color: var(--accent-green); }
-.report-status.queued    { color: var(--accent-amber); font-family: var(--font-mono); }
-.report-status.archived  { color: var(--text-tertiary); }
+.archive-list {
+  display: flex; flex-direction: column;
+  max-height: 440px; overflow-y: auto;
+  scrollbar-width: thin;
+}
+.archive-day {
+  display: flex; align-items: center; gap: var(--s-4);
+  padding: var(--s-3) 0;
+}
+.archive-day + .archive-day { border-top: 1px solid var(--border-subtle); }
+.archive-day.is-today .archive-day-date { color: var(--accent-green); }
+.archive-day-date {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-secondary);
+  width: 52px; flex-shrink: 0;
+}
+.archive-day-wd {
+  font-size: 11px; color: var(--text-tertiary);
+  width: 28px; flex-shrink: 0;
+}
+.archive-links { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; }
+.archive-link {
+  font-size: 11px; color: var(--text-secondary); text-decoration: none;
+  background: var(--bg-chip); border: 1px solid var(--border-subtle);
+  border-radius: 999px; padding: 3px 10px; white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.archive-link:hover { color: var(--text-primary); border-color: var(--border-strong); }
+.archive-link.key { color: var(--accent-green); border-color: rgba(60,207,78,.35); }
+.archive-link.key:hover { border-color: var(--accent-green); }
+.archive-global {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding-top: var(--s-4); margin-top: var(--s-2);
+  border-top: 1px solid var(--border-subtle);
+}
 
-/* PWA card */
+/* PWA 安装条 — 通栏细条 (不再与归档并排, 避免右侧大片空白) */
+.pwa-section { padding: 0 120px var(--s-12); }
 .pwa-card {
   display: flex;
-  flex-direction: column;
-  gap: var(--s-5);
-}
-.pwa-icon {
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--r-md);
-}
-.pwa-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-}
-.pwa-desc {
-  font-size: 13px;
-  line-height: 1.62;
-  color: var(--text-secondary);
-  margin: 0;
-}
-.pwa-status {
-  display: inline-flex;
   align-items: center;
-  gap: var(--s-3);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--accent-green);
-}
-.pwa-status .dot {
-  width: 6px; height: 6px; border-radius: var(--r-pill);
-  background: var(--accent-green);
-}
-.pwa-install {
-  height: 42px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--accent-green);
-  color: var(--bg-canvas);
-  border-radius: var(--r-md);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* =========================================================
-   Cross check — 6 play types + 2 CTAs
-   ========================================================= */
-.cross-check {
-  padding: 0 120px var(--s-12);
-}
-.cross-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  align-items: center;
-  gap: var(--s-9);
-  padding: var(--s-9);
+  gap: var(--s-6);
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-lg);
+  padding: var(--s-6) var(--s-7);
 }
-.cross-copy {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-5);
-  min-width: 0;
-}
-.cross-chip {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--accent-green);
-}
-.cross-title {
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
-}
-.cross-desc {
-  font-size: 13px;
-  line-height: 1.62;
-  color: var(--text-secondary);
-  margin: 0;
-}
-.play-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-}
-.play-chip {
-  padding: 6px var(--s-4);
-  border-radius: var(--r-sm);
+.pwa-icon {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
   background: var(--bg-chip);
   border: 1px solid var(--border-subtle);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-secondary);
+  border-radius: var(--r-md);
 }
-.cross-actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
+.pwa-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--s-2); }
+.pwa-title { font-size: 15px; font-weight: 600; margin: 0; }
+.pwa-desc { font-size: 12px; line-height: 1.55; color: var(--text-secondary); margin: 0; }
+.pwa-status {
+  display: inline-flex; align-items: center; gap: var(--s-3);
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--accent-green); flex-shrink: 0;
 }
-.cross-actions .btn { width: 100%; justify-content: center; }
+.pwa-status .dot { width: 6px; height: 6px; border-radius: var(--r-pill); background: var(--accent-green); }
+.pwa-install {
+  flex-shrink: 0;
+  height: 38px; padding: 0 var(--s-6);
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--accent-green); color: var(--bg-canvas);
+  border-radius: var(--r-md); font-size: 13px; font-weight: 600;
+}
 
 /* =========================================================
    Footer
@@ -613,24 +484,25 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
    ========================================================= */
 @media (max-width: 1100px) {
   .hero,
-  .engines,
   .reports-section,
-  .cross-check,
+  .pwa-section,
   .footer { padding-left: var(--s-9); padding-right: var(--s-9); }
-  .hero { grid-template-columns: 1fr; }
-  .reports-section { grid-template-columns: 1fr; }
-  .cross-panel { grid-template-columns: 1fr; }
-  .engines-panel { grid-template-columns: 1fr; }
-  .engine-divider { display: none; }
+  .hero { grid-template-columns: 1fr; gap: var(--s-9); }
+  .hero-stats { max-width: 420px; }
 }
 @media (max-width: 640px) {
   .topbar { padding: 0 var(--s-5); }
   .ticker { padding: 0 var(--s-5); }
-  .hero, .engines, .reports-section, .cross-check, .footer {
+  .hero, .reports-section, .pwa-section, .footer {
     padding-left: var(--s-5); padding-right: var(--s-5);
   }
   .headline { font-size: 32px; line-height: 1.3; }
   .cta-row { flex-wrap: wrap; }
+  .hero-stats { max-width: none; }
+  .hs-num { font-size: 24px; }
+  .pwa-card { flex-wrap: wrap; gap: var(--s-4); }
+  .pwa-status { order: 3; }
+  .pwa-install { width: 100%; }
 }
 </style>
 </head>
@@ -690,7 +562,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
     <div class="hero-copy">
       <span class="engine-chip">
         <span class="dot"></span>
-        <span>DIXON-COLES × ELO × BAYESIAN MARKET</span>
+        <span>DIXON-COLES × ELO × 贝叶斯市场</span>
       </span>
       <h1 class="headline">每天 4 次模型研判，&#10;开赛前看清每一场。</h1>
       <p class="subline">足球大模型 · 每日预测与复盘。Dixon-Coles 比分模型 + ELO 实力评级 + 贝叶斯市场融合，早盘 / 复盘 / 午盘 / 终盘四个节点自动产出报告。</p>
@@ -703,94 +575,49 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
       <span class="meta-line">6 种玩法覆盖 · 每日 4 次更新 · 报告自动生成，无需人工维护</span>
     </div>
 
-    <!-- Prediction panel — right column -->
-    <aside class="prediction" aria-label="今日终盘预测示例">
-      <div class="pred-head">
-        <span class="pred-label">TODAY · 终盘预测 21:00</span>
-        <span class="pred-demo">示例 DEMO</span>
+    <!-- 数据档案概览 — 数字由 files.js 实时统计, 取不到就留着占位符 -->
+    <aside class="hero-stats" aria-label="数据档案概览">
+      <div class="hs-head">
+        <span class="hs-chip">DATA ARCHIVE</span>
+        <span class="hs-live"><span class="dot"></span>已收录</span>
       </div>
-      <div>
-        <p class="match-title">曼彻斯特城 vs 阿森纳</p>
-        <p class="match-meta">英超 · 第 5 轮 · ELO 1874 : 1856</p>
+      <div class="hs-grid">
+        <div class="hs-item">
+          <span class="hs-num" id="hs-reports">—</span>
+          <span class="hs-label">累计报告</span>
+        </div>
+        <div class="hs-item">
+          <span class="hs-num" id="hs-days">—</span>
+          <span class="hs-label">覆盖天数</span>
+        </div>
       </div>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-swatch swatch-home"></span>主胜 47.2%</span>
-        <span class="legend-item"><span class="legend-swatch swatch-draw"></span>平局 26.8%</span>
-        <span class="legend-item"><span class="legend-swatch swatch-away"></span>客胜 26.0%</span>
-      </div>
-      <!-- Stacked probability bar; widths sum to 100% -->
-      <div class="stack-bar" role="img" aria-label="胜平负概率分布 47.2 / 26.8 / 26.0">
-        <span class="seg-home" style="width:47.2%"></span>
-        <span class="seg-draw" style="width:26.8%"></span>
-        <span class="seg-away" style="width:26.0%"></span>
-      </div>
-      <div class="pred-divider"></div>
-      <div class="stat-row">
-        <span>O2.5 大 58.4%</span>
-        <span>BTTS 是 54.1%</span>
-        <span class="agree">一致度 82/100</span>
+      <div class="hs-rows">
+        <div class="hs-row"><span class="hs-k">最新一期</span><span class="hs-v" id="hs-latest">—</span></div>
+        <div class="hs-row"><span class="hs-k">起始日期</span><span class="hs-v" id="hs-first">—</span></div>
+        <div class="hs-row"><span class="hs-k">覆盖范围</span><span class="hs-v">五大联赛 + 欧冠</span></div>
       </div>
     </aside>
   </section>
 
-  <!-- =================== Engine Cards =================== -->
-  <section class="engines" aria-label="三模型引擎">
-    <div class="engines-panel">
-      <article class="engine-card">
-        <span class="engine-tag">ENGINE 01</span>
-        <h3 class="engine-name">Dixon-Coles</h3>
-        <p class="engine-desc">泊松修正比分模型，刻画进球强度与时间衰减</p>
-      </article>
-      <div class="engine-divider" aria-hidden="true"></div>
-      <article class="engine-card">
-        <span class="engine-tag">ENGINE 02</span>
-        <h3 class="engine-name">ELO Rating</h3>
-        <p class="engine-desc">球队实力动态评级，主客场与赛程强度加权</p>
-      </article>
-      <div class="engine-divider" aria-hidden="true"></div>
-      <article class="engine-card">
-        <span class="engine-tag">ENGINE 03</span>
-        <h3 class="engine-name">Bayesian Market</h3>
-        <p class="engine-desc">贝叶斯市场融合，用赔率信号校准模型先验</p>
-      </article>
+  <!-- =================== Reports + PWA =================== -->
+  <section class="reports-section" id="archive" aria-label="历史预测归档">
+    <div class="reports-panel">
+      <div class="reports-head">
+        <h2 class="reports-title">历史预测归档</h2>
+        <span class="reports-auto">AUTO · 全部日期自动收录</span>
+      </div>
+
+      <!-- 月份一级菜单: 出现跨月时自动生成 (数据来自 data/output/files.js) -->
+      <div class="archive-months" role="tablist" aria-label="按月份筛选"></div>
+      <div class="archive-summary"></div>
+      <div class="archive-list"></div>
+      <div class="archive-global"></div>
     </div>
   </section>
 
-  <!-- =================== Reports + PWA =================== -->
-  <section class="reports-section" aria-label="最近报告">
-    <div class="reports-panel">
-      <div class="reports-head">
-        <h2 class="reports-title">最近报告</h2>
-        <span class="reports-auto">AUTO · 链接随日期自动更新</span>
-      </div>
-
-      <div class="report-row">
-        <span class="report-date">09-07</span>
-        <span class="report-tag">早盘分析</span>
-        <span class="report-title">14 场赛事 · 胜平负 / 大小球 / 让球</span>
-        <span class="report-status published">已发布</span>
-      </div>
-      <div class="report-row">
-        <span class="report-date">09-07</span>
-        <span class="report-tag">赛后复盘</span>
-        <span class="report-title">昨日命中回测 · 模型偏差校正记录</span>
-        <span class="report-status published">已发布</span>
-      </div>
-      <div class="report-row">
-        <span class="report-date">09-07</span>
-        <span class="report-tag">午盘分析</span>
-        <span class="report-title">临场赔率异动追踪 · 市场信号复核</span>
-        <span class="report-status queued">18:00 生成</span>
-      </div>
-      <div class="report-row">
-        <span class="report-date">09-06</span>
-        <span class="report-tag">全部报告</span>
-        <span class="report-title">早盘 / 复盘 / 午盘 / 终盘 · 完整日报</span>
-        <span class="report-status archived">已归档</span>
-      </div>
-    </div>
-
-    <aside class="pwa-card" aria-label="安装到桌面">
+  <!-- =================== PWA 安装条 =================== -->
+  <section class="pwa-section" id="pwa" aria-label="安装到桌面">
+    <div class="pwa-card">
       <div class="pwa-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--accent-green)" aria-hidden="true">
           <rect x="7" y="2" width="10" height="20" rx="2.5"/>
@@ -798,11 +625,13 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
           <path d="M12 8V13M12 13L9.5 10.5M12 13L14.5 10.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-      <h3 class="pwa-title">装到手机桌面</h3>
-      <p class="pwa-desc">PWA 应用，免下载免商店，报告更新即时触达，赛前提醒不缺席。</p>
+      <div class="pwa-copy">
+        <h3 class="pwa-title">装到手机桌面</h3>
+        <p class="pwa-desc">PWA 应用，免下载免商店，报告更新即时触达，赛前提醒不缺席。</p>
+      </div>
       <span class="pwa-status"><span class="dot"></span>当前环境 · 支持安装</span>
       <button class="pwa-install" type="button">一键安装到桌面</button>
-    </aside>
+    </div>
   </section>
 
   <!-- =================== Footer =================== -->
@@ -819,10 +648,10 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
     </div>
     <div class="footer-meta">
       <nav class="footer-links" aria-label="页脚导航">
-        <a href="#latest">最新预测</a>
+        <a href="#archive">历史归档</a>
         <a href="#pwa">安装到桌面</a>
       </nav>
-      <span class="footer-status">ALL MODELS OPERATIONAL · SYNC 10:33</span>
+      <span class="footer-status">模型全部在线 · 同步 10:33</span>
     </div>
   </footer>
 
@@ -831,6 +660,7 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
 <script>
 (function(){
   var F = window.FOOT_FILES || { predictions: [], reviews: [], early: [], midday: [] };
+  var DATE_RE = /^\d{4}-\d{2}-\d{2}$/;   // 报告日期格式 (files.js 里是 YYYY-MM-DD)
   function pad(n){ return String(n).padStart(2,'0'); }
   var d = new Date();
   var today = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
@@ -838,80 +668,137 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
   var de = document.querySelector('.date');
   if(de) de.textContent = today + ' ' + WD + ' · UTC+8';
 
-  // 预测面板: 拉今日真实预测, 选有下注信号的场次, 否则第一场
-  var el = document.querySelector('.prediction');
-  if(el){
-    var demo = el.querySelector('.pred-demo');
-    fetch('data/output/predictions_' + today + '.json', {cache:'no-store'})
-      .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(preds){
-        if(!preds || !preds.length){ if(demo) demo.textContent = '今日暂无数据'; return; }
-        var p = null;
-        for(var i=0;i<preds.length;i++){ if(preds[i].bet_class === 'bet'){ p = preds[i]; break; } }
-        if(!p) p = preds[0];
-        var m = p.model || {};
-        var home = Math.round((m.home_win||0)*1000)/10;
-        var draw = Math.round((m.draw||0)*1000)/10;
-        var away = Math.round((m.away_win||0)*1000)/10;
-        var ou = Math.round((m.over_25||0)*1000)/10;
-        var btts = Math.round((m.btts||0)*1000)/10;
-        var pick = p.bet_pick || '观望';
-        var meta = (p.league_code||'') + ' · ELO ' + Math.round(p.elo_home||0) + ' : ' + Math.round(p.elo_away||0);
-        var h = '';
-        h += '<div class="pred-head"><span class="pred-label">TODAY · 终盘预测 21:00</span><span class="pred-demo">LIVE</span></div>';
-        h += '<div><p class="match-title">' + p.home_team + ' vs ' + p.away_team + '</p><p class="match-meta">' + meta + '</p></div>';
-        h += '<div class="legend"><span class="legend-item"><span class="legend-swatch swatch-home"></span>主胜 ' + home + '%</span><span class="legend-item"><span class="legend-swatch swatch-draw"></span>平局 ' + draw + '%</span><span class="legend-item"><span class="legend-swatch swatch-away"></span>客胜 ' + away + '%</span></div>';
-        h += '<div class="stack-bar" role="img" aria-label="胜平负概率"><span class="seg-home" style="width:' + home + '%"></span><span class="seg-draw" style="width:' + draw + '%"></span><span class="seg-away" style="width:' + away + '%"></span></div>';
-        h += '<div class="pred-divider"></div>';
-        h += '<div class="stat-row"><span>O2.5 大 ' + ou + '%</span><span>BTTS ' + btts + '%</span><span class="agree">' + pick + '</span></div>';
-        el.innerHTML = h;
-        el.style.cursor = 'pointer';
-        el.addEventListener('click', function(){ location.href = 'detail.html'; });
-      })
-      .catch(function(){ if(demo) demo.textContent = '今日暂无数据'; });
-  }
+  // 数据档案概览: 直接由 files.js 统计真实数字, 统计不出就保留占位符, 不编造
+  (function(){
+    var SRC = [
+      ['early', '早盘分析'], ['midday', '午盘分析'], ['reviews', '赛后复盘'],
+      ['review_analysis', '复盘分析'], ['predictions', '终盘预测']
+    ];
+    var byDate = {}, total = 0;
+    SRC.forEach(function(pair){
+      (F[pair[0]] || []).forEach(function(s){
+        if(!DATE_RE.test(s)) return;
+        (byDate[s] = byDate[s] || []).push(pair);
+        total++;
+      });
+    });
+    var dates = Object.keys(byDate).sort();
+    function put(id, v){ var e = document.getElementById(id); if(e) e.textContent = v; }
+    if(!dates.length) return;
+    var last = dates[dates.length - 1];
+    put('hs-reports', total);
+    put('hs-days', dates.length);
+    put('hs-first', dates[0]);
+    // 最新一期取当天"最靠后"的节点 (按 SRC 顺序, 终盘优先级最高)
+    var pick = byDate[last][byDate[last].length - 1];
+    put('hs-latest', last.slice(5) + ' · ' + pick[1]);
+  })();
 
-  // 报告列表: 真实链接 (预测/复盘/看板/存证)
+  // 历史预测归档: 月份一级菜单 + 全部日期的报告清单 (数据来自 data/output/files.js)
   var panel = document.querySelector('.reports-panel');
   if(panel){
-    var head = panel.querySelector('.reports-head');
-    var headHtml = head ? head.outerHTML : '';
-    var rows = '';
-    function row(dd, tag, title, st, cls, href){
-      var t = href ? ('<a href="' + href + '">' + title + '</a>') : title;
-      return '<div class="report-row"><span class="report-date">' + dd + '</span><span class="report-tag">' + tag + '</span><span class="report-title">' + t + '</span><span class="report-status ' + cls + '">' + st + '</span></div>';
+    var KINDS = [
+      { key:'predictions',     label:'终盘预测', cls:' key', url:function(s){ return 'data/output/predictions_' + s + '.html'; } },
+      { key:'reviews',         label:'赛后复盘', cls:'',     url:function(s){ return 'data/output/review_' + s + '.html'; } },
+      { key:'review_analysis', label:'复盘分析', cls:'',     url:function(s){ return 'data/output/review_analysis_' + s + '.html'; } },
+      { key:'early',           label:'早盘分析', cls:'',     url:function(s){ return 'data/output/analysis_morning_' + s + '.html'; } },
+      { key:'midday',          label:'午盘分析', cls:'',     url:function(s){ return 'data/output/analysis_midday_' + s + '.html'; } }
+    ];
+    var WD = ['周日','周一','周二','周三','周四','周五','周六'];
+
+    // 1) 汇总: 日期 -> 该日可用的报告种类
+    var byDate = {};
+    KINDS.forEach(function(k){
+      (F[k.key] || []).forEach(function(s){
+        if(!DATE_RE.test(s)) return;
+        (byDate[s] = byDate[s] || []).push(k);
+      });
+    });
+    // 2) 按月分组 (月份倒序, 月内日期倒序)
+    var byMonth = {};
+    Object.keys(byDate).sort().forEach(function(s){ (byMonth[s.slice(0,7)] = byMonth[s.slice(0,7)] || []).push(s); });
+    var months = Object.keys(byMonth).sort().reverse();
+    months.forEach(function(mo){ byMonth[mo].reverse(); });
+
+    var monthsBox  = panel.querySelector('.archive-months');
+    var summaryBox = panel.querySelector('.archive-summary');
+    var listBox    = panel.querySelector('.archive-list');
+    var globalBox  = panel.querySelector('.archive-global');
+
+    function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function countMonth(mo){ var t=0; byMonth[mo].forEach(function(ds){ t += byDate[ds].length; }); return t; }
+
+    function renderList(mo){
+      var out = '';
+      byMonth[mo].forEach(function(ds){
+        var p = ds.split('-');
+        var wd = WD[new Date(ds + 'T00:00:00+08:00').getDay()];
+        var links = '';
+        byDate[ds].forEach(function(k){
+          links += '<a class="archive-link' + k.cls + '" href="' + k.url(ds) + '">' + esc(k.label) + '</a>';
+        });
+        out += '<div class="archive-day' + (ds === today ? ' is-today' : '') + '">'
+             +     '<span class="archive-day-date">' + p[1] + '-' + p[2] + '</span>'
+             +     '<span class="archive-day-wd">' + wd + '</span>'
+             +     '<span class="archive-links">' + links + '</span>'
+             +   '</div>';
+      });
+      listBox.innerHTML = out || '<div class="archive-summary">该月暂无报告</div>';
+      summaryBox.textContent = mo.replace('-', ' 年 ') + ' 月 · ' + byMonth[mo].length + ' 天 · ' + countMonth(mo) + ' 份报告';
     }
-    if(F.predictions && F.predictions.indexOf(today) >= 0){ rows += row(pad(d.getMonth()+1)+'-'+pad(d.getDate()), '预测', '整合预测(汇总)', '已发布', 'published', 'data/output/predictions_' + today + '.html'); rows += row(pad(d.getMonth()+1)+'-'+pad(d.getDate()), '八维', '详细八维分析', '已发布', 'published', 'data/output/analysis_final_' + today + '.html'); }
-    if(F.reviews && F.reviews.indexOf(today) >= 0){ rows += row(pad(d.getMonth()+1)+'-'+pad(d.getDate()), '复盘', '今日赛后复盘', '已发布', 'published', 'data/output/review_' + today + '.html'); }
-    var y = new Date(d); y.setDate(y.getDate()-1);
-    var ys = y.getFullYear() + '-' + pad(y.getMonth()+1) + '-' + pad(y.getDate());
-    if(F.predictions && F.predictions.indexOf(ys) >= 0){ rows += row(pad(y.getMonth()+1)+'-'+pad(y.getDate()), '预测', '昨日终盘预测', '已归档', 'archived', 'data/output/predictions_' + ys + '.html'); }
-    rows += row('—', '看板', '复盘看板 · 全维度对账', '已发布', 'published', 'data/output/复盘看板.html');
-    rows += row('—', '存证', '透明账本 · 哈希链存证', '已发布', 'published', 'data/output/transparency.html');
-    panel.innerHTML = headHtml + rows;
+
+    if(!months.length){
+      summaryBox.textContent = '暂无归档数据';
+    } else {
+      monthsBox.innerHTML = months.map(function(mo){
+        return '<button type="button" class="archive-month" data-month="' + mo + '" role="tab">'
+             +   esc(mo) + '<span class="cnt">' + countMonth(mo) + '</span></button>';
+      }).join('');
+      var tabs = monthsBox.querySelectorAll('.archive-month');
+      var select = function(mo){
+        for(var i=0;i<tabs.length;i++){ tabs[i].classList.toggle('active', tabs[i].getAttribute('data-month') === mo); }
+        renderList(mo);
+      };
+      for(var i=0;i<tabs.length;i++){
+        tabs[i].addEventListener('click', function(){ select(this.getAttribute('data-month')); });
+      }
+      select(months[0]);
+    }
+
+    // 全局入口 (与日期无关)
+    globalBox.innerHTML = '<a class="archive-link" href="data/output/复盘看板.html">复盘看板 · 全维度对账</a>'
+                        + '<a class="archive-link" href="data/output/transparency.html">透明账本 · 哈希链存证</a>';
   }
 
   // 时间槽状态: 按当前时刻标注 READY/QUEUED
   var cells = document.querySelectorAll('.ticker-cell');
-  var slots = [[900],[1000],[1800],[2100]];
+  // 与文件清单的报告类型一一对应: 早盘 09:00 / 复盘 10:00 / 午盘 18:00 / 终盘 21:00
+  var slots = [
+    { at: 900,  key: 'early' },
+    { at: 1000, key: 'reviews' },
+    { at: 1800, key: 'midday' },
+    { at: 2100, key: 'predictions' }
+  ];
   var hm = d.getHours()*100 + d.getMinutes();
   for(var i=0;i<cells.length && i<slots.length;i++){
     var st = cells[i].querySelector('.ticker-status');
     if(!st) continue;
-    var ok = hm >= slots[i][0];
-    st.textContent = ok ? 'READY' : 'QUEUED';
-    st.className = 'ticker-status ' + (ok ? 'ready' : 'queued');
+    // 有当日报告=READY; 已到点但报告没出来=生成中; 未到点=QUEUED
+    var has = (F[slots[i].key] || []).indexOf(today) >= 0;
+    var late = hm >= slots[i].at;
+    st.textContent = has ? 'READY' : (late ? '生成中' : 'QUEUED');
+    st.className = 'ticker-status ' + (has ? 'ready' : (late ? 'building' : 'queued'));
   }
 
   // 页脚状态
   var fs = document.querySelector('.footer-status');
-  if(fs) fs.textContent = 'ALL MODELS OPERATIONAL · SYNC ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  if(fs) fs.textContent = '模型全部在线 · 同步 ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
 
-  // CTA 按钮 → 真实链接
+  // CTA → 最新一期终盘预测 (清单为空才退回 detail.html)
+  var preds = F.predictions || [];
+  var ctaHref = preds.length ? ('data/output/predictions_' + preds[preds.length - 1] + '.html') : 'detail.html';
   var btns = document.querySelectorAll('.btn-primary');
-  for(var bi=0; bi<btns.length; bi++){ btns[bi].addEventListener('click', function(){ location.href = 'detail.html'; }); }
-  var ghosts = document.querySelectorAll('.btn-ghost');
-  if(ghosts[0]) ghosts[0].addEventListener('click', function(){ location.href = 'archive.html'; });
+  for(var bi=0; bi<btns.length; bi++){ btns[bi].addEventListener('click', function(){ location.href = ctaHref; }); }
 })();
 </script>
 </body>

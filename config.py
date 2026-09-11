@@ -57,6 +57,12 @@ SECOND_TIER_LEAGUES = ["PD2", "ELC", "BL2", "SB", "FL2"]
 # 预测/下注范围: 只做五大联赛+欧冠, 其他一律不参与 (2026-09-09 用户拍板)
 PREDICT_LEAGUES = list(FOCUS_LEAGUES) + ["UCL"]
 
+# football-data.org v4 的联赛代码 (注意: 欧冠在那边叫 CL, 我们内部叫 UCL)
+# 2026-09-11 加: /v4/matches 不传 competitions 参数会返回**全世界所有比赛**
+# (含 U19 青年队/预备队/女足/爱沙尼亚/香港等), 之前每天误拉 200~1300 场,
+# 是赛果数据污染和青年队误结算的根源。传了之后服务端就只返回这些联赛。
+FOOTBALL_DATA_COMPETITIONS = "PL,PD,BL1,SA,FL1,CL"
+
 # 投注资金池 (元) — 看好栏建议注额 = 资金池 × 凯利 ÷ 4
 BANKROLL = float(get("BANKROLL", "1000"))
 

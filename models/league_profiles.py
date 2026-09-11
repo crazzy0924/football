@@ -24,12 +24,12 @@ class LeagueProfile:
     code: str
     region: str = "europe"
 
-    # Goal characteristics
+    # 进球特征
     avg_home_goals: float = 1.50
     avg_away_goals: float = 1.15
     avg_total_goals: float = 2.65
 
-    # Win/draw/loss distribution
+    # 胜平负分布
     home_win_rate: float = 0.45
     draw_rate: float = 0.25
     away_win_rate: float = 0.30
@@ -66,7 +66,7 @@ class LeagueProfile:
 # ============================================================
 
 _HARDCODED: dict[str, LeagueProfile] = {
-    # ---- Big 5 European Leagues ----
+    # ---- 五大联赛 (手写兜底值, 实测版见 league_profiles.json) ----
     "PL": LeagueProfile(
         name="Premier League", code="PL", region="europe",
         avg_home_goals=1.62, avg_away_goals=1.22, avg_total_goals=2.84,

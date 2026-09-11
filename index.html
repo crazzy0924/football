@@ -649,8 +649,8 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
     </div>
     <div class="footer-meta">
       <nav class="footer-links" aria-label="页脚导航">
-        <a href="my_preds/latest.html">克劳德交叉预测</a>
         <a href="#archive">历史归档</a>
+        <a href="my_preds/latest.html">克劳德交叉预测</a>
         <a href="#pwa">安装到桌面</a>
       </nav>
       <span class="footer-status">模型全部在线 · 同步 10:33</span>
@@ -802,6 +802,10 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
   var btns = document.querySelectorAll('.btn-primary');
   for(var bi=0; bi<btns.length; bi++){ btns[bi].addEventListener('click', function(){ location.href = ctaHref; }); }
 })();
+</script>
+<script>
+// 克劳德交叉预测入口: 每次加载追加时间戳, 彻底绕过缓存
+(function(){var ts=Date.now();var a=document.querySelectorAll('a[href^="my_preds/latest.html"]');for(var i=0;i<a.length;i++){a[i].href='my_preds/latest.html?t='+ts;}})();
 </script>
 </body>
 </html>

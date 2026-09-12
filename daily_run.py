@@ -173,9 +173,11 @@ def cmd_predict(args) -> None:
     except Exception as e:
         print("[警告] FPL 伤停采集跳过: " + str(e))
 
-    # 3c) SofaScore 盘口 (午盘 + 终盘; 真实动态大小球阶梯 + 1X2 + 亚盘, Playwright+Edge 过反爬)
-    # 2026-09-11: 午盘(18:00)也抓一次 —— 临场盘口更准, 且终盘若抓取失败仍有午盘快照兜底。
-    if args.stage in ("midday", "final"):
+    # 3c) SofaScore 盘口 (早盘 + 午盘 + 终盘; 真实动态大小球阶梯 + 1X2 + 亚盘 + 双进球)
+    # 2026-09-11: 午盘(18:00)也抓 —— 临场盘口更准, 终盘失败还有午盘兜底。
+    # 2026-09-12: 早盘(09:00)也抓 —— 实测当天早盘 21 场只有 12 场有盘口(57%),
+    #             因为早盘用的是上一班的旧快照; 且早/午/终三个时点才看得出盘口移动。
+    if args.stage in ("morning", "midday", "final"):
         try:
             print("[盘口] SofaScore 抓取...")
             _run([sys.executable, "pipeline/odds_fetcher_sofascore.py",

@@ -120,7 +120,9 @@ def build_evidence_packet(prediction: dict, intel_text: str = "") -> str:
         lines.append(f"Model-Market Edge: {edge_str}")
         edge_dir = value.get("best_direction", "none")
         if edge_dir != "none":
-            lines.append(f"最强信号: {edge_dir} (Kelly {value.get('kelly', 0):.2%})")
+            # 2026-09-12: 去掉 Kelly 与"最强信号"措辞。
+            # 样本外 ROI 回测证明三个维度对赌真实盘口全为负期望, 不应再给下注暗示。
+            lines.append(f"模型-市场价值方向: {edge_dir} (仅供参考, 不构成投注建议)")
 
     std = prediction.get("standings") or {}
     sh = std.get("home")

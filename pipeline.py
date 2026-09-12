@@ -390,6 +390,11 @@ def cmd_predict(args):
             # token 打分匹配 (2026-09-11): 子串匹配会漏掉 "Man United" vs
             # "Manchester United" 这类同队异名, 导致该场拿不到大小球盘口。
             from pipeline.team_names import canonical_of as _canon
+            import os as _os
+            _dbg = bool(_os.environ.get("DEBUG_OU_MATCH"))
+            if _dbg:
+                print("  [盘口] %r vs %r | canon=%r / %r | 库内 %d 场" % (
+                    home, away, _canon(home), _canon(away), len(_sofascore)))
             _best, _best_sc = None, 0
             for _sk, _sv in _sofascore.items():
                 _sh = _sv.get("home") or ""
@@ -397,6 +402,10 @@ def cmd_predict(args):
                 if not _sh or not _sa:
                     continue
                 _sc = _team_score(home, _sh) + _team_score(away, _sa)
+                if _dbg and (_team_score(home, _sh) or _team_score(away, _sa)):
+                    print("      候选 %r vs %r | score=%d canon=%r/%r | match_h=%s match_a=%s" % (
+                        _sh, _sa, _sc, _canon(_sh), _canon(_sa),
+                        _canon(home) == _canon(_sh), _canon(away) == _canon(_sa)))
                 # 总表优先 (2026-09-11): 两边归到同一规范名 → 直接压倒性加分。
                 # 表由 tools/build_team_map.py 生成且人工确认过, 比 token 打分可靠。
                 if _canon(home) and _canon(home) == _canon(_sh):
@@ -405,9 +414,21 @@ def cmd_predict(args):
                     _sc += 10
                 if _sc > _best_sc:
                     _best_sc, _best = _sc, _sv
-            # 两侧各至少命中一个 token 才认 (避免只凭一个词错配到别的队)
-            if _best and _team_score(home, _best.get("home") or "") >= 1 \
-                     and _team_score(away, _best.get("away") or "") >= 1:
+            if _dbg:
+                print("      选中: %r vs %r (score=%d)" % (
+                    (_best or {}).get("home"), (_best or {}).get("away"), _best_sc))
+            # 两侧都要能证明是同一队。**token 命中 或 总表判同队, 二者之一即可**。
+            # 2026-09-11 修复: 原守卫只认 token, 于是 Rennes ↔ Stade Rennais
+            # (两队无任何共享 token, 只能靠总表确认) 会被拦下 —— 匹配明明选中了
+            # 正确的场次(score=21), 却在取盘口前被跳过, 表现为"这一场莫名没盘口"。
+            def _same_team(ours: str, _theirs: str) -> bool:
+                if _team_score(ours, _theirs) >= 1:
+                    return True
+                _c1, _c2 = _canon(ours), _canon(_theirs)
+                return bool(_c1 and _c2 and _c1 == _c2)
+
+            if _best and _same_team(home, _best.get("home") or "") \
+                     and _same_team(away, _best.get("away") or ""):
                 _sv = _best
                 _so = _sv.get("odds") or {}
                 if (not m.get("odds")) and _so.get("home") and _so.get("away"):

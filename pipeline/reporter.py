@@ -497,20 +497,18 @@ def _build_match_card(
     non_focus = league_code not in ("PL", "PD", "BL1", "SA", "FL1", "UCL")
     secondary_bet = False
 
-    # 推荐等级 (纪律: 冲突场/非五大场一律skip, 不得绿色高亮不得计入推荐)
-    if conflict or (non_focus and not secondary_bet):
-        recommendation = "skip"
-    elif confidence == "high" and not no_bet:
-        recommendation = "recommended"
-    elif confidence in ("medium", "high") or ((cold_start or cross_league) and confidence != "none"):
-        recommendation = "reference"
-    else:
-        recommendation = "skip"
-
-    # Kelly
-    kelly_val = value.get("kelly", 0) or 0
-    kelly_text = f"{kelly_val:.2%}" if kelly_val > 0 else None
-    kelly_class = "pos" if kelly_val > 0 else "neg"
+    # ── 下注信号已撤除 (2026-09-12, 用户拍板) ────────────────────────────
+    # 依据: 样本外 ROI 回测 (tools/backtest_roi.py, 生产同款 MLE 拟合, 1752 场)
+    #   1X2    ROI -3.4% ~ -4.8%
+    #   大小球  ROI -0.3% ~ -6.3%
+    #   亚盘    ROI -2.2% ~ -2.3%  ← 恒定等于 Pinnacle 抽水, 即与市场等价
+    # 三个维度对赌真实盘口全部为负期望。继续显示注额与 Kelly 只会制造虚假信心。
+    # 结论: 本系统定位为「分析展示」, 不是下注系统。
+    # 下面这些字段保留仅为模板兼容, 一律置为空信号。
+    recommendation = "skip"
+    kelly_val = 0.0
+    kelly_text = None
+    kelly_class = "neg"
 
     # Edge
     edges = {
@@ -522,41 +520,17 @@ def _build_match_card(
     best_edge_val = edges[best_edge_dir]
     edge_pct = f"{best_edge_val:.1%}" if best_edge_val > 0 else None
 
-    # 一致性裁决 (纪律: 三向冲突不出推荐): 方向-比分冲突 → 整场强制降级, 不显示看好/建议金额
-    # 看好方向 (下注栏, CLAUDE.md 纪律): edge≥5% + Kelly≥1% + 非冷启动 + 非无信号 + 仅五大联赛
+    # 看好方向/建议注额已撤除 (2026-09-12): 见上方说明, 三者 ROI 全为负。
+    # 这里只保留"为什么不下注"的可读说明, 不再给方向与金额。
     no_signal = p.get("no_signal", False)
     if conflict:
         bet_pick = "结论不可用(方向-比分冲突)"
         bet_class = "conflict"
-    elif non_focus and not secondary_bet:
+    elif non_focus:
         bet_pick = "非五大仅观察"
         bet_class = "skip"
-    elif no_signal:
-        bet_pick = "无信号"
-        bet_class = "skip"
-    elif cold_start:
-        bet_pick = "冷启动不碰"
-        bet_class = "cold"
-    elif cross_league:
-        bet_pick = "跨级先验不碰"
-        bet_class = "cold"
-    elif best_edge_val >= 0.05 and kelly_val >= 0.01:
-        dir_cn = {"home": "主胜", "draw": "平局", "away": "客胜"}.get(best_edge_dir, "观望")
-        dir_odds = odds_data.get(best_edge_dir) if odds_data else None
-        stake = None
-        try:
-            from config import BANKROLL
-            stake = BANKROLL * kelly_val / 4.0  # 1/4 凯利
-        except Exception:
-            pass
-        stake_txt = f" 建议¥{stake:.0f}" if stake and stake >= 1 else ""
-        if dir_odds:
-            bet_pick = f"{dir_cn} @{dir_odds:.2f} (凯利{kelly_val:.0%}){stake_txt}"
-        else:
-            bet_pick = f"{dir_cn} (凯利{kelly_val:.0%}){stake_txt}"
-        bet_class = "bet"
     else:
-        bet_pick = "观望"
+        bet_pick = "仅供分析 · 非投注建议"
         bet_class = "skip"
 
     if divergence_note and bet_class == "bet":

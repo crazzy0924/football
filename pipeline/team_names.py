@@ -499,6 +499,26 @@ def canonical_of(name: str) -> str | None:
     for cand in (key.title(), key.lower()):
         if cand in idx:
             return idx[cand]
+    # token 兜底 (2026-09-12): 赛果源会带后缀 —— "Stade Rennais FC 1901" 而表里是
+    # "Stade Rennais", 精确匹配直接漏掉, 导致该场永远结算不了。
+    # 只认"唯一最高分", 并列就放弃 (宁可漏, 不可错配)。
+    try:
+        tk = team_tokens(key)
+    except Exception:
+        return None
+    if not tk:
+        return None
+    best, bs, tie = None, 0, False
+    for k, v in idx.items():
+        if not k:
+            continue
+        s = len(tk & team_tokens(k))
+        if s > bs:
+            bs, best, tie = s, v, False
+        elif s == bs and s > 0:
+            tie = True
+    if bs >= 1 and not tie:
+        return best
     return None
 
 

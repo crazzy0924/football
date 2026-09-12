@@ -277,16 +277,21 @@ def main():
                                 continue
                             s = team_score(nm, r['sofascore'])
                             if s >= 1:
-                                agg[r['canonical']] = max(agg.get(r['canonical'], 0), s)
-                        items = sorted(agg.items(), key=lambda kv: -kv[1])
+                                k = r['canonical']
+                                # 同时记住"命中它的那个 SofaScore 名", 后面做字符门槛用
+                                if k not in agg or s > agg[k][0]:
+                                    agg[k] = (s, r['sofascore'])
+                        items = sorted(agg.items(), key=lambda kv: -kv[1][0])
                         if items:
-                            if len(items) == 1 or items[0][1] > items[1][1]:
+                            if len(items) == 1 or items[0][1][0] > items[1][1][0]:
                                 pick = items[0][0]
                             else:
                                 pick = max((k for k, _ in items), key=lambda cc: char_sim(nm, cc))
-                            # 赛果侧名字五花八门, 单靠 token 会出 "Bristol City -> Man City"
-                            # 这种(只共享 city)的错配 → 再加一道字符相似度门槛。
-                            if char_sim(nm, pick) >= 0.6:
+                            # 字符门槛要比"命中的 SofaScore 名", 不能比规范名 ——
+                            # 2026-09-12: 赛果源会带后缀("Stade Rennais FC 1901"), 而规范名
+                            # 是简称("Rennes"), 拿规范名比会因相似度过低被判"认不出",
+                            # 于是自登记成自身, 该场永远结算不了。
+                            if char_sim(nm, agg[pick][1]) >= 0.6:
                                 c = pick
                     if not c and nm in canon:
                         c = nm

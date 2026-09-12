@@ -74,7 +74,9 @@ def settle_ah(h, a, line, side, odds):
 
 
 def main():
-    test = norm_season(sys.argv[1]) if len(sys.argv) > 1 else '2526'
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    use_mle = '--mle' in sys.argv
+    test = norm_season(args[0]) if args else '2526'
     per = defaultdict(list)
     for lg, code in CSV_CODE.items():
         for fp in sorted(glob.glob(os.path.join(HIST, code + '_*'))):
@@ -114,9 +116,14 @@ def main():
             m2 = dict(m)
             m2['league_code'] = lg
             (te if m['season'] == test else tr).append(m2)
-    print('训练 %d 场, 测试 %d 场' % (len(tr), len(te)))
+    print('训练 %d 场, 测试 %d 场  拟合方式=%s' % (len(tr), len(te), 'MLE(生产同款)' if use_mle else 'fit_simple(解析)'))
     dc = DixonColesModel()
-    dc.fit_simple(tr)
+    if use_mle:
+        # 2026-09-11: 生产环境用 MLE, 而首跑用的是 fit_simple —— 可能低估了模型。
+        # 这个开关就是为了消除这个怀疑: 换成生产同款拟合再跑一次。
+        dc.fit_mle(tr)
+    else:
+        dc.fit_simple(tr)
     base = {}
     for lg in CSV_CODE:
         g = [m for m in tr if m['league_code'] == lg]

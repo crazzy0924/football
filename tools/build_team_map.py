@@ -73,6 +73,14 @@ CURATED = {
     'Fenerbahçe': '费内巴切',
     'Sabah FK': '萨巴赫',
     'LASK': 'LASK Linz',
+    # 2026-09-13: SofaScore 把这个队叫 "Real Racing Club", 但它没有地名 token,
+    # 必须手工钉死, 否则会被 racing 带到 Lens 去。
+    'Real Racing Club': 'Santander',
+    # 赛果源给的是全称, 也是零/单 token, 一并钉死
+    'Real Racing Club de Santander': 'Santander',
+    'Racing Santander': 'Santander',
+    # Lens 在我方有两份规范名(五大用 Lens, 欧冠用 Racing Club de Lens), 钉死归一口径
+    'Racing Club de Lens': 'Lens',
     'NEC Nijmegen': 'Nijmegen',
     'Viking FK': 'Viking',
     'Mjällby AIF': '米亚尔比',
@@ -278,20 +286,27 @@ def main():
                             s = team_score(nm, r['sofascore'])
                             if s >= 1:
                                 k = r['canonical']
-                                # 同时记住"命中它的那个 SofaScore 名", 后面做字符门槛用
-                                if k not in agg or s > agg[k][0]:
-                                    agg[k] = (s, r['sofascore'])
-                        items = sorted(agg.items(), key=lambda kv: -kv[1][0])
+                                # 同一个规范名可能对应多个 SofaScore 名(Santander 与
+                                # Real Racing Club 都是它)。全记下来, 门槛时取最像的那个,
+                                # 只留一个会挑错参照物。
+                                if k not in agg:
+                                    agg[k] = [s, [r['sofascore']]]
+                                else:
+                                    agg[k][0] = max(agg[k][0], s)
+                                    agg[k][1].append(r['sofascore'])
+                        items = sorted(((k, v[0], v[1]) for k, v in agg.items()),
+                                       key=lambda x: -x[1])
                         if items:
-                            if len(items) == 1 or items[0][1][0] > items[1][1][0]:
+                            if len(items) == 1 or items[0][1] > items[1][1]:
                                 pick = items[0][0]
                             else:
-                                pick = max((k for k, _ in items), key=lambda cc: char_sim(nm, cc))
+                                pick = max((k for k, _, _ in items), key=lambda cc: char_sim(nm, cc))
                             # 字符门槛要比"命中的 SofaScore 名", 不能比规范名 ——
                             # 2026-09-12: 赛果源会带后缀("Stade Rennais FC 1901"), 而规范名
                             # 是简称("Rennes"), 拿规范名比会因相似度过低被判"认不出",
                             # 于是自登记成自身, 该场永远结算不了。
-                            if char_sim(nm, agg[pick][1]) >= 0.6:
+                            # 参照物取"最像 nm 的那个 SofaScore 名"
+                            if any(char_sim(nm, sn) >= 0.6 for sn in agg[pick][1]):
                                 c = pick
                     if not c and nm in canon:
                         c = nm

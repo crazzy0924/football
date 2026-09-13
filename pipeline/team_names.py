@@ -392,6 +392,11 @@ TEAM_STOP = frozenset({
     'fc', 'cf', 'sc', 'afc', 'sk', 'fk', 'ac', 'as', 'ss', 'cd', 'sv', 'us',
     'vfb', 'vfl', 'tsg', 'bsc', 'osc', 'club', 'de', 'cp', 'acf', 'ssc', 'rc',
     'real', 'stade', 'deportivo', 'olympique', 'atletico', 'athletic', 'sporting',
+    # 2026-09-13: racing 加入停用词。此前刻意保留(以为"Real Racing Club"要靠它识别),
+    # 结果造成跨国家错配: Racing Santander / Racing Club de Lens / Racing Strasbourg
+    # 全都含 racing → "Real Racing Club de Santander" 被归到 Lens。
+    # 真正有区分度的是 santander / lens 这些地名, 不是 racing。
+    'racing',
 })
 
 # 非拉丁字母显式转写 (NFKD 不会把 ø 拆成 o)

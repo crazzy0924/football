@@ -1,5 +1,5 @@
 {
-  "backtest_date": "2026-09-12",
+  "backtest_date": "2026-09-14",
   "folds": [
     {
       "test_season": "25-26",
@@ -74,13 +74,56 @@
           "hit_rate": 0.5121
         }
       }
+    },
+    {
+      "test_season": "26-27",
+      "n_matches": 146,
+      "n_candidates": 146,
+      "brier": 0.588,
+      "accuracy": 0.5274,
+      "thresholds": {
+        "5%": {
+          "bets": 30,
+          "pl": 0.08,
+          "roi": 0.0028,
+          "hit_rate": 0.3
+        },
+        "8%": {
+          "bets": 7,
+          "pl": 0.24,
+          "roi": 0.0348,
+          "hit_rate": 0.4286
+        },
+        "10%": {
+          "bets": 2,
+          "pl": 0.31,
+          "roi": 0.156,
+          "hit_rate": 1.0
+        },
+        "12%": {
+          "bets": 1,
+          "pl": 0.29,
+          "roi": 0.2859,
+          "hit_rate": 1.0
+        },
+        "15%": {
+          "bets": 0,
+          "pl": 0,
+          "roi": 0,
+          "hit_rate": 0
+        }
+      },
+      "ah_brier": 0,
+      "ah_accuracy": 0,
+      "ah_push_rate": 0,
+      "ah_thresholds": {}
     }
   ],
   "summary": {
-    "folds": 1,
-    "avg_brier": 0.5954,
-    "avg_logloss": 0.9979,
-    "avg_accuracy": 0.508,
+    "folds": 2,
+    "avg_brier": 0.5917,
+    "avg_logloss": 0.9929,
+    "avg_accuracy": 0.5177,
     "all_folds_beat_baseline": true,
     "per_fold": [
       {
@@ -89,6 +132,13 @@
         "beats": true,
         "accuracy": 0.508,
         "n": 1752
+      },
+      {
+        "brier": 0.588,
+        "baseline_brier": 0.653,
+        "beats": true,
+        "accuracy": 0.5274,
+        "n": 146
       }
     ]
   },

@@ -178,12 +178,30 @@ def cmd_predict(args) -> None:
     # 2026-09-12: 早盘(09:00)也抓 —— 实测当天早盘 21 场只有 12 场有盘口(57%),
     #             因为早盘用的是上一班的旧快照; 且早/午/终三个时点才看得出盘口移动。
     if args.stage in ("morning", "midday", "final"):
+        # 2026-09-13 教训: 抓取失败曾被 try/except 静默吞掉, 预测拿着昨天的旧盘口照跑不误
+        # (当天早盘/午盘两次抓取全挂, 13 场预测用的是 09-12 21:13 的旧快照)。
+        # 这里比对文件 mtime: 本轮没写成功就大声报警, 不再静默降级。
+        _odds_fp = os.path.join("data", "state", "sofascore_odds.json")
+        _odds_before = os.path.getmtime(_odds_fp) if os.path.exists(_odds_fp) else 0.0
         try:
             print("[盘口] SofaScore 抓取...")
             _run([sys.executable, "pipeline/odds_fetcher_sofascore.py",
                   date_str, "--stage", args.stage])
         except Exception as e:
             print("[警告] SofaScore 盘口跳过: " + str(e))
+        _odds_after = os.path.getmtime(_odds_fp) if os.path.exists(_odds_fp) else 0.0
+        if _odds_after <= _odds_before:
+            print("")
+            print("=" * 62)
+            print("[严重] SofaScore 盘口本轮未更新, 预测将使用旧快照!")
+            print("       文件: " + _odds_fp)
+            print("       旧快照时间: %s (距今 %.1f 小时)" % (
+                datetime.fromtimestamp(_odds_after).strftime("%Y-%m-%d %H:%M:%S"),
+                (datetime.now().timestamp() - _odds_after) / 3600.0))
+            print("       大小球/亚盘线可能不是当天盘口, 结论不可信 → 请手工重跑:")
+            print("       请手工执行: python pipeline/odds_fetcher_sofascore.py %s --stage %s" % (date_str, args.stage))
+            print("=" * 62)
+            print("")
 
     # 4) 预测 (可选 LLM 分析; 早盘/午盘只出七维分析存档页, 终盘出预测页)
     cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json", "--stage", args.stage]

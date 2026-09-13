@@ -85,6 +85,10 @@ CURATED = {
     'Viking FK': 'Viking',
     'Mjällby AIF': '米亚尔比',
     'Heart of Midlothian': 'Hearts',
+    # 2026-09-13: SofaScore 的 UCL 名单把 Brest 写成 "Stade Brestois"(规范成
+    # "Stade Brestois 29"), 体彩给的是 "Brest" → 该场拿不到大小球盘口。
+    'Stade Brestois': 'Brest',
+    'Stade Brestois 29': 'Brest',
 }
 
 

@@ -227,6 +227,7 @@ CN_TO_EN_TEAM.update({
     # ── 法甲 FL1 ──
     '昂热': 'Angers', '欧塞尔': 'Auxerre', '波尔多': 'Bordeaux',
     '布雷斯特': 'Brest', '勒阿弗尔': 'Le Havre', '朗斯': 'Lens',
+    '勒芒': 'Le Mans',
     '里尔': 'Lille', '洛里昂': 'Lorient', '里昂': 'Lyon',
     '马赛': 'Marseille', '梅斯': 'Metz', '摩纳哥': 'Monaco',
     '南特': 'Nantes', '尼斯': 'Nice', '巴黎FC': 'Paris FC',
@@ -478,6 +479,11 @@ def load_team_name_map(path: str | None = None) -> dict:
                 idx[r['sofascore']] = c
             for a in r.get('canonical_aliases') or []:
                 idx[a] = c
+            # 2026-09-13: 体彩中文名也要进索引。表里一直有 sporttery_cn, 但索引只吃
+            # sofascore/别名/result_names, 于是"体彩给中文、SofaScore 给英文"的场次
+            # 永远归不到一起 —— 勒芒 ↔ Le Mans 就是这样丢掉大小球盘口的。
+            if r.get('sporttery_cn'):
+                idx[r['sporttery_cn']] = c
         # 赛果/预测侧的写法 (FC Bayern München / Fenerbahçe SK ...)
         for nm, c in (doc.get('result_names') or {}).items():
             idx.setdefault(nm, _norm(c))
@@ -504,6 +510,12 @@ def canonical_of(name: str) -> str | None:
     for cand in (key.title(), key.lower()):
         if cand in idx:
             return idx[cand]
+    # 2026-09-13: 中文名兜底 —— 体彩直接给中文, 而总表里可能只有英文规范名。
+    # 走人工维护的中文→英表, 避免升班马在总表重建之前一直配不上 (勒芒 丢盘口)。
+    if _has_cjk(key) and key in CN_TO_EN_TEAM:
+        _en = CN_TO_EN_TEAM[key]
+        return idx.get(_en) or _en
+
     # token 兜底 (2026-09-12): 赛果源会带后缀 —— "Stade Rennais FC 1901" 而表里是
     # "Stade Rennais", 精确匹配直接漏掉, 导致该场永远结算不了。
     # 只认"唯一最高分", 并列就放弃 (宁可漏, 不可错配)。

@@ -198,8 +198,8 @@ def main():
 
     ap = argparse.ArgumentParser(description='SofaScore 五大+欧冠盘口抓取')
     ap.add_argument('date', nargs='?', default=datetime.now().strftime('%Y-%m-%d'))
-    ap.add_argument('--stage', default='manual', choices=['midday', 'final', 'manual'],
-                    help='抓取节点, 用于留档区分 (午盘/终盘)')
+    ap.add_argument('--stage', default='manual', choices=['morning', 'midday', 'final', 'manual'],
+                    help='抓取节点, 用于留档区分 (早盘/午盘/终盘)')
     ap.add_argument('--window', type=int, default=1,
                     help='日期窗口(天): 前后各取 N 天, 覆盖"欧洲晚上=北京次日凌晨"的交界 (默认1)')
     a = ap.parse_args()

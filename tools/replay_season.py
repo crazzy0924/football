@@ -72,9 +72,13 @@ def main():
             shutil.rmtree(od)
         os.makedirs(od, exist_ok=True)
         print("[%d/%d] %s ← %s (%d 场)" % (i, len(dates), d, os.path.basename(fp), n))
+        # 重放绝不能写公示哈希链台账 (否则往对外存证里灌虚构记录)
+        env = dict(os.environ)
+        env["FOOTBALL_NO_FREEZE"] = "1"
         r = subprocess.run([sys.executable, "pipeline.py", "predict",
                             "--matches-json", mj, "--output-dir", od],
-                           capture_output=True, text=True, encoding="utf-8", errors="replace")
+                           capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", env=env)
         if r.returncode != 0:
             print("      失败: " + (r.stdout or "")[-300:] + (r.stderr or "")[-300:])
             continue

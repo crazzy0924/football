@@ -38,6 +38,12 @@ def _picks_summary(predictions):
     return out
 
 def freeze(date_str, predictions):
+    # 2026-09-13: 重放/回测不得写入公示台账。赛季重放(30 天)曾把 29 条虚构的
+    # 09-14 记录灌进哈希链, 污染了对外存证 —— 哈希链的价值全在"没有事后添加",
+    # 一旦混进非当日真实冻结的记录, 整条链的存证意义就没了。
+    # 设 FOOTBALL_NO_FREEZE=1 整体跳过 (tools/replay_season.py 默认会设)。
+    if os.environ.get('FOOTBALL_NO_FREEZE'):
+        return None
     try:
         entries = _load()
         prev = entries[-1]['hash'] if entries else GENESIS

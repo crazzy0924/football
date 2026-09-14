@@ -76,6 +76,9 @@ def main() -> int:
     ap.add_argument("--w", default="0,0.3,0.5,0.7,1.0", help="xG 融合权重网格")
     ap.add_argument("--leagues", default=",".join(FIVE))
     ap.add_argument("--seasons", default=",".join(TEST_SEASONS))
+    ap.add_argument("--fused", action="store_true",
+                    help="走生产同款市场融合 (两臂都融合, 仍只差拟合目标)。"
+                         "关键: 市场本身已包含 xG 信息, 增益可能被吃掉一部分")
     a = ap.parse_args()
     ws = [float(x) for x in a.w.split(",") if x.strip()]
     keep = {x.strip().upper() for x in a.leagues.split(",") if x.strip()}
@@ -96,6 +99,9 @@ def main() -> int:
         hit, len(ms), hit / max(len(ms), 1) * 100))
     print()
 
+    if a.fused:
+        from models.bayesian import bayesian_fusion_predict
+    market_b = []
     per_w = {w: [] for w in ws}          # 每臂: [(brier, 联赛, 赛季)]
     for s in tests:
         te = [m for m in ms if m["season"] == s]
@@ -130,6 +136,16 @@ def main() -> int:
                 if not r or r.get("home_win") is None:
                     continue
                 p = [r["home_win"], r["draw"], r["away_win"]]
+                if a.fused:
+                    od = m.get("odds") or {}
+                    mk = od.get("pinnacle") or od.get("bet365")
+                    if not (mk and mk.get("home") and mk.get("draw") and mk.get("away")):
+                        continue          # 两臂用同一过滤器, 长度仍一致
+                    b = bayesian_fusion_predict(p, mk, model_confidence=0.50)
+                    po = (b or {}).get("posterior") or {}
+                    if po.get("home") is None:
+                        continue
+                    p = [po["home"], po["draw"], po["away"]]
                 h, g2 = m["home_goals"], m["away_goals"]
                 act = "H" if h > g2 else ("D" if h == g2 else "A")
                 per_w[w].append((brier(p, act), m["league_code"], s))
@@ -140,11 +156,37 @@ def main() -> int:
         print("缺少基线 w=0，无法配对")
         return 1
     base = per_w[0.0]
+
+    # 市场参照线 (去水概率), 与上面同一批测试场次
+    mn = mb = 0
+    for s in tests:
+        te = [m for m in ms if m["season"] == s]
+        start = min(m["date"] for m in te) if te else None
+        if not start:
+            continue
+        for m in te:
+            od = m.get("odds") or {}
+            mk = od.get("pinnacle") or od.get("bet365")
+            if not (mk and mk.get("home") and mk.get("draw") and mk.get("away")):
+                continue
+            raw = [1.0 / mk["home"], 1.0 / mk["draw"], 1.0 / mk["away"]]
+            sm = sum(raw)
+            if not (1.0 <= sm <= 1.2):
+                continue
+            p = [x / sm for x in raw]
+            h, g2 = m["home_goals"], m["away_goals"]
+            act = "H" if h > g2 else ("D" if h == g2 else "A")
+            mb += brier(p, act)
+            mn += 1
+    if mn:
+        print()
+        print("市场(去水)参照线: n=%d  Brier=%.4f   ← 比这个低才算真的接近市场" % (mn, mb / mn))
     print()
     print("=" * 78)
     print("配对检验: 逐场 Brier 差 (配对) | 负值 = 引入 xG 更好")
     print("=" * 78)
-    hdr = "%-7s %-8s %-11s %-10s %-9s %-14s %s" % ("w", "测试场次", "平均差", "标准误", "t 值", "95%区间", "结论")
+    hdr = "%-7s %-8s %-10s %-11s %-10s %-9s %-14s %s" % (
+        "w", "测试场次", "绝对Brier", "平均差", "标准误", "t 值", "95%区间", "结论")
     print(hdr)
     print("-" * len(hdr))
     for w in ws:
@@ -160,8 +202,9 @@ def main() -> int:
         t = mu / se if se else 0.0
         lo, hi = mu - 1.96 * se, mu + 1.96 * se
         verdict = "显著更优" if t < -2 else ("显著更差" if t > 2 else "不显著")
-        print("%-7.1f %-8d %+.5f   %-10.5f %-9.2f [%+.5f,%+.5f] %s" % (
-            w, n, mu, se, t, lo, hi, verdict))
+        abs_b = sum(x[0] for x in cur) / n
+        print("%-7.1f %-8d %-10.4f %+.5f   %-10.5f %-9.2f [%+.5f,%+.5f] %s" % (
+            w, n, abs_b, mu, se, t, lo, hi, verdict))
     # 用事先定好的 w=0.5 做拆分 (不挑"最好看的那一档", 避免选择偏差)
     W = 0.5 if 0.5 in per_w and len(per_w[0.5]) == len(base) else None
     if W is not None:

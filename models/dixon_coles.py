@@ -28,6 +28,17 @@ from models.poisson import poisson_pmf
 # Dixon-Coles τ correction (preserved from v2.0)
 # ============================================================
 
+# ── 分联赛时间衰减系数 (2026-09-13 立) ──
+# 经典 Dixon-Coles 的近因加权 w = exp(-λ·距今天数), 但**必须分联赛定值**:
+# tools/tune_time_decay.py 的配对检验 (同一批比赛上比 λ 与 λ=0 的逐场 Brier 差, n=4028):
+#     PL   差 -0.00764  t=-2.36  显著改善   → 开 0.003
+#     FL1  差 +0.00731  t=+2.23  显著变差   → 保持 0
+#     BL1  +0.00616 t=+1.58 / SA -0.00207 t=-0.64 / UCL -0.00083 t=-0.24 / PD +0.00187 t=+0.67 均不显著
+#     总体 +0.00051 t=0.38 无效 —— PL 的收益被 FL1 的损失抵消, 这就是"一套模板套所有联赛"的代价。
+# 复算: python tools/tune_time_decay.py --seasons 3 --paired 0.003
+TIME_DECAY_BY_LEAGUE: dict[str, float] = {"PL": 0.003}
+
+
 def tau(gh: int, ga: int, lam_h: float, lam_a: float, rho: float) -> float:
     """Dixon-Coles τ correction factor.
 
@@ -292,7 +303,14 @@ class DixonColesModel:
     # 差异在噪声内 (±1.5 个标准误)。取 0.01 保守值: 该缺陷真实存在, 但不指望它带来整体改善。
     MARKET_LAMBDA_TOTAL_WEIGHT = 0.01
 
-    def __init__(self):
+    # 时间衰减系数 λ (每天), 经典 Dixon-Coles 的近因加权 w = exp(-λ·t)。
+    # 2026-09-13 立: 此前所有历史场次等权, 上赛季甚至更早的数据与上周等权,
+    # 升班马/换帅/转会窗之后的旧战绩仍在拉扯参数。λ=0 表示关闭(与旧行为一致)。
+    # 定值方式: tools/tune_time_decay.py 走样本外滚动, 以 Brier 最小化为准。
+    TIME_DECAY = 0.0
+
+    def __init__(self, time_decay: float = 0.0):
+        self.time_decay: float = float(time_decay)
         self.team_attack: dict[str, float] = {}
         self.team_defense: dict[str, float] = {}
         self.team_league: dict[str, str] = {}       # team → league_code
@@ -415,7 +433,7 @@ class DixonColesModel:
 
         self._fitted = True
 
-    def fit_mle(self, matches: list[dict]) -> None:
+    def fit_mle(self, matches: list[dict], time_decay: float | None = None) -> None:
         """Maximum likelihood estimation using scipy L-BFGS-B.
 
         Jointly estimates:
@@ -464,6 +482,33 @@ class DixonColesModel:
         m_home_idx = np.array([team_idx[m["home_team"]] for m in matches], dtype=np.int32)
         m_away_idx = np.array([team_idx[m["away_team"]] for m in matches], dtype=np.int32)
         m_league_idx = np.array([league_idx[m["league_code"]] for m in matches], dtype=np.int32)
+
+        # ── 时间衰减权重 (2026-09-13) ──
+        # w_i = exp(-λ · 距参考日的天数), 参考日 = 训练集里最晚的一场。
+        # 归一化到均值 1: 否则 λ 变大时权重整体变小, 会变相削弱似然、放大下面的 L2 正则,
+        # 让"衰减强度"和"正则强度"纠缠在一起, 网格搜索出来的 λ 就无法解释。
+        _lam = self.time_decay if time_decay is None else float(time_decay)
+        if _lam and _lam > 0:
+            from datetime import date as _date
+            _ds = []
+            for _m in matches:
+                try:
+                    _ds.append(_date.fromisoformat(str(_m.get("date"))[:10]))
+                except Exception:
+                    _ds.append(None)
+            _known = [d for d in _ds if d is not None]
+            if _known:
+                _ref = max(_known)
+                _age = np.array([((_ref - d).days if d is not None else 0.0) for d in _ds],
+                                dtype=np.float64)
+                m_weight = np.exp(-_lam * np.maximum(_age, 0.0))
+                _mw = float(m_weight.mean())
+                if _mw > 1e-12:
+                    m_weight = m_weight / _mw
+            else:
+                m_weight = np.ones(n_matches, dtype=np.float64)
+        else:
+            m_weight = np.ones(n_matches, dtype=np.float64)
 
         # Per-match league average goals
         league_goals = {}
@@ -523,7 +568,7 @@ class DixonColesModel:
             log_tau = np.log(np.maximum(tau_val, 1e-12))
 
             # --- NLL value ---
-            ll = np.sum(log_tau + log_p_h + log_p_a)
+            ll = np.sum(m_weight * (log_tau + log_p_h + log_p_a))
             reg = 0.01 * (np.sum((att - 1.0) ** 2) + np.sum((def_ - 1.0) ** 2))
             nll = float(-(ll - reg))
 
@@ -552,9 +597,9 @@ class DixonColesModel:
             dlogtau_drho[mask_11]   = -1.0 / safe_tau[mask_11]
 
             # Per-match contribution: τ'_λh * λh + gh - λh  (goes to home-team attack / away-team defense)
-            contrib_h = dlogtau_dlamh * lam_h + m_gh - lam_h
+            contrib_h = (dlogtau_dlamh * lam_h + m_gh - lam_h) * m_weight
             # Per-match contribution: τ'_λa * λa + ga - λa  (goes to away-team attack / home-team defense)
-            contrib_a = dlogtau_dlama * lam_a + m_ga - lam_a
+            contrib_a = (dlogtau_dlama * lam_a + m_ga - lam_a) * m_weight
 
             # --- Grad: attack[t] ---
             # LL contribution from matches where t is home + where t is away
@@ -571,7 +616,7 @@ class DixonColesModel:
             grad_def = -np.divide(grad_def_raw, def_, where=def_ > 1e-10, out=np.zeros_like(grad_def_raw)) + 0.02 * (def_ - 1.0)
 
             # --- Grad: rho[L] ---
-            grad_rho = -np.bincount(m_league_idx, weights=dlogtau_drho, minlength=n_leagues)
+            grad_rho = -np.bincount(m_league_idx, weights=dlogtau_drho * m_weight, minlength=n_leagues)
 
             # --- Grad: home_adv[L] ---
             # ∂λh/∂ha = λh/(1+ha), so ∂ll/∂ha = contrib_h / (1+ha)

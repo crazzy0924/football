@@ -151,11 +151,17 @@ def train_per_league_models(
         if len(lg_matches) < 100:
             print(f"  [{code}] 样本不足({len(lg_matches)}), 跳过独立模型")
             continue
-        dc = DixonColesModel()
+        # 分联赛时间衰减: 只有实测显著改善的联赛才开 (见 models/dixon_coles.py
+        # 的 TIME_DECAY_BY_LEAGUE 注释, PL t=-2.36 显著, FL1 t=+2.23 显著变差)
+        from models.dixon_coles import TIME_DECAY_BY_LEAGUE
+        _td = TIME_DECAY_BY_LEAGUE.get(code, 0.0)
+        dc = DixonColesModel(time_decay=_td)
         try:
             dc.fit_mle(lg_matches)
         except Exception:
             dc.fit_simple(lg_matches)
+        if _td:
+            print(f"  [{code}] 时间衰减 λ={_td}")
         model_dir = os.path.join(state_dir, "models", code)
         dc.save(model_dir)
 

@@ -9,11 +9,18 @@ from __future__ import annotations
 import math
 
 
-def poisson_pmf(k: int, lam: float) -> float:
-    """Poisson probability mass function: P(X = k) for rate λ."""
+def poisson_pmf(k: float, lam: float) -> float:
+    """Poisson probability mass function: P(X = k) for rate λ.
+
+    k 允许小数 (2026-09-14): 用 xG 这类"期望进球"当拟合目标时, 计数不是整数。
+    math.factorial 只吃整数, 会直接抛 TypeError (实测: 'float' object cannot be
+    interpreted as an integer), 让整个 xG 实验在暖启动阶段就崩掉。
+    换成 math.gamma(k + 1): 整数下与阶乘完全一致 (gamma(n+1) = n!), 小数下是它的
+    连续延拓 —— 正是准泊松拟合需要的。原整数路径行为不变, 无回归风险。
+    """
     if lam <= 0:
         return 1.0 if k == 0 else 0.0
-    return (lam ** k) * math.exp(-lam) / math.factorial(k)
+    return (lam ** k) * math.exp(-lam) / math.gamma(k + 1)
 
 
 def score_matrix(lam_h: float, lam_a: float, max_g: int = 8) -> dict[str, float]:

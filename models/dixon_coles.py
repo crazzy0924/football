@@ -477,8 +477,11 @@ class DixonColesModel:
 
         # ── Pre-compute per-match numpy arrays (all vectorized) ──
         n_matches = len(matches)
-        m_gh = np.array([m["home_goals"] for m in matches], dtype=np.int32)
-        m_ga = np.array([m["away_goals"] for m in matches], dtype=np.int32)
+        # 必须是浮点 (2026-09-14): 之前写死 int32, 会把 xG 这类小数进球目标**静默截断**,
+        # 让"用 xG 拟合"的实验悄悄退化成"用取整后的 xG 拟合", 结论全错。
+        # 整数进球在浮点下的行为完全一致, 无回归风险。
+        m_gh = np.array([m["home_goals"] for m in matches], dtype=np.float64)
+        m_ga = np.array([m["away_goals"] for m in matches], dtype=np.float64)
         m_home_idx = np.array([team_idx[m["home_team"]] for m in matches], dtype=np.int32)
         m_away_idx = np.array([team_idx[m["away_team"]] for m in matches], dtype=np.int32)
         m_league_idx = np.array([league_idx[m["league_code"]] for m in matches], dtype=np.int32)

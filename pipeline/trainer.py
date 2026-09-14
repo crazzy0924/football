@@ -156,10 +156,17 @@ def train_per_league_models(
         from models.dixon_coles import TIME_DECAY_BY_LEAGUE
         _td = TIME_DECAY_BY_LEAGUE.get(code, 0.0)
         dc = DixonColesModel(time_decay=_td)
+        # xG 融合 (实验开关, 默认关闭): 只作用于拟合目标。
+        # 下游的平局校准必须用**原始赛果**, 所以下面 fit_draw_calibration 仍传 lg_matches。
+        from pipeline.xg_blend import maybe_blend
+        _fit_matches, _xg_stat = maybe_blend(lg_matches, code)
+        if _xg_stat:
+            print(f"  [{code}] xG 融合 w={_xg_stat['w']} : "
+                  f"{_xg_stat['blended']}/{_xg_stat['total']} 场")
         try:
-            dc.fit_mle(lg_matches)
+            dc.fit_mle(_fit_matches)
         except Exception:
-            dc.fit_simple(lg_matches)
+            dc.fit_simple(_fit_matches)
         if _td:
             print(f"  [{code}] 时间衰减 λ={_td}")
         model_dir = os.path.join(state_dir, "models", code)

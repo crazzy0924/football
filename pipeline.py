@@ -186,6 +186,34 @@ def cmd_predict(args):
         print("无比赛可预测。请提供 --matches-json 或确认赔率API可用。")
         sys.exit(1)
 
+    # 同名去重 (2026-09-14): 同一场比赛可能带两套名字进来 (体彩中文 + SofaScore 英文),
+    # 例如 "勒芒 vs Lens" 与 "Le Mans vs Lens"。规范名打通之后它们本就是同一场,
+    # 不去重会在预测文件里留两行、而复盘页只生成一张卡片 → 触发 B3 硬性违规
+    # (2026-09-13 实测 复盘 13/14)。以规范名为键, 冲突时保留信息更全的那条。
+    from pipeline.team_names import canonical_of as _canon
+
+    def _dkey(m):
+        h = _canon(m.get("home_team") or "") or (m.get("home_team") or "").strip().lower()
+        a = _canon(m.get("away_team") or "") or (m.get("away_team") or "").strip().lower()
+        return (h, a)
+
+    _seen: dict = {}
+    _dedup: list = []
+    for _m in matches:
+        _k = _dkey(_m)
+        if _k in _seen:
+            _i = _seen[_k]
+            _has = bool((_m.get("odds") or {}).get("home"))
+            _old_has = bool((_dedup[_i].get("odds") or {}).get("home"))
+            if _has and not _old_has:
+                _dedup[_i] = _m
+            continue
+        _seen[_k] = len(_dedup)
+        _dedup.append(_m)
+    if len(_dedup) != len(matches):
+        print(f"同名去重: {len(matches)} → {len(_dedup)} 场 (去掉 {len(matches) - len(_dedup)} 条重复)")
+    matches = _dedup
+
     # 范围纪律 (2026-09-09 用户拍板): 只预测五大联赛+欧冠, 其他一律不参与
     from config import PREDICT_LEAGUES
     _before_n = len(matches)

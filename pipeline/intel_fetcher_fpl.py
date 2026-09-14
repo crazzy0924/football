@@ -104,7 +104,14 @@ def _impact(points_per_game, element_type, chance):
 
     借鉴球小策"伤停阵容折损权重"思路: 核心主力(高场均得分)缺阵折损高, 替补缺阵折损低。
     """
+    # FPL 接口的 points_per_game 偶尔回来是字符串(如 "4.5"), 直接比较会抛
+    # TypeError: '>=' not supported between instances of 'str' and 'float',
+    # 导致整个英超伤停采集崩掉 (2026-09-13/14 连续两日实测)。强制转 float。
     ppg = points_per_game or 0
+    try:
+        ppg = float(ppg)
+    except (TypeError, ValueError):
+        ppg = 0.0
     imp = 1.5 if ppg >= 5.0 else (1.0 if ppg >= 3.0 else 0.5)
     if element_type == 1:
         imp *= 1.2  # 主力门将缺阵影响大

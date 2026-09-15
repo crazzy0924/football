@@ -89,6 +89,17 @@ CURATED = {
     # "Stade Brestois 29"), 体彩给的是 "Brest" → 该场拿不到大小球盘口。
     'Stade Brestois': 'Brest',
     'Stade Brestois 29': 'Brest',
+    # 2026-09-15: 赛果源(football-data.org)给全称, 我们的预测用简称, 两边规范名对不上
+    # → 该场永远结算不了 (09-14 复盘 5 场只结 3 场, 触发 B3 硬性违规)。
+    'Parma Calcio 1913': 'Parma',
+    'FC Internazionale Milano': 'Inter',
+    'Inter Milano': 'Inter',
+    'Como 1907': 'Como',
+    'Udinese Calcio': 'Udinese',
+    'Villarreal CF': 'Villarreal',
+    'Real Betis Balompié': 'Betis',
+    'Torino FC': 'Torino',
+    'Leeds United FC': 'Leeds',
 }
 
 

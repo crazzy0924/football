@@ -166,6 +166,30 @@ def main() -> None:
         ok = (n_cards == n_preds) if n_preds > 0 else None
         add("B3", "复盘匹配率", ok, f"{latest_date}: 复盘 {n_cards}/{n_preds} 场", hard=True)
 
+    # F1 队名未匹配队列 (2026-09-15): 把"结算不上"从人肉踩坑变成系统报账。
+    # 同类故障已复现 4 次(Rennes/Brest/勒芒/Parma-Inter), 都是复盘时才发现缺场次。
+    try:
+        import subprocess as _sp2
+        _sp2.run([sys.executable, "tools/check_unmatched.py", "--days", "14"],
+                 capture_output=True, text=True, encoding="utf-8", errors="replace")
+        _qj = os.path.join("data", "state", "unmatched_names.json")
+        _fresh = []
+        if os.path.exists(_qj):
+            with open(_qj, "r", encoding="utf-8") as _f:
+                _qd = json.load(_f)
+            _cut = (datetime.now() - timedelta(days=14)).strftime("%Y-%m-%d")
+            # 只算**预测侧**结算不上的 —— 那才是我方范围的真实缺口。
+            # 赛果侧的"孤儿"多是赛果源返回的英冠/其他联赛(我们从不预测), 属预期噪音,
+            # 一并报会天天喊狼来了。
+            _fresh = [k for k, v in _qd.items()
+                      if str(v.get("last", "")) >= _cut and v.get("side") == "预测"]
+        add("F1", "队名未匹配队列", len(_fresh) == 0,
+            "近14天预测未能结算的队名 %d 个%s" % (
+                len(_fresh), ("：" + "、".join(_fresh[:5])) if _fresh else ""),
+            hard=False)
+    except Exception as _e:
+        add("F1", "队名未匹配队列", None, str(_e)[:60])
+
     # E2 计划任务 Ready 数
     rc, out = _sh(["schtasks", "/Query", "/FO", "CSV"])
     # schtasks CSV 每行前缀带反斜杠 (如 "\足球模型-..."), 按包含匹配

@@ -214,6 +214,39 @@ def cmd_predict(args):
         print(f"同名去重: {len(matches)} → {len(_dedup)} 场 (去掉 {len(matches) - len(_dedup)} 条重复)")
     matches = _dedup
 
+    # 跳过已开赛场次 (2026-09-15): 固定钟点(终盘21:00 / 早盘09:00)与跨时区赛程会错位,
+    # 导致对已经踢完的比赛出"预测" —— 实测 09-13 首场 20:00 开踢而终盘挂 21:00;
+    # 09-15 早盘又把凌晨 00:30-03:00 已结束的三场重新预测了一遍。
+    # 消歧办法: 凌晨场次归属次日还是当日有歧义, 所以取"离现在最近的那个时间解释",
+    # 若它早于现在 → 已开赛, 跳过。
+    try:
+        from datetime import datetime as _dtc, timedelta as _tdc
+        _now = _dtc.now()
+        _base = _dtc.strptime(date_str, "%Y-%m-%d")
+        _kept, _started = [], 0
+        for _m in matches:
+            _kt = (_m.get("kickoff_time") or "").strip()
+            if not _kt:
+                _kept.append(_m)
+                continue
+            try:
+                _h, _mi = int(_kt.split(":")[0]), int(_kt.split(":")[1])
+            except Exception:
+                _kept.append(_m)
+                continue
+            _c1 = _base.replace(hour=_h, minute=_mi, second=0, microsecond=0)
+            _c2 = _c1 + _tdc(days=1)
+            _kdt = _c1 if abs((_c1 - _now).total_seconds()) <= abs((_c2 - _now).total_seconds()) else _c2
+            if _kdt <= _now:
+                _started += 1
+                continue
+            _kept.append(_m)
+        if _started:
+            print(f"跳过已开赛 {_started} 场 (固定钟点与跨时区赛程错位)")
+        matches = _kept
+    except Exception as _e:
+        print(f"[警告] 开赛时间过滤跳过: {_e}")
+
     # 范围纪律 (2026-09-09 用户拍板): 只预测五大联赛+欧冠, 其他一律不参与
     from config import PREDICT_LEAGUES
     _before_n = len(matches)

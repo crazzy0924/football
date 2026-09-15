@@ -133,6 +133,48 @@ def _git_sync() -> None:
 def cmd_predict(args) -> None:
     date_str = args.date or _today()
 
+    # 临盘时点 = 当天最早开赛前 90 分钟 (2026-09-15 用户拍板, 取代固定 20:00)。
+    # 计划任务每 30 分钟唤起一次, 这里做闸门:
+    #   今天已出过终盘 → 安静退出 (避免重复冻结哈希链)
+    #   还没到"最早开赛前 90 分钟" → 安静退出
+    # 体彩当天场次最早可能 18:00 开踢, 所以固定钟点(原 20:00)会晚于开赛。
+    if args.stage == "final":
+        _flag = os.path.join("data", "state", "final_done_" + date_str)
+        if os.path.exists(_flag):
+            print("[临盘] " + date_str + " 终盘已出过, 跳过")
+            return
+        try:
+            with open("data/today.json", encoding="utf-8") as _fh:
+                _mm = json.load(_fh)
+        except Exception:
+            _mm = []
+        _now = datetime.now()
+        _b = datetime.strptime(date_str, "%Y-%m-%d")
+        _best = None
+        for _m in _mm:
+            _kt = (_m.get("kickoff_time") or "").strip()
+            if not _kt:
+                continue
+            try:
+                _h, _mi = int(_kt.split(":")[0]), int(_kt.split(":")[1])
+            except Exception:
+                continue
+            _c1 = _b.replace(hour=_h, minute=_mi, second=0, microsecond=0)
+            _c2 = _c1 + timedelta(days=1)
+            _kdt = _c1 if abs((_c1 - _now).total_seconds()) <= abs((_c2 - _now).total_seconds()) else _c2
+            if _kdt <= _now:
+                continue
+            if _best is None or _kdt < _best:
+                _best = _kdt
+        if _best is not None:
+            _go = _best - timedelta(minutes=90)
+            if _now < _go:
+                print("[临盘] 未到点 (最早开赛 %s, 临盘时点 %s), 跳过" % (
+                    _best.strftime("%H:%M"), _go.strftime("%H:%M")))
+                return
+            print("[临盘] 最早开赛 %s → 临盘时点 %s, 开跑" % (
+                _best.strftime("%H:%M"), _go.strftime("%H:%M")))
+
     # 1) 拉取今日比赛 (体彩为主, odds-api.io 兜底; --all-leagues 时纳入体彩开盘全部比赛)
     fetch_cmd = [sys.executable, "fetch_sporttery.py", date_str]
     if args.all_leagues:
@@ -225,6 +267,13 @@ def cmd_predict(args) -> None:
     if rc != 0:
         print("[失败] 预测流程退出码 " + str(rc))
         sys.exit(rc)
+
+    # 终盘成功才落"今天已出"标记 (临盘闸门靠它避免一天出多次 / 重复冻结哈希链)
+    if args.stage == "final":
+        try:
+            open(os.path.join("data", "state", "final_done_" + date_str), "w").close()
+        except Exception:
+            pass
 
     stage_cn = {"morning": "早盘", "midday": "午盘", "final": "终盘"}.get(args.stage, args.stage)
     if args.stage == "final":

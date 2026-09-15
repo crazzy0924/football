@@ -139,7 +139,21 @@ def cmd_predict(args) -> None:
         fetch_cmd.append("--all")
     rc = _run(fetch_cmd)
     if rc != 0:
-        print("[警告] 体彩拉取失败, 尝试 odds-api.io 构建...")
+        # 2026-09-15 教训: 体彩失败曾静默走兜底 —— 而兜底脚本 build_today_matches.py
+        # 不填 kickoff_time, 且会返回刚踢完的场次。结果: 早盘把 4 场已经结束的比赛
+        # (0-2/2-1/5-3/4-1) 又"预测"了一遍, 没有任何人发现, 直到翻日志才查出来。
+        # 这里先重试一次; 仍失败就大声报警 —— 兜底可以走, 但失败必须可见。
+        print("[盘口] 体彩拉取失败, 重试一次...")
+        rc = _run(fetch_cmd)
+    if rc != 0:
+        print("")
+        print("=" * 62)
+        print("[严重] 体彩抓取失败, 本轮将走 odds-api.io 兜底!")
+        print("       兜底数据不含 kickoff_time, 且可能带上已结束场次,")
+        print("       按时间做的过滤会失效 → 请务必核对 data/today.json 是否可信。")
+        print("       手工重跑: python fetch_sporttery.py " + date_str)
+        print("=" * 62)
+        print("")
         _run([sys.executable, "build_today_matches.py", date_str])
 
     # 2) 伤停自动侦察 (Bing公开搜索, 零注册零订阅)

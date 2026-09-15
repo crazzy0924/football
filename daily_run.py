@@ -306,6 +306,13 @@ def cmd_review(args) -> None:
         _run([sys.executable, "h2h.py", "--append", results_path])
     else:
         print("[跳过] 未找到 " + results_path + ", 跳过h2h回灌")
+    # 假设台账自动更新 (2026-09-15): 复盘归因必须被"消费", 否则闭环断在这里。
+    # 这里每天扫一次, 把"未中"场次的归因归拢成模式; 周复盘直接读台账。
+    try:
+        _run([sys.executable, "pipeline/hypothesis_ledger.py", "--scan"])
+    except Exception as e:
+        print("[警告] 假设台账更新跳过: " + str(e))
+
     _write_files_manifest()
     _git_sync()
 

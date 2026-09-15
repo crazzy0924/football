@@ -247,6 +247,35 @@ def cmd_predict(args):
     except Exception as _e:
         print(f"[警告] 开赛时间过滤跳过: {_e}")
 
+    # 已完赛兜底 (2026-09-15): 体彩在售列表在早上 09:00 常只剩"凌晨已结束"的场次
+    # (当天傍晚的场次还没挂出来), 而这些场次的 kickoff_time 又是空的 ——
+    # 上面基于开赛时间的过滤拦不住它 (没时间就放行)。实测 09-15 早盘把 4 场
+    # 已经踢完的比赛又预测了一遍(0-2 / 2-1 / 5-3 / 4-1)。
+    # 这里直接对赛果: 近 3 天已有赛果的场次一律剔除, 绝不对结束的比赛出预测。
+    try:
+        import glob as _glob
+        _done = []
+        for _rf in sorted(_glob.glob("data/output/results_????-??-??.json"))[-3:]:
+            try:
+                with open(_rf, encoding="utf-8") as _fh:
+                    _done += json.load(_fh)
+            except Exception:
+                pass
+        if _done:
+            from pipeline.result_fetcher import _teams_match as _tm
+            _kept2, _played = [], 0
+            for _m in matches:
+                if any(_tm(_m.get("home_team", ""), x.get("home_team", ""))
+                       and _tm(_m.get("away_team", ""), x.get("away_team", "")) for x in _done):
+                    _played += 1
+                    continue
+                _kept2.append(_m)
+            if _played:
+                print(f"剔除已有赛果 {_played} 场 (已结束的比赛不出预测)")
+            matches = _kept2
+    except Exception as _e:
+        print(f"[警告] 已完赛过滤跳过: {_e}")
+
     # 范围纪律 (2026-09-09 用户拍板): 只预测五大联赛+欧冠, 其他一律不参与
     from config import PREDICT_LEAGUES
     _before_n = len(matches)

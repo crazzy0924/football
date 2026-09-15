@@ -138,7 +138,7 @@ def cmd_predict(args) -> None:
     #   今天已出过终盘 → 安静退出 (避免重复冻结哈希链)
     #   还没到"最早开赛前 90 分钟" → 安静退出
     # 体彩当天场次最早可能 18:00 开踢, 所以固定钟点(原 20:00)会晚于开赛。
-    if args.stage == "final":
+    if args.stage == "final" and not getattr(args, "force", False):
         _flag = os.path.join("data", "state", "final_done_" + date_str)
         if os.path.exists(_flag):
             print("[临盘] " + date_str + " 终盘已出过, 跳过")
@@ -166,7 +166,7 @@ def cmd_predict(args) -> None:
                 continue
             if _best is None or _kdt < _best:
                 _best = _kdt
-        if _best is not None:
+        if _best is not None and not getattr(args, "force", False):
             _go = _best - timedelta(minutes=90)
             if _now < _go:
                 print("[临盘] 未到点 (最早开赛 %s, 临盘时点 %s), 跳过" % (
@@ -326,6 +326,10 @@ def main() -> None:
     p_predict.add_argument("--no-llm", action="store_true", help="跳过LLM定性分析")
     p_predict.add_argument("--stage", choices=["morning", "midday", "final"], default="final",
                           help="早盘/午盘只出七维分析存档页, 终盘出预测页")
+    # 手动强制出终盘 (用户临时叫): 绕过"最早开赛前90分钟"与"今天已出过"两道闸门。
+    # 注意: 强制重跑不应重复写哈希链台账 —— 调用方需自行设 FOOTBALL_NO_FREEZE=1。
+    p_predict.add_argument("--force", action="store_true",
+                          help="手动强制出终盘, 绕过临盘时点与当日去重闸门")
     p_predict.add_argument("--all-leagues", action="store_true",
                           help="纳入体彩开盘的全部比赛(含非五大联赛, 分析为主)")
 

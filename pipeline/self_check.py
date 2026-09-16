@@ -158,10 +158,14 @@ def main() -> None:
         with open(ra_files[-1], "r", encoding="utf-8") as f:
             ra = f.read()
         n_cards = ra.count('<article class="match">')
-        pred_path = os.path.join("data", "output", f"predictions_{latest_date}.json")
+        # 分母用"当日已取到赛果的场次数", 不用预测条数 (2026-09-16 修):
+        # predictions_<date>.json 按设计会**合并保留早盘已踢场次**(供复盘结算),
+        # 所以预测条数 > 当日可结算场次, 拿它当分母会误报漏配 (实测 09-15: 3/7)。
+        # 真正要查的是"有赛果却没出卡片", 用 results 当分母才对准。
+        res_path = os.path.join("data", "output", f"results_{latest_date}.json")
         n_preds = 0
-        if os.path.exists(pred_path):
-            with open(pred_path, "r", encoding="utf-8") as f:
+        if os.path.exists(res_path):
+            with open(res_path, "r", encoding="utf-8") as f:
                 n_preds = len(json.load(f))
         ok = (n_cards == n_preds) if n_preds > 0 else None
         add("B3", "复盘匹配率", ok, f"{latest_date}: 复盘 {n_cards}/{n_preds} 场", hard=True)

@@ -60,6 +60,15 @@ def main() -> int:
     q = _load()
     new_hits = 0
     day_rows = []
+    # 预读所有日期的赛果, 供"是否已在别处结算"判断 (避免循环里反复读盘)
+    all_res = {}
+    for dd in dates:
+        nf = "data/output/results_%s.json" % dd
+        if os.path.exists(nf):
+            try:
+                all_res[dd] = json.load(open(nf, encoding="utf-8"))
+            except Exception:
+                pass
     for d in dates:
         pf = "data/output/predictions_%s.json" % d
         rf = "data/output/results_%s.json" % d
@@ -78,14 +87,22 @@ def main() -> int:
                      for p in P)
             if not ok:
                 orphan.append(x)
-        # 预测侧: 没有任何赛果能对上 → 尚未结算
+        # 预测侧: 没有任何赛果能对上 → 尚未结算。
+        # 要排除"已在别的日期结算过"的 (2026-09-16 修): predictions_<date>.json
+        # 按设计会保留早盘已踢场次, 那些的赛果在**前一天**的 results 里 ——
+        # 只看当日会误报一堆"未结算"(实测 09-15 误报 4 场)。
+        def _hit(p, pool):
+            return any(_teams_match(p.get("home_team", ""), x.get("home_team", ""))
+                       and _teams_match(p.get("away_team", ""), x.get("away_team", ""))
+                       for x in pool)
+
         unsettled = []
         for p in P:
-            ok = any(_teams_match(p.get("home_team", ""), x.get("home_team", ""))
-                     and _teams_match(p.get("away_team", ""), x.get("away_team", ""))
-                     for x in R)
-            if not ok:
-                unsettled.append(p)
+            if _hit(p, R):
+                continue
+            if any(_hit(p, other) for dd2, other in all_res.items() if dd2 != d):
+                continue
+            unsettled.append(p)
         if orphan or unsettled:
             day_rows.append((d, len(orphan), len(unsettled)))
             for x in orphan:

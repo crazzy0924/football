@@ -126,9 +126,17 @@ def guess_league_code(name, home, away):
         for cn, code in LEAGUE_CN_TO_CODE.items():
             if cn in name or name in cn:
                 return code
-    # 按队名猜常见国际俱乐部赛事
+        # 赛名存在但不认识 → 先排掉国内杯赛 (2026-09-16 修):
+        # 实测「英联赛杯」Coventry vs Aston Villa 因为队里有阿斯顿维拉,
+        # 被下面的队名兜底猜成 UCL, 混过"只做五大+欧冠"的范围过滤出了预测。
+        # 国内的联赛杯/足总杯/超级杯既不是五大联赛也不是欧冠, 一律 UNK。
+        if ('杯' in name or '锦标' in name) and not any(
+                k in name for k in ('欧冠', '欧洲', '欧联', '欧会')):
+            return 'UNK'
+    # 按队名猜国际俱乐部赛事 —— **只在赛名缺失时才允许**。
+    # 赛名给了却认不出来, 说明是我方词表没覆盖, 这时候猜等于拿范围纪律冒险。
     big_euro = {'巴黎圣日尔曼','皇家马德里','巴塞罗那','拜仁慕尼黑','曼城','利物浦','阿斯顿维拉','阿森纳','切尔西','多特蒙德','国际米兰','AC米兰','尤文图斯'}
-    if home in big_euro or away in big_euro:
+    if not name and (home in big_euro or away in big_euro):
         if any(t in {'巴黎圣日尔曼','阿斯顿维拉','皇家马德里'} for t in [home, away]):
             return 'UCL'  # UEFA CL
     # CONMEBOL

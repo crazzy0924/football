@@ -853,6 +853,15 @@ def cmd_predict(args):
               f"{m['home_win']:>6.1%} {m['draw']:>6.1%} {m['away_win']:>6.1%} "
               f"{pick:>10} {edge_str:>6}")
 
+    # 首页归档清单 (2026-09-16): 手动跑预测会绕过 daily_run 的 _write_files_manifest,
+    # 结果和复盘那条路一样 —— 页面推上去了、但站点点不到 (09-15 复盘已实测踩过)。
+    # 这里补一次, 让"手动跑"和"计划任务跑"结果完全一致。
+    try:
+        from daily_run import _write_files_manifest
+        _write_files_manifest()
+    except Exception as e:
+        print(f"[清单] 刷新跳过: {str(e)[:60]}")
+
 
 def cmd_review(args):
     """Evaluate predictions against actual results.

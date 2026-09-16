@@ -26,10 +26,15 @@ import sys
 from pathlib import Path
 
 # ---- Windows GBK修复: 强制UTF-8输出 ----
-if hasattr(sys.stdout, "buffer"):
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-if hasattr(sys.stderr, "buffer"):
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+# 用 reconfigure 而不是新建 TextIOWrapper (2026-09-16 踩坑):
+# 本模块会导入 daily_run (取 _write_files_manifest), 那边也包装一次 stdout ——
+# 两层包装会让第一层被 GC 并关掉底层 buffer, 导致进程尾部所有 print 崩掉
+# ("I/O operation on closed file")。reconfigure 不产生新对象, 幂等。
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 
 def cmd_train(args):

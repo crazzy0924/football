@@ -24,9 +24,17 @@ import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 
-# Windows GBK修复: 强制UTF-8输出
-if hasattr(sys.stdout, "buffer"):
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+# Windows GBK修复: 强制UTF-8输出。
+# 必须用 reconfigure, 不能新建 TextIOWrapper (2026-09-16 踩坑):
+# 本模块会被 pipeline.py 导入, 而 pipeline.py 自己也包装一次 stdout ——
+# 两层包装时第一层会失去引用被 GC, 其 __del__ 关掉底层 buffer,
+# 之后所有 print 报 "I/O operation on closed file", 整个进程尾部崩掉。
+# reconfigure 不产生新对象, 天然幂等。
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 BEIJING = timezone(timedelta(hours=8))
 

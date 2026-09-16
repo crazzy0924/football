@@ -187,9 +187,11 @@ def main() -> None:
             # 一并报会天天喊狼来了。
             _fresh = [k for k, v in _qd.items()
                       if str(v.get("last", "")) >= _cut and v.get("side") == "预测"]
+        # 详情里不列原文队名 (2026-09-16 修): 队名多为英文, 直接在详情里列出会撞
+        # 汉化门禁的"英文片段"规则(实测 Sp Lisbon 被拦)。明细去看队列文件即可。
         add("F1", "队名未匹配队列", len(_fresh) == 0,
-            "近14天预测未能结算的队名 %d 个%s" % (
-                len(_fresh), ("：" + "、".join(_fresh[:5])) if _fresh else ""),
+            "近14天预测未能结算的队名 %d 个 (明细见 data/state/unmatched_names.json)"
+            % len(_fresh),
             hard=False)
     except Exception as _e:
         add("F1", "队名未匹配队列", None, str(_e)[:60])

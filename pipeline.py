@@ -741,6 +741,10 @@ def cmd_predict(args):
         try:
             with open(out_path, "r", encoding="utf-8") as f:
                 for p2 in json.load(f):
+                    # 合并时也要守范围 (2026-09-16): 否则上一轮误纳的越界场次
+                    # (实测: 英联赛杯被误判成 UCL) 会被合并**复活**, 即使本轮已剔除。
+                    if (p2.get("league_code") or "") not in PREDICT_LEAGUES:
+                        continue
                     merged_preds[f"{p2.get('home_team', '')}|{p2.get('away_team', '')}"] = p2
         except Exception:
             pass

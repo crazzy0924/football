@@ -1114,6 +1114,16 @@ def cmd_review(args):
     except Exception as e:
         print(f"[复盘分析] 生成失败: {e}")
 
+    # ---- 首页归档清单 (2026-09-16) ----
+    # 手动跑复盘会绕过 daily_run 的 _write_files_manifest, 结果是复盘文件推上去了、
+    # 但站点点不到 (实测 09-15: files.js 的 reviews 数组停在 09-14)。
+    # 在复盘流程末尾补一次, 让"手动跑"和"计划任务跑"结果一致。
+    try:
+        from daily_run import _write_files_manifest
+        _write_files_manifest()
+    except Exception as e:
+        print(f"[清单] 刷新跳过: {str(e)[:60]}")
+
     # ---- 透明哈希链账本: 赛后结算回填 ----
     try:
         from pipeline.transparency import settle as _tp_settle, generate_page as _tp_page

@@ -1133,6 +1133,23 @@ def cmd_review(args):
     except Exception as e:
         print(f"[清单] 刷新跳过: {str(e)[:60]}")
 
+    # ---- 复盘收尾: h2h 全库回灌 + 假设台账扫描 (2026-09-16) ----
+    # 这两步原本只在 daily_run 的复盘流程里, 手动跑 pipeline.py review 会漏掉 ——
+    # 和上面清单是同一个坑。补齐后, "手动跑"与"计划任务跑"完全等价。
+    import subprocess as _sp
+    _res_path = os.path.join("data", "output", f"results_{date_str}.json")
+    if os.path.exists(_res_path):
+        try:
+            _sp.run([sys.executable, "h2h.py", "--append", _res_path], check=False)
+        except Exception as e:
+            print(f"[h2h] 回灌跳过: {str(e)[:60]}")
+    else:
+        print(f"[h2h] 未找到 {_res_path}, 跳过回灌")
+    try:
+        _sp.run([sys.executable, "pipeline/hypothesis_ledger.py", "--scan"], check=False)
+    except Exception as e:
+        print(f"[台账] 扫描跳过: {str(e)[:60]}")
+
     # ---- 透明哈希链账本: 赛后结算回填 ----
     try:
         from pipeline.transparency import settle as _tp_settle, generate_page as _tp_page

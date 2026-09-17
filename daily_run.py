@@ -141,59 +141,21 @@ def _git_sync() -> None:
 def cmd_predict(args) -> None:
     date_str = args.date or _today()
 
-    # 临盘时点 = 当天最早开赛前 90 分钟 (2026-09-15 用户拍板, 取代固定 20:00)。
-    # 计划任务每 30 分钟唤起一次, 这里做闸门:
-    #   今天已出过终盘 → 安静退出 (避免重复冻结哈希链)
-    #   还没到"最早开赛前 90 分钟" → 安静退出
-    # 体彩当天场次最早可能 18:00 开踢, 所以固定钟点(原 20:00)会晚于开赛。
+    # 终盘只有一个守卫: 当天已出过就退出 (防重复冻结哈希链)。
+    #
+    # **时点不在这里判** (2026-09-17 用户拍板, 拆掉此前三层补丁)。
+    # 三层补丁的来由, 都是因为"用固定/半固定钟点去猜跨时区赛程":
+    #   1) 固定 21:00 → 首场 20:00 就开踢了
+    #   2) 每30分钟唤起 + 最早开赛前90分钟闸门 → 触发器用了 -Once, 第二天不跑
+    #   3) 改成每天触发 → 00:00 那一跳用前一天的赛程判时点, 给新一天提前 22 小时出终盘
+    # 现在改为: tools/schedule_final.py 拉当日赛程, 用 business_date + kickoff_time
+    # 拼出**绝对开赛时间**, 算出"最早开赛前 90 分钟", 直接把计划任务设到那个时刻。
+    # 计划任务每天只跑一次, 时间由赛程决定 —— 这里不需要再判一次。
     if args.stage == "final" and not getattr(args, "force", False):
         _flag = os.path.join("data", "state", "final_done_" + date_str)
         if os.path.exists(_flag):
             print("[临盘] " + date_str + " 终盘已出过, 跳过")
             return
-        # 跨天防线 (2026-09-17 修): 闸门判时点靠 data/today.json 里的开赛时间, 但那个
-        # 文件可能还是**前一天**抓的。实测 09-17 00:03 那一跳: 用 09-16 的赛程算出
-        # "离最早开赛不足 90 分钟" → 放行, 而运行时 date_str 已是 09-17 → 给新的一天
-        # 提前 22 小时出了终盘, 之后所有 tick 又被"已出过"标记挡住。
-        # 要求 today.json 必须是当天写的, 否则这一跳不判时点。
-        try:
-            _mt = datetime.fromtimestamp(os.path.getmtime("data/today.json"))
-            if _mt.date() != datetime.now().date():
-                print("[临盘] today.json 是 %s 抓的, 不是今天, 跳过本跳" % _mt.strftime("%Y-%m-%d"))
-                return
-        except Exception:
-            pass
-        try:
-            with open("data/today.json", encoding="utf-8") as _fh:
-                _mm = json.load(_fh)
-        except Exception:
-            _mm = []
-        _now = datetime.now()
-        _b = datetime.strptime(date_str, "%Y-%m-%d")
-        _best = None
-        for _m in _mm:
-            _kt = (_m.get("kickoff_time") or "").strip()
-            if not _kt:
-                continue
-            try:
-                _h, _mi = int(_kt.split(":")[0]), int(_kt.split(":")[1])
-            except Exception:
-                continue
-            _c1 = _b.replace(hour=_h, minute=_mi, second=0, microsecond=0)
-            _c2 = _c1 + timedelta(days=1)
-            _kdt = _c1 if abs((_c1 - _now).total_seconds()) <= abs((_c2 - _now).total_seconds()) else _c2
-            if _kdt <= _now:
-                continue
-            if _best is None or _kdt < _best:
-                _best = _kdt
-        if _best is not None and not getattr(args, "force", False):
-            _go = _best - timedelta(minutes=90)
-            if _now < _go:
-                print("[临盘] 未到点 (最早开赛 %s, 临盘时点 %s), 跳过" % (
-                    _best.strftime("%H:%M"), _go.strftime("%H:%M")))
-                return
-            print("[临盘] 最早开赛 %s → 临盘时点 %s, 开跑" % (
-                _best.strftime("%H:%M"), _go.strftime("%H:%M")))
 
     # 1) 拉取今日比赛 (体彩为主, odds-api.io 兜底; --all-leagues 时纳入体彩开盘全部比赛)
     fetch_cmd = [sys.executable, "fetch_sporttery.py", date_str]
@@ -288,12 +250,22 @@ def cmd_predict(args) -> None:
         print("[失败] 预测流程退出码 " + str(rc))
         sys.exit(rc)
 
-    # 终盘成功才落"今天已出"标记 (临盘闸门靠它避免一天出多次 / 重复冻结哈希链)
+    # 终盘成功才落"今天已出"标记 (避免一天出多次 / 重复冻结哈希链)
     if args.stage == "final":
         try:
             open(os.path.join("data", "state", "final_done_" + date_str), "w").close()
         except Exception:
             pass
+
+    # 早盘/午盘跑完后重排终盘时刻 (2026-09-17 用户拍板: 用"算"取代"猜")。
+    # 排程器拉当日赛程 → 用 business_date + kickoff_time 拼出绝对开赛时间 →
+    # 把终盘任务设到"最早开赛前 90 分钟"。每天重排一次, 时间随赛程走。
+    if args.stage in ("morning", "midday"):
+        try:
+            print("[排程] 重排终盘时刻...")
+            _run([sys.executable, "tools/schedule_final.py"])
+        except Exception as e:
+            print("[排程] 跳过: " + str(e)[:60])
 
     stage_cn = {"morning": "早盘", "midday": "午盘", "final": "终盘"}.get(args.stage, args.stage)
     if args.stage == "final":

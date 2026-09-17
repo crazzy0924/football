@@ -61,6 +61,10 @@ for pool in ['HAD', 'HHAD', 'TTG', 'CRS', 'HAFU']:
                     'league_id': m.get('leagueId', ''),
                     'match_num': m.get('matchNumCode', ''),
                     'match_time': m.get('matchTime') or m.get('matchTime2') or '',
+                    # 体彩的比赛日 = 绝对日期 (2026-09-17)。带上它, 下游就能拼出
+                    # "business_date + match_time" 的**绝对开赛时间**, 跨天不再有歧义 ——
+                    # 之前只给 HH:MM, 靠"离现在最近"去猜是当天还是次日, 才引出一串错误。
+                    'business_date': m.get('businessDate', ''),
                 }
             if pool == 'HAD':
                 all_matches[mid]['had'] = m.get('had', {})
@@ -176,6 +180,7 @@ for mid, m in sorted(all_matches.items(), key=lambda x: x[1].get('match_num', ''
         'league_name': m.get('league_name', ''),
         'match_num': m.get('match_num', ''),
         'kickoff_time': m.get('match_time', ''),
+        'business_date': m.get('business_date', ''),
     }
 
     # SPF odds

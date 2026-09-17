@@ -151,6 +151,18 @@ def cmd_predict(args) -> None:
         if os.path.exists(_flag):
             print("[临盘] " + date_str + " 终盘已出过, 跳过")
             return
+        # 跨天防线 (2026-09-17 修): 闸门判时点靠 data/today.json 里的开赛时间, 但那个
+        # 文件可能还是**前一天**抓的。实测 09-17 00:03 那一跳: 用 09-16 的赛程算出
+        # "离最早开赛不足 90 分钟" → 放行, 而运行时 date_str 已是 09-17 → 给新的一天
+        # 提前 22 小时出了终盘, 之后所有 tick 又被"已出过"标记挡住。
+        # 要求 today.json 必须是当天写的, 否则这一跳不判时点。
+        try:
+            _mt = datetime.fromtimestamp(os.path.getmtime("data/today.json"))
+            if _mt.date() != datetime.now().date():
+                print("[临盘] today.json 是 %s 抓的, 不是今天, 跳过本跳" % _mt.strftime("%Y-%m-%d"))
+                return
+        except Exception:
+            pass
         try:
             with open("data/today.json", encoding="utf-8") as _fh:
                 _mm = json.load(_fh)

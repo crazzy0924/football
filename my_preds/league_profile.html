@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang='zh'><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>五大联赛 + 欧冠 · 各联赛自画像</title>
+<style>body{font-family:-apple-system,'Segoe UI',sans-serif;background:#0f1218;color:#e6e9ef;margin:0;padding:16px;line-height:1.55}
+h1{font-size:1.25rem}h2{font-size:1.05rem;color:#9fb3d1;margin-top:26px;border-bottom:1px solid #222833;padding-bottom:4px}
+table{border-collapse:collapse;width:100%;font-size:.82rem;margin:8px 0}
+th,td{border-bottom:1px solid #222833;padding:5px 8px;text-align:center}
+th{color:#8fa3bf}.ok{color:#39d98a}.warn{color:#ffcc66}.dim{color:#7b8aa3;font-size:.78rem}
+b{color:#e6e9ef}</style>
+<h1>五大联赛 + 欧冠 · 各联赛自画像</h1>
+<p class='dim'>机器生成（<code>回测\league_profile.py</code>）：长历史＝football-data 6 季（欧冠 3 季）；「我的战绩」＝公开台账实测。</p>
+<h2>总览</h2><table><tr><th>联赛</th><th>大2.5</th><th>场均进球</th><th>跟热门命中</th><th>我·胜平负</th><th>我·大小球</th><th>我·比分</th></tr>
+<tr><td><b>英超</b> <span class='dim'>PL</span></td><td>56.5%</td><td>2.925</td><td>56.2%</td><td>6/15</td><td>9/17</td><td>2/21</td></tr>
+<tr><td><b>西甲</b> <span class='dim'>PD</span></td><td>47.6%</td><td>2.603</td><td>54.5%</td><td>14/26</td><td>21/33</td><td>6/36</td></tr>
+<tr><td><b>德甲</b> <span class='dim'>BL1</span></td><td>61.2%</td><td>3.185</td><td>54.0%</td><td>5/8</td><td>9/14</td><td>2/16</td></tr>
+<tr><td><b>意甲</b> <span class='dim'>SA</span></td><td>49.0%</td><td>2.607</td><td>53.9%</td><td>8/13</td><td>6/14</td><td>3/23</td></tr>
+<tr><td><b>法甲</b> <span class='dim'>FL1</span></td><td>53.7%</td><td>2.826</td><td>52.5%</td><td>3/8</td><td>5/9</td><td>1/10</td></tr>
+<tr><td><b>欧冠</b> <span class='dim'>UCL</span></td><td>63.0%</td><td>3.266</td><td>—</td><td>0/0</td><td>2/3</td><td>1/4</td></tr>
+</table>
+<h2>英超（PL）</h2>
+<p>样本 <b>1930</b> 场｜场均 <b>2.925</b> 球｜大2.5 <b>56.5%</b>｜BTTS 55.3%｜主胜 44.1%／平 24.0%／客胜 31.9%｜市场偏差 +1.3pp</p>
+<table><tr><th>让球盘档</th><th>n</th><th>实际大2.5%</th></tr>
+<tr><td>浅盘≤0.5</td><td>995</td><td><b>53.9%</b></td></tr>
+<tr><td>中盘0.75-1.0</td><td>481</td><td><b>55.7%</b></td></tr>
+<tr><td>1.25-1.5</td><td>286</td><td class='ok'><b>60.1%</b></td></tr>
+<tr><td>深盘≥1.75</td><td>167</td><td class='ok'><b>67.7%</b></td></tr>
+</table>
+<table><tr><th>组合格（盘档 × 市场方向）</th><th>n</th><th>跟市场命中</th></tr>
+<tr><td>深盘≥1.75 × 市场大</td><td>149</td><td class='ok'><b>68.5%</b></td></tr>
+<tr><td>中盘0.75-1.0 × 市场大</td><td>335</td><td><b>59.4%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场大</td><td>502</td><td><b>59.0%</b></td></tr>
+<tr><td>1.25-1.5 × 市场大</td><td>258</td><td><b>58.1%</b></td></tr>
+<tr><td>中盘0.75-1.0 × 市场小</td><td>94</td><td><b>57.4%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场小</td><td>401</td><td class='warn'><b>51.6%</b></td></tr>
+</table>
+<p class='dim'>我的实战：可计分 23 场｜胜平负 6/15｜大小球 9/17｜比分 2/21</p>
+<p><b>该联赛怎么打：</b></p><ul>
+<li>最强格：深盘≥1.75 × 市场大（n=149，跟市场命中 68.5%）</li>
+<li>最弱格：浅盘≤0.5 × 市场小（n=401，跟市场命中 51.6%）</li>
+<li>无「跟市场命中<50% 且 n≥150」的格子 → 不做反做，只按强弱调信心。</li>
+</ul>
+<h2>西甲（PD）</h2>
+<p>样本 <b>1941</b> 场｜场均 <b>2.603</b> 球｜大2.5 <b>47.6%</b>｜BTTS 51.9%｜主胜 45.8%／平 26.2%／客胜 28.0%｜市场偏差 +0.7pp</p>
+<table><tr><th>让球盘档</th><th>n</th><th>实际大2.5%</th></tr>
+<tr><td>浅盘≤0.5</td><td>1181</td><td class='warn'><b>43.0%</b></td></tr>
+<tr><td>中盘0.75-1.0</td><td>455</td><td><b>49.9%</b></td></tr>
+<tr><td>1.25-1.5</td><td>198</td><td class='ok'><b>61.1%</b></td></tr>
+<tr><td>深盘≥1.75</td><td>103</td><td class='ok'><b>63.1%</b></td></tr>
+</table>
+<table><tr><th>组合格（盘档 × 市场方向）</th><th>n</th><th>跟市场命中</th></tr>
+<tr><td>浅盘≤0.5 × 市场大</td><td>165</td><td class='ok'><b>62.4%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场小</td><td>892</td><td class='ok'><b>61.4%</b></td></tr>
+<tr><td>1.25-1.5 × 市场大</td><td>152</td><td class='ok'><b>61.2%</b></td></tr>
+<tr><td>深盘≥1.75 × 市场大</td><td>87</td><td class='ok'><b>60.9%</b></td></tr>
+<tr><td>中盘0.75-1.0 × 市场大</td><td>182</td><td><b>58.2%</b></td></tr>
+<tr><td>中盘0.75-1.0 × 市场小</td><td>234</td><td><b>58.1%</b></td></tr>
+</table>
+<p class='dim'>我的实战：可计分 38 场｜胜平负 14/26｜大小球 21/33｜比分 6/36</p>
+<p><b>该联赛怎么打：</b></p><ul>
+<li>最强格：浅盘≤0.5 × 市场大（n=165，跟市场命中 62.4%）</li>
+<li>最弱格：中盘0.75-1.0 × 市场小（n=234，跟市场命中 58.1%）</li>
+<li>无「跟市场命中<50% 且 n≥150」的格子 → 不做反做，只按强弱调信心。</li>
+</ul>
+<h2>德甲（BL1）</h2>
+<p>样本 <b>1548</b> 场｜场均 <b>3.185</b> 球｜大2.5 <b>61.2%</b>｜BTTS 60.0%｜主胜 44.2%／平 24.8%／客胜 31.0%｜市场偏差 +3.1pp</p>
+<table><tr><th>让球盘档</th><th>n</th><th>实际大2.5%</th></tr>
+<tr><td>浅盘≤0.5</td><td>875</td><td><b>58.5%</b></td></tr>
+<tr><td>中盘0.75-1.0</td><td>332</td><td><b>56.3%</b></td></tr>
+<tr><td>1.25-1.5</td><td>190</td><td class='ok'><b>70.0%</b></td></tr>
+<tr><td>深盘≥1.75</td><td>151</td><td class='ok'><b>76.2%</b></td></tr>
+</table>
+<table><tr><th>组合格（盘档 × 市场方向）</th><th>n</th><th>跟市场命中</th></tr>
+<tr><td>深盘≥1.75 × 市场大</td><td>98</td><td class='ok'><b>74.5%</b></td></tr>
+<tr><td>1.25-1.5 × 市场大</td><td>169</td><td class='ok'><b>69.8%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场大</td><td>585</td><td class='ok'><b>62.7%</b></td></tr>
+<tr><td>中盘0.75-1.0 × 市场大</td><td>272</td><td><b>56.2%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场小</td><td>195</td><td><b>53.8%</b></td></tr>
+</table>
+<p class='dim'>我的实战：可计分 16 场｜胜平负 5/8｜大小球 9/14｜比分 2/16</p>
+<p><b>该联赛怎么打：</b></p><ul>
+<li>最强格：深盘≥1.75 × 市场大（n=98，跟市场命中 74.5%）</li>
+<li>最弱格：浅盘≤0.5 × 市场小（n=195，跟市场命中 53.8%）</li>
+<li>无「跟市场命中<50% 且 n≥150」的格子 → 不做反做，只按强弱调信心。</li>
+</ul>
+<h2>意甲（SA）</h2>
+<p>样本 <b>1930</b> 场｜场均 <b>2.607</b> 球｜大2.5 <b>49.0%</b>｜BTTS 51.4%｜主胜 40.4%／平 27.0%／客胜 32.6%｜市场偏差 -0.6pp</p>
+<table><tr><th>让球盘档</th><th>n</th><th>实际大2.5%</th></tr>
+<tr><td>浅盘≤0.5</td><td>1068</td><td class='warn'><b>44.5%</b></td></tr>
+<tr><td>中盘0.75-1.0</td><td>508</td><td><b>56.3%</b></td></tr>
+<tr><td>1.25-1.5</td><td>270</td><td><b>53.3%</b></td></tr>
+<tr><td>深盘≥1.75</td><td>83</td><td><b>47.0%</b></td></tr>
+</table>
+<table><tr><th>组合格（盘档 × 市场方向）</th><th>n</th><th>跟市场命中</th></tr>
+<tr><td>中盘0.75-1.0 × 市场大</td><td>243</td><td class='ok'><b>66.7%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场小</td><td>697</td><td class='ok'><b>60.0%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场大</td><td>277</td><td><b>54.9%</b></td></tr>
+<tr><td>1.25-1.5 × 市场大</td><td>216</td><td><b>54.6%</b></td></tr>
+<tr><td>中盘0.75-1.0 × 市场小</td><td>214</td><td><b>54.2%</b></td></tr>
+</table>
+<p class='dim'>我的实战：可计分 26 场｜胜平负 8/13｜大小球 6/14｜比分 3/23</p>
+<p><b>该联赛怎么打：</b></p><ul>
+<li>最强格：中盘0.75-1.0 × 市场大（n=243，跟市场命中 66.7%）</li>
+<li>最弱格：中盘0.75-1.0 × 市场小（n=214，跟市场命中 54.2%）</li>
+<li>无「跟市场命中<50% 且 n≥150」的格子 → 不做反做，只按强弱调信心。</li>
+</ul>
+<h2>法甲（FL1）</h2>
+<p>样本 <b>1705</b> 场｜场均 <b>2.826</b> 球｜大2.5 <b>53.7%</b>｜BTTS 55.2%｜主胜 43.2%／平 24.6%／客胜 32.2%｜市场偏差 +1pp</p>
+<table><tr><th>让球盘档</th><th>n</th><th>实际大2.5%</th></tr>
+<tr><td>浅盘≤0.5</td><td>986</td><td><b>49.5%</b></td></tr>
+<tr><td>中盘0.75-1.0</td><td>423</td><td><b>55.1%</b></td></tr>
+<tr><td>1.25-1.5</td><td>207</td><td class='ok'><b>62.3%</b></td></tr>
+<tr><td>深盘≥1.75</td><td>89</td><td class='ok'><b>73.0%</b></td></tr>
+</table>
+<table><tr><th>组合格（盘档 × 市场方向）</th><th>n</th><th>跟市场命中</th></tr>
+<tr><td>1.25-1.5 × 市场大</td><td>180</td><td class='ok'><b>63.9%</b></td></tr>
+<tr><td>中盘0.75-1.0 × 市场大</td><td>278</td><td><b>59.4%</b></td></tr>
+<tr><td>中盘0.75-1.0 × 市场小</td><td>110</td><td><b>56.4%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场大</td><td>382</td><td><b>55.5%</b></td></tr>
+<tr><td>浅盘≤0.5 × 市场小</td><td>517</td><td><b>55.3%</b></td></tr>
+</table>
+<p class='dim'>我的实战：可计分 10 场｜胜平负 3/8｜大小球 5/9｜比分 1/10</p>
+<p><b>该联赛怎么打：</b></p><ul>
+<li>最强格：1.25-1.5 × 市场大（n=180，跟市场命中 63.9%）</li>
+<li>最弱格：浅盘≤0.5 × 市场小（n=517，跟市场命中 55.3%）</li>
+<li>无「跟市场命中<50% 且 n≥150」的格子 → 不做反做，只按强弱调信心。</li>
+</ul>
+<h2>欧冠（UCL）</h2>
+<p>样本 <b>503</b> 场｜场均 <b>3.266</b> 球｜大2.5 <b>63.0%</b>｜BTTS 56.1%｜主胜 49.7%／平 17.5%／客胜 32.8%</p>
+<p class='dim'>我的实战：可计分 4 场｜胜平负 0/0｜大小球 2/3｜比分 1/4</p>
+<p><b>该联赛怎么打：</b></p><ul>
+<li>组合格样本不足（n<80）→ 沿用全局规则，不下联赛结论。</li>
+</ul>
+<p class='dim'>口径：让球盘分档用收盘亚盘线（abs），组合格＝盘档 × 收盘大2.5 隐含方向；「跟市场命中%」＝照市场方向判的命中率。样本 &lt;80 的格子不列出。仅 AI 学习与研究，不构成投注建议。</p>
+</body></html>

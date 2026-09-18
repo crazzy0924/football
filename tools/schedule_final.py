@@ -37,11 +37,31 @@ LEAD_MIN = 90
 
 
 def _ps(cmd: str) -> str:
-    """用 -EncodedCommand 执行 PowerShell —— 绕开中文任务名在命令行上的编码问题。"""
-    enc = base64.b64encode(cmd.encode("utf-16-le")).decode("ascii")
-    r = subprocess.run(["powershell", "-NoProfile", "-EncodedCommand", enc],
-                       capture_output=True, text=True, encoding="utf-8", errors="replace")
-    return (r.stdout or "").strip()
+    """执行 PowerShell —— 写临时 .ps1 (UTF-8 BOM) 再跑。
+
+    不用 -Command/-EncodedCommand (2026-09-18 实测): 设置任务的**动作**时参数里带
+    双引号和 && >> 重定向, 走命令行会被打散, Set-ScheduledTask 静默失败 ——
+    表现为"触发时间设对了, 但动作没换", 而且不报错。写文件执行没有这个问题。
+    """
+    import tempfile
+    fd, path = tempfile.mkstemp(suffix=".ps1")
+    os.close(fd)
+    try:
+        with io.open(path, "w", encoding="utf-8-sig") as f:
+            f.write(cmd)
+        r = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
+                            "-File", path],
+                           capture_output=True, text=True, encoding="utf-8", errors="replace")
+        out = (r.stdout or "").strip()
+        err = (r.stderr or "").strip()
+        if err and not out:
+            return "ERR " + err[:200]
+        return out
+    finally:
+        try:
+            os.remove(path)
+        except Exception:
+            pass
 
 
 def load_slate(date_str: str) -> list:
@@ -134,14 +154,22 @@ def main() -> int:
         print("[排程] --dry-run: 本应把任务设为每天 %s 触发" % target.strftime("%H:%M"))
         return 0
 
+    # 动作里必须钉死 --date (2026-09-18 修):
+    # 终盘常在**午夜后**触发(如 01:00), 那时 daily_run 的 date_str 取"今天"已经翻到
+    # 次日 → 会去拉**下一天**的比赛日, 给出错误一天的终盘。实测 09-18 这批 5 场
+    # (开赛 09-19 凌晨) 属于比赛日 09-18, 必须显式传 --date 2026-09-18。
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    arg = ('/c cd /d "%s" && python daily_run.py predict --stage final --date %s '
+           '>> data' + chr(92) + 'log' + chr(92) + 'final_predict.log 2>&1' % (root, a.date))
     ps = ("$tr = New-ScheduledTaskTrigger -Daily -At '%s';"
-          "Set-ScheduledTask -TaskName '%s' -Trigger $tr | Out-Null"
-          % (at, TASK))
+          "$ac = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument '%s';"
+          "Set-ScheduledTask -TaskName '%s' -Trigger $tr -Action $ac | Out-Null"
+          % (at, arg, TASK))
     _ps(ps)
-    return _verify(target)
+    return _verify(target, a.date)
 
 
-def _verify(target: datetime) -> int:
+def _verify(target: datetime, date_str: str = "") -> int:
     """改完立刻读回任务状态并校验 —— 2026-09-18 加。
 
     起因: 手动改任务时把起始时间设成**过去**的时刻, Windows 把下一次算成了后天,
@@ -150,9 +178,11 @@ def _verify(target: datetime) -> int:
     ps = ("$t = Get-ScheduledTask -TaskName '%s';"
           "$g = $t.Triggers[0];"
           "$i = $t | Get-ScheduledTaskInfo;"
+          "$a = $t.Actions | Select-Object -First 1;"
           "Write-Output ('NEXT=' + $i.NextRunTime.ToString('yyyy-MM-ddTHH:mm:ss'));"
           "Write-Output ('INTERVAL=' + $g.DaysInterval);"
-          "Write-Output ('REPEAT=' + $g.Repetition.Interval)"
+          "Write-Output ('REPEAT=' + $g.Repetition.Interval);"
+          "Write-Output ('ACTION=' + $a.Arguments)"
           % TASK)
     raw = _ps(ps)
     vals = {}
@@ -185,6 +215,13 @@ def _verify(target: datetime) -> int:
         problems.append("不是每天一次 (间隔=%s)" % vals.get("INTERVAL"))
     if vals.get("REPEAT"):
         problems.append("残留重复窗口 %s" % vals.get("REPEAT"))
+    # 动作必须钉死比赛日 (2026-09-18 加): 终盘常在午夜后跑, 不带 --date 就会拉错一天。
+    act = vals.get("ACTION", "")
+    if date_str:
+        if ("--date " + date_str) not in act:
+            problems.append("动作里没有 --date %s (午夜后跑会拉错比赛日)" % date_str)
+    elif "--date" not in act:
+        problems.append("动作里没有 --date")
 
     if problems:
         print("")

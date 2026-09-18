@@ -81,6 +81,35 @@ def _write_files_manifest() -> None:
 
 
 RETRY_TASK_NAME = "足球模型-补推"
+REVIEW_RETRY_TASK = "足球模型-补复盘"
+
+
+def _register_review_retry(date_str: str) -> None:
+    """复盘失败时注册每30分钟重试任务 (2026-09-18 加)。
+
+    起因: 09-17 早上两个赛果源同时连不上(WinError 10061), 复盘直接退出码 1 ——
+    **09-16 的复盘从此缺失, 一直没人发现**。推送那条路早就有断网自愈(补推任务),
+    复盘这条一直没有: 同一个网络故障, 推送能自愈, 复盘丢一天。
+    """
+    try:
+        root = os.path.dirname(os.path.abspath(__file__))
+        subprocess.run([
+            "schtasks", "/Create", "/TN", REVIEW_RETRY_TASK,
+            "/TR", f'cmd /c cd /d {root} && python daily_run.py review {date_str}',
+            "/SC", "MINUTE", "/MO", "30", "/F",
+        ], capture_output=True)
+        print("[复盘] 拉取失败已注册每30分钟重试任务 (网通自动补回并自删)")
+    except Exception as e:
+        print("[复盘] 注册重试任务失败: " + str(e))
+
+
+def _remove_review_retry() -> None:
+    """复盘成功后删除重试任务"""
+    try:
+        subprocess.run(["schtasks", "/Delete", "/TN", REVIEW_RETRY_TASK, "/F"],
+                       capture_output=True)
+    except Exception:
+        pass
 
 
 def _register_push_retry() -> None:
@@ -290,7 +319,11 @@ def cmd_review(args) -> None:
     rc = _run(cmd)
     if rc != 0:
         print("[失败] 复盘流程退出码 " + str(rc))
+        # 断网自愈 (2026-09-18): 不要直接丢一天 —— 注册重试任务, 网通后自动补回。
+        # 注意: 重试任务跑的是同一个命令, 成功时会走到下面 _remove_review_retry() 自删。
+        _register_review_retry(date_str)
         sys.exit(rc)
+    _remove_review_retry()  # 成功则清掉可能残留的重试任务
 
     # 赛果回灌全库 (h2h 纪律)
     results_path = os.path.join("data", "output", f"results_{date_str}.json")

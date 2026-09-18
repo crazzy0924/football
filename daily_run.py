@@ -271,7 +271,12 @@ def cmd_predict(args) -> None:
             print("")
 
     # 4) 预测 (可选 LLM 分析; 早盘/午盘只出七维分析存档页, 终盘出预测页)
-    cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json", "--stage", args.stage]
+    # **必须显式传 --date** (2026-09-19 修): 终盘常在午夜后跑, 不传的话 pipeline.py
+    # 用"当前日期"命名产物 —— 实测 09-19 00:00 那次按 09-18 抓的数据, 却写成了
+    # predictions_2026-09-19.json。上面 fetch_sporttery / odds_fetcher 都传了日期,
+    # 只有这里漏了, 于是"内容对、文件名错"。
+    cmd = [sys.executable, "pipeline.py", "predict", "--matches-json", "data/today.json",
+           "--stage", args.stage, "--date", date_str]
     if not args.no_llm:
         cmd.append("--llm")
     rc = _run(cmd)

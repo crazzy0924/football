@@ -84,6 +84,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", default=datetime.now().strftime("%Y-%m-%d"))
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--check", action="store_true",
+                    help="只校验当前任务状态, 不修改")
     a = ap.parse_args()
     now = datetime.now()
 
@@ -119,6 +121,9 @@ def main() -> int:
     print("[排程] 最早开赛 %s → 终盘目标 %s (提前 %d 分钟)" % (
         earliest.strftime("%m-%d %H:%M"), target.strftime("%m-%d %H:%M"), LEAD_MIN))
 
+    if a.check:
+        return _verify(target)
+
     if target <= now:
         print("[排程] 目标时刻已过 (现在 %s) → 不安排" % now.strftime("%H:%M"))
         print("       需要立即出终盘: python daily_run.py predict --stage final --force")
@@ -130,12 +135,67 @@ def main() -> int:
         return 0
 
     ps = ("$tr = New-ScheduledTaskTrigger -Daily -At '%s';"
-          "Set-ScheduledTask -TaskName '%s' -Trigger $tr | Out-Null;"
-          "$t = Get-ScheduledTask -TaskName '%s';"
-          "Write-Output ('OK 下次运行 ' + ($t | Get-ScheduledTaskInfo).NextRunTime)"
-          % (at, TASK, TASK))
-    out = _ps(ps)
-    print("[排程] " + (out or "设置完成(无回显)"))
+          "Set-ScheduledTask -TaskName '%s' -Trigger $tr | Out-Null"
+          % (at, TASK))
+    _ps(ps)
+    return _verify(target)
+
+
+def _verify(target: datetime) -> int:
+    """改完立刻读回任务状态并校验 —— 2026-09-18 加。
+
+    起因: 手动改任务时把起始时间设成**过去**的时刻, Windows 把下一次算成了后天,
+    直接跳过了一整天的复盘, 而当时没有任何检查发现。人改任务状态必须当场验证。
+    """
+    ps = ("$t = Get-ScheduledTask -TaskName '%s';"
+          "$g = $t.Triggers[0];"
+          "$i = $t | Get-ScheduledTaskInfo;"
+          "Write-Output ('NEXT=' + $i.NextRunTime.ToString('yyyy-MM-ddTHH:mm:ss'));"
+          "Write-Output ('INTERVAL=' + $g.DaysInterval);"
+          "Write-Output ('REPEAT=' + $g.Repetition.Interval)"
+          % TASK)
+    raw = _ps(ps)
+    vals = {}
+    for line in (raw or "").splitlines():
+        if "=" in line:
+            k, _, v = line.partition("=")
+            vals[k.strip()] = v.strip()
+
+    nxt = vals.get("NEXT", "")
+    try:
+        nxt_dt = datetime.strptime(nxt[:19], "%Y-%m-%dT%H:%M:%S")
+    except ValueError:
+        print("[校验] ❌ 读不回下次运行时间 (回显: %r)" % raw)
+        return 3
+
+    now = datetime.now()
+    print("[校验] 下次运行 %s | 每天间隔 %s | 重复窗口 %r" % (
+        nxt_dt.strftime("%m-%d %H:%M"), vals.get("INTERVAL", "?"),
+        vals.get("REPEAT", "")))
+
+    problems = []
+    if nxt_dt <= now:
+        problems.append("下次运行时间已过期")
+    if abs((nxt_dt - target).total_seconds()) > 120:
+        problems.append("与目标 %s 不符 (差了 %.0f 分钟)" % (
+            target.strftime("%m-%d %H:%M"), (nxt_dt - target).total_seconds() / 60))
+    if (nxt_dt - now).total_seconds() > 48 * 3600:
+        problems.append("超过 48 小时才跑 —— 很可能是起始时间设在过去, 被跳过了一整天")
+    if vals.get("INTERVAL") not in ("1", "?"):
+        problems.append("不是每天一次 (间隔=%s)" % vals.get("INTERVAL"))
+    if vals.get("REPEAT"):
+        problems.append("残留重复窗口 %s" % vals.get("REPEAT"))
+
+    if problems:
+        print("")
+        print("=" * 62)
+        print("[校验] ❌ 任务状态不对:")
+        for p in problems:
+            print("       - " + p)
+        print("       请检查: Get-ScheduledTask -TaskName '%s'" % TASK)
+        print("=" * 62)
+        return 3
+    print("[校验] ✅ 任务状态正常")
     return 0
 
 

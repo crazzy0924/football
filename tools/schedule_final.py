@@ -33,7 +33,12 @@ except Exception:
     pass
 
 TASK = "足球模型-终盘预测"
-LEAD_MIN = 90
+
+# === 终盘时刻规则 (用户拍板 2026-09-19, 写死) ===
+#   默认 21:00; 当日比赛日的场次里有开赛早于 21:00 的 → 提前到 20:00。
+DEFAULT_AT = (21, 0)        # 默认出终盘的时刻 (时, 分)
+EARLY_AT = (20, 0)          # 有早场时提前到的时刻
+EARLY_BEFORE_HOUR = 21      # "早场"的判定线: 开赛时间早于这个整点
 
 
 def _ps(cmd: str) -> str:
@@ -129,17 +134,27 @@ def main() -> int:
         print("   %s  %-6s %s vs %s  [%s]" % (
             dt.strftime("%m-%d %H:%M"), m.get("league_code"),
             m.get("home_team", ""), m.get("away_team", ""), mark))
+    # === 终盘时刻规则 (用户拍板 2026-09-19, 写死) ===
+    #   默认: 每天 21:00 出终盘
+    #   若当日比赛日的场次里, 有开赛时间早于 21:00 的 → 提前到 20:00
+    # 只有两条分支, 不再算"最早开赛前90分钟"那种动态时点。
+    early = [(dt, m) for dt, m in rows if dt.hour < EARLY_BEFORE_HOUR]
+    hh, mm = (EARLY_AT if early else DEFAULT_AT)
+    target = datetime.strptime(a.date, "%Y-%m-%d").replace(hour=hh, minute=mm, second=0, microsecond=0)
+    print()
+    print("[排程] 规则: 默认 %02d:%02d; 有早于 %02d:00 开赛的场次则 %02d:%02d" % (
+        DEFAULT_AT[0], DEFAULT_AT[1], EARLY_BEFORE_HOUR, EARLY_AT[0], EARLY_AT[1]))
+    print("[排程] 当日早于 %02d:00 开赛的场次: %d 场 → 终盘定在 %s" % (
+        EARLY_BEFORE_HOUR, len(early), target.strftime("%m-%d %H:%M")))
+    for dt, m in early[:4]:
+        print("       早场 %s %s vs %s" % (
+            dt.strftime("%m-%d %H:%M"), m.get("home_team", ""), m.get("away_team", "")))
+
     if not upcoming:
         print()
         print("[排程] 今天没有未开赛的场次 → 不安排终盘")
         print("       需要临时出终盘: python daily_run.py predict --stage final --force")
         return 2
-
-    earliest = upcoming[0][0]
-    target = earliest - timedelta(minutes=LEAD_MIN)
-    print()
-    print("[排程] 最早开赛 %s → 终盘目标 %s (提前 %d 分钟)" % (
-        earliest.strftime("%m-%d %H:%M"), target.strftime("%m-%d %H:%M"), LEAD_MIN))
 
     if a.check:
         return _verify(target)

@@ -174,8 +174,9 @@ def main() -> int:
     # 次日 → 会去拉**下一天**的比赛日, 给出错误一天的终盘。实测 09-18 这批 5 场
     # (开赛 09-19 凌晨) 属于比赛日 09-18, 必须显式传 --date 2026-09-18。
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # 注意括号位置: % 只作用于紧邻的那个字面量, 拼接时必须整个括起来再用 % (踩过)
     arg = ('/c cd /d "%s" && python daily_run.py predict --stage final --date %s '
-           '>> data' + chr(92) + 'log' + chr(92) + 'final_predict.log 2>&1' % (root, a.date))
+           '>> data\\log\\final_predict.log 2>&1') % (root, a.date)
     ps = ("$tr = New-ScheduledTaskTrigger -Daily -At '%s';"
           "$ac = New-ScheduledTaskAction -Execute 'cmd.exe' -Argument '%s';"
           "Set-ScheduledTask -TaskName '%s' -Trigger $tr -Action $ac | Out-Null"

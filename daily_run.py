@@ -103,13 +103,29 @@ def _register_review_retry(date_str: str) -> None:
         print("[复盘] 注册重试任务失败: " + str(e))
 
 
-def _remove_review_retry() -> None:
-    """复盘成功后删除重试任务"""
+def _detach_delete_task(task_name: str, delay: int = 5) -> None:
+    """脱离当前进程、延迟若干秒后删除计划任务 —— 2026-09-19 修。
+
+    为什么不能直接删: 任务**正在运行时** schtasks /Delete 删自己会失败(被占用),
+    而异常被吞掉、也没检查返回值 → **任务永远删不掉, 每10分钟空跑一次**。
+    实测: 补推任务连续多次"结果 0(成功)", 但下次运行时间照旧, 一直挂着。
+    做法: 起一个脱离的 PowerShell, 先睡几秒(等当前实例退出), 再删。
+    """
+    import base64
+    ps = ("Start-Sleep -Seconds %d;"
+          "Unregister-ScheduledTask -TaskName '%s' -Confirm:$false" % (delay, task_name))
+    enc = base64.b64encode(ps.encode("utf-16-le")).decode("ascii")
     try:
-        subprocess.run(["schtasks", "/Delete", "/TN", REVIEW_RETRY_TASK, "/F"],
-                       capture_output=True)
+        subprocess.Popen(["powershell", "-NoProfile", "-EncodedCommand", enc],
+                         creationflags=0x00000008,   # DETACHED_PROCESS
+                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception:
         pass
+
+
+def _remove_review_retry() -> None:
+    """复盘成功后删除重试任务 (必须脱离进程延迟删, 见 _detach_delete_task)"""
+    _detach_delete_task(REVIEW_RETRY_TASK)
 
 
 def _register_push_retry() -> None:
@@ -127,12 +143,8 @@ def _register_push_retry() -> None:
 
 
 def _remove_push_retry() -> None:
-    """补推成功后删除补推任务"""
-    try:
-        subprocess.run(["schtasks", "/Delete", "/TN", RETRY_TASK_NAME, "/F"],
-                       capture_output=True)
-    except Exception:
-        pass
+    """补推成功后删除补推任务 (必须脱离进程延迟删, 见 _detach_delete_task)"""
+    _detach_delete_task(RETRY_TASK_NAME)
 
 
 def cmd_push_retry() -> None:

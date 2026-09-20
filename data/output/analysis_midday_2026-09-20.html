@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>午盘七维分析存档 — 2026-09-20</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 午盘七维分析存档 · 非预测页</div>
+    <h1>2026-09-20</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-09-20.html">predictions_2026-09-20.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>佛罗伦萨<span class="tvs">VS</span>那不勒斯
+      <span style="font-size:.75rem;color:#8d99b0;">(Fiorentina vs Napoli)</span>
+    </div>
+    <span class="m-meta">开球 18:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (48.0%) · 最可能比分 0-2 (9%) [原始0-1与让球/大小球矛盾, 已按约束修正]</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.13 / 平3.25 / 客1.99
+主胜赔率变动: 3.02 → 3.13 (+0.11)
+亚盘(主让1.0球): 主1.63 / 平3.6 / 客4.2
+波胆最低赔: 1-1@6.5 / 0-1@8.0 / 1-2@8.0
+模型亚盘倾向: away (价值 +5.2%, 信心 medium)
+模型大小球倾向: 小2.5 (模型48% vs 市场53%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第16名 (保级区) · 客队: 第10名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 0胜 0平 4负, 进球 3:10 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -1.6,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为那不勒斯客场小胜，核心是ELO差173、交锋4连败与客队资金流入。最大风险是那不勒斯中游战意不稳、紫百合主场保级反弹。&quot;,
+&quot;次选比分&quot;: &quot;0-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率: 客2.06→1.99(-0.07), 主3.02→3.13(+0.11); 亚盘主+1.0&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;客胜赔率下行、主队资金流出，市场与模型同向支持客队，但高margin显示市场已部分计价，优势分给-2。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-173; 预期进球1.01-1.57; 模型概率客48.8%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;ELO与预期进球均指向客队更强，紫百合进攻输出偏低，状态面那不勒斯占优。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失，无法量化影响，权重降至8并分配给市场/状态/赛程/战意。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋: 主队0胜0平4负, 总进球3-10; 无换帅/大换血信息&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;交锋4连败且净失7球，克制明显；因阵容变化程度不明，仅给-1。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程或双线压力，体能维度无倾向。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0-4并重新分配，不作推测。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测，权重0。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;Fiorentina #16保级区3分; Napoli #10中游6分&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 26,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;紫百合保级压力下有反弹动机，但那不勒斯无欧战分心、状态更稳，战意互有抵消，给0。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;那不勒斯控球推进，利用边路与中路渗透压制紫百合低位防线。&quot;,
+&quot;无球&quot;: &quot;佛罗伦萨需防范客队快速转换，中后场回追与禁区前保护是关键风险。&quot;,
+&quot;最大变量&quot;: &quot;佛罗伦萨若早早丢球，保级压力下阵型前压可能放大客队反击空间。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;那不勒斯先进球且紫百合进攻效率无提升&quot;,
+&quot;比分&quot;: [&quot;0-2&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;紫百合主场提升对抗强度，那不勒斯战意不足未能扩大比分&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;佛罗伦萨定位球或反击先得分，那不勒斯中游心态松懈&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场可能胶着，那不勒斯若未破门则下半场后段风险上升&quot;
+},
+&quot;触发器&quot;: [
+&quot;佛罗伦萨公布核心伤停或那不勒斯轮换主力&quot;,
+&quot;临场客胜赔率回升至2.05以上且主队资金回流&quot;,
+&quot;亚盘从主+1.0降至主+0.75&quot;,
+&quot;赛前确认那不勒斯大幅轮换&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在佛罗伦萨保级主场爆发而那不勒斯中游战意不足，导致主队不败甚至小胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主23.4% 平27.9% 客48.8%&lt;br&gt;预期进球: 1.01 - 1.57&lt;br&gt;大2.5: 48.2% | BTTS: 50.4%&lt;br&gt;贝叶斯后验: 主24.3% 平27.8% 客48.0%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>赫塔费<span class="tvs">VS</span>马拉加
+      <span style="font-size:.75rem;color:#8d99b0;">(Getafe vs Malaga)</span>
+    </div>
+    <span class="m-meta">开球 20:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (50.3%) · 最可能比分 1-0 (31%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.89 / 平2.83 / 客4.05
+主胜赔率变动: 1.95 → 1.89 (-0.06)
+亚盘(主受1.0球): 主4.37 / 平3.2 / 客1.7
+波胆最低赔: 1-0@5.3 / 1-1@5.5 / 0-0@6.5
+模型亚盘倾向: push (价值 +6.5%, 信心 medium)
+模型大小球倾向: 小1.5 (模型32% vs 市场64%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第17名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 1.6,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;主队小胜方向，核心是赫塔费主场保级战意与市场资金同步，但进攻效率极低，最大风险是闷平。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天SPF主1.95→1.89，客3.85→4.05；亚盘主-1.0模型主覆盖仅21%&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;资金流入主队，客队赔率大幅外流，市场方向与模型一致，但主-1.0覆盖不足显示市场对主队大胜存疑，仅支持小胜。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;预期进球0.96-0.22；模型概率主51.1%平41.0%客7.9%；ELO差-49&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;赫塔费预期进球不足1球，但马拉加预期仅0.22，客队进攻几乎无威胁，主队防守端优势明显，状态维度利好主队零封小胜。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法量化影响，按规则降权并将权重重新分配至市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未提供近3年交锋记录，无法判断克制关系，降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能条件对等，无额外优势，维度中性。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0，不纳入方向判断。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，权重记0，不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;赫塔费#17保级区，5分，近况L,D,D,L,W；马拉加无明确积分榜分区信息&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 32,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;赫塔费处于保级区，主场抢分动力明确，但近5轮仅1胜，战意虽强但转化能力存疑；客队战意信息不足，保守给主队优势。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;赫塔费主场预计控球压制，但缺乏高效终结，依赖定位球和边路传中制造有限机会。&quot;,
+&quot;无球&quot;: &quot;马拉加进攻威胁极弱，赫塔费无球阶段风险低，主要防范对手反击和定位球。&quot;,
+&quot;最大变量&quot;: &quot;赫塔费若迟迟无法破门，比赛可能陷入闷平。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;赫塔费上半场取得进球后收缩防守&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;, &quot;2-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;赫塔费进攻效率低下，马拉加门将发挥出色&quot;,
+&quot;比分&quot;: [&quot;0-0&quot;, &quot;1-1&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;马拉加通过定位球或反击偷得进球，赫塔费心态急躁&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;0-2球&quot;,
+&quot;净胜球&quot;: &quot;主队0-1球优势&quot;,
+&quot;上半场&quot;: &quot;预计上半场节奏偏慢，0-0概率较高&quot;
+},
+&quot;触发器&quot;: [
+&quot;赫塔费首发缺少核心得分手&quot;,
+&quot;马拉加意外派出强攻阵容&quot;,
+&quot;赛前赔率主胜大幅回调至1.95以上&quot;,
+&quot;天气或场地条件显著恶化&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能是赫塔费保级压力下心态失衡，进攻端无法转化优势，最终被马拉加逼平或偷袭得手。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主51.1% 平41.0% 客7.9%&lt;br&gt;预期进球: 0.96 - 0.22&lt;br&gt;大2.5: 29.4% | BTTS: 31.8%&lt;br&gt;贝叶斯后验: 主50.3% 平39.2% 客10.5%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">英超</span>利兹联<span class="tvs">VS</span>水晶宫
+      <span style="font-size:.75rem;color:#8d99b0;">(Leeds vs Crystal Palace)</span>
+    </div>
+    <span class="m-meta">开球 21:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (48.5%) · 最可能比分 1-0 (12%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.57 / 平3.70 / 客4.55
+主胜赔率变动: 1.69 → 1.57 (-0.12)
+亚盘(主受1.0球): 主2.72 / 平3.5 / 客2.1
+波胆最低赔: 2-1@7.0 / 1-1@7.5 / 1-0@8.25
+模型亚盘倾向: away (价值 +10.1%, 信心 high)
+模型大小球倾向: 小2.5 (模型47% vs 市场57%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第6名 (欧战区) · 客队: 第17名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 1平 0负, 进球 4:1 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 1.2,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;利兹联主场小胜方向, 主队状态与战意占优, 但亚盘主-1覆盖不足且模型-市场分歧偏大, 谨防小胜或平局。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率变动: 主1.69→1.57(-0.12), 客3.98→4.55(+0.57); 亚盘主-1.0模型主覆盖24%/客覆盖52%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;主胜资金流入明显, 但亚盘主-1覆盖不足, 市场对主队大胜信心有限, 支持主胜但限制净胜球预期。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差+128; 预期进球1.50-1.04; 利兹联近况W,D,D,W, 水晶宫L,W,L,L&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;利兹联整体实力和近期状态明显占优, 水晶宫攻防稳定性不足, 主队小胜基础较扎实。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停, 无法量化核心缺阵影响, 该维度不作方向判断。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队1胜1平0负, 总进球4-1&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;历史交锋主队占优, 但样本极小且阵容变化程度未知, 仅作轻微利好。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场, 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程或双线压力, 体能条件对等, 不构成方向差异。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气, 权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未公布裁判, 不猜测, 权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;利兹联#6欧战区8分, 水晶宫#17保级区3分&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;利兹联有冲击欧战区动力, 水晶宫虽需保级但客场抢分能力有限, 主队战意更可信。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;利兹联预计主导控球并依靠边路与中场前插创造机会。&quot;,
+&quot;无球&quot;: &quot;水晶宫需警惕利兹联前场压迫, 后场出球压力较大。&quot;,
+&quot;最大变量&quot;: &quot;利兹联能否在60分钟前打破僵局, 否则比赛可能陷入胶着。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;利兹联上半场取得领先且控制节奏&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;水晶宫低位防守奏效, 利兹联久攻不下&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;水晶宫利用定位球或反击先入球, 利兹联心态波动&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场大概率利兹联控场但未必破门, 0-0或1-0形态。&quot;
+},
+&quot;触发器&quot;: [
+&quot;利兹联首发缺少核心攻击手或中场组织者&quot;,
+&quot;水晶宫变阵五后卫且赛前确认核心后腰复出&quot;,
+&quot;临场亚盘降至主-0.5且主队水位继续走高&quot;,
+&quot;赛前出现利兹联轮换主力备战杯赛的明确信号&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了, 最可能错在水晶宫摆大巴成功逼平, 利兹联攻坚效率低于预期, 主-1盘口无法打穿。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主46.6% 平27.7% 客25.6%&lt;br&gt;预期进球: 1.50 - 1.04&lt;br&gt;大2.5: 51.7% | BTTS: 52.8%&lt;br&gt;贝叶斯后验: 主48.5% 平27.0% 客24.5%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">英超</span>伯恩茅斯<span class="tvs">VS</span>利物浦
+      <span style="font-size:.75rem;color:#8d99b0;">(Bournemouth vs Liverpool)</span>
+    </div>
+    <span class="m-meta">开球 21:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (38.2%) · 最可能比分 2-1 (9%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 59% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.00 / 平3.65 / 客1.92
+主胜赔率变动: 2.92 → 3.00 (+0.08)
+亚盘(主让1.0球): 主1.69 / 平4.0 / 客3.48
+波胆最低赔: 1-2@7.75 / 1-1@8.0 / 2-1@9.75
+模型亚盘倾向: home (价值 +12.3%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第16名 (保级区) · 客队: 第10名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 0平 3负, 进球 5:11 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.6,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为伯恩茅斯小胜或平局，模型主胜概率略高但市场资金流出主队形成分歧。核心是伯恩茅斯主场进攻略优，但保级压力与状态不稳构成风险。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率变动：主2.92→3.00(+0.08)，客1.96→1.92(-0.04)；资金信号：主队资金流出。&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;赔率变动显示资金流向利物浦方向，与模型主胜概率方向相反，需警惕模型对伯恩茅斯主场优势高估。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主40.2%平25.3%客34.5%；预期进球1.64-1.50；ELO差-9。&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;模型预期进球主队略高，ELO差距极小，整体接近均势，伯恩茅斯主场有轻微进攻优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法量化影响，按规则降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋：主队1胜0平3负，总进球5-11。&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;历史交锋利物浦明显占优，但需结合当前双方阵容变化，若伯恩茅斯阵容稳定则参考价值中等，仍对客队有利。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能影响中性。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;伯恩茅斯#16保级区3分，近况D,D,D,L；利物浦#10中游6分，近况D,W,D,D。&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 24,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;伯恩茅斯保级压力更大，主场抢分意愿强，但连续平局显示赢球能力不足；利物浦中游无迫切压力，轮换可能略高。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;伯恩茅斯主场可能主动控球并利用边路传中制造机会，利物浦则依赖快速转换。&quot;,
+&quot;无球&quot;: &quot;伯恩茅斯无球时需防范利物浦反击，后防速度不足可能被针对。&quot;,
+&quot;最大变量&quot;: &quot;伯恩茅斯能否将主场控球转化为实际进球，避免连续平局。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;伯恩茅斯率先破门并保持防守纪律&quot;,
+&quot;比分&quot;: [&quot;2-1&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;双方进攻效率均一般，利物浦反击未形成致命威胁&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;利物浦利用定位球或反击先进球，伯恩茅斯压上后被再打反击&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场可能谨慎，进球概率偏低，易出现0-0或1-0进入下半场。&quot;
+},
+&quot;触发器&quot;: [
+&quot;伯恩茅斯首发缺少主力前锋或中场核心&quot;,
+&quot;利物浦大幅轮换但首发仍为强阵&quot;,
+&quot;赛前赔率主胜继续上调超过3.10&quot;,
+&quot;天气或场地条件变差影响传控&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能是利物浦客场反弹赢球，因为历史交锋占优且伯恩茅斯连续不胜状态低迷。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主40.2% 平25.3% 客34.5%&lt;br&gt;预期进球: 1.64 - 1.50&lt;br&gt;大2.5: 58.7% | BTTS: 59.0%&lt;br&gt;贝叶斯后验: 主38.2% 平25.1% 客36.7%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">英超</span>曼城<span class="tvs">VS</span>桑德兰
+      <span style="font-size:.75rem;color:#8d99b0;">(Man City vs Sunderland)</span>
+    </div>
+    <span class="m-meta">开球 21:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (64.9%) · 最可能比分 1-0 (14%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.18 / 平5.55 / 客9.80
+主胜赔率变动: 1.18 → 1.18 (+0.00)
+亚盘(主受1.0球): 主1.67 / 平3.84 / 客3.7
+波胆最低赔: 2-0@6.5 / 1-0@7.5 / 2-1@7.75
+模型亚盘倾向: away (价值 +12.3%, 信心 high)
+模型大小球倾向: 小2.5 (模型48% vs 市场60%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">客队: 第14名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 1平 0负, 进球 3:0 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 2.0,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;曼城主场控场小胜方向，最可能1-0/2-0。核心是实力差与主场压制，但市场深盘下主队覆盖不足，进攻效率与轮换是最大风险。&quot;,
+&quot;次选比分&quot;: &quot;2-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;亚盘主-1.0下模型主覆盖38%对客覆盖36%，覆盖接近；欧赔1.18/5.55/9.80，全天无变动&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场深盘压低主队回报，模型主胜概率与市场基本一致，但让球覆盖不足显示市场对曼城大胜信心有限，方向仍偏主，降大胜预期。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主62.6%平23.4%客14.0%；预期进球1.86-0.74；ELO差+212&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;实力差和预期进球均明确指向曼城控制比赛，桑德兰预期进球不足0.75，客队进攻威胁有限，主队零封概率较高。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及双方伤停，无法区分核心与替补影响，该维度不构成方向增量。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队1胜1平0负，总进球3-0；双方阵容变化程度未提供&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;交锋样本小且缺少阵容变化信息，参考价值有限，仅轻微支持主队零封方向。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 16,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能条件对等，不构成明显优势方向。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气或场地，权重记0。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无裁判信息，不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;桑德兰英超#14中游，近况L,D,W,L；曼城为积分榜上游争冠/欧战级别但未提供具体排名&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;曼城主场争胜战意明确，但深盘下存在轮换管理可能；桑德兰客场抢分动力一般，整体仍利主。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;曼城主导控球并高位压制，通过边中结合寻找禁区渗透机会。&quot;,
+&quot;无球&quot;: &quot;桑德兰低位防守下，曼城需防范转换和定位球失位。&quot;,
+&quot;最大变量&quot;: &quot;曼城若早早进球，可能降低强度进入控场节奏。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;曼城上半场控制节奏并率先破门，桑德兰难以形成持续反扑&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;曼城久攻不下且桑德兰门将高接抵挡，客队定位球或反击制造威胁&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;曼城轮换幅度大且桑德兰反击效率极高，主队防线出现个人失误&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势&quot;,
+&quot;上半场&quot;: &quot;曼城控场但可能半场0-0或1-0&quot;
+},
+&quot;触发器&quot;: [
+&quot;曼城首发大幅轮换核心球员&quot;,
+&quot;桑德兰摆出五后卫且放弃控球&quot;,
+&quot;赛前曼城出现核心中卫或后腰伤停&quot;,
+&quot;亚盘从主-1.0退至主-0.75&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在曼城让球覆盖不足，主队无法转化为大胜，桑德兰死守逼平。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主62.6% 平23.4% 客14.0%&lt;br&gt;预期进球: 1.86 - 0.74&lt;br&gt;大2.5: 52.4% | BTTS: 49.8%&lt;br&gt;贝叶斯后验: 主64.9% 平22.0% 客13.1%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>帕尔马<span class="tvs">VS</span>热那亚
+      <span style="font-size:.75rem;color:#8d99b0;">(Parma vs Genoa)</span>
+    </div>
+    <span class="m-meta">开球 21:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (35.3%) · 最可能比分 1-0 (16%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.96 / 平2.70 / 客2.38
+主胜赔率变动: 3.05 → 2.96 (-0.09)
+亚盘(主让1.0球): 主1.44 / 平3.75 / 客5.95
+波胆最低赔: 1-1@5.8 / 0-1@6.25 / 0-0@7.5
+模型亚盘倾向: home (价值 +7.8%, 信心 medium)
+模型大小球倾向: 小2.5 (模型30% vs 市场38%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第18名 (保级区) · 客队: 第19名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 0胜 2平 2负, 进球 0:2 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.4,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;保级战偏均势，主队微优但进攻乏力，最可能小比分平局或主队一球小胜，最大风险是帕尔马进攻效率不足被逼平。&quot;,
+&quot;次选比分&quot;: &quot;1-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率变动：主3.05→2.96(-0.09)，客2.25→2.38(+0.13)，主队资金流入；亚盘主+1.0主覆盖69%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;资金流向略偏主队，但欧赔客胜仍低至2.38，市场对客队有保留。模型与市场方向一致但幅度不大，主队微优。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主36.6%平35.0%客28.4%；预期进球1.04-0.88；ELO差+7；双方近况均差，主L,D,L,L，客D,L,L,L&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方状态都很差，但模型预期进球和ELO均略偏主队，主场微幅优势成立。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法评估主力折损，降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队视角0胜2平2负，总进球0-2&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;历史交锋客队占优，但缺乏阵容变化信息，参考价值有限，仅作轻微负向。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方赛程均轻松，无体能差异，中性。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测，权重记0。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;帕尔马#18保级区1分，热那亚#19保级区1分&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 28,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方同为保级直接对手，战意均强，但主场作战的帕尔马抢分压力更大，微幅利好主队。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队帕尔马主场预计控球稍多，但缺乏高效终结，进攻依赖边路与定位球。&quot;,
+&quot;无球&quot;: &quot;无球阶段需警惕热那亚反击和定位球，防守端易出现保级战紧张失误。&quot;,
+&quot;最大变量&quot;: &quot;帕尔马能否在主场把微弱场面优势转化为进球。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;帕尔马主场控球占优并率先破门，热那亚进攻乏力&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;, &quot;2-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;双方进攻效率均低，比赛陷入中场绞杀&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;热那亚反击或定位球得手，帕尔马久攻不下&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;主队0-1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率闷平或0-0，进球多在下半场。&quot;
+},
+&quot;触发器&quot;: [
+&quot;帕尔马主力前锋或核心中场赛前确认缺阵&quot;,
+&quot;热那亚公布明显轮换阵容&quot;,
+&quot;临场主胜赔率回升至3.05以上且客胜降至2.30以下&quot;,
+&quot;天气或场地条件显著恶化影响传控&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了，最可能错在帕尔马主场无法转化优势，热那亚凭一次反击或定位球偷走胜利。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主36.6% 平35.0% 客28.4%&lt;br&gt;预期进球: 1.04 - 0.88&lt;br&gt;大2.5: 39.5% | BTTS: 44.2%&lt;br&gt;贝叶斯后验: 主35.3% 平34.6% 客30.0%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>弗洛西诺内<span class="tvs">VS</span>科莫
+      <span style="font-size:.75rem;color:#8d99b0;">(Frosinone vs Como)</span>
+    </div>
+    <span class="m-meta">开球 21:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (58.9%) · 最可能比分 0-1 (11%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主5.85 / 平4.60 / 客1.35
+主胜赔率变动: 5.40 → 5.85 (+0.45)
+亚盘(主让1.0球): 主2.66 / 平3.67 / 客2.08
+波胆最低赔: 1-2@7.25 / 0-2@8.75 / 1-1@9.0
+模型亚盘倾向: home (价值 +6.7%, 信心 medium)
+模型大小球倾向: 小3.5 (模型35% vs 市场45%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第7名 (中游) · 客队: 第5名 (欧战区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -1.4,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为科莫客场小胜，模型与市场一致看客队。核心理由是客队实力、状态与欧战区位阶均占优。最大风险是弗罗西诺内主场韧性及科莫进攻效率波动。&quot;,
+&quot;次选比分&quot;: &quot;1-2&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;SPF客胜1.40→1.35，主胜5.40→5.85；亚盘主+1.0&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场资金持续流向客队，客胜赔率下调，主胜大幅上调，方向明确支持客队。模型与市场方向一致，无反向预警，客队优势获得资金确认。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-82；模型概率客57.4%；预期进球1.03-1.96；近况主DWWL，客WWWD&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;客队ELO明显占优，模型概率与预期进球均支持客队。主队近期状态起伏，客队连续不败且排名更高，攻防两端更稳定。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及具体伤停，无法评估核心或替补折损。该维度降权，避免编造影响。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未提供近3年交锋记录，且双方阵容变动情况不明，克制关系无法判断，降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 16,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程或双线作战压力，体能条件对等，不构成明显优势倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气及场地条件，权重记0，不参与方向判断。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判任命未公布，不猜测执法尺度或倾向，权重记0。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;主队#7中游7分；客队#5欧战区10分&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;客队处于欧战区，抢分巩固排名的战意更明确；主队中游位置，压力相对较小。客队战意略占优，但主队主场不会轻易放弃。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;科莫控球推进并利用边中结合持续施压，弗罗西诺内伺机反击。&quot;,
+&quot;无球&quot;: &quot;弗罗西诺内低位防守时需警惕科莫禁区前沿的连续渗透与二点球。&quot;,
+&quot;最大变量&quot;: &quot;科莫能否在60分钟前打开僵局，若久攻不下，主队反击可能改变走势。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;科莫控球率占优并率先取得进球&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;, &quot;0-2&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;弗罗西诺内防线紧凑，科莫进攻效率不足&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;弗罗西诺内利用定位球或反击先进球，科莫被迫压上留出空间&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场节奏偏慢，科莫略占控球优势但可能无法破门&quot;
+},
+&quot;触发器&quot;: [
+&quot;科莫首发缺少核心中场或主要得分手&quot;,
+&quot;弗罗西诺内主场改打三中卫强化边路防守&quot;,
+&quot;临场客胜赔率大幅回升至1.45以上&quot;,
+&quot;赛前确认弗罗西诺内多名主力复出增强中后场&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能是科莫控球压制却无法转化为进球，弗罗西诺内依靠一次高效反击或定位球取得领先并守住平局或小胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主18.8% 平23.8% 客57.4%&lt;br&gt;预期进球: 1.03 - 1.96&lt;br&gt;大2.5: 53.1% | BTTS: 53.0%&lt;br&gt;贝叶斯后验: 主18.1% 平23.0% 客58.9%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">德甲</span>勒沃库森<span class="tvs">VS</span>莱比锡红牛
+      <span style="font-size:.75rem;color:#8d99b0;">(Leverkusen vs RB Leipzig)</span>
+    </div>
+    <span class="m-meta">开球 21:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (50.5%) · 最可能比分 2-1 (9%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.80 / 平4.15 / 客3.00
+主胜赔率变动: 1.95 → 1.80 (-0.15)
+亚盘(主受1.0球): 主3.28 / 平3.9 / 客1.76
+波胆最低赔: 2-1@8.25 / 2-2@9.5 / 1-1@10.0
+模型亚盘倾向: home (价值 +4.2%, 信心 medium)
+模型大小球倾向: 小3.5 (模型45% vs 市场53%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第10名 (中游) · 客队: 第7名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 1平 1负, 进球 11:7 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为主队小胜，勒沃库森状态回暖且市场资金明显流入主队，但亚盘覆盖不足与防守风险并存，主胜优势有限。&quot;,
+&quot;次选比分&quot;: &quot;2-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率主1.95→1.80，客2.75→3.00；亚盘主-1.0主覆盖31%/客覆盖48%&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;欧赔主胜大幅下调且客胜上调，资金明确流向主队，但亚盘主-1.0覆盖不足，说明市场对主队净胜1球以上信心有限，主胜方向有支撑但不宜高估。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主50.8%，预期进球2.04-1.38，ELO差+52；主队近况D,W,L，客队W,L,W&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;ELO与预期进球均指向主队占优，但勒沃库森近况不稳，莱比锡胜率不低，状态面优势有限，主队进攻略强但防守存在失球风险。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法评估核心主力缺阵影响，该维度不贡献方向分。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年主队2胜1平1负，总进球11-7；无阵容大换血或换帅情报&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;历史交锋主队略占上风且进球较多，但缺乏阵容变化信息，参考价值中等，对主胜形成轻微支撑。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 12,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方赛程密度一致，均无体能劣势，该维度中性。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0，不评估。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测，该维度不贡献方向分。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;勒沃库森#10积4分，莱比锡#7积6分，均为中游&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 16,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均处中游，战意无极端差异，但主队积分落后更需抢分，主场作战略具动力，对主胜有轻微支撑。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队有球阶段预计通过中场控制与边路推进压制莱比锡防线。&quot;,
+&quot;无球&quot;: &quot;无球阶段需防范莱比锡快速转换与反击效率。&quot;,
+&quot;最大变量&quot;: &quot;勒沃库森防线稳定性与莱比锡反击效率的对抗。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;主队率先进球且莱比锡反击受限&quot;,
+&quot;比分&quot;: [&quot;2-1&quot;, &quot;2-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;莱比锡先扳平或双方中场绞杀效率接近&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;莱比锡高效反击且主队防线连续失误&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场可能胶着，进球或偏晚出现&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前公布勒沃库森核心主力伤停，主胜方向需下调&quot;,
+&quot;亚盘主-1.0水位持续走高或退盘至-0.75&quot;,
+&quot;莱比锡首发出现明显轮换或留力欧战信号&quot;,
+&quot;临场客胜赔率大幅回落至2.80以下&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了，最可能错在勒沃库森状态回暖被高估，莱比锡反击效率超出预期导致客胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主50.8% 平24.4% 客24.8%&lt;br&gt;预期进球: 2.04 - 1.38&lt;br&gt;大2.5: 63.7% | BTTS: 62.8%&lt;br&gt;贝叶斯后验: 主50.5% 平23.8% 客25.7%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>马德里竞技<span class="tvs">VS</span>皇家马德里
+      <span style="font-size:.75rem;color:#8d99b0;">(Ath Madrid vs Real Madrid)</span>
+    </div>
+    <span class="m-meta">开球 22:15:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (42.4%) · 最可能比分 1-2 (9%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 56% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.26 / 平3.70 / 客1.81
+主胜赔率变动: 3.40 → 3.26 (-0.14)
+亚盘(主让1.0球): 主1.78 / 平3.95 / 客3.18
+波胆最低赔: 1-2@7.5 / 1-1@8.25 / 2-2@10.0
+模型亚盘倾向: home (价值 +7.7%, 信心 medium)
+模型大小球倾向: 小3.5 (模型36% vs 市场41%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">客队: 第2名 (争冠区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 2平 1负, 进球 9:7 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为皇马客场小胜，模型与市场均指向客队，但主队资金流入与盘口变动显示一定抗性。最大风险在于马竞主场德比战意与防守韧性可能压缩皇马进攻效率。&quot;,
+&quot;次选比分&quot;: &quot;1-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主3.40→3.26(-0.14)，客1.75→1.81(+0.06)；亚盘主+1.0模型主覆盖57%/客覆盖21%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧赔客胜仍为最低赔，但主队赔率下行、客队赔率上行，显示资金向主队流入，市场对皇马大胜信心不足。亚盘主+1.0下主队覆盖更高，模型与市场分歧主要在主队抗性，不宜过度看空主队。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-148，预期进球1.43-1.60，模型概率客40.9%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;皇马ELO优势明显，预期进球略高，整体实力占优。但马竞主场防守韧性通常较强，预期进球差仅0.17，皇马优势不算碾压，客胜方向有支撑但幅度有限。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法判断核心主力是否缺阵，该维度对方向分贡献中性，权重保留但置信度低。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋马竞1胜2平1负，总进球9-7&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;近3年交锋接近均势，马竞主场不落下风，总进球略占优。双方阵容变化程度未提供，参考价值中等，略偏主队抗性。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 12,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方赛程密度相同，均无额外体能负担，该维度对方向无偏向。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 3,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重降至3并重新分配给赛程体能，对本场方向无实质影响。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 3,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测，权重降至3并重新分配给赛程体能，对方向无贡献。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;皇马#2争冠区，近况W,W,L,W,W；马竞德比战意通常强烈&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;皇马处于争冠区，抢分动力充足，但马竞德比战意极强，主场作战往往提升对抗强度，削弱皇马优势。该维度略偏客队但幅度有限。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;皇马主导控球并依靠边路推进，马竞伺机反击并利用定位球制造威胁。&quot;,
+&quot;无球&quot;: &quot;马竞无球阶段需防范皇马中路渗透与快速转换，皇马则需应对马竞高压逼抢下的出球风险。&quot;,
+&quot;最大变量&quot;: &quot;马竞主场德比的防守强度能否将比赛拖入低比分僵局。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;皇马率先取得进球或马竞防线在高压下出现失误&quot;,
+&quot;比分&quot;: [&quot;1-2&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;马竞成功限制皇马进攻并利用定位球或反击扳平&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;马竞防守稳固并抓住皇马防线失误取得进球&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场大概率胶着，进球数偏少&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前公布马竞核心后卫或门将缺阵&quot;,
+&quot;皇马公布轮换阵容且多名主力休战&quot;,
+&quot;盘口从主+1.0调整为主+0.75或更低&quot;,
+&quot;天气出现大雨或场地条件恶化&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在马竞主场德比战意与防守韧性被低估，皇马无法打破密集防守，比赛以平局或马竞小胜收场。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主33.6% 平25.5% 客40.9%&lt;br&gt;预期进球: 1.43 - 1.60&lt;br&gt;大2.5: 52.9% | BTTS: 55.9%&lt;br&gt;贝叶斯后验: 主32.4% 平25.2% 客42.4%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">法甲</span>尼斯<span class="tvs">VS</span>里尔
+      <span style="font-size:.75rem;color:#8d99b0;">(Nice vs Lille)</span>
+    </div>
+    <span class="m-meta">开球 23:15:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (37.8%) · 最可能比分 0-1 (13%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.52 / 平3.35 / 客1.83
+主胜赔率变动: 3.45 → 3.52 (+0.07)
+亚盘(主让1.0球): 主1.76 / 平3.58 / 客3.55
+波胆最低赔: 1-1@6.2 / 1-2@7.25 / 0-1@7.5
+模型亚盘倾向: home (价值 +13.5%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第18名 (保级区) · 客队: 第4名 (欧战区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 2平 1负, 进球 5:4 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为里尔客场小胜，尼斯保级压力与主场因素形成一定抵抗，但市场与状态均偏向客队。最大风险是里尔进攻效率一般且比分偏小，尼斯若先守平可能拖入平局。&quot;,
+&quot;次选比分&quot;: &quot;1-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天SPF：客1.86→1.83，主3.45→3.52；亚盘主+1.0下模型主覆盖64%/客覆盖15%。&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;欧赔客胜小幅走低，主胜上调，资金面与盘口均倾向里尔。模型对主队价值更高，但市场融合仅19%，说明市场对尼斯信心不足，该维度小幅利客。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-227；尼斯近况L,D,L,D，里尔近况W,W,D,W；预期进球1.07-1.10。&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;里尔无论整体实力、近期状态还是攻防稳定性都明显优于尼斯。尼斯连续不胜且进攻乏力，预期进球略低于对手，状态攻防维度较明确利客。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;证据包未提及双方伤停或折损等级，无法量化影响。为避免编造，该维度降权并记中性分。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋：尼斯1胜2平1负，总进球5-4；无阵容变动情报。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;交锋总体接近，尼斯不落下风，但缺少双方当前阵容变化信息，参考价值受限。该维度中性。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无额外赛程负担，体能条件相当，不构成明显利好任何一方。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气场地，权重记0并重新分配，不纳入方向判断。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未公布裁判任命，不猜测，不纳入本场判断。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;尼斯#18保级区仅2分，里尔#4欧战区10分；尼斯近况L,D,L,D。&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;尼斯保级压力更大，主场作战可能提升投入度，但状态与实力不足使其战意难以完全转化为优势。里尔也有欧战抢分需求，双方战意都不低，尼斯仅获小幅主场战意加成。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;里尔更可能主导球权并依靠边路与中场前插制造机会，尼斯则依赖低位防守后的快速转换。&quot;,
+&quot;无球&quot;: &quot;尼斯无球阶段需重点保护禁区前沿，避免被里尔连续短传渗透打穿肋部。&quot;,
+&quot;最大变量&quot;: &quot;尼斯若能通过定位球或反击先取得进球，比赛走势可能显著偏离当前客胜预期。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;里尔正常控制节奏并率先破门，尼斯进攻难以形成持续威胁。&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;, &quot;1-2&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;尼斯防守紧凑且里尔错失关键机会，比赛进入低比分僵持。&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;尼斯利用主场气势或定位球先入一球，并成功压缩里尔反扑空间。&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率节奏较慢，0-0或0-1进入中场。&quot;
+},
+&quot;触发器&quot;: [
+&quot;里尔首发出现多名核心轮换或伤停，客胜支撑将下降&quot;,
+&quot;尼斯临场亚盘从+1.0大幅调整为+0.75或更低，说明市场转向主队&quot;,
+&quot;赛前确认尼斯多名主力复出或里尔双线轮换&quot;,
+&quot;天气或场地条件显著变差，利于防守方拖慢节奏&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在尼斯保级战意与主场防守韧性超出预期，里尔虽占优但缺乏终结效率，比赛被拖入平局。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主33.8% 平30.9% 客35.3%&lt;br&gt;预期进球: 1.07 - 1.10&lt;br&gt;大2.5: 45.1% | BTTS: 49.3%&lt;br&gt;贝叶斯后验: 主32.1% 平30.1% 客37.8%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">英超</span>富勒姆<span class="tvs">VS</span>曼联
+      <span style="font-size:.75rem;color:#8d99b0;">(Fulham vs Man United)</span>
+    </div>
+    <span class="m-meta">开球 23:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (44.5%) · 最可能比分 1-2 (9%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 59% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.50 / 平3.70 / 客1.75
+主胜赔率变动: 3.37 → 3.50 (+0.13)
+亚盘(主让1.0球): 主1.85 / 平3.65 / 客3.2
+波胆最低赔: 1-2@7.5 / 1-1@8.0 / 0-1@10.5
+模型亚盘倾向: home (价值 +8.1%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第20名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 0胜 1平 3负, 进球 3:6 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -1.3,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为曼联客场小胜。客队实力与市场一致占优，但主队保级战意与模型轻微高估主胜形成对冲，风险在于曼联破密集防守效率不足。&quot;,
+&quot;次选比分&quot;: &quot;0-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔客胜1.75，客胜方向受资金支持；亚盘主+1.0下模型主覆盖56%，市场对曼联净胜1球以上信心有限。&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场整体偏向客队，但亚盘受让一球显示曼联赢盘预期不强，限制客队方向分上限。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-176，预期进球1.46-1.72，模型概率客胜43.1%。&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;曼联实力和预期进球均占优，但预期净胜球不足一球，状态面支持客胜但非大胜。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法判断核心缺阵影响，该维度不贡献方向分。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队0胜1平3负，总进球3-6。&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;历史交锋曼联占优，但未提供双方阵容变化程度，参考价值中等，给予轻微客队优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方赛程密度一致，均无体能劣势，该维度中性。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0，已重新分配至市场、状态攻防、赛程体能和战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测，权重重新分配至维度1、2、5、8。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;富勒姆积1分排名第20，处于保级区，近况D,L,L,L。&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队保级压力大，主场战意较强，但近况糟糕，战意难以完全弥补实力差距。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;曼联控球主导，通过边路传中和肋部渗透打击富勒姆低位防线。&quot;,
+&quot;无球&quot;: &quot;富勒姆需防范曼联快速转换，本方边后卫身后空间是主要风险。&quot;,
+&quot;最大变量&quot;: &quot;曼联能否在阵地战中提前破门，否则富勒姆保级战意可能拖住比赛。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;曼联正常发挥，上半场或下半场早段取得进球&quot;,
+&quot;比分&quot;: [&quot;1-2&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;富勒姆密集防守奏效，曼联进攻效率低下&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;富勒姆通过定位球或反击先下一城，曼联情绪波动&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场可能较为胶着，进球概率偏低&quot;
+},
+&quot;触发器&quot;: [
+&quot;曼联首发缺少多名主力攻击手&quot;,
+&quot;富勒姆变阵三中卫加强防守&quot;,
+&quot;临场客胜赔率大幅回升至1.85以上&quot;,
+&quot;赛前确认富勒姆核心中卫或后腰缺阵&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能是富勒姆凭借主场保级战意逼平曼联，曼联控球优势无法转化为进球。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主32.0% 平25.0% 客43.1%&lt;br&gt;预期进球: 1.46 - 1.72&lt;br&gt;大2.5: 59.1% | BTTS: 59.1%&lt;br&gt;贝叶斯后验: 主30.7% 平24.8% 客44.5%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">德甲</span>沙尔克04<span class="tvs">VS</span>埃尔沃斯堡
+      <span style="font-size:.75rem;color:#8d99b0;">(Schalke 04 vs Elversberg)</span>
+    </div>
+    <span class="m-meta">开球 23:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (71.2%) · 最可能比分 1-4 (7%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.90 / 平3.60 / 客3.08
+主胜赔率变动: 1.95 → 1.90 (-0.05)
+亚盘(主受1.0球): 主3.52 / 平4.0 / 客1.68
+波胆最低赔: 1-1@7.5 / 2-1@7.5 / 1-2@9.75
+模型亚盘倾向: away (价值 +38.8%, 信心 high)
+模型大小球倾向: 大3.5 (模型82% vs 市场43%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第11名 (中游) · 客队: 第8名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 3胜 0平 1负, 进球 8:4 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -2.4,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;客队Elversberg方向占优，模型与市场均指向客胜，但亚盘主-1与赔率结构存在分歧，最大风险是主队资金流入与客队赔率上调形成反向信号。&quot;,
+&quot;次选比分&quot;: &quot;1-3&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率变动：主1.95→1.90(-0.05)，客2.97→3.08(+0.11)；亚盘主-1.0模型主覆盖3%/客覆盖92%&quot;,
+&quot;优势分&quot;: -3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;赔率变动显示主队资金流入、客队资金流出，与模型客胜方向形成分歧；亚盘主-1下客覆盖极高，市场对客队大胜存疑，模型盲区需警惕。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率：主8.4%/平10.7%/客80.9%；预期进球1.53-4.24；ELO差-39&quot;,
+&quot;优势分&quot;: -4,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;模型概率与预期进球均强烈指向客队，ELO客队占优，攻防数据支持客胜方向，主队失球风险高。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法量化影响，降权处理，不编造。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋：主队3胜0平1负（总进球8-4）&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;历史交锋主队占优，但需结合阵容变化；情报未提供转会/换帅信息，参考价值中等，适当降权。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场/客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 12,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能影响中性，不构成方向性优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;情报未提及，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无天气情报，权重重新分配至市场/状态攻防/赛程体能/战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测，权重重新分配至市场/状态攻防/赛程体能/战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;Schalke #11中游4分，Elversberg #8中游6分，近况主WDL、客LWW&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均为中游，客队近况更好且积分略高，主队缺乏明确争分压力，客队战意与状态略占优。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;客队Elversberg控球推进并依靠高效转换制造高预期进球。&quot;,
+&quot;无球&quot;: &quot;主队Schalke防线承压，需防范客队快速反击与边路渗透。&quot;,
+&quot;最大变量&quot;: &quot;主队若利用主场气势先入球，可能改变比赛节奏与客队心态。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;客队率先破门且控球优势明显&quot;,
+&quot;比分&quot;: [&quot;1-3&quot;, &quot;1-4&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;主队防守收紧且客队终结效率下降&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;主队依靠定位球或反击先入球并守住优势&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;3-5球&quot;,
+&quot;净胜球&quot;: &quot;客队2-3球优势&quot;,
+&quot;上半场&quot;: &quot;客队可能较早取得进球，上半场客队领先概率较高&quot;
+},
+&quot;触发器&quot;: [
+&quot;主队首发出现核心中卫或后腰缺阵&quot;,
+&quot;客队轮换主力前锋或中场核心&quot;,
+&quot;赛前亚盘从主-1.0调整为主-0.75或更低&quot;,
+&quot;客队赔率继续上调且主队资金持续流入&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在历史交锋主队占优的心理优势被放大，主队主场打出超预期防守反击，而客队高预期进球未能转化为实际得分。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主8.4% 平10.7% 客80.9%&lt;br&gt;预期进球: 1.53 - 4.24&lt;br&gt;大2.5: 76.8% | BTTS: 68.8%&lt;br&gt;贝叶斯后验: 主15.5% 平13.3% 客71.2%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>尤文图斯<span class="tvs">VS</span>亚特兰大
+      <span style="font-size:.75rem;color:#8d99b0;">(Juventus vs Atalanta)</span>
+    </div>
+    <span class="m-meta">开球 00:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (42.6%) · 最可能比分 1-0 (13%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.53 / 平3.75 / 客4.80
+主胜赔率变动: 1.55 → 1.53 (-0.02)
+亚盘(主受1.0球): 主2.8 / 平3.3 / 客2.13
+波胆最低赔: 1-1@7.0 / 2-1@7.0 / 1-0@7.5
+模型亚盘倾向: away (价值 +16.8%, 信心 high)
+模型大小球倾向: 小2.5 (模型43% vs 市场50%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第8名 (中游) · 客队: 第11名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 2平 1负, 进球 3:6 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;主队略占优但优势被市场高估, 最可能小胜。核心理由是尤文状态回升且主场, 亚特兰大客战不稳。最大风险是尤文进攻效率不足, 平局概率不低。&quot;,
+&quot;次选比分&quot;: &quot;1-1&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主1.53/平3.75/客4.80, 全天客队资金流出+0.10&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:21, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场明显偏向主队, 但模型后验主胜仅42.6%, 低于赔率隐含约65%, 模型-市场边缘主胜-18.8%, 存在高估主队风险, 主队优势需打折。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差+68, 预期进球1.30-1.11, 近况主队L,D,W,W, 客队L,L,W,W&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:19, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;尤文ELO和预期进球略占优, 双方近况同为两连胜, 但亚特兰大此前两连败, 稳定性稍差。整体利好主队但幅度有限。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:6, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及伤停, 无法判断核心缺阵影响, 该维度权重下调并转移至市场、状态、赛程和战意。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;近3年主队1胜2平1负, 总进球3-6&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;交锋总体均势, 亚特兰大不落下风。双方阵容变化程度未提供, 参考价值中等, 不构成明显克制。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场, 客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;双方均无密集赛程, 体能条件对等, 不产生方向性影响。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气, 权重记0并转移至核心维度。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判未公布, 不猜测, 权重转移至核心维度。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;尤文#8积7分, 亚特兰大#11积6分, 均为中游&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方均为中游, 尤文主场争胜动力稍强, 但不存在必须赢的极端战意, 轮换概率中等, 主队略占心理优势。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;尤文主场预计控球推进, 依靠边路和中场后插上制造机会。&quot;, &quot;无球&quot;: &quot;尤文需防范亚特兰大快速转换和定位球, 防线压上后空间风险。&quot;, &quot;最大变量&quot;: &quot;尤文能否尽早破门, 若久攻不下平局风险显著上升。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;尤文上半场取得进球, 亚特兰大被迫压出&quot;, &quot;比分&quot;:[&quot;1-0&quot;,&quot;2-1&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;尤文进攻效率低, 亚特兰大防守紧凑并伺机反击&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;亚特兰大率先反击得手, 尤文攻坚乏力&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;1-2球&quot;, &quot;净胜球&quot;: &quot;主队0-1球优势&quot;, &quot;上半场&quot;: &quot;上半场大概率0-0或1-0, 节奏偏谨慎&quot;},
+&quot;触发器&quot;: [&quot;尤文首发缺少核心前场球员&quot;, &quot;亚特兰大轮换幅度小于预期且主力尽出&quot;, &quot;临场主胜赔率跌破1.45&quot;, &quot;赛前确认亚特兰大核心攻击手复出&quot;],
+&quot;反向验证&quot;: &quot;如果预测错, 最可能是亚特兰大防守反击效率极高, 尤文控球无果被对手一次机会击败, 或尤文防线注意力不集中导致先丢球。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主39.1% 平30.4% 客30.5%&lt;br&gt;预期进球: 1.30 - 1.11&lt;br&gt;大2.5: 46.1% | BTTS: 49.7%&lt;br&gt;贝叶斯后验: 主42.6% 平29.1% 客28.2%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>比利亚雷亚尔<span class="tvs">VS</span>莱万特
+      <span style="font-size:.75rem;color:#8d99b0;">(Villarreal vs Levante)</span>
+    </div>
+    <span class="m-meta">开球 00:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (70.5%) · 最可能比分 3-1 (8%) [原始2-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 57% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.38 / 平4.55 / 客5.40
+主胜赔率变动: 1.41 → 1.38 (-0.03)
+亚盘(主受1.0球): 主2.17 / 平3.7 / 客2.51
+波胆最低赔: 2-1@7.25 / 1-1@9.0 / 2-0@9.0
+模型亚盘倾向: home (价值 +11.5%, 信心 high)
+模型大小球倾向: 大3.5 (模型55% vs 市场45%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第15名 (保级区) · 客队: 第16名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 0平 0负, 进球 6:1 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 2.1,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;主队实力、交锋与主场优势明显，最可能零封取胜，但近期状态差且保级战意双向拉高波动，大胜需防防线失误。&quot;,
+&quot;次选比分&quot;: &quot;2-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主1.38/平4.55/客5.40；亚盘主-1.0；SPF变动客队资金流出+0.22&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场深度压低主胜，客队赔率上行显示资金不信任客队，主队方向获市场支持，但高margin提示警惕浅盘过热。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主71.9%；预期进球2.81-1.11；ELO差+83；主队近况W,L,L,L,D，客队L,D,W,D,L&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;ELO与预期进球显著倾向主队，但主队近5轮仅1胜，状态不稳，限制大胜预期。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法量化核心或替补折损，该维度对方向判断贡献有限。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队2胜0平0负，总进球6-1&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队交锋明显占优，但需结合双方阵容稳定性，情报未提供转会或换帅信息，参考价值中等。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能条件对等，不构成明显方向倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0并重新分配至市场、状态攻防、赛程体能和战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，权重记0并重新分配，不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;两队均处保级区，主队#15积5分，客队#16积5分&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 24,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方保级压力均大，主队主场求胜欲更强，但客队同样急需分数，可能降低主队轻松取胜概率。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队主场控球压制，利用边路与定位球制造连续机会。&quot;,
+&quot;无球&quot;: &quot;主队高位逼抢后需防客队快速转换打身后。&quot;,
+&quot;最大变量&quot;: &quot;主队近期防线不稳，若先失球可能打乱主场节奏。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;主队上半场取得进球，且客队进攻效率低下&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;3-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;主队久攻不下或客队定位球先下一城&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;主队防线失误导致早失球，客队收缩反击&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-4球&quot;,
+&quot;净胜球&quot;: &quot;主队1-2球优势&quot;,
+&quot;上半场&quot;: &quot;主队控球占优，上半场可能1-0领先或0-0僵持&quot;
+},
+&quot;触发器&quot;: [
+&quot;主队首发缺少核心攻击手或主力中卫&quot;,
+&quot;赛前主胜赔率大幅回升至1.45以上&quot;,
+&quot;客队出现新援或核心复出消息&quot;,
+&quot;临场亚盘退至主-0.75&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在主队近期状态差，保级战意未能转化为进球效率，客队反击或定位球偷分。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主71.9% 平16.0% 客12.1%&lt;br&gt;预期进球: 2.81 - 1.11&lt;br&gt;大2.5: 61.0% | BTTS: 57.1%&lt;br&gt;贝叶斯后验: 主70.5% 平16.6% 客12.9%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>拉科鲁尼亚<span class="tvs">VS</span>皇家贝蒂斯
+      <span style="font-size:.75rem;color:#8d99b0;">(Deportivo La Coruna vs Betis)</span>
+    </div>
+    <span class="m-meta">开球 00:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (54.0%) · 最可能比分 0-2 (10%) [原始0-1与让球/大小球矛盾, 已按约束修正]</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.50 / 平3.60 / 客1.77
+主胜赔率变动: 3.30 → 3.50 (+0.20)
+亚盘(主让1.0球): 主1.8 / 平3.47 / 客3.5
+波胆最低赔: 1-1@6.9 / 1-2@7.5 / 0-1@8.5
+模型亚盘倾向: away (价值 +6.1%, 信心 medium)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">客队: 第3名 (争冠区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -1.9,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为贝蒂斯客场小胜，模型与市场均指向客队优势。核心支撑是实力差与状态差，最大风险是拉科鲁尼亚主场韧性及贝蒂斯轮换导致攻坚效率不足。&quot;,
+&quot;次选比分&quot;: &quot;0-2&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率变动：主3.30→3.50(+0.20)，客1.85→1.77(-0.08)；市场融合Model 81% / Market 19%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;资金持续流向客队，主胜赔率上调、客胜赔率下调，市场与模型方向一致，对贝蒂斯有利。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-196；预期进球0.99-1.77；贝蒂斯近况W,W,W,L,W，积分榜第3&quot;,
+&quot;优势分&quot;: -3,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;实力差和近期状态均明显偏向贝蒂斯，主队预期进球不足1球，进攻威胁有限。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停或折损情况，无法判断核心主力是否缺阵，权重保留但优势分记0。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提供近3年交锋记录，无法评估克制关系，权重保留但优势分记0。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 12,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方赛程压力均较低，体能接近，不构成明显倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0并重新分配至市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测，权重记0并重新分配至市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;贝蒂斯#3争冠区，近况W,W,W,L,W；拉科鲁尼亚未提供积分榜位置&quot;,
+&quot;优势分&quot;: -3,
+&quot;权重&quot;: 28,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;贝蒂斯处于争冠区且状态火热，战意明确；主队战意信息不足，但实力差距下难以形成有效反制。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;贝蒂斯控球推进并利用边路与肋部创造机会，拉科鲁尼亚有球阶段以低位反击为主。&quot;,
+&quot;无球&quot;: &quot;拉科鲁尼亚无球阶段需面对贝蒂斯持续渗透，防线承压较大。&quot;,
+&quot;最大变量&quot;: &quot;贝蒂斯若轮换或久攻不下，比赛可能陷入低比分胶着。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;贝蒂斯正常发挥且较早取得进球&quot;,
+&quot;比分&quot;: [&quot;0-2&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;拉科鲁尼亚主场防守紧凑，贝蒂斯攻坚效率下降&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;贝蒂斯大幅轮换且拉科鲁尼亚把握定位球或反击机会&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-3球&quot;,
+&quot;净胜球&quot;: &quot;客队1-2球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率低比分，贝蒂斯可能控场但破门不一定早。&quot;
+},
+&quot;触发器&quot;: [
+&quot;贝蒂斯首发大幅轮换，核心攻击手缺阵&quot;,
+&quot;拉科鲁尼亚出现核心中后场伤停&quot;,
+&quot;赔率临场主胜大幅下调、客胜上调&quot;,
+&quot;天气或场地条件明显不利于技术流打法&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了，最可能错在拉科鲁尼亚主场韧性超出预期，贝蒂斯得势不得分，最终被逼平或小负。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主20.5% 平24.5% 客54.9%&lt;br&gt;预期进球: 0.99 - 1.77&lt;br&gt;大2.5: 49.7% | BTTS: 51.6%&lt;br&gt;贝叶斯后验: 主21.4% 平24.5% 客54.0%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">德甲</span>帕德博恩<span class="tvs">VS</span>霍芬海姆
+      <span style="font-size:.75rem;color:#8d99b0;">(Paderborn vs Hoffenheim)</span>
+    </div>
+    <span class="m-meta">开球 01:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>平局</b> (43.4%) · 最可能比分 0-0 (33%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主4.10 / 平4.10 / 客1.56
+主胜赔率变动: 4.10 → 4.10 (+0.00)
+亚盘(主让1.0球): 主2.12 / 平3.7 / 客2.58
+波胆最低赔: 1-2@7.0 / 1-1@9.0 / 1-3@10.5
+模型亚盘倾向: home (价值 +25.5%, 信心 high)
+模型大小球倾向: 小3.5 (模型3% vs 市场45%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第16名 (保级区) · 客队: 第13名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.1,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;最可能为平局方向，模型高估0-0概率，市场不认可。核心是双方进攻效率低、进球预期极低；最大风险是客队实力与战意略占优，若早进球则主队难追。&quot;,
+&quot;次选比分&quot;: &quot;0-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主4.10/平4.10/客1.56，亚盘主+1.0，大小球市场小3.5概率45%；全天赔率无变动&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场明显倾向客队，模型高估平局尤其0-0，资金与模型分歧大，需警惕模型对平局高估的盲区，小幅利客。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-27，预期进球0.49-0.64，模型概率主21.4%平48.3%客30.2%；帕德博恩近况L,L,D，霍芬海姆W,L,L&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方状态都差，客队ELO略高但近况不稳，进球预期极低，整体略偏客队不败，但对平局支撑有限。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停，无法量化影响，降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无近3年交锋记录，且双方阵容变化不明，参考价值低，降权。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 16,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能影响中性，不构成方向倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0，已重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无裁判信息，不猜测，权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;帕德博恩#16保级区仅1分，霍芬海姆#13中游3分；主队近况L,L,D，客队W,L,L&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队有保级压力但实力有限，客队中游战意不极端，双方均无强轮换信号，略偏客队整体实力。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队若持球预计以低位防反为主，缺乏稳定前场支点，难以持续压制。&quot;,
+&quot;无球&quot;: &quot;主队无球时需防范客队边路与二点球，但客队近期终结效率一般。&quot;,
+&quot;最大变量&quot;: &quot;客队能否在低进球预期比赛中率先破门，一旦早进球主队追分能力不足。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;客队控球占优但节奏偏慢，双方进攻效率低，比赛进入僵持&quot;,
+&quot;比分&quot;: [&quot;0-0&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;主队低位防守有效，客队缺乏破密集防守手段&quot;,
+&quot;比分&quot;: [&quot;0-0&quot;, &quot;1-1&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;主队利用定位球或反击先进球，客队无法快速回应&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;0-2球&quot;,
+&quot;净胜球&quot;: &quot;客队0-1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场大概率僵持，进球概率低&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前公布双方核心伤停或轮换名单&quot;,
+&quot;临场亚盘从主+1.0调整至主+0.75或更深&quot;,
+&quot;天气出现雨雪或场地条件明显改变&quot;,
+&quot;霍芬海姆首发大幅轮换或帕德博恩主力复出&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在模型过度高估0-0平局，实际客队凭借个体能力在下半场打破僵局并带走胜利。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主21.4% 平48.3% 客30.2%&lt;br&gt;预期进球: 0.49 - 0.64&lt;br&gt;大2.5: 35.9% | BTTS: 39.5%&lt;br&gt;贝叶斯后验: 主21.5% 平43.4% 客35.2%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>AC米兰<span class="tvs">VS</span>莱切
+      <span style="font-size:.75rem;color:#8d99b0;">(Milan vs Lecce)</span>
+    </div>
+    <span class="m-meta">开球 02:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (67.2%) · 最可能比分 1-0 (16%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.15 / 平5.70 / 客12.00
+主胜赔率变动: 1.19 → 1.15 (-0.04)
+亚盘(主受1.0球): 主1.62 / 平3.75 / 客4.1
+波胆最低赔: 2-0@6.2 / 1-0@7.0 / 3-0@7.25
+模型亚盘倾向: away (价值 +10.5%, 信心 high)
+模型大小球倾向: 小2.5 (模型47% vs 市场59%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第2名 (争冠区) · 客队: 第12名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 4胜 0平 0负, 进球 9:2 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 2.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为米兰主场小胜, 核心是实力与状态差距明显, 但米兰进攻效率一般且让球偏深, 最大风险是久攻不下被逼平。&quot;,
+&quot;次选比分&quot;: &quot;2-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主1.15/平5.70/客12.00; 全天变动主1.19→1.15, 客10.00→12.00, 客队资金流出&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场强烈看好主队, 客队资金流出进一步压低客胜赔率; 但模型主胜概率65%低于赔率隐含概率, 让球-1.0下主队覆盖仅40%, 深盘下市场对净胜球有保留, 略降主队优势分。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主65.0%, 预期进球1.89-0.66, ELO差+191; 米兰近况D,W,W,W,W, 莱切近况W,L,L,W&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;米兰状态稳定且实力大幅领先, 预期进球差超过1球, 攻防两端均占优; 但莱切近期也有胜绩, 并非完全崩盘, 主队进攻效率未达碾压级别。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停, 无法判断核心缺阵影响, 权重降至6并重新分配给市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队4胜0平0负, 总进球9-2&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;历史交锋米兰完全压制, 但莱切阵容变化程度未知, 参考价值需降权; 整体仍利好主队。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场, 客队7天0场, 均无双线作战&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方体能均无劣势, 米兰轮换压力小, 但该因素不构成额外优势, 中性处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气, 权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未公布裁判, 不猜测, 权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;米兰#2争冠区13分, 莱切#12中游6分; 米兰近况四连胜&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;米兰处于争冠区且状态火热, 主场抢分战意明确; 莱切中游无保级压力, 客场战意相对有限, 利好主队。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;米兰预计控球压制, 通过边路与肋部渗透寻找莱切防线空隙。&quot;,
+&quot;无球&quot;: &quot;莱切可能深度回收, 米兰需防范反击和定位球。&quot;,
+&quot;最大变量&quot;: &quot;米兰能否在上半场打开局面, 若久攻不下则平局风险上升。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;米兰上半场取得进球, 莱切被迫压出后留出空间&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;莱切防守韧性十足, 米兰射门转化率低, 70分钟后仍0-0&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;米兰轮换或轻敌, 莱切抓住定位球或反击率先得分&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势为主&quot;,
+&quot;上半场&quot;: &quot;米兰控球占优但可能半场0-0或1-0&quot;
+},
+&quot;触发器&quot;: [
+&quot;米兰首发出现明显轮换, 多名核心替补&quot;,
+&quot;莱切上半场取得进球&quot;,
+&quot;盘口从主-1.0退至主-0.75&quot;,
+&quot;赛前确认米兰核心攻击手伤停&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误, 最可能是米兰控球压制但无法转化为进球, 莱切门将高接抵挡或米兰防线一次失误导致平局甚至客胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主65.0% 平23.2% 客11.9%&lt;br&gt;预期进球: 1.89 - 0.66&lt;br&gt;大2.5: 47.7% | BTTS: 45.8%&lt;br&gt;贝叶斯后验: 主67.2% 平21.8% 客11.0%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">法甲</span>马赛<span class="tvs">VS</span>巴黎圣日尔曼
+      <span style="font-size:.75rem;color:#8d99b0;">(Marseille vs Paris SG)</span>
+    </div>
+    <span class="m-meta">开球 02:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (48.3%) · 最可能比分 1-2 (9%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 59% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主6.25 / 平5.15 / 客1.29
+主胜赔率变动: 5.75 → 6.25 (+0.50)
+亚盘(主让1.0球): 主2.9 / 平4.0 / 客1.87
+波胆最低赔: 1-2@7.25 / 1-3@9.0 / 0-2@9.25
+模型亚盘倾向: home (价值 +25.1%, 信心 high)
+模型大小球倾向: 小3.5 (模型40% vs 市场50%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第15名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 0平 3负, 进球 2:11 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -1.5,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;巴黎客场有望小胜，但马赛主场与保级战意构成阻力，最可能1-2或0-1。最大风险是巴黎进攻效率不足被逼平。&quot;,
+&quot;次选比分&quot;: &quot;0-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率变动: 主5.75→6.25(+0.50), 客1.33→1.29(-0.04); 亚盘主+1.0模型主覆盖56%/客覆盖24%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;资金流出主队、客胜赔率走低，市场明确偏向巴黎。但模型与市场分歧较大，主队价值方向被模型高估，需警惕马赛主场爆冷可能，整体仍利客。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主32.1%/平24.3%/客43.6%; 预期进球1.47-1.75; ELO差-199&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;ELO差接近200，巴黎实力与状态明显占优。马赛近况3负1胜且排名第15，攻防稳定性不足，巴黎应能创造更多得分机会。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及伤停或折损等级，无法量化影响。巴黎阵容厚度优于马赛，但具体缺阵情况不明，不作偏置。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋: 马赛1胜0平3负, 总进球2-11&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;巴黎近年交锋全面压制，且总进球差距悬殊。但马赛当前阵容与换帅情况未明，参考价值需部分降权，仍倾向巴黎。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程或双线作战压力，体能条件相当，对比赛方向影响中性。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气，权重记0。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;马赛#15保级区, 3分; 巴黎为争冠级别球队&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;马赛有保级抢分动力，主场可能更积极，但实力差距限制其转化效率。巴黎争冠压力下预计主力尽出，战意不弱，马赛仅获小幅战意加成。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;巴黎控球主导，通过边路与中场渗透制造连续进攻机会。&quot;,
+&quot;无球&quot;: &quot;马赛需低位防守并依赖反击，但面对巴黎高压出球风险较大。&quot;,
+&quot;最大变量&quot;: &quot;马赛若先入球，可能激发主场气势改变比赛节奏。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;巴黎上半场取得领先，控制节奏&quot;,
+&quot;比分&quot;: [&quot;1-2&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;马赛防守稳固或巴黎进攻效率低，比赛陷入胶着&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;马赛利用定位球或反击先入球并守住优势&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率胶着，巴黎控球占优但进球可能较晚出现&quot;
+},
+&quot;触发器&quot;: [
+&quot;巴黎首发轮换多名主力，进攻威胁下降&quot;,
+&quot;马赛出现核心中卫或门将缺阵&quot;,
+&quot;临场亚盘从主+1.0升至主+0.75&quot;,
+&quot;天气或场地条件显著影响传控打法&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在巴黎得势不得分，马赛凭借主场气势和一次高效反击逼平甚至取胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主32.1% 平24.3% 客43.6%&lt;br&gt;预期进球: 1.47 - 1.75&lt;br&gt;大2.5: 57.9% | BTTS: 59.3%&lt;br&gt;贝叶斯后验: 主28.7% 平23.0% 客48.3%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>瓦伦西亚<span class="tvs">VS</span>皇家社会
+      <span style="font-size:.75rem;color:#8d99b0;">(Valencia vs Sociedad)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (36.7%) · 最可能比分 1-0 (13%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.65 / 平3.25 / 客2.26
+主胜赔率变动: 2.65 → 2.65 (+0.00)
+亚盘(主让1.0球): 主1.48 / 平4.0 / 客4.9
+波胆最低赔: 1-1@6.0 / 1-2@8.0 / 0-1@8.5
+模型亚盘倾向: home (价值 +6.3%, 信心 medium)
+模型大小球倾向: 小2.5 (模型39% vs 市场50%)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第19名 (保级区) · 客队: 第13名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报未提及天气, 默认正常</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 1平 1负, 进球 6:7 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;主队小胜或平局方向，核心是小比分低进球格局，最大风险是客队整体实力与市场倾向压制主队保级题材。&quot;,
+&quot;次选比分&quot;: &quot;1-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主2.65/平3.25/客2.26，亚盘主+1.0，模型主覆盖66%/客覆盖13%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场略向客队倾斜，但亚盘受让一球结构下模型对主队覆盖更高，资金方向与模型存在一定分歧，主队具备价值但不构成强信号。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主37.4%/平30.4%/客32.2%，预期进球1.18-1.07，ELO差+25&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;ELO与模型概率略偏主队，双方预期进球都偏低，整体是低比分均势局，主队微幅占优但缺乏决定性攻击力。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及双方伤停与折损等级，无法区分核心与替补影响，该维度按不足降权处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队2胜1平1负，总进球6-7&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队近年交锋略占上风，但分差很小，且缺少双方阵容变化程度信息，参考价值有限。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程或双线压力，体能恢复条件接近，不构成明显利好。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气与场地，权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，不猜测，权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;瓦伦西亚#19保级区4分，近况W,L,L,L,L；皇家社会#13中游7分，近况L,W,D,W,L&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队保级压力更大，主场抢分动机明确；客队中游动力相对平稳。主队战意占优，但近期连败可能限制信心。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队预计以低位防反和定位球寻找小比分领先机会。&quot;,
+&quot;无球&quot;: &quot;主队无球阶段需防范客队边路推进与禁区前沿渗透。&quot;,
+&quot;最大变量&quot;: &quot;主队保级高压下的防守稳定性是否足以守住小胜或平局。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;主队率先进球或长时间保持均势，比赛进入低比分节奏&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;, &quot;2-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;双方进攻效率偏低，互相限制且缺乏绝对机会&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;主队防线失误或客队早期进球迫使主队压出&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场大概率胶着，0-0或1-0形态&quot;
+},
+&quot;触发器&quot;: [
+&quot;主队首发缺少多名防线主力&quot;,
+&quot;赛前亚盘从主+1.0大幅调整至主+0.75或更深&quot;,
+&quot;客队首发出现明显轮换或核心缺阵&quot;,
+&quot;临场大小球盘口进一步压低至2球以下&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在客队整体实力被低估，皇家社会客场小胜而非主队拿分。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主37.4% 平30.4% 客32.2%&lt;br&gt;预期进球: 1.18 - 1.07&lt;br&gt;大2.5: 43.2% | BTTS: 48.2%&lt;br&gt;贝叶斯后验: 主36.7% 平29.8% 客33.5%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  
+</article>
+  <div class="footer">自动生成于 2026-09-20 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

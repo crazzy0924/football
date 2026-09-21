@@ -147,15 +147,31 @@ def _remove_push_retry() -> None:
     _detach_delete_task(RETRY_TASK_NAME)
 
 
+def _git_fetch_merge_push() -> int:
+    """fetch + merge + push —— 不能裸推 (2026-09-21 修)。
+
+    原因: **另一个会话也在往同一分支推** (它跑 my_preds 自动更新)。我们裸 git push
+    只要远端动过就必然 non-fast-forward 被拒; 补推任务重试还是裸 push → 永远推不上去。
+    实测后果: 09-20 08:16 起连续 9 个提交堆积在本地, 预测/复盘/分析全都没上 GitHub,
+    而任务结果码一直是 0 (提交成功、推送失败), 从外面看不出问题。
+    """
+    _run(["git", "fetch", "origin"])
+    rc = _run(["git", "merge", "origin/master", "-m", "合并远端最新提交"])
+    if rc != 0:
+        _run(["git", "merge", "--abort"])
+        print("[推送] 与远端合并失败, 已回退合并 —— 请人工处理")
+        return rc
+    return _run(["git", "push", "origin", "master"])
+
+
 def cmd_push_retry() -> None:
-    """断网补推: 尝试推送; 成功或已同步则删除补推任务, 失败则10分钟后自动再试"""
-    r = subprocess.run(["git", "push", "origin", "master"], capture_output=True, text=True)
-    out = (r.stdout or "") + (r.stderr or "")
-    if r.returncode == 0 and ("up-to-date" in out or "->" in out):
+    """断网/被拒补推: 成功或已同步则删除补推任务, 失败则10分钟后自动再试"""
+    rc = _git_fetch_merge_push()
+    if rc == 0:
         print("[补推] 推送成功/已同步, 删除补推任务")
         _remove_push_retry()
     else:
-        print("[补推] 网络仍不通, 10分钟后自动重试")
+        print("[补推] 仍未推成功, 10分钟后自动重试")
 
 
 def _git_sync() -> None:
@@ -170,9 +186,9 @@ def _git_sync() -> None:
     if rc not in (0, 1):  # 1 = 无变更可提交
         print("[推送] 提交失败, 跳过推送")
         return
-    rc = _run(["git", "push", "origin", "master"])
+    rc = _git_fetch_merge_push()
     if rc != 0:
-        # 断网自愈: 注册补推任务, 网通后自动补回并自删
+        # 自愈: 注册补推任务 (它同样走 fetch+merge+push), 成功后自删
         _register_push_retry()
         return
     print("[推送] 已推送 origin/master")

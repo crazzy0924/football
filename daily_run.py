@@ -313,11 +313,18 @@ def cmd_predict(args) -> None:
         sys.exit(rc)
 
     # 终盘成功才落"今天已出"标记 (避免一天出多次 / 重复冻结哈希链)
+    # **必须确认真的有产物** (2026-09-21 修): 当天没有五大+欧冠场次时, pipeline.py 会
+    # 打印"无比赛可预测"并返回 0 —— 那是"没东西可出", 不是"出过了"。若照样落标记,
+    # 当天晚些时候体彩再挂出场次, 终盘就永远不会跑了 (实测 09-21 就是这么落上的)。
     if args.stage == "final":
-        try:
-            open(os.path.join("data", "state", "final_done_" + date_str), "w").close()
-        except Exception:
-            pass
+        _out_json = os.path.join("data", "output", f"predictions_{date_str}.json")
+        if os.path.exists(_out_json) and os.path.getsize(_out_json) > 100:
+            try:
+                open(os.path.join("data", "state", "final_done_" + date_str), "w").close()
+            except Exception:
+                pass
+        else:
+            print("[临盘] 没有预测产物 → 不落'今天已出'标记 (当天场次可能稍后才挂出)")
 
     # 早盘/午盘跑完后重排终盘时刻 (2026-09-17 用户拍板: 用"算"取代"猜")。
     # 排程器拉当日赛程 → 用 business_date + kickoff_time 拼出绝对开赛时间 →

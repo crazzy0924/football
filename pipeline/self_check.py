@@ -114,6 +114,19 @@ def main() -> None:
     else:
         add("B5", "情报矛盾检测", None, "当日无情报账本")
 
+    # B6 情报文件不得被清空 (2026-09-24 立)
+    #   由来: intel_fetcher.py 曾用截断模式无条件写入, 采集不到时把**主代理当天写好的
+    #   整份情报**清成 2 字节, 然后才打印"未采集到"。连续约 20 天没人发现, 期间八维里
+    #   "阵容伤停14 + 天气场地6 + 裁判6 = 26%" 的权重一直在无证据状态下打分。
+    #   self_check 只在终盘后有比赛的日子跑, 所以这里小文件基本就等于"分析师在盲打"。
+    if not os.path.exists(intel_path):
+        add("B6", "情报文件未被清空", False, "当日**没有**情报文件 —— 分析师在无证据下打分", hard=True)
+    else:
+        _isz = os.path.getsize(intel_path)
+        add("B6", "情报文件未被清空", _isz >= 200,
+            f"{_isz} 字节" + ("" if _isz >= 200 else " —— 情报被清空了? 查 intel_fetcher.py 是否又无条件覆盖"),
+            hard=True)
+
     # D1 汉化检查
     rc, out = _sh([sys.executable, "pre_push_check.py"])
     add("D1", "汉化检查", rc == 0, out.splitlines()[-1] if out else "", hard=True)

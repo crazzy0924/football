@@ -209,14 +209,16 @@ def main():
     print("FPL 伤停采集: %d 场英超..." % pl_count)
     intel_text = build_intel(matches)
     out_path = os.path.join("data", "intel", "fpl_%s.txt" % date_str)
+    # ⚠️ 2026-09-24 同 intel_fetcher.py 的 bug: 原来无条件以截断模式写入,
+    #   采集不到时会把文件清成 1-2 字节, 然后才打印"未采集到"。写入前先判空。
+    if not intel_text:
+        print("未采集到 FPL 伤停信息。**不写文件, 避免清空已有内容。**")
+        return
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
-        f.write((intel_text or "") + "\n")
-    if intel_text:
-        print("已写入 → %s" % out_path)
-        print(intel_text[:600])
-    else:
-        print("未采集到 FPL 伤停信息。")
+        f.write(intel_text + "\n")
+    print("已写入 → %s" % out_path)
+    print(intel_text[:600])
 
 
 if __name__ == "__main__":

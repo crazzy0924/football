@@ -212,14 +212,33 @@ def main() -> None:
     print(f"请求数: {_requests_used}/{DAILY_BUDGET}")
 
     intel_path = os.path.join("data", "intel", f"{date_str}.txt")
+
+    # ⚠️ 2026-09-24 修复 —— 这里原来是个**会清空情报的静默 bug**:
+    #   原代码是 `with open(path, "w") as f: f.write(intel_text + "\n")` 然后才 `if intel_text:`。
+    #   那个 if 是**打印守卫, 不是写入守卫** —— 位置错了。采集不到时它已经用截断模式
+    #   把文件清成 "\n" (Windows 下 2 字节), 然后才打印"未采集到"。
+    #   而 daily_run 的顺序是: injury_recon.py(会保留已有内容) -> 本脚本(清空),
+    #   所以**主代理当天写好的情报会被这一步整个抹掉**。
+    #   实测: 2026-09-04 起 data/intel/<日期>.txt 在比赛日全是 2 字节, 连续 20 天。
+    #   影响: 八维里 阵容伤停14 + 天气场地6 + 裁判6 = 26% 的权重长期没有证据。
+    if not intel_text:
+        print("未采集到伤停信息 (无伤停或球队未匹配)。**不写文件, 避免清空已有情报。**")
+        return
+
     os.makedirs(os.path.dirname(intel_path), exist_ok=True)
-    with open(intel_path, "w", encoding="utf-8") as f:
-        f.write(intel_text + "\n")
-    if intel_text:
-        print(f"已写入情报 → {intel_path}")
-        print(intel_text[:400])
+    # 与 injury_recon.py 同一条纪律: 保留已有的、非本模块产出内容 (不覆盖别人的情报)
+    existing = ""
+    if os.path.exists(intel_path):
+        with open(intel_path, "r", encoding="utf-8") as f:
+            existing = f.read().strip()
+    if existing and "API-Football 伤停" not in existing:
+        content_out = existing + "\n\n" + intel_text + "\n"
     else:
-        print("未采集到伤停信息 (无伤停或球队未匹配)。")
+        content_out = intel_text + "\n"
+    with open(intel_path, "w", encoding="utf-8") as f:
+        f.write(content_out)
+    print(f"已写入情报 → {intel_path}")
+    print(intel_text[:400])
 
 
 if __name__ == "__main__":

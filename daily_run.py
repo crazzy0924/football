@@ -358,6 +358,17 @@ def cmd_review(args) -> None:
         cmd += ["--results-text", args.results_text]
     rc = _run(cmd)
     if rc != 0:
+        # 先分清两种失败 (2026-09-24 修):
+        #   (a) 当天**本来就没有比赛** → 复盘命令找不到预测记录, 退出码 1。
+        #       这不是故障, 注册重试毫无意义 —— 实测 09-21~09-24 连着几天每 30 分钟
+        #       空跑一次、永远失败, 补复盘任务一直挂在系统里。
+        #   (b) 当天有预测, 但赛果拉不到 (断网/源超时) → 这才需要重试自愈。
+        _pf = os.path.join("data", "output", f"predictions_{date_str}.json")
+        _has_pred = os.path.exists(_pf) and os.path.getsize(_pf) > 100
+        if not _has_pred:
+            print("[复盘] " + date_str + " 当天没有预测记录 (无五大+欧冠场次), 无需复盘, 不重试")
+            _remove_review_retry()
+            return
         print("[失败] 复盘流程退出码 " + str(rc))
         # 断网自愈 (2026-09-18): 不要直接丢一天 —— 注册重试任务, 网通后自动补回。
         # 注意: 重试任务跑的是同一个命令, 成功时会走到下面 _remove_review_retry() 自删。

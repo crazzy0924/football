@@ -298,6 +298,25 @@ def cmd_predict(args) -> None:
             print("=" * 62)
             print("")
 
+    # === 当天无赛程 = 一等公民状态 (2026-09-24 用户拍板) ===
+    # 约定: 当天没有五大+欧冠场次时 —— **不报警、不重试、不落标记、不产出**。
+    # 缘起: 同一个"没比赛"的状态, 之前三条路给了三种结果 ——
+    #   预测: 当成成功 → 落"今天已出"标记 (晚挂的场次永远出不来)
+    #   复盘: 当成失败 → 每30分钟无限重试 (实测空转好几天)
+    #   早盘/午盘: 照常生成一个 0 场的空分析页
+    # 这里统一在前面拦掉, 后面所有分支就不必各自判。
+    if args.stage in ("morning", "midday", "final"):
+        try:
+            with open("data/today.json", encoding="utf-8") as _fh:
+                _slate = json.load(_fh)
+        except Exception:
+            _slate = None
+        if _slate is not None and not _slate:
+            print("[赛程] 今天没有五大+欧冠场次 → 跳过预测/分析 (正常状态, 不是故障)")
+            _write_files_manifest()
+            _git_sync()
+            return
+
     # 4) 预测 (可选 LLM 分析; 早盘/午盘只出七维分析存档页, 终盘出预测页)
     # **必须显式传 --date** (2026-09-19 修): 终盘常在午夜后跑, 不传的话 pipeline.py
     # 用"当前日期"命名产物 —— 实测 09-19 00:00 那次按 09-18 抓的数据, 却写成了

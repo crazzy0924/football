@@ -233,6 +233,11 @@ content_files = [f for f in content_files if f.name not in ('pre_push_check.py',
 # 覆盖 {date, picks} —— 改成中文会直接破坏存证校验。这是审计留痕, 不是给人读的
 # 内容, 8 月初那批记录的英文队名必须原样保留。
 content_files = [f for f in content_files if f.name != 'transparency.html']
+# 内部审计包豁免 (2026-09-26): octa_*.json 是八维盲判的「证据包 + 提示词缓存」,
+# 里面的 evidence_s1 含**外文原文引用**与来源标题 —— 那是留痕, 翻译了就毁证据链。
+# 它只进 octa_*.json、不进台账、不上页面 (见 national/octa.py 第 498 行)。
+content_files = [f for f in content_files if not (
+    f.name.startswith('octa_') and f.suffix == '.json')]
 # JSON数据文件豁免 — 机器内部数据(队名/联赛代码必须英文才能匹配ELO)
 # 注意: pinnacle_bets_ 是投注单(用户可见) → 不豁免, 队名必须中文 (8-14修正)
 content_files = [f for f in content_files if not (f.suffix == '.json' and (

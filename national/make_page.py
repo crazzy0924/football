@@ -52,7 +52,10 @@ NAME_MAP = {
     "Mancini": "曼奇尼", "Spalletti": "斯帕莱蒂", "Esposito": "埃斯波西托", "Romano": "罗马诺",
     "Retegui": "雷特吉", "Rovella": "罗韦拉", "Tzolis": "佐利斯", "Karetsas": "卡雷察斯",
     "Tadic": "塔迪奇", "Montella": "蒙特拉", "Klopp": "克洛普", "Xavi": "哈维",
-    "Pio": "皮奥", "UEFA": "欧足联",
+    "Pio": "皮奥", "UEFA": "欧足联", "Zidane": "齐达内", "Timber": "廷伯", "Taylor": "泰勒",
+    "Zechiël": "泽希尔", "Zechiel": "泽希尔", "Daramy": "达拉米", "Jesus": "热苏斯",
+    "Konaté": "科纳特", "Konate": "科纳特", "Yoro": "约罗", "Sjøvold": "舍沃尔", "Sjovold": "舍沃尔",
+    "Langås": "朗戈斯", "Langas": "朗戈斯", "Paunović": "保诺维奇", "Paunovic": "保诺维奇",
     # 注意: 不要写空字符串映射 (如 "League": "") —— 那会把正常文案也删掉。
     # 2026-09-24 实际踩到: 标题被削成 "欧国联  A 判断"。文案该改文案本身。
 }
@@ -67,9 +70,16 @@ def localize(text: str) -> str:
     #   "意大利Italy" 这种中文紧挨英文的地方 \b 匹配不上, 替换会**静默失败**
     #   (2026-09-24 实际踩到: 页面上残留 Belgium / Italy)。
     #   改用"两侧不是拉丁字母"判定。
+    # 短语优先于单词 (否则 "Nations League" 会被拆开)
+    out = (out.replace("UEFA Nations League", "欧国联")
+              .replace("Nations League", "欧国联")
+              .replace("League A", "A 级")
+              .replace("web search", "联网检索")
+              .replace("UEFA", "欧足联"))
+
     def _sub(src, mapping):
         for en, cn in mapping.items():
-            src = _re.sub(r"(?<![A-Za-z])" + _re.escape(en) + r"(?![A-Za-z])", cn, src)
+            src = _re.sub(r"(?<![A-Za-zÀ-ÿ])" + _re.escape(en) + r"(?![A-Za-zÀ-ÿ])", cn, src)
         return src
     out = _sub(out, EN_TO_CN)
     out = _sub(out, NAME_MAP)
@@ -79,7 +89,8 @@ def localize(text: str) -> str:
     # 只扫**可见文本**: 先去掉 style/script, 再去掉所有标签 —— 否则 CSS 类名会淹没警告
     body = _re.sub(r"<(style|script)[\s\S]*?</\1>", " ", out)
     body = _re.sub(r"<[^>]+>", " ", body)
-    left = sorted({w for w in _re.findall(r"[A-Za-z][A-Za-z\-\.]{2,}", body)
+    # 注意要含重音字母 (é å ć ø ...), 否则 Konaté 会被截成 Konat 而看不出问题
+    left = sorted({w for w in _re.findall(r"[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\-\.]{2,}", body)
                    if w not in SKIP and not w.startswith("rgba")})
     return out, left
 

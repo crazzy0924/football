@@ -127,9 +127,10 @@ def main():
     P = []
     P.append("<!DOCTYPE html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\">")
     P.append("<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">")
-    P.append("<title>欧国联 A 级 判断 · %s</title><style>%s</style></head><body><div class=\"wrap\">" % (date_str, CSS))
-    P.append("<h1>欧国联 A 级 · 第一轮</h1>")
-    P.append("<div class=\"sub\">判断时间 %s · %d 场 · 先遮赔率独立判断，再揭示赔率对照</div>"
+    P.append("<title>欧国联 判断 · %s</title><style>%s</style></head><body><div class=\"wrap\">" % (date_str, CSS))
+    P.append("<h1>欧国联 · 判断（体彩在售 A/B/C 级）</h1>")
+    P.append("<div class=\"sub\">判断时间 %s · %d 场 · 先遮赔率独立判断，再揭示赔率对照 · "
+             "2026-09-26 起范围由「A 级 16 队」扩大为「体彩在售的全部欧国联场次」</div>"
              % (esc(recs[0].get("ts")), len(recs)))
 
     for r in recs:
@@ -202,8 +203,10 @@ def main():
     P.append("· 第一段**遮住赔率**独立判断; 第二段才揭示赔率, 只有「市场揭示了我确实漏掉的具体事实」才允许改判。<br>")
     P.append("· 标注「反向」的场次 = 我们与市场相反。**只有这些场次计入判据**(同向只是在附和市场)。<br>")
     P.append("· 自洽度 = 同一份证据跑 3 次取多数的一致程度。<b>2/3 表示这个判断本身不稳定, 要打折看。</b><br>")
-    P.append("· ⚠️ 这套方法**无法回测**(情报是当天抓的), 且 League A 每年只新增 48 场 —— "
+    P.append("· ⚠️ 这套方法**无法回测**(情报是当天抓的), 且欧国联一年总量有限 —— "
              "<b>显著性永远拿不到, 单轮数字不许当结论。</b><br>")
+    P.append("· ⚠️ 2026-09-26 起把 B/C 级一并纳入。**B/C 级的联赛分组尚未拿到权威源**, "
+             "页面不标组号; 级别只在提示词里作为背景, 不参与任何数字。<br>")
     P.append("· 情报由主代理 web_search 抓取, 每条带来源; 抓不到的如实写「未获取」, 权重记 0, 禁止编造。")
     P.append("</div></div></body></html>")
 

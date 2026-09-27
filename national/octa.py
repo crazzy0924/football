@@ -354,6 +354,10 @@ def main() -> int:
     ap.add_argument("--only-divergent", type=float, default=0.0,
                     help="只跑 |DC模型-市场| >= 该百分点 的场次 (省钱用; 默认 0 = 全跑)")
     ap.add_argument("--dry-run", action="store_true", help="不落账、不写文件")
+    ap.add_argument("--final", action="store_true",
+                    help="终盘模式: 复用当天已有的**第一段盲判**(不重掷), 只用最新赔率重跑第二段对照")
+    ap.add_argument("--include-started", action="store_true",
+                    help="把已开赛场次也包住 (终盘模式必须用: 否则页面会少掉已开打的那几场)")
     args = ap.parse_args()
 
     now = datetime.now()
@@ -369,8 +373,25 @@ def main() -> int:
     rnd = max((rounds_played(t) for t in tables.values()), default=0)
     print("语料 %d 场  球队 %d 支  已完成 %d/6 轮" % (len(ms), len(model.teams), rnd))
 
+    # ── 终盘模式 (2026-09-26 新增): 复用当天已有的第一段盲判, 只用最新赔率重跑第二段 ──
+    # 为什么必须复用: 第一段本身不看赔率 —— **重掷一次就是重新抽签**, 会把"盲判"这道
+    # 纪律毁掉 (同一份证据跑 3 次本来就可能出不同结论, 见自洽度设计)。
+    # 终盘要变的只有两样: 赔率(临场水位) 与第二段的对照结论。自洽度/盲判立场原样保留。
+    prior = {}
+    prior_path = os.path.join(_ROOT, "data", "national", "octa_%s.json" % args.date)
+    if args.final and os.path.exists(prior_path):
+        try:
+            for r in json.load(open(prior_path, encoding="utf-8")):
+                prior[(r.get("home"), r.get("away"))] = r
+            print("终盘模式: 复用 %s 里已落账的 %d 场第一段盲判" % (
+                os.path.relpath(prior_path, _ROOT), len(prior)))
+        except Exception as e:
+            print("⚠ 读不到旧落账 (%s) → 退回全量重跑" % e)
+            prior = {}
+
     raw = fetch_sporttery()
     picks = []
+    held = []          # 已开赛: 不重判, 原样搬进输出 (否则页面会少场)
     for m in raw:
         if "欧国联" not in (m["league"] or ""):
             continue
@@ -379,9 +400,11 @@ def main() -> int:
         if not h or not a:
             continue
         ko = kickoff_abs(m["business_date"], m["match_time"])
-        if ko is not None and ko < now:
-            continue
         m["home"], m["away"], m["ko"] = h, a, ko
+        if ko is not None and ko < now:
+            if args.include_started and (h, a) in prior:
+                held.append(prior[(h, a)])
+            continue
         picks.append(m)
     picks.sort(key=lambda x: x["match_time"])
     if args.only:
@@ -425,53 +448,64 @@ def main() -> int:
         mkt = {"odds": (oh, od, oa), "margin": imp["margin"],
                "probs": (imp["home"], imp["draw"], imp["away"])}
 
-        ev1 = build_evidence_s1(ms, model, elo, tables, stakes_all, rnd, h, a, args.date)
+        ev1 = (prior.get((h, a)) or {}).get("evidence_s1") or \
+            build_evidence_s1(ms, model, elo, tables, stakes_all, rnd, h, a, args.date)
         # ── 第一段 盲判: 跑 K 次取多数 (自洽性投票) ──
         # 2026-09-24 实测: 同一份证据跑 5 次出过 3 种结论 (客胜/主胜/平局)。
         # 一个不稳定的判断不是判断。所以这里把"跑几次一致"本身当成测量值, 直接写进台账。
-        print("   第一段 盲判中 (遮住赔率, 跑 %d 次) ..." % args.repeats)
-        runs = []
-        for k in range(args.repeats):
-            raw_k = call_llm(INSTRUCTION_S1 + "\n\n" + ev1, SYSTEM)
-            s_k = parse_json(raw_k)
-            if not s_k:
-                print("     run%d: 解析失败" % (k + 1))
+        old = prior.get((h, a)) if args.final else None
+        if old and old.get("stage1_blind"):
+            s1 = old["stage1_blind"]
+            print("   第一段 复用已有盲判: %s  一致度 %s  方向分 %s  (终盘不重掷)"
+                  % (s1.get("站边"), s1.get("_一致度"), s1.get("方向分")))
+            s1["_复用自"] = old.get("ts")
+        else:
+            print("   第一段 盲判中 (遮住赔率, 跑 %d 次) ..." % args.repeats)
+            runs = []
+            for k in range(args.repeats):
+                raw_k = call_llm(INSTRUCTION_S1 + "\n\n" + ev1, SYSTEM)
+                s_k = parse_json(raw_k)
+                if not s_k:
+                    print("     run%d: 解析失败" % (k + 1))
+                    continue
+                dims_k = s_k.get("七维") or []
+                try:
+                    # 方向分由程序算, 不信 LLM 自报的数
+                    # (2026-09-24: 它 6 场里 4 场算错, 其中一场符号都反了)
+                    s_k["方向分"] = round(
+                        sum(int(d.get("优势分", 0)) * int(d.get("权重", 0)) for d in dims_k) / 100.0, 2)
+                    s_k["权重合计"] = sum(int(d.get("权重", 0)) for d in dims_k)
+                except Exception:
+                    s_k["方向分"] = None
+                dj = s_k.get("方向分") or 0
+                s_k["_矛盾"] = ((s_k.get("站边") == "主胜" and dj < -0.3) or
+                               (s_k.get("站边") == "客胜" and dj > 0.3))
+                runs.append(s_k)
+                print("     run%d: %s %s  方向分 %s  置信度分 %s%s"
+                      % (k + 1, s_k.get("站边"), s_k.get("比分"), s_k.get("方向分"),
+                         s_k.get("置信度分"), "   ⚠ 维度分不支持站边" if s_k["_矛盾"] else ""))
+            if not runs:
+                print("   ✗ 第一段全部失败, 跳过本场")
                 continue
-            dims_k = s_k.get("七维") or []
-            try:
-                # 方向分由程序算, 不信 LLM 自报的数
-                # (2026-09-24: 它 6 场里 4 场算错, 其中一场符号都反了)
-                s_k["方向分"] = round(
-                    sum(int(d.get("优势分", 0)) * int(d.get("权重", 0)) for d in dims_k) / 100.0, 2)
-                s_k["权重合计"] = sum(int(d.get("权重", 0)) for d in dims_k)
-            except Exception:
-                s_k["方向分"] = None
-            dj = s_k.get("方向分") or 0
-            s_k["_矛盾"] = ((s_k.get("站边") == "主胜" and dj < -0.3) or
-                           (s_k.get("站边") == "客胜" and dj > 0.3))
-            runs.append(s_k)
-            print("     run%d: %s %s  方向分 %s  置信度分 %s%s"
-                  % (k + 1, s_k.get("站边"), s_k.get("比分"), s_k.get("方向分"),
-                     s_k.get("置信度分"), "   ⚠ 维度分不支持站边" if s_k["_矛盾"] else ""))
-        if not runs:
-            print("   ✗ 第一段全部失败, 跳过本场")
-            continue
-        votes = Counter(r.get("站边") for r in runs)
-        winner, agree_n = votes.most_common(1)[0]
-        agreement = agree_n / len(runs)
-        pool = [r for r in runs if r.get("站边") == winner]
-        pool.sort(key=lambda r: (r.get("方向分") is None, r.get("方向分")))
-        s1 = pool[len(pool) // 2]          # 取多数派里的中位数那个, 不取极端
-        s1["_投票"] = dict(votes)
-        s1["_一致度"] = "%d/%d" % (agree_n, len(runs))
-        print("   盲判(多数): %s   一致度 %s   方向分 %s   比分 %s   置信度分 %s"
-              % (winner, s1["_一致度"], s1.get("方向分"), s1.get("比分"), s1.get("置信度分")))
-        print("   形状: %s" % s1.get("这场的形状"))
+            votes = Counter(r.get("站边") for r in runs)
+            winner, agree_n = votes.most_common(1)[0]
+            pool = [r for r in runs if r.get("站边") == winner]
+            pool.sort(key=lambda r: (r.get("方向分") is None, r.get("方向分")))
+            s1 = pool[len(pool) // 2]          # 取多数派里的中位数那个, 不取极端
+            s1["_投票"] = dict(votes)
+            s1["_一致度"] = "%d/%d" % (agree_n, len(runs))
+            print("   盲判(多数): %s   一致度 %s   方向分 %s   比分 %s   置信度分 %s"
+                  % (winner, s1["_一致度"], s1.get("方向分"), s1.get("比分"), s1.get("置信度分")))
+            print("   形状: %s" % s1.get("这场的形状"))
 
         ev2 = build_evidence_s2(s1, mkt)
         print("   第二段 对照赔率 ...")
         raw2 = call_llm(INSTRUCTION_S2 + "\n\n" + ev2, SYSTEM)
         s2 = parse_json(raw2) if raw2 else None
+        if s2 is None and old is not None:
+            # 第二段失败时的兜底: 沿用上一版对照结论, 别把已经发布过的结论擦掉
+            s2 = old.get("stage2_vs_market")
+            print("   ⚠ 第二段失败 → 沿用上一版对照结论 (不擦已发布内容)")
         if s2:
             print("   市场: 主 %.1f%% / 平 %.1f%% / 客 %.1f%%   关系: %s"
                   % (mkt["probs"][0] * 100, mkt["probs"][1] * 100, mkt["probs"][2] * 100,
@@ -514,7 +548,7 @@ def main() -> int:
     print("=" * 76)
     print("汇总 (我们的判断, 未经市场融合)")
     print("  场次                    盲判      -> 最终      比分    市场(主/平/客)")
-    for r in results:
+    for r in sorted(results + held, key=lambda x: str(x.get("kickoff_abs") or "")):
         f = r["final"]
         mp = r["market_probs"]
         print("  %-20s  %-6s  ->  %-6s    %-5s   %.0f/%.0f/%.0f"
@@ -525,6 +559,15 @@ def main() -> int:
         print()
         print("已落账 %d 条 -> %s" % (len(results), os.path.relpath(LEDGER, _ROOT)))
         out = os.path.join(_ROOT, "data", "national", "octa_%s.json" % args.date)
+        # 终盘模式: 把"已开赛而不再重判"的场次与"上一版里有、这次没进 picks"的场次并回来,
+        # 否则页面会静默少几场 (看起来像临阵撤预测)。同 key 以本次新算的为准。
+        if args.final:
+            fresh = {(r.get("home"), r.get("away")) for r in results}
+            keep = [r for k, r in prior.items() if k not in fresh]
+            if keep:
+                print("并入未重判的旧记录 %d 条 (已开赛/不在本次 picks)" % len(keep))
+            results = results + held + keep
+        results.sort(key=lambda r: str(r.get("kickoff_abs") or ""))
         json.dump(results, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
         print("完整输出 -> %s" % os.path.relpath(out, _ROOT))
     return 0

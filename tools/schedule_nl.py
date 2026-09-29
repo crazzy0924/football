@@ -187,11 +187,19 @@ def verify(target: datetime, date_str: str = "") -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--date", default=datetime.now().strftime("%Y-%m-%d"))
+    ap.add_argument("--date", default="",
+                    help="体彩比赛日; 留空 = 按当前时刻推算 (12:00 前算前一天)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--check", action="store_true", help="只校验当前任务, 不修改")
     ap.add_argument("--clear", action="store_true", help="删除该任务 (今天没有欧国联时用)")
     a = ap.parse_args()
+
+    if not a.date:
+        # 2026-09-30 加: 不能用 datetime.now().date()。体彩比赛日 D 覆盖 D 白天 → D+1 早上,
+        # 所以 12:00 前算**前一天**。起因: 若每日排程任务被 StartWhenAvailable 补跑在凌晨,
+        # 用"今天"会去查明天的赛程, 当晚这批凌晨场就永远排不上 (与 pipeline.py 同一条规则)。
+        a.date = (datetime.now() - timedelta(hours=12)).strftime("%Y-%m-%d")
+        print("[欧国联排程] 未指定 --date → 按当前时刻推算比赛日 = %s" % a.date)
 
     if a.clear:
         out = _ps("Unregister-ScheduledTask -TaskName '%s' -Confirm:$false" % TASK)

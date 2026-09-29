@@ -41,8 +41,22 @@ def check(rec: dict, issues: list, warns: list) -> None:
         wsum = sum(int(d.get("权重", 0)) for d in dims)
     except Exception:
         wsum = -1
-    if wsum != 100:
-        issues.append("%s C1 权重合计 = %s (应 100)" % (tag, wsum))
+    # 2026-09-30 放宽 (原规则"必须 = 100"是错的):
+    # 规则本来就要求**情报没提到的维度权重记 0** —— 那么当"阵容伤停/天气场地/裁判"
+    # 三个维度都没情报时, 权重合计**必然小于 100**, 这是如实记账, 不是错误。
+    # 实测: 09-29 捷克 vs 英格兰 就是"阵容伤停 0 / 天气 0 / 裁判 0" → 合计 64。
+    # 改法: 100 仍然必须; **小于 100 时要求差额正好由"权重=0 的维度"解释**, 并降级为提醒;
+    #       权重**超过** 100 或差额解释不通 → 才是真问题。
+    if wsum > 100:
+        issues.append("%s C1 权重合计 = %s (超过 100)" % (tag, wsum))
+    elif wsum < 100:
+        zero_dims = [d.get("维度") for d in dims if int(d.get("权重", 0) or 0) == 0]
+        if not zero_dims:
+            issues.append("%s C1 权重合计 = %s 但没有任何「权重记0」的维度 —— 差额无法解释"
+                          % (tag, wsum))
+        else:
+            warns.append("%s C1 证据只有 %s%% 权重 (缺: %s) → 这一场要按「证据不全」打折看"
+                         % (tag, wsum, "、".join(zero_dims)))
     # C2
     try:
         calc = sum(int(d.get("优势分", 0)) * int(d.get("权重", 0)) for d in dims) / 100.0

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早盘七维分析存档 — 2026-10-09</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 早盘七维分析存档 · 非预测页</div>
+    <h1>2026-10-09</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-10-09.html">predictions_2026-10-09.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">德甲</span>多特蒙德<span class="tvs">VS</span>云达不莱梅
+      <span style="font-size:.75rem;color:#8d99b0;">(Dortmund vs Werder Bremen)</span>
+    </div>
+    <span class="m-meta">开球 02:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (70.5%) · 最可能比分 2-1 (9%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.25 / 平5.20 / 客7.30
+亚盘(主受1.0球): 主1.79 / 平3.87 / 客3.2
+波胆最低赔: 2-1@7.25 / 2-0@8.5 / 3-1@9.0
+模型亚盘倾向: home (价值 +2.2%, 信心 low)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第1名 (争冠区) · 客队: 第8名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 义上讲，所有生活 … === 天气侦察 (未经核实, 仅供参考) === [天气] 多特蒙德 vs 云达不莱梅</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 2平 0负, 进球 7:2 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: ```json
+{
+&quot;方向分&quot;: 2.5,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向:多特蒙德主场取胜。核心理由:ELO差291、状态四连胜、交锋4场不败且阵容稳定。最大风险:模型与市场融合后主胜概率被高估,平局价值方向出现,谨防主队赢球输盘或冷平。&quot;,
+&quot;次选比分&quot;: &quot;2-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;亚盘主-1.0,主覆盖52%/客覆盖28%;欧赔1.25/5.20/7.30;Model-Market Edge: draw=+0.9%&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队让一球且欧赔深盘反映市场对多特信心强,但模型与市场融合后平局价值方向为正,说明主胜方向存在一定高估风险,主队赢盘难度较大。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;多特近况W,W,W,W,积12分居首;不莱梅近况W,D,W,L,积7分;预期进球2.67-1.01;ELO差+291&quot;,
+&quot;优势分&quot;: 4,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;多特状态与攻防数据全面占优,预期进球差近1.7球,ELO差291属德甲强弱分明区间,主队取胜基础扎实。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提供具体伤停信息,无法区分核心与替补影响,故降权处理,不编造缺阵名单。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队2胜2平0负,总进球7-2;情报未提示双方大换血或换帅&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;交锋记录多特4场不败且失球极少,在双方阵容未见大幅变动的背景下参考价值较高,对主队形成正向支撑。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场/客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程或双线作战压力,体能条件对等,不构成主客差异。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气,权重记0。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判信息未官方确认,不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;多特争冠区居首,需保持领先;不莱梅中游第8,压力相对较小&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;多特争冠战意明确且主场作战,轮换概率较低;不莱梅无保级或欧战压力,爆冷动力有限,但仍可能以稳守反击应对。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;多特蒙德有球阶段预计主导控球并利用边路与中场渗透持续施压不莱梅防线。&quot;,
+&quot;无球&quot;: &quot;无球阶段多特需防范不莱梅快速转换与定位球,尤其在大举压上后的身后空当。&quot;,
+&quot;最大变量&quot;: &quot;多特若久攻不下,不莱梅反击效率可能改变比赛走势。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;多特上半场取得进球且不莱梅防线持续承压&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;2-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;多特进攻效率低,不莱梅门将高接抵挡或通过定位球偷袭得手&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;不莱梅先进球且多特心态急躁,反击再下一城&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1-2球优势&quot;,
+&quot;上半场&quot;: &quot;多特蒙德上半场大概率主导场面,但破门时间存在不确定性。&quot;
+},
+&quot;触发器&quot;: [
+&quot;多特蒙德首发轮换超过3名核心主力,战意下降&quot;,
+&quot;不莱梅赛前公布主力中卫或后腰伤停,防守体系受损&quot;,
+&quot;临场亚盘降至主-0.75,市场对主胜信心明显减弱&quot;,
+&quot;赛前出现多特更衣室或伤病负面消息&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了,最可能错在低估了不莱梅的防守韧性与反击效率,导致多特控球占优但无法转化为足够进球,最终平局或小胜输盘。&quot;
+}
+```<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主70.5% 平17.9% 客11.6%&lt;br&gt;预期进球: 2.67 - 1.01&lt;br&gt;大2.5: 66.2% | BTTS: 59.9%&lt;br&gt;贝叶斯后验: 主70.5% 平17.7% 客11.7%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[裁判] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[裁判] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[天气] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[天气] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">法甲</span>朗斯<span class="tvs">VS</span>里昂
+      <span style="font-size:.75rem;color:#8d99b0;">(Lens vs Lyon)</span>
+    </div>
+    <span class="m-meta">开球 02:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (44.7%) · 最可能比分 1-0 (9%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 56% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.12 / 平3.55 / 客2.66
+亚盘(主受1.0球): 主4.08 / 平4.2 / 客1.55
+波胆最低赔: 1-1@7.5 / 2-1@7.5 / 1-2@9.25
+模型亚盘倾向: home (价值 +2.2%, 信心 low)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第15名 (保级区) · 客队: 第2名 (争冠区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 义上讲，所有生活 … === 天气侦察 (未经核实, 仅供参考) === [天气] 多特蒙德 vs 云达不莱梅</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 1平 1负, 进球 6:2 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 1.1,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为朗斯小胜或平局，主队受市场与状态支撑但优势有限。核心风险是里昂整体实力更强且近期稳定，朗斯保级压力下若久攻不下易被反击。&quot;,
+&quot;次选比分&quot;: &quot;1-1&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主2.12/平3.55/客2.66，亚盘主-1.0下主覆盖24%客覆盖54%；模型-市场价值方向为主队+3.6%。&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;欧赔略倾主队，但亚盘主-1.0覆盖明显偏低，市场对朗斯能否净胜一球存疑。模型与市场方向一致但幅度有限，主队优势不宜高估。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差-33，预期进球1.62-1.25；朗斯近况L,D,L,L,W，里昂近况W,D,W,D,W。&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;里昂ELO更高且近期不败，但朗斯主场预期进球略占优，攻防数据未形成明确单边优势，双方状态差距被积分排名放大。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:10, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及具体伤停，无法判断核心缺阵影响，权重下调并转移至市场、状态、赛程、战意。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;近3年朗斯2胜1平1负，总进球6-2；双方阵容变化程度无数据。&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;历史交锋朗斯占优，但缺少当前阵容稳定性信息，参考价值中等。若朗斯阵容大换血则此项需降权。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场/客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;双方均无密集赛程或双线压力，体能条件对等，不构成明显利好。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;天气情报无效，权重记0并转移。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无官方裁判信息，不猜测，权重转移至状态、赛程与战意。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;朗斯#15保级区4分，里昂#2争冠区11分。&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:16, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;朗斯保级压力带来额外战意，但积分差距大且赛季尚早，不宜滥用‘必须赢’逻辑。里昂争冠区有保持势头动力，双方战意接近。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;朗斯主场预计主动控球并利用边路传中制造机会。&quot;, &quot;无球&quot;: &quot;朗斯需防范里昂由守转攻时的快速推进和中路渗透。&quot;, &quot;最大变量&quot;: &quot;朗斯能否在60分钟前取得进球，否则里昂反击效率可能改变比赛。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;: &quot;朗斯早段进球或里昂进攻效率偏低&quot;, &quot;比分&quot;:[&quot;1-0&quot;,&quot;2-1&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;: &quot;双方中场绞杀，朗斯破密集防守乏力&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;: &quot;里昂率先反击得手，朗斯压上后暴露身后空间&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;1-3球&quot;, &quot;净胜球&quot;: &quot;主队0-1球优势&quot;, &quot;上半场&quot;: &quot;上半场大概率胶着，0-0或1-0概率较高&quot;},
+&quot;触发器&quot;: [&quot;朗斯首发缺少多名主力进攻球员&quot;, &quot;里昂轮换幅度明显低于预期并派出全主力&quot;, &quot;临场亚盘从主-1.0退至主-0.5&quot;, &quot;赛前确认朗斯主场天气恶劣影响传控&quot;],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能是高估了朗斯主场保级战意，里昂凭借更稳定的整体性客场小胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主45.4% 平25.7% 客28.9%&lt;br&gt;预期进球: 1.62 - 1.25&lt;br&gt;大2.5: 54.0% | BTTS: 56.0%&lt;br&gt;贝叶斯后验: 主44.7% 平25.6% 客29.7%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[裁判] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[裁判] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[天气] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[天气] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>马拉加<span class="tvs">VS</span>西班牙人
+      <span style="font-size:.75rem;color:#8d99b0;">(Malaga vs Espanol)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (46.6%) · 最可能比分 0-1 (23%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.55 / 平3.12 / 客2.40
+亚盘(主让1.0球): 主1.43 / 平4.15 / 客5.35
+波胆最低赔: 1-1@6.0 / 0-1@8.5 / 1-2@8.5
+模型亚盘倾向: push (价值 +8.5%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 义上讲，所有生活 … === 天气侦察 (未经核实, 仅供参考) === [天气] 多特蒙德 vs 云达不莱梅</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -1.4,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为西班牙人客场小胜，0-1是核心比分；模型与市场均偏向客队，且主队预期进球仅0.55，进攻乏力是主因；最大风险是平局概率不低，西班牙人领先后保守可能被逼平。&quot;,
+&quot;次选比分&quot;: &quot;0-2&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔客胜2.40低于主胜2.55；亚盘主+1.0下模型主覆盖48%而客覆盖22%；市场融合Model 81% / Market 19%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场资金略偏向客队，模型与市场方向一致，但高margin显示市场对模型有折价，客胜优势不算极端，给客队温和优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;预期进球主0.55 vs 客1.14；ELO差+75；模型概率客48.8%显著高于主17.0%&quot;,
+&quot;优势分&quot;: -3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;客队攻防数据全面占优，主队预期进球极低，进攻端难以制造威胁，是客队方向最强支撑。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失，无法评估核心球员缺阵影响，权重下调并转移至市场与状态攻防。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无近3年交锋记录，无法判断克制关系，权重下调。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能条件对等，不构成方向性影响。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报缺失，权重记0并转移至核心维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判信息未公布，不猜测，权重转移至市场与战意。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;联赛定位未提供，模型概率平34.2%偏高&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 30,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;客队有明确拿分动力，主队若处中下游可能更保守；平局概率高提示双方可能谨慎，客队小胜方向略占优。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;西班牙人控球推进时主队将深度回收，客队通过边路与定位球寻找破门机会。&quot;,
+&quot;无球&quot;: &quot;马拉加无球阶段防线偏后，若边路回防不及时，客队反击可制造致命空间。&quot;,
+&quot;最大变量&quot;: &quot;马拉加若先通过定位球或远射意外破门，比赛将转入主队低位防守模式。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;西班牙人上半场控制节奏，主队预期进球持续低于0.6，客队在下半场或定位球中破门&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;, &quot;0-2&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;主队门将高接抵挡，西班牙人射正转化率低，比赛进入60分钟后仍0-0&quot;,
+&quot;比分&quot;: [&quot;0-0&quot;, &quot;1-1&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;主队通过定位球或反击先入一球，随后全员退守，西班牙人攻坚乏力&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率0-0或0-1，节奏偏慢&quot;
+},
+&quot;触发器&quot;: [
+&quot;西班牙人首发缺少核心前场球员或主力中卫，客胜方向需下调&quot;,
+&quot;马拉加首发出现多名主力回归，预期进球提升至0.9以上&quot;,
+&quot;赛前赔率客胜升至2.60以上且平赔降至3.00以下，市场转向平局&quot;,
+&quot;天气或场地出现明显不利进攻条件，如大风或场地积水&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在西班牙人控球优势无法转化为进球，而马拉加利用一次定位球或反击得分，比赛以1-0或1-1收场，主队防守韧性被低估。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主17.0% 平34.2% 客48.8%&lt;br&gt;预期进球: 0.55 - 1.14&lt;br&gt;大2.5: 35.6% | BTTS: 39.8%&lt;br&gt;贝叶斯后验: 主20.3% 平33.1% 客46.6%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[裁判] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[裁判] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[天气] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[天气] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+  <div class="footer">自动生成于 2026-10-09 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>午盘七维分析存档 — 2026-10-09</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 午盘七维分析存档 · 非预测页</div>
+    <h1>2026-10-09</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-10-09.html">predictions_2026-10-09.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">德甲</span>多特蒙德<span class="tvs">VS</span>云达不莱梅
+      <span style="font-size:.75rem;color:#8d99b0;">(Dortmund vs Werder Bremen)</span>
+    </div>
+    <span class="m-meta">开球 02:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (71.3%) · 最可能比分 2-1 (9%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.18 / 平5.80 / 客9.10
+主胜赔率变动: 1.25 → 1.18 (-0.07)
+亚盘(主受1.0球): 主1.61 / 平4.15 / 客3.75
+波胆最低赔: 2-1@7.5 / 2-0@8.0 / 3-1@8.5
+模型亚盘倾向: away (价值 +4.5%, 信心 medium)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第1名 (争冠区) · 客队: 第8名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 义上讲，所有生活 … === 天气侦察 (未经核实, 仅供参考) === [天气] 多特蒙德 vs 云达不莱梅</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 2平 0负, 进球 7:2 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 2.3,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;摘要&quot;: &quot;多特蒙德主场优势明显，攻防实力与战意均占优，最可能2-1或2-0取胜。最大风险是后防核心缺阵与不莱梅中游反击效率。&quot;,
+&quot;次选比分&quot;: &quot;2-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;SPF主胜1.25→1.18(-0.07)，客胜7.30→9.10(+1.80)，资金流入主队；Model-Market Edge主=-4.5%&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场资金明确流向主队，赔率变动与模型方向一致，但主胜赔率极低已反映高预期，模型对主队优势略低于市场，警惕过热风险。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差+291，多特近况W,W,W,W，预期进球2.67-1.01，模型主胜70.5%&quot;,
+&quot;优势分&quot;: 4,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;多特状态火热且攻防两端数据全面压制，预期进球差显著，是方向分的主要正向贡献。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;新浪2026-09-02：多特后防告急，施洛特贝克、聚勒缺阵；新浪1天前：主力边卫瑞尔森受伤；不莱梅9人缺阵&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;多特后防核心缺阵折损较高，但进攻端完整；不莱梅9人缺阵若属实则影响更大，但情报未经官方核实，综合仍偏主队但优势被削弱。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋多特2胜2平0负，总进球7-2；无明确阵容大换血信息&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;历史交锋多特不败且进球效率高，克制关系明确，但需结合当前伤停情况适当降权。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;双方7天均0场，无密集赛程压力&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方体能均充沛，多特主场作战且无额外消耗，体能维度轻微利好主队。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;情报未提及天气及场地状况&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无天气情报，权重记0，已重新分配至市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，侦察信息无有效裁判任命内容&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，权重记0，不猜测，已重新分配至维度1/2/5/8。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;多特#1争冠区12分，不莱梅#8中游7分&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;多特争冠区需保持连胜势头，战意强烈且主场作战；不莱梅中游无保级压力，战意相对中性，主队战意优势明显。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;多特将主导控球并利用边路与高位压迫持续冲击不莱梅残缺防线。&quot;,
+&quot;无球&quot;: &quot;多特后防核心缺阵，面对不莱梅反击需警惕边后卫身后空当。&quot;,
+&quot;最大变量&quot;: &quot;多特后防伤病是否导致防线不稳，从而给不莱梅留下反击进球机会。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;多特上半场较早进球且不莱梅无法形成有效反击&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;多特久攻不下或后防失误被不莱梅反击得手&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;多特后防核心缺阵导致连续失误，不莱梅高效反击且多特进攻哑火&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-4球&quot;,
+&quot;净胜球&quot;: &quot;主队1-2球优势&quot;,
+&quot;上半场&quot;: &quot;多特有望半场领先或至少控场，不莱梅上半场进球概率较低&quot;
+},
+&quot;触发器&quot;: [
+&quot;多特官方首发确认施洛特贝克、聚勒、瑞尔森同时缺阵且替补防线为临时组合&quot;,
+&quot;不莱梅9人缺阵被官方否认或证实为虚假情报&quot;,
+&quot;赛前赔率出现主胜大幅回升至1.30以上&quot;,
+&quot;多特首发轮换多名主力，战意出现明显下降&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在多特后防核心缺阵导致防线实际表现远低于预期，不莱梅反击效率超常，多特主场未能转化为进球。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主70.5% 平17.9% 客11.6%&lt;br&gt;预期进球: 2.67 - 1.01&lt;br&gt;大2.5: 66.2% | BTTS: 59.9%&lt;br&gt;贝叶斯后验: 主71.3% 平17.4% 客11.3%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[Dortmund / 多特蒙德]
+来源:新浪 任选九场 伤停 速览：多特后防告急|施洛特贝克|尼克拉斯&amp;#183;聚勒 ... 2026年9月2日 &amp;#0183; 结合最新赛程与伤停情报，本期（9月13日档期）任选九场可重点参考德甲、英超多场焦点战，其中多特蒙德、莱比锡 …
+来源:新浪 › doc-iniupafi... 足彩 伤停 ：多特边卫瑞尔森受伤 不莱梅9人缺阵 1 天前 &amp;#0183; 多特蒙德主力边卫瑞尔森缺阵胜负彩第26136期由英冠、德甲、西甲、法甲、葡超等赛事组成。英冠赛场，西汉姆联两大主力 …
+来源:搜狐 多特蒙德 新援康斯坦泰利亚斯膝 伤 重创，球队应对策略引发关注 2026年8月31日 &amp;#0183; 多特蒙德的新援吉安尼斯&amp;#183;康斯坦泰利亚斯在训练中遭遇了严重的伤病，经过医疗团队的检查，确认他左膝前交叉韧带 …
+来源:网络 › news 德甲前瞻： 多特蒙德 vs汉堡_今日足球网 2026年8月29日 &amp;#0183; 一、关键伤停核对（赛前官方最新） 多特蒙德 确定缺阵：施洛特贝克（脚踝韧带，主力中卫长期伤缺）、埃姆雷・ …
+[Lens / 朗斯]
+来源:搜狐 法甲｜ 朗斯 vs 里昂：西马 伤 了，托万还在_比赛_进攻_防守 8 小时之前 &amp;#0183; 尼亚卡特是里昂后防线上的核心球员，他的缺阵让里昂在中卫位置上的深度受到了考验。朗斯的进攻端在托万的调度下具 …
+来源:直播吧 › zuqiu 法甲彩经： 朗斯 力擒洛里昂 尼斯激战勒芒-直播吧 2026年9月5日 &amp;#0183; 【朗斯 VS 洛里昂】 【比赛时间】 北京时间 9 月 5 日 23:15 【比赛性质】 法甲 【重要伤停】 朗斯：纳夫罗茨基、阿 …
+来源:网络 › football-lineups › slavia-praha-vs... 布拉格斯拉维亚 vs 朗斯 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 布拉格斯拉维亚 vs 朗斯（欧冠）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+来源:网络 › football-lineups › lens-vs-auxerre... 朗斯 vs 欧塞尔 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 朗斯 vs 欧塞尔（法甲）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+[Lyon / 里昂]
+来源:搜狐 法甲｜朗斯 vs 里昂 ：西马 伤 了，托万还在_比赛_进攻_防守 8 小时之前 &amp;#0183; 尼亚卡特是里昂后防线上的核心球员，他的缺阵让里昂在中卫位置上的深度受到了考验。朗斯的进攻端在托万的调度下具 …
+来源:知乎 如何评价费内巴切13人 伤 停下的欧冠生死战？残阵远征 里昂 ... 2026年8月26日 &amp;#0183; 费内巴切13人伤停——进攻端三大主力阿森西奥、云代尔、阿克蒂尔克奥卢全部缺阵，门将居诺克、后卫瑟云聚、奥 …
+来源:网络 › football-lineups › fenerbahce-vs-lyon... 费内巴切 vs 里昂 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 费内巴切 vs 里昂（欧冠）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+来源:新浪 里昂 主帅说首回合客场不会全力死守？后防停赛+复出并存 ... 北京时间8月23日凌晨，2026-27赛季法甲首轮将迎来图卢兹对阵里昂，历史交锋中里昂近12场联赛11胜占优，但后防核心塔利亚菲科 …
+[Malaga / 马拉加]
+来源:腾讯 › rain 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 ... 2026年8月24日 &amp;#0183; 西甲联赛马拉加主场迎战拉科鲁尼亚，主队多名球员伤缺，涉及后场、中场和前场，客队则有一名球员无法出场。 马 …
+来源:网络 › article › news 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 2026年8月24日 &amp;#0183; 马拉加的伤停人数更多，且同时影响后场稳定、前场终结和中场衔接，战术完整性受到的影响更明显。 球队可能降低 …
+来源:网络 › news 360体育-伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换 ... 2026年8月24日 &amp;#0183; 马拉加方面 马拉加的卡莱罗、迭戈-穆里略、阿德里安-尼尼奥和阿龙-奥乔亚均因伤缺阵。 卡莱罗和迭戈-穆里略主要 …
+来源:网易 › dy › article 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 2026年8月24日 &amp;#0183; 马拉加方面 马拉加的卡莱罗、迭戈-穆里略、阿德里安-尼尼奥和阿龙-奥乔亚均因伤缺阵。 卡莱罗和迭戈-穆里略主要 …
+[Espanol / 西班牙人]
+来源:新浪 › doc-iniscqye... 火线 伤停 :切尔西3线均有主力缺阵 西班牙人伤 2 人 |莫伊塞斯&amp;#183;凯 ... 2026年9月17日 &amp;#0183; 火线伤停:切尔西3线均有主力缺阵 西班牙人伤2人 2026年09月18日 06:00 作者 新浪彩票 新浪彩票频道官方微博 缩小 … &amp;
+来源:新浪 [2026年9月16日]状态分析：巴列卡诺遭遇五员大将 伤 缺且场 ... 2026年9月16日 &amp;#0183; 反观西班牙人，虽然前锋普阿多和加西亚、后卫戈罗萨韦尔伤停，但核心骨架完整，且近期客场2胜0平2负展现韧劲 …
+来源:搜狐 西甲巴列卡诺对阵 西班牙人 ，9 人伤停 右路双翼齐废，3连胜 ... 北京时间9月16日01:00，西甲第5轮补赛，巴列卡诺坐镇巴列卡斯球场迎战西班牙人。 上轮客场3-2击败桑坦德竞技虽终结连败，但此 …
+来源:网易 › dy › article 8大主力 伤停 防线千疮百孔！巴列卡诺主场死磕 西班牙人 ，近 ... 2026年9月15日 &amp;#0183; 综合分析 巴列卡诺虽然坐拥主场优势，但伤停潮导致阵容残缺严重，防线稳定性完全无法保障，西班牙人只要稳扎稳 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[裁判] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[裁判] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[天气] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[天气] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">法甲</span>朗斯<span class="tvs">VS</span>里昂
+      <span style="font-size:.75rem;color:#8d99b0;">(Lens vs Lyon)</span>
+    </div>
+    <span class="m-meta">开球 02:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (44.7%) · 最可能比分 1-0 (9%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 56% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.12 / 平3.55 / 客2.66
+主胜赔率变动: 2.12 → 2.12 (+0.00)
+亚盘(主受1.0球): 主4.08 / 平4.2 / 客1.55
+波胆最低赔: 1-1@7.5 / 2-1@7.5 / 1-2@9.0
+模型亚盘倾向: home (价值 +2.2%, 信心 low)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第15名 (保级区) · 客队: 第2名 (争冠区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 义上讲，所有生活 … === 天气侦察 (未经核实, 仅供参考) === [天气] 多特蒙德 vs 云达不莱梅</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 1平 1负, 进球 6:2 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 1.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为朗斯主场小胜,核心是主场作战+里昂中卫核心缺阵+交锋占优,但朗斯自身近况差且保级压力大,冷平风险不低。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主2.12/平3.55/客2.66,模型主胜45.4%高于市场,Model-Market Edge主+3.6%;亚盘主-1.0下模型主覆盖仅24%,客覆盖54%。&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧赔与模型均指向主队方向,但亚盘主-1.0覆盖不足,反映市场对朗斯一球以上优势存疑,主胜方向以小幅优势为主,不宜高估净胜球。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;朗斯近5轮L,D,L,L,W,积4分排第15;里昂W,D,W,D,W,积11分排第2;ELO差-33,预期进球1.62-1.25。&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;状态面里昂明显更稳定,朗斯仅1胜且攻防连续性差;但模型预期进球仍给主队更高,反映主场攻击端尚有托万等组织点支撑,状态劣势部分被主场因素对冲。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;搜狐8小时前:里昂后防核心尼亚卡特缺阵,中卫深度受考验;同期情报提及朗斯西马受伤、托万仍在,朗斯进攻端由托万调度。&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;里昂折损后防核心,对客队防线稳定性影响偏高;朗斯虽西马缺阵但托万仍在,进攻组织未完全断裂。该维度利好主队,但情报未提供完整伤停名单,置信度受限。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋朗斯2胜1平1负,总进球6-2;情报未提供双方大规模换血或换帅信息。&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;朗斯近3年交锋占优且失球极少,若双方阵容未发生大换血,该参考价值较高;但里昂当前排名和状态优于往绩时段,需降权使用。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场,客队7天0场,双方均无密集赛程或双线作战压力。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方体能条件对等,无明显轮换压力,该维度对方向判断无实质倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据,已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气,权重重新分配给市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;无数据,已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布,权重重新分配给市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;朗斯第15名身处保级区,近5轮仅1胜;里昂第2名争冠区,积分领先。&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;朗斯保级压力下主场取分动力强,里昂争冠需维持拿分节奏但客场压力略低;战意层面主队更迫切,但需警惕保级队急于求成导致阵型前压被反击。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;朗斯主场预计由托万主导前场串联,利用里昂中卫缺阵后的防线缝隙做肋部渗透。&quot;,
+&quot;无球&quot;: &quot;朗斯无球阶段需防里昂快速转换,尤其边路回追和中卫身后空间。&quot;,
+&quot;最大变量&quot;: &quot;里昂后防核心缺阵后,临时中卫组合能否顶住朗斯主场持续施压。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;朗斯上半场取得进球且里昂防线因核心缺阵持续被动&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;朗斯久攻不下或里昂通过定位球/反击先破门,比赛陷入拉锯&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;朗斯保级压力下大举压上,里昂利用反击高效得分&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率胶着,朗斯控球略占优但进球可能集中在下半场&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前官方名单确认托万缺阵,朗斯进攻端组织力大幅下降&quot;,
+&quot;里昂公布更强中卫替代方案,尼亚卡特缺阵影响被明显削弱&quot;,
+&quot;临场亚盘主-1.0水位大幅上调,市场对主胜信心进一步减弱&quot;,
+&quot;朗斯首发出现多名轮换,战意信号转弱&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误,最可能是高估了朗斯主场战力,其近5轮仅1胜的低迷状态被保级战意掩盖,实际比赛中因效率不足被里昂逼平或反击击败。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主45.4% 平25.7% 客28.9%&lt;br&gt;预期进球: 1.62 - 1.25&lt;br&gt;大2.5: 54.0% | BTTS: 56.0%&lt;br&gt;贝叶斯后验: 主44.7% 平25.6% 客29.7%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[Dortmund / 多特蒙德]
+来源:新浪 任选九场 伤停 速览：多特后防告急|施洛特贝克|尼克拉斯&amp;#183;聚勒 ... 2026年9月2日 &amp;#0183; 结合最新赛程与伤停情报，本期（9月13日档期）任选九场可重点参考德甲、英超多场焦点战，其中多特蒙德、莱比锡 …
+来源:新浪 › doc-iniupafi... 足彩 伤停 ：多特边卫瑞尔森受伤 不莱梅9人缺阵 1 天前 &amp;#0183; 多特蒙德主力边卫瑞尔森缺阵胜负彩第26136期由英冠、德甲、西甲、法甲、葡超等赛事组成。英冠赛场，西汉姆联两大主力 …
+来源:搜狐 多特蒙德 新援康斯坦泰利亚斯膝 伤 重创，球队应对策略引发关注 2026年8月31日 &amp;#0183; 多特蒙德的新援吉安尼斯&amp;#183;康斯坦泰利亚斯在训练中遭遇了严重的伤病，经过医疗团队的检查，确认他左膝前交叉韧带 …
+来源:网络 › news 德甲前瞻： 多特蒙德 vs汉堡_今日足球网 2026年8月29日 &amp;#0183; 一、关键伤停核对（赛前官方最新） 多特蒙德 确定缺阵：施洛特贝克（脚踝韧带，主力中卫长期伤缺）、埃姆雷・ …
+[Lens / 朗斯]
+来源:搜狐 法甲｜ 朗斯 vs 里昂：西马 伤 了，托万还在_比赛_进攻_防守 8 小时之前 &amp;#0183; 尼亚卡特是里昂后防线上的核心球员，他的缺阵让里昂在中卫位置上的深度受到了考验。朗斯的进攻端在托万的调度下具 …
+来源:直播吧 › zuqiu 法甲彩经： 朗斯 力擒洛里昂 尼斯激战勒芒-直播吧 2026年9月5日 &amp;#0183; 【朗斯 VS 洛里昂】 【比赛时间】 北京时间 9 月 5 日 23:15 【比赛性质】 法甲 【重要伤停】 朗斯：纳夫罗茨基、阿 …
+来源:网络 › football-lineups › slavia-praha-vs... 布拉格斯拉维亚 vs 朗斯 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 布拉格斯拉维亚 vs 朗斯（欧冠）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+来源:网络 › football-lineups › lens-vs-auxerre... 朗斯 vs 欧塞尔 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 朗斯 vs 欧塞尔（法甲）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+[Lyon / 里昂]
+来源:搜狐 法甲｜朗斯 vs 里昂 ：西马 伤 了，托万还在_比赛_进攻_防守 8 小时之前 &amp;#0183; 尼亚卡特是里昂后防线上的核心球员，他的缺阵让里昂在中卫位置上的深度受到了考验。朗斯的进攻端在托万的调度下具 …
+来源:知乎 如何评价费内巴切13人 伤 停下的欧冠生死战？残阵远征 里昂 ... 2026年8月26日 &amp;#0183; 费内巴切13人伤停——进攻端三大主力阿森西奥、云代尔、阿克蒂尔克奥卢全部缺阵，门将居诺克、后卫瑟云聚、奥 …
+来源:网络 › football-lineups › fenerbahce-vs-lyon... 费内巴切 vs 里昂 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 费内巴切 vs 里昂（欧冠）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+来源:新浪 里昂 主帅说首回合客场不会全力死守？后防停赛+复出并存 ... 北京时间8月23日凌晨，2026-27赛季法甲首轮将迎来图卢兹对阵里昂，历史交锋中里昂近12场联赛11胜占优，但后防核心塔利亚菲科 …
+[Malaga / 马拉加]
+来源:腾讯 › rain 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 ... 2026年8月24日 &amp;#0183; 西甲联赛马拉加主场迎战拉科鲁尼亚，主队多名球员伤缺，涉及后场、中场和前场，客队则有一名球员无法出场。 马 …
+来源:网络 › article › news 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 2026年8月24日 &amp;#0183; 马拉加的伤停人数更多，且同时影响后场稳定、前场终结和中场衔接，战术完整性受到的影响更明显。 球队可能降低 …
+来源:网络 › news 360体育-伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换 ... 2026年8月24日 &amp;#0183; 马拉加方面 马拉加的卡莱罗、迭戈-穆里略、阿德里安-尼尼奥和阿龙-奥乔亚均因伤缺阵。 卡莱罗和迭戈-穆里略主要 …
+来源:网易 › dy › article 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 2026年8月24日 &amp;#0183; 马拉加方面 马拉加的卡莱罗、迭戈-穆里略、阿德里安-尼尼奥和阿龙-奥乔亚均因伤缺阵。 卡莱罗和迭戈-穆里略主要 …
+[Espanol / 西班牙人]
+来源:新浪 › doc-iniscqye... 火线 伤停 :切尔西3线均有主力缺阵 西班牙人伤 2 人 |莫伊塞斯&amp;#183;凯 ... 2026年9月17日 &amp;#0183; 火线伤停:切尔西3线均有主力缺阵 西班牙人伤2人 2026年09月18日 06:00 作者 新浪彩票 新浪彩票频道官方微博 缩小 … &amp;
+来源:新浪 [2026年9月16日]状态分析：巴列卡诺遭遇五员大将 伤 缺且场 ... 2026年9月16日 &amp;#0183; 反观西班牙人，虽然前锋普阿多和加西亚、后卫戈罗萨韦尔伤停，但核心骨架完整，且近期客场2胜0平2负展现韧劲 …
+来源:搜狐 西甲巴列卡诺对阵 西班牙人 ，9 人伤停 右路双翼齐废，3连胜 ... 北京时间9月16日01:00，西甲第5轮补赛，巴列卡诺坐镇巴列卡斯球场迎战西班牙人。 上轮客场3-2击败桑坦德竞技虽终结连败，但此 …
+来源:网易 › dy › article 8大主力 伤停 防线千疮百孔！巴列卡诺主场死磕 西班牙人 ，近 ... 2026年9月15日 &amp;#0183; 综合分析 巴列卡诺虽然坐拥主场优势，但伤停潮导致阵容残缺严重，防线稳定性完全无法保障，西班牙人只要稳扎稳 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[裁判] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[裁判] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[天气] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[天气] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>马拉加<span class="tvs">VS</span>西班牙人
+      <span style="font-size:.75rem;color:#8d99b0;">(Malaga vs Espanol)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (47.1%) · 最可能比分 0-1 (23%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.75 / 平3.12 / 客2.25
+主胜赔率变动: 2.55 → 2.75 (+0.20)
+亚盘(主让1.0球): 主1.5 / 平3.95 / 客4.8
+波胆最低赔: 1-1@6.0 / 0-1@8.0 / 1-2@8.25
+模型亚盘倾向: push (价值 +7.4%, 信心 medium)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 义上讲，所有生活 … === 天气侦察 (未经核实, 仅供参考) === [天气] 多特蒙德 vs 云达不莱梅</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: ```json
+{
+&quot;方向分&quot;: -1.6,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;客队方向略占优，最可能为西班牙人小胜。核心是市场资金与模型同向支持客队，且马拉加伤停面更大；最大风险是平局概率较高且主队主场韧性未被完全排除。&quot;,
+&quot;次选比分&quot;: &quot;0-2&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;全天赔率变动: 主2.55→2.75(+0.20), 客2.40→2.25(-0.15); 资金信号: 主队资金流出, 客队资金流入&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 24,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;赔率与资金同向指向客队，市场与模型方向一致，无反向预警，小幅强化客队优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率客48.8%, 平34.2%, 主17.0%; 预期进球0.55-1.14; ELO差+75&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;模型与预期进球均显示西班牙人整体实力和状态占优，马拉加进攻效率偏低，客队防守端更稳。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;2026年8月24日腾讯/网易: 马拉加卡莱罗、迭戈-穆里略、阿德里安-尼尼奥、阿龙-奥乔亚四人缺阵，影响后场、中场、前场；西班牙人前锋普阿多、加西亚、后卫戈罗萨韦尔伤停但核心骨架完整&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 16,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;马拉加折损面更大且涉及多线，但未能确认全部为核心主力；西班牙人伤停集中在个别位置，整体影响较低，客队阵容完整度更好。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提供近3年交锋记录，无法评估克制关系，权重降至4并转移至状态与市场维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;赛程密度: 主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 12,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程或双线压力，体能条件对等，不构成明显优势方。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气与场地，权重记0并转移至市场与状态维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判信息未公布，不猜测，权重转移至市场与战意维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;无双方积分榜分区或明确轮换情报&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未明确双方战意或轮换倾向，无法判断额外动力差异，仅按中性处理。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;西班牙人预计控球更多，通过边路与中场衔接压制马拉加，利用主队伤停后的防线空当制造低平球传中。&quot;,
+&quot;无球&quot;: &quot;马拉加无球阶段风险在于中场衔接断档后难以快速回防，可能被客队反击直接打穿肋部。&quot;,
+&quot;最大变量&quot;: &quot;马拉加若在定位球或主场氛围下率先进球，可能改变西班牙人原本偏控的节奏。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;西班牙人早早取得进球，马拉加进攻乏力难以扳平&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;, &quot;0-2&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;马拉加低位防守有效，西班牙人破密集防守效率一般&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;马拉加利用主场定位球或反击先进球，同时西班牙人前场终结持续低效&quot;,
+&quot;比分&quot;: [&quot;2-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率胶着，0-0或客队1-0领先&quot;
+},
+&quot;触发器&quot;: [
+&quot;西班牙人赛前确认核心中场或锋线主力缺阵&quot;,
+&quot;马拉加公布首发显示四名伤停球员中多人复出&quot;,
+&quot;临场赔率客胜大幅回调至2.40以上&quot;,
+&quot;天气或场地出现明显不利于技术型客队的条件&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了，最可能错在马拉加主场韧性超出预期，利用定位球或反击偷分，而西班牙人虽然控球占优但终结效率不足，最终被逼平甚至小负。&quot;
+}
+```<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主17.0% 平34.2% 客48.8%&lt;br&gt;预期进球: 0.55 - 1.14&lt;br&gt;大2.5: 35.6% | BTTS: 39.8%&lt;br&gt;贝叶斯后验: 主19.8% 平33.1% 客47.1%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[Dortmund / 多特蒙德]
+来源:新浪 任选九场 伤停 速览：多特后防告急|施洛特贝克|尼克拉斯&amp;#183;聚勒 ... 2026年9月2日 &amp;#0183; 结合最新赛程与伤停情报，本期（9月13日档期）任选九场可重点参考德甲、英超多场焦点战，其中多特蒙德、莱比锡 …
+来源:新浪 › doc-iniupafi... 足彩 伤停 ：多特边卫瑞尔森受伤 不莱梅9人缺阵 1 天前 &amp;#0183; 多特蒙德主力边卫瑞尔森缺阵胜负彩第26136期由英冠、德甲、西甲、法甲、葡超等赛事组成。英冠赛场，西汉姆联两大主力 …
+来源:搜狐 多特蒙德 新援康斯坦泰利亚斯膝 伤 重创，球队应对策略引发关注 2026年8月31日 &amp;#0183; 多特蒙德的新援吉安尼斯&amp;#183;康斯坦泰利亚斯在训练中遭遇了严重的伤病，经过医疗团队的检查，确认他左膝前交叉韧带 …
+来源:网络 › news 德甲前瞻： 多特蒙德 vs汉堡_今日足球网 2026年8月29日 &amp;#0183; 一、关键伤停核对（赛前官方最新） 多特蒙德 确定缺阵：施洛特贝克（脚踝韧带，主力中卫长期伤缺）、埃姆雷・ …
+[Lens / 朗斯]
+来源:搜狐 法甲｜ 朗斯 vs 里昂：西马 伤 了，托万还在_比赛_进攻_防守 8 小时之前 &amp;#0183; 尼亚卡特是里昂后防线上的核心球员，他的缺阵让里昂在中卫位置上的深度受到了考验。朗斯的进攻端在托万的调度下具 …
+来源:直播吧 › zuqiu 法甲彩经： 朗斯 力擒洛里昂 尼斯激战勒芒-直播吧 2026年9月5日 &amp;#0183; 【朗斯 VS 洛里昂】 【比赛时间】 北京时间 9 月 5 日 23:15 【比赛性质】 法甲 【重要伤停】 朗斯：纳夫罗茨基、阿 …
+来源:网络 › football-lineups › slavia-praha-vs... 布拉格斯拉维亚 vs 朗斯 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 布拉格斯拉维亚 vs 朗斯（欧冠）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+来源:网络 › football-lineups › lens-vs-auxerre... 朗斯 vs 欧塞尔 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 朗斯 vs 欧塞尔（法甲）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+[Lyon / 里昂]
+来源:搜狐 法甲｜朗斯 vs 里昂 ：西马 伤 了，托万还在_比赛_进攻_防守 8 小时之前 &amp;#0183; 尼亚卡特是里昂后防线上的核心球员，他的缺阵让里昂在中卫位置上的深度受到了考验。朗斯的进攻端在托万的调度下具 …
+来源:知乎 如何评价费内巴切13人 伤 停下的欧冠生死战？残阵远征 里昂 ... 2026年8月26日 &amp;#0183; 费内巴切13人伤停——进攻端三大主力阿森西奥、云代尔、阿克蒂尔克奥卢全部缺阵，门将居诺克、后卫瑟云聚、奥 …
+来源:网络 › football-lineups › fenerbahce-vs-lyon... 费内巴切 vs 里昂 首发阵容、 伤停 与球队情报 &amp;#183; 说球哥 费内巴切 vs 里昂（欧冠）首发阵容、替补、主教练与伤停名单。 下载说球哥 App，首发公布和阵容变动会及时提醒。
+来源:新浪 里昂 主帅说首回合客场不会全力死守？后防停赛+复出并存 ... 北京时间8月23日凌晨，2026-27赛季法甲首轮将迎来图卢兹对阵里昂，历史交锋中里昂近12场联赛11胜占优，但后防核心塔利亚菲科 …
+[Malaga / 马拉加]
+来源:腾讯 › rain 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 ... 2026年8月24日 &amp;#0183; 西甲联赛马拉加主场迎战拉科鲁尼亚，主队多名球员伤缺，涉及后场、中场和前场，客队则有一名球员无法出场。 马 …
+来源:网络 › article › news 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 2026年8月24日 &amp;#0183; 马拉加的伤停人数更多，且同时影响后场稳定、前场终结和中场衔接，战术完整性受到的影响更明显。 球队可能降低 …
+来源:网络 › news 360体育-伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换 ... 2026年8月24日 &amp;#0183; 马拉加方面 马拉加的卡莱罗、迭戈-穆里略、阿德里安-尼尼奥和阿龙-奥乔亚均因伤缺阵。 卡莱罗和迭戈-穆里略主要 …
+来源:网易 › dy › article 伤病追踪： 马拉加 四人缺阵，拉科鲁尼亚防线轮换受影响 2026年8月24日 &amp;#0183; 马拉加方面 马拉加的卡莱罗、迭戈-穆里略、阿德里安-尼尼奥和阿龙-奥乔亚均因伤缺阵。 卡莱罗和迭戈-穆里略主要 …
+[Espanol / 西班牙人]
+来源:新浪 › doc-iniscqye... 火线 伤停 :切尔西3线均有主力缺阵 西班牙人伤 2 人 |莫伊塞斯&amp;#183;凯 ... 2026年9月17日 &amp;#0183; 火线伤停:切尔西3线均有主力缺阵 西班牙人伤2人 2026年09月18日 06:00 作者 新浪彩票 新浪彩票频道官方微博 缩小 … &amp;
+来源:新浪 [2026年9月16日]状态分析：巴列卡诺遭遇五员大将 伤 缺且场 ... 2026年9月16日 &amp;#0183; 反观西班牙人，虽然前锋普阿多和加西亚、后卫戈罗萨韦尔伤停，但核心骨架完整，且近期客场2胜0平2负展现韧劲 …
+来源:搜狐 西甲巴列卡诺对阵 西班牙人 ，9 人伤停 右路双翼齐废，3连胜 ... 北京时间9月16日01:00，西甲第5轮补赛，巴列卡诺坐镇巴列卡斯球场迎战西班牙人。 上轮客场3-2击败桑坦德竞技虽终结连败，但此 …
+来源:网易 › dy › article 8大主力 伤停 防线千疮百孔！巴列卡诺主场死磕 西班牙人 ，近 ... 2026年9月15日 &amp;#0183; 综合分析 巴列卡诺虽然坐拥主场优势，但伤停潮导致阵容残缺严重，防线稳定性完全无法保障，西班牙人只要稳扎稳 …
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[裁判] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[裁判] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 多特蒙德 vs 云达不莱梅
+来源:百度 › item › 多特蒙德 多特蒙德 足球俱乐部_百度百科 多特蒙德足球俱乐部（ 09 e.V. Dortmund），简称多特蒙德，是一家位于德国北莱茵-威斯特法伦州多特蒙德市 …
+来源:网络 bvb.de › de › en. | 1 天前 &amp;#0183; .de, : sports, players, matches, news, .
+[天气] 朗斯 vs 里昂
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 汉字“ 朗 ”的起源、演变过程-汉字字源辞典 1 天前 &amp;#0183; 俗体隶书调整左右顺序，将“良”简写成，将“朖”写成“朗”。 造字本义：形容词，月光明媚完美，令人感觉良好。 古籍多以“朗”代 …
+[天气] 马拉加 vs 西班牙人
+来源:百度 › item 马 （奇蹄目 马 科 马 属草食性动物）_百度百科 动物学史：马属动物的祖先始新马5500万年前出现于北美，体型仅如狐狸大小，后历经始马、中马、原马、上新马、真马五个阶段， …
+来源:知乎 中国 马 图鉴（一） - 知乎 2023年11月7日 &amp;#0183; 说起马绝大部分都只知道汗血宝马，或者只知道八骏图。 那么今天我们就来深刻了解一下马吧~ 广义上讲，所有生活 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+  <div class="footer">自动生成于 2026-10-09 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早盘七维分析存档 — 2026-10-12</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 早盘七维分析存档 · 非预测页</div>
+    <h1>2026-10-12</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-10-12.html">predictions_2026-10-12.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>亚特兰大<span class="tvs">VS</span>威尼斯
+      <span style="font-size:.75rem;color:#8d99b0;">(Atalanta vs Venezia)</span>
+    </div>
+    <span class="m-meta">开球 00:30:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (71.3%) · 最可能比分 2-0 (13%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.46 / 平4.05 / 客5.05
+亚盘(主受1.0球): 主2.45 / 平3.5 / 客2.3
+波胆最低赔: 2-1@7.5 / 1-1@7.75 / 2-0@8.25
+模型亚盘倾向: home (价值 +15.5%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第11名 (中游) · 客队: 第20名 (保级区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 胶东半岛，也是由 … === 天气侦察 (未经核实, 仅供参考) === [天气] 亚特兰大 vs 威尼斯 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 1平 0负, 进球 2:0 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 2.6,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;亚特兰大主场优势明显，最可能2-0取胜。核心是实力差与攻防压制，威尼斯进攻乏力且保级压力难转化。最大风险是主队近期状态起伏且让一球盘下主覆盖仅52%。&quot;,
+&quot;次选比分&quot;: &quot;3-0&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;亚盘主-1.0模型主覆盖52%客覆盖24%; 欧赔主1.46/平4.05/客5.05&quot;, &quot;优势分&quot;:3, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场明显偏向主队但model-market edge显示主队价值方向，high margin下市场已部分折价，主队方向有支撑但让球盘覆盖不深，需警惕赢球不赢盘。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差+72; 预期进球2.38-0.69; Atalanta近况L,L,L,W,W; Venezia近况L,L,L,L,L&quot;, &quot;优势分&quot;:4, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;实力差与预期进球均显著利于主队，威尼斯五连败且进攻端预期进球极低，主队攻防两端优势构成核心支撑。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:6, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及双方伤停，无法量化核心主力缺阵影响，该维度降权处理，不编造伤停。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;近3年交锋主队1胜1平0负, 总进球2-0&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;交锋样本极小且未提供双方阵容变化细节，参考价值有限，仅作轻微主队倾向。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场 / 客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方均无密集赛程或双线作战压力，体能维度对方向影响中性，不构成主客队额外优势。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;天气情报未提及，权重记0并重新分配至市场/状态攻防/赛程体能/战意轮换，不编造天气。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判任命未官方公布，权重记0并重新分配至市场/状态攻防/赛程体能/战意轮换，不猜测。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;Atalanta #11中游6分; Venezia #20保级区0分&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;威尼斯保级区但五连败，战意未必能转化为表现；亚特兰大中游积分压力有限，可能保持常规主力，主队略占主动但无强轮换信号。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;亚特兰大控球压制，通过边路与中场前插持续给威尼斯防线施压。&quot;, &quot;无球&quot;: &quot;威尼斯无球阶段退守较深，但防线连续失球下存在被二次进攻打穿风险。&quot;, &quot;最大变量&quot;: &quot;亚特兰大近期状态不稳定，若久攻不下可能让威尼斯获得反击或定位球机会。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;亚特兰大早早取得进球，威尼斯被迫压出留出空间&quot;, &quot;比分&quot;:[&quot;2-0&quot;,&quot;3-0&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;亚特兰大进攻效率低且威尼斯门将高接低挡，比赛进入僵持&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;威尼斯定位球或反击先下一城，亚特兰大心态急躁且轮换后配合生疏&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;2-3球&quot;, &quot;净胜球&quot;: &quot;主队1-2球优势&quot;, &quot;上半场&quot;: &quot;上半场主队控球占优但可能仅1球领先或0-0僵持&quot;},
+&quot;触发器&quot;: [&quot;亚特兰大首发出现明显轮换或核心缺阵&quot;, &quot;威尼斯临场变阵三中卫强化防守&quot;, &quot;赛前主队赔率大幅上调至1.55以上&quot;, &quot;官方公布主队有核心中卫或中锋伤停&quot;],
+&quot;反向验证&quot;: &quot;如果这场预测错了，最可能错在亚特兰大近期状态起伏被高估，以及让一球盘下主队赢球但无法打穿，实际可能仅1-0小胜或平局收场。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主73.8% 平17.5% 客8.7%&lt;br&gt;预期进球: 2.38 - 0.69&lt;br&gt;大2.5: 53.8% | BTTS: 47.8%&lt;br&gt;贝叶斯后验: 主71.3% 平18.4% 客10.3%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 亚特兰大 vs 威尼斯
+来源:百度 › item › 亚特兰 亚特兰大 （美国佐治亚州首府、富尔顿县县治）_百度百科 亚特兰大（Atlanta），美国佐治亚州首府、富尔顿县县治，位于美国东南部、佐治亚州中北部的皮德蒙特地区，市域面积353.04平方 … 阅读更多
+来源:知乎 › question 美国 亚特兰大 是个什么样的城市？ - 知乎 地位和发展 96奥运和08金融危机为亚特兰大（简称亚城）提供了两次长足发展的机会，特别是近10年来，全美人口流动趋势呈从传统 …
+[裁判] 都灵 vs 乌迪内斯
+来源:百度 › item › 都灵 都灵 （意大利第三大城市、皮埃蒙特大区和 都灵 省首府 ... 2011年3月27日 &amp;#0183; 都灵（意大利语：Torino），位于意大利西北部波河上游谷地，阿尔卑斯山东南部，是皮埃蒙特大区和都灵省首府， …
+来源:知乎 坐拥意大利十之最的城市就是它—— 都灵 - 知乎 2016年4月18日 &amp;#0183; 都灵（Torino）位于意大利北部的皮埃蒙特大区，是出了米兰和罗马之外的意大利第三大城市。 但相对于其它两大城 …
+[裁判] 考文垂 vs 纽卡斯尔
+来源:百度 › item › 考文垂 考文垂 （英国城市）_百度百科 2026年4月17日 &amp;#0183; 考文垂（Coventry）是英国英格兰西米德兰郡城市，位于英格兰中部，面积98.64平方千米，人口约34.5万（2015 …
+来源:网络 coventry.ac., , , the …
+[裁判] 莱万特 vs 塞维利亚
+来源:百度 › item 莱 （汉字）_百度百科 汉代文字作图1。 “莱”的异体字是“莱”。 “莱”是由“ 艹 ”和“ 来 ”组成的。 “莱”是形声字。 “草”字旁表义，指草本植物。 “来”读l&amp;#225;i，表声。 …
+来源:知乎 › question 山东为什么有那么多带“ 莱 ”的地名？ - 知乎 2024年3月16日 &amp;#0183; 山东的“莱”确实直接来源于东夷分支莱夷族群，以及由他们建立的莱国。 现在“莱”地名大多集中在胶东半岛，也是由 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 亚特兰大 vs 威尼斯
+来源:百度 › item › 亚特兰 亚特兰大 （美国佐治亚州首府、富尔顿县县治）_百度百科 亚特兰大（Atlanta），美国佐治亚州首府、富尔顿县县治，位于美国东南部、佐治亚州中北部的皮德蒙特地区，市域面积353.04平方 …
+来源:知乎 › question 美国 亚特兰大 是个什么样的城市？ - 知乎 地位和发展 96奥运和08金融危机为亚特兰大（简称亚城）提供了两次长足发展的机会，特别是近10年来，全美人口流动趋势呈从传统 …
+[天气] 都灵 vs 乌迪内斯
+来源:百度 › item › 都灵 都灵 （意大利第三大城市、皮埃蒙特大区和 都灵 省首府 ... 2011年3月27日 &amp;#0183; 都灵（意大利语：Torino），位于意大利西北部波河上游谷地，阿尔卑斯山东南部，是皮埃蒙特大区和都灵省首府， …
+来源:知乎 坐拥意大利十之最的城市就是它—— 都灵 - 知乎 2016年4月18日 &amp;#0183; 都灵（Torino）位于意大利北部的皮埃蒙特大区，是出了米兰和罗马之外的意大利第三大城市。 但相对于其它两大城 …
+[天气] 考文垂 vs 纽卡斯尔
+来源:百度 › item › 考文垂 考文垂 （英国城市）_百度百科 2026年4月17日 &amp;#0183; 考文垂（Coventry）是英国英格兰西米德兰郡城市，位于英格兰中部，面积98.64平方千米，人口约34.5万（2015 …
+来源:网络 coventry.ac., , , the …
+[天气] 莱万特 vs 塞维利亚
+来源:百度 › item 莱 （汉字）_百度百科 汉代文字作图1。 “莱”的异体字是“莱”。 “莱”是由“ 艹 ”和“ 来 ”组成的。 “莱”是形声字。 “草”字旁表义，指草本植物。 “来”读l&amp;#225;i，表声。 … 阅读更多
+来源:知乎 › question 山东为什么有那么多带“ 莱 ”的地名？ - 知乎 2024年3月16日 &amp;#0183; 山东的“莱”确实直接来源于东夷分支莱夷族群，以及由他们建立的莱国。 现在“莱”地名大多集中在胶东半岛，也是由 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">意甲</span>都灵<span class="tvs">VS</span>乌迪内斯
+      <span style="font-size:.75rem;color:#8d99b0;">(Torino vs Udinese)</span>
+    </div>
+    <span class="m-meta">开球 02:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (39.1%) · 最可能比分 1-0 (12%)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.15 / 平3.05 / 客2.98
+亚盘(主受1.0球): 主4.85 / 平3.65 / 客1.54
+波胆最低赔: 1-1@6.25 / 1-0@7.5 / 2-1@8.0
+模型亚盘倾向: away (价值 +1.5%, 信心 low)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第15名 (保级区) · 客队: 第14名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 胶东半岛，也是由 … === 天气侦察 (未经核实, 仅供参考) === [天气] 亚特兰大 vs 威尼斯 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 1胜 1平 2负, 进球 5:6 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.4,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为都灵小胜或平局，1-0/2-1是主路径。核心理由是主场与模型概率略偏主队，但双方状态均差、伤停情报缺失，最大风险是乌迪内斯反击带走分数。&quot;,
+&quot;次选比分&quot;: &quot;1-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主2.15/平3.05/客2.98；亚盘主-1.0下主覆盖18%客覆盖59%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧赔略示好主队但幅度有限，亚盘主-1.0下客覆盖更高，说明市场对都灵大胜缺乏信心，主队优势被压缩为小胜或平局。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主38.6%/平30.2%/客31.1%；预期进球1.29-1.13；ELO差-46&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;模型概率主队略占优，预期进球也稍高，但ELO显示客队基础实力反而更强，状态层面没有形成单边压制，主队只能算微幅优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;自动伤停侦察未提供有效伤停信息，无法量化核心或替补折损，该维度基本不产生方向影响。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年主队视角1胜1平2负，总进球5-6&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;历史交锋乌迪内斯略占上风，但双方阵容变化程度未知，参考价值中等，对主队方向形成轻微压制。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方赛程密度一致，均无额外消耗或双线压力，体能维度不偏向任何一方。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报未提及，权重记0并重新分配至市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判任命未公布，不猜测，权重记0并重新分配至市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;都灵#15保级区4分，近况D,L,W,L,L；乌迪内斯#14中游4分，近况L,L,L,W,D&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;都灵处于保级区边缘，主场取分诉求略强于中游区乌迪内斯，但双方分差极小，战意差距有限，不宜高估。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;都灵主场倾向主动控球并依靠边路与定位球寻找小比分领先机会。&quot;,
+&quot;无球&quot;: &quot;乌迪内斯若回收反击，都灵后场空间可能被利用，存在被偷袭风险。&quot;,
+&quot;最大变量&quot;: &quot;双方近期状态都不稳定，一次定位球或反击效率可能直接决定比赛走向。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;都灵主场控球占优且率先取得进球，乌迪内斯进攻效率不足&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;, &quot;2-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;都灵得势不得分或乌迪内斯扳平后比赛进入均势&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;乌迪内斯反击或定位球先进球，都灵主场压力下失误增多&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;主队0-1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率小球，0-0或1-0形态较常见&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前公布都灵核心主力伤停，则主队优势分下调&quot;,
+&quot;赛前公布乌迪内斯多名主力缺阵，则客队抵抗能力下降&quot;,
+&quot;亚盘从主-1.0降至主-0.5，说明市场进一步看低主队&quot;,
+&quot;官方裁判信息公布且历史执法对主队明显不利&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在乌迪内斯实际状态强于近况表象，利用反击或定位球直接取胜，而都灵主场进攻效率过低。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主38.6% 平30.2% 客31.1%&lt;br&gt;预期进球: 1.29 - 1.13&lt;br&gt;大2.5: 46.3% | BTTS: 49.9%&lt;br&gt;贝叶斯后验: 主39.1% 平30.0% 客30.9%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 亚特兰大 vs 威尼斯
+来源:百度 › item › 亚特兰 亚特兰大 （美国佐治亚州首府、富尔顿县县治）_百度百科 亚特兰大（Atlanta），美国佐治亚州首府、富尔顿县县治，位于美国东南部、佐治亚州中北部的皮德蒙特地区，市域面积353.04平方 … 阅读更多
+来源:知乎 › question 美国 亚特兰大 是个什么样的城市？ - 知乎 地位和发展 96奥运和08金融危机为亚特兰大（简称亚城）提供了两次长足发展的机会，特别是近10年来，全美人口流动趋势呈从传统 …
+[裁判] 都灵 vs 乌迪内斯
+来源:百度 › item › 都灵 都灵 （意大利第三大城市、皮埃蒙特大区和 都灵 省首府 ... 2011年3月27日 &amp;#0183; 都灵（意大利语：Torino），位于意大利西北部波河上游谷地，阿尔卑斯山东南部，是皮埃蒙特大区和都灵省首府， …
+来源:知乎 坐拥意大利十之最的城市就是它—— 都灵 - 知乎 2016年4月18日 &amp;#0183; 都灵（Torino）位于意大利北部的皮埃蒙特大区，是出了米兰和罗马之外的意大利第三大城市。 但相对于其它两大城 …
+[裁判] 考文垂 vs 纽卡斯尔
+来源:百度 › item › 考文垂 考文垂 （英国城市）_百度百科 2026年4月17日 &amp;#0183; 考文垂（Coventry）是英国英格兰西米德兰郡城市，位于英格兰中部，面积98.64平方千米，人口约34.5万（2015 …
+来源:网络 coventry.ac., , , the …
+[裁判] 莱万特 vs 塞维利亚
+来源:百度 › item 莱 （汉字）_百度百科 汉代文字作图1。 “莱”的异体字是“莱”。 “莱”是由“ 艹 ”和“ 来 ”组成的。 “莱”是形声字。 “草”字旁表义，指草本植物。 “来”读l&amp;#225;i，表声。 …
+来源:知乎 › question 山东为什么有那么多带“ 莱 ”的地名？ - 知乎 2024年3月16日 &amp;#0183; 山东的“莱”确实直接来源于东夷分支莱夷族群，以及由他们建立的莱国。 现在“莱”地名大多集中在胶东半岛，也是由 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 亚特兰大 vs 威尼斯
+来源:百度 › item › 亚特兰 亚特兰大 （美国佐治亚州首府、富尔顿县县治）_百度百科 亚特兰大（Atlanta），美国佐治亚州首府、富尔顿县县治，位于美国东南部、佐治亚州中北部的皮德蒙特地区，市域面积353.04平方 …
+来源:知乎 › question 美国 亚特兰大 是个什么样的城市？ - 知乎 地位和发展 96奥运和08金融危机为亚特兰大（简称亚城）提供了两次长足发展的机会，特别是近10年来，全美人口流动趋势呈从传统 …
+[天气] 都灵 vs 乌迪内斯
+来源:百度 › item › 都灵 都灵 （意大利第三大城市、皮埃蒙特大区和 都灵 省首府 ... 2011年3月27日 &amp;#0183; 都灵（意大利语：Torino），位于意大利西北部波河上游谷地，阿尔卑斯山东南部，是皮埃蒙特大区和都灵省首府， …
+来源:知乎 坐拥意大利十之最的城市就是它—— 都灵 - 知乎 2016年4月18日 &amp;#0183; 都灵（Torino）位于意大利北部的皮埃蒙特大区，是出了米兰和罗马之外的意大利第三大城市。 但相对于其它两大城 …
+[天气] 考文垂 vs 纽卡斯尔
+来源:百度 › item › 考文垂 考文垂 （英国城市）_百度百科 2026年4月17日 &amp;#0183; 考文垂（Coventry）是英国英格兰西米德兰郡城市，位于英格兰中部，面积98.64平方千米，人口约34.5万（2015 …
+来源:网络 coventry.ac., , , the …
+[天气] 莱万特 vs 塞维利亚
+来源:百度 › item 莱 （汉字）_百度百科 汉代文字作图1。 “莱”的异体字是“莱”。 “莱”是由“ 艹 ”和“ 来 ”组成的。 “莱”是形声字。 “草”字旁表义，指草本植物。 “来”读l&amp;#225;i，表声。 … 阅读更多
+来源:知乎 › question 山东为什么有那么多带“ 莱 ”的地名？ - 知乎 2024年3月16日 &amp;#0183; 山东的“莱”确实直接来源于东夷分支莱夷族群，以及由他们建立的莱国。 现在“莱”地名大多集中在胶东半岛，也是由 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">英超</span>考文垂<span class="tvs">VS</span>纽卡斯尔
+      <span style="font-size:.75rem;color:#8d99b0;">(Coventry vs Newcastle)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (67.4%) · 最可能比分 0-2 (19%) [原始0-1与让球/大小球矛盾, 已按约束修正]</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.98 / 平3.52 / 客1.96
+亚盘(主让1.0球): 主1.66 / 平3.9 / 客3.7
+波胆最低赔: 1-2@7.25 / 1-1@7.5 / 2-1@9.5
+模型亚盘倾向: away (价值 +21.5%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第19名 (保级区) · 客队: 第11名 (中游)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 胶东半岛，也是由 … === 天气侦察 (未经核实, 仅供参考) === [天气] 亚特兰大 vs 威尼斯 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 3.2,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为纽卡斯尔客场零封取胜，核心理由是模型与市场一致看客、考文垂攻防数据极差且处保级区。最大风险是纽卡中游战意不足或轮换导致进攻效率下降。&quot;,
+&quot;次选比分&quot;: &quot;0-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔客胜1.96，亚盘主+1.0；模型客胜72.4%高于市场，市场融合仅19%，显示高margin下市场信心被下调。&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧赔与亚盘均指向纽卡客胜方向，但模型与市场存在较大分歧，市场对客队大胜保持谨慎，客胜方向可信但不宜过度放大净胜球。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型预期进球0.34-1.80，ELO差-25；考文垂近况W,L,L,L,L，纽卡近况W,L,D,W,D。&quot;,
+&quot;优势分&quot;: 4,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;攻防数据一边倒，考文垂进攻端预期进球极低，纽卡客场控制力明显占优，状态与实力双重支撑客队。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;情报未提及双方伤停，无核心或替补缺阵信息。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停信息缺失，无法量化阵容折损，权重下调并转移至市场、状态攻防、赛程体能、战意轮换维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无近3年交锋记录或阵容变化信息。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;交锋数据不足，已降权，无法作为参考。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;双方7天均0场，无密集赛程或双线作战压力。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;赛程压力对双方均等，体能因素不构成明显优势，但纽卡阵容深度更好，若轮换影响更小。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;情报未提及比赛天气与场地条件。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无天气情报，权重记0并转移至状态攻防与战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判信息侦察未返回有效任命，仅出现与比赛无关的城市词条。&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布，权重记0并转移至市场与状态攻防。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;考文垂排名第19处保级区，纽卡排名第11中游；考文垂近5轮4负，纽卡近5轮2胜2平1负。&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;考文垂有保级压力但状态极差，主场抢分动力可能带来一定韧性；纽卡中游战意存疑，存在轮换或专注度下降风险，因此客队优势不宜给满。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;纽卡斯尔预计主导有球阶段，通过边路推进与中场控制压制考文垂低位防线。&quot;,
+&quot;无球&quot;: &quot;考文垂无球阶段需应对纽卡高位逼抢与快速转换，后场出球风险较大。&quot;,
+&quot;最大变量&quot;: &quot;纽卡若提前轮换或领先后放松，可能给考文垂留下反击或定位球机会。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;纽卡主力出战并较早取得进球，考文垂进攻无力反扑。&quot;,
+&quot;比分&quot;: [&quot;0-2&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;纽卡轮换明显或考文垂靠主场气势与定位球先守后攻。&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;考文垂利用主场定位球或反击先进球，纽卡中游战意不足未能扳回。&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-3球&quot;,
+&quot;净胜球&quot;: &quot;纽卡斯尔1-2球优势&quot;,
+&quot;上半场&quot;: &quot;上半场纽卡控球占优，考文垂大概率半场难有射正。&quot;
+},
+&quot;触发器&quot;: [
+&quot;纽卡斯尔首发出现明显轮换或多名核心缺阵&quot;,
+&quot;考文垂赛前公布核心前锋或主力中卫复出&quot;,
+&quot;欧赔客胜大幅上调或亚盘退至客让半球&quot;,
+&quot;赛前出现考文垂主场天气或场地条件恶劣的确认信息&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在纽卡中游战意不足导致轮换幅度超预期，或考文垂保级主场爆发逼平甚至爆冷。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主6.2% 平21.4% 客72.4%&lt;br&gt;预期进球: 0.34 - 1.80&lt;br&gt;大2.5: 46.4% | BTTS: 39.7%&lt;br&gt;贝叶斯后验: 主10.5% 平22.1% 客67.4%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 亚特兰大 vs 威尼斯
+来源:百度 › item › 亚特兰 亚特兰大 （美国佐治亚州首府、富尔顿县县治）_百度百科 亚特兰大（Atlanta），美国佐治亚州首府、富尔顿县县治，位于美国东南部、佐治亚州中北部的皮德蒙特地区，市域面积353.04平方 … 阅读更多
+来源:知乎 › question 美国 亚特兰大 是个什么样的城市？ - 知乎 地位和发展 96奥运和08金融危机为亚特兰大（简称亚城）提供了两次长足发展的机会，特别是近10年来，全美人口流动趋势呈从传统 …
+[裁判] 都灵 vs 乌迪内斯
+来源:百度 › item › 都灵 都灵 （意大利第三大城市、皮埃蒙特大区和 都灵 省首府 ... 2011年3月27日 &amp;#0183; 都灵（意大利语：Torino），位于意大利西北部波河上游谷地，阿尔卑斯山东南部，是皮埃蒙特大区和都灵省首府， …
+来源:知乎 坐拥意大利十之最的城市就是它—— 都灵 - 知乎 2016年4月18日 &amp;#0183; 都灵（Torino）位于意大利北部的皮埃蒙特大区，是出了米兰和罗马之外的意大利第三大城市。 但相对于其它两大城 …
+[裁判] 考文垂 vs 纽卡斯尔
+来源:百度 › item › 考文垂 考文垂 （英国城市）_百度百科 2026年4月17日 &amp;#0183; 考文垂（Coventry）是英国英格兰西米德兰郡城市，位于英格兰中部，面积98.64平方千米，人口约34.5万（2015 …
+来源:网络 coventry.ac., , , the …
+[裁判] 莱万特 vs 塞维利亚
+来源:百度 › item 莱 （汉字）_百度百科 汉代文字作图1。 “莱”的异体字是“莱”。 “莱”是由“ 艹 ”和“ 来 ”组成的。 “莱”是形声字。 “草”字旁表义，指草本植物。 “来”读l&amp;#225;i，表声。 …
+来源:知乎 › question 山东为什么有那么多带“ 莱 ”的地名？ - 知乎 2024年3月16日 &amp;#0183; 山东的“莱”确实直接来源于东夷分支莱夷族群，以及由他们建立的莱国。 现在“莱”地名大多集中在胶东半岛，也是由 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 亚特兰大 vs 威尼斯
+来源:百度 › item › 亚特兰 亚特兰大 （美国佐治亚州首府、富尔顿县县治）_百度百科 亚特兰大（Atlanta），美国佐治亚州首府、富尔顿县县治，位于美国东南部、佐治亚州中北部的皮德蒙特地区，市域面积353.04平方 …
+来源:知乎 › question 美国 亚特兰大 是个什么样的城市？ - 知乎 地位和发展 96奥运和08金融危机为亚特兰大（简称亚城）提供了两次长足发展的机会，特别是近10年来，全美人口流动趋势呈从传统 …
+[天气] 都灵 vs 乌迪内斯
+来源:百度 › item › 都灵 都灵 （意大利第三大城市、皮埃蒙特大区和 都灵 省首府 ... 2011年3月27日 &amp;#0183; 都灵（意大利语：Torino），位于意大利西北部波河上游谷地，阿尔卑斯山东南部，是皮埃蒙特大区和都灵省首府， …
+来源:知乎 坐拥意大利十之最的城市就是它—— 都灵 - 知乎 2016年4月18日 &amp;#0183; 都灵（Torino）位于意大利北部的皮埃蒙特大区，是出了米兰和罗马之外的意大利第三大城市。 但相对于其它两大城 …
+[天气] 考文垂 vs 纽卡斯尔
+来源:百度 › item › 考文垂 考文垂 （英国城市）_百度百科 2026年4月17日 &amp;#0183; 考文垂（Coventry）是英国英格兰西米德兰郡城市，位于英格兰中部，面积98.64平方千米，人口约34.5万（2015 …
+来源:网络 coventry.ac., , , the …
+[天气] 莱万特 vs 塞维利亚
+来源:百度 › item 莱 （汉字）_百度百科 汉代文字作图1。 “莱”的异体字是“莱”。 “莱”是由“ 艹 ”和“ 来 ”组成的。 “莱”是形声字。 “草”字旁表义，指草本植物。 “来”读l&amp;#225;i，表声。 … 阅读更多
+来源:知乎 › question 山东为什么有那么多带“ 莱 ”的地名？ - 知乎 2024年3月16日 &amp;#0183; 山东的“莱”确实直接来源于东夷分支莱夷族群，以及由他们建立的莱国。 现在“莱”地名大多集中在胶东半岛，也是由 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">西甲</span>莱万特<span class="tvs">VS</span>塞维利亚
+      <span style="font-size:.75rem;color:#8d99b0;">(Levante vs Sevilla)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (40.0%) · 最可能比分 2-1 (9%) [原始1-1与让球/大小球矛盾, 已按约束修正]</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 56% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.57 / 平3.15 / 客2.37
+亚盘(主让1.0球): 主1.44 / 平4.1 / 客5.25
+波胆最低赔: 1-1@6.0 / 1-2@8.5 / 0-1@8.75
+模型亚盘倾向: home (价值 +3.9%, 信心 medium)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">主队: 第18名 (保级区) · 客队: 第5名 (欧战区)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 胶东半岛，也是由 … === 天气侦察 (未经核实, 仅供参考) === [天气] 亚特兰大 vs 威尼斯 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年交锋: 主队 2胜 0平 0负, 进球 5:0 (需结合双方阵容变化程度解读: 阵容稳定则参考价值高)</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 0.2,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;莱万特主场略占优但优势微弱，最可能小胜或平局。核心风险是保级队进攻效率不稳，塞维利亚欧战区实力更强但客战波动大。&quot;,
+&quot;次选比分&quot;: &quot;1-0&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;亚盘主+1.0模型主覆盖65%/客覆盖16%；欧赔主2.57/平3.15/客2.37&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场对主队有一定支持，但赔率结构显示主胜并非绝对热门，高margin下市场对主队价值方向认可度有限。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主41.3%/平25.4%/客33.3%；预期进球1.61-1.42；ELO差+11&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;ELO和模型概率均略偏向主队，预期进球也主队占优，但差距不大，属于微弱优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失，无法判断核心球员缺阵影响，权重下调并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;近3年交锋主队2胜0平0负，总进球5-0；阵容变化程度未知&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队历史交锋占优且零封对手，但缺少阵容变化信息，参考价值需谨慎，优势分给正向但不高。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场/客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方赛程密度相同，体能恢复对等，无明确优势方。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报缺失，权重降至最低并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判信息未公布，不猜测，权重归零。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;莱万特#18保级区5分，近况L,L,D,W,D；塞维利亚#5欧战区13分，近况L,W,W,D,L&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;主队保级压力大但近况一般，客队争夺欧战但近期状态波动，双方战意相当，无明显优势。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队莱万特预计利用主场控球并寻找边路传中机会，塞维利亚则通过中场压迫后快速转换进攻。&quot;,
+&quot;无球&quot;: &quot;莱万特无球时需防范塞维利亚中路渗透和定位球，塞维利亚无球时注意保护肋部空当。&quot;,
+&quot;最大变量&quot;: &quot;莱万特保级压力下是否敢于前压，若阵型过于开放可能被塞维利亚反击惩罚。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;莱万特主场率先取得进球且防守稳固&quot;,
+&quot;比分&quot;: [&quot;2-1&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;双方进攻效率均不高，互有攻守但缺乏致命一击&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;塞维利亚把握反击机会，莱万特防线失误&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;主队0-1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场可能较为谨慎，进球数偏少&quot;
+},
+&quot;触发器&quot;: [
+&quot;莱万特主力前锋或核心后卫伤停消息出现&quot;,
+&quot;塞维利亚轮换幅度超预期&quot;,
+&quot;赛前赔率大幅向客队倾斜&quot;,
+&quot;天气或场地条件明显不利于技术流打法&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在莱万特保级战意被高估，实际进攻效率无法转化为进球，塞维利亚凭借个人能力客场取胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主41.3% 平25.4% 客33.3%&lt;br&gt;预期进球: 1.61 - 1.42&lt;br&gt;大2.5: 52.9% | BTTS: 55.9%&lt;br&gt;贝叶斯后验: 主40.0% 平25.9% 客34.0%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 亚特兰大 vs 威尼斯
+来源:百度 › item › 亚特兰 亚特兰大 （美国佐治亚州首府、富尔顿县县治）_百度百科 亚特兰大（Atlanta），美国佐治亚州首府、富尔顿县县治，位于美国东南部、佐治亚州中北部的皮德蒙特地区，市域面积353.04平方 … 阅读更多
+来源:知乎 › question 美国 亚特兰大 是个什么样的城市？ - 知乎 地位和发展 96奥运和08金融危机为亚特兰大（简称亚城）提供了两次长足发展的机会，特别是近10年来，全美人口流动趋势呈从传统 …
+[裁判] 都灵 vs 乌迪内斯
+来源:百度 › item › 都灵 都灵 （意大利第三大城市、皮埃蒙特大区和 都灵 省首府 ... 2011年3月27日 &amp;#0183; 都灵（意大利语：Torino），位于意大利西北部波河上游谷地，阿尔卑斯山东南部，是皮埃蒙特大区和都灵省首府， …
+来源:知乎 坐拥意大利十之最的城市就是它—— 都灵 - 知乎 2016年4月18日 &amp;#0183; 都灵（Torino）位于意大利北部的皮埃蒙特大区，是出了米兰和罗马之外的意大利第三大城市。 但相对于其它两大城 …
+[裁判] 考文垂 vs 纽卡斯尔
+来源:百度 › item › 考文垂 考文垂 （英国城市）_百度百科 2026年4月17日 &amp;#0183; 考文垂（Coventry）是英国英格兰西米德兰郡城市，位于英格兰中部，面积98.64平方千米，人口约34.5万（2015 …
+来源:网络 coventry.ac., , , the …
+[裁判] 莱万特 vs 塞维利亚
+来源:百度 › item 莱 （汉字）_百度百科 汉代文字作图1。 “莱”的异体字是“莱”。 “莱”是由“ 艹 ”和“ 来 ”组成的。 “莱”是形声字。 “草”字旁表义，指草本植物。 “来”读l&amp;#225;i，表声。 …
+来源:知乎 › question 山东为什么有那么多带“ 莱 ”的地名？ - 知乎 2024年3月16日 &amp;#0183; 山东的“莱”确实直接来源于东夷分支莱夷族群，以及由他们建立的莱国。 现在“莱”地名大多集中在胶东半岛，也是由 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 亚特兰大 vs 威尼斯
+来源:百度 › item › 亚特兰 亚特兰大 （美国佐治亚州首府、富尔顿县县治）_百度百科 亚特兰大（Atlanta），美国佐治亚州首府、富尔顿县县治，位于美国东南部、佐治亚州中北部的皮德蒙特地区，市域面积353.04平方 …
+来源:知乎 › question 美国 亚特兰大 是个什么样的城市？ - 知乎 地位和发展 96奥运和08金融危机为亚特兰大（简称亚城）提供了两次长足发展的机会，特别是近10年来，全美人口流动趋势呈从传统 …
+[天气] 都灵 vs 乌迪内斯
+来源:百度 › item › 都灵 都灵 （意大利第三大城市、皮埃蒙特大区和 都灵 省首府 ... 2011年3月27日 &amp;#0183; 都灵（意大利语：Torino），位于意大利西北部波河上游谷地，阿尔卑斯山东南部，是皮埃蒙特大区和都灵省首府， …
+来源:知乎 坐拥意大利十之最的城市就是它—— 都灵 - 知乎 2016年4月18日 &amp;#0183; 都灵（Torino）位于意大利北部的皮埃蒙特大区，是出了米兰和罗马之外的意大利第三大城市。 但相对于其它两大城 …
+[天气] 考文垂 vs 纽卡斯尔
+来源:百度 › item › 考文垂 考文垂 （英国城市）_百度百科 2026年4月17日 &amp;#0183; 考文垂（Coventry）是英国英格兰西米德兰郡城市，位于英格兰中部，面积98.64平方千米，人口约34.5万（2015 …
+来源:网络 coventry.ac., , , the …
+[天气] 莱万特 vs 塞维利亚
+来源:百度 › item 莱 （汉字）_百度百科 汉代文字作图1。 “莱”的异体字是“莱”。 “莱”是由“ 艹 ”和“ 来 ”组成的。 “莱”是形声字。 “草”字旁表义，指草本植物。 “来”读l&amp;#225;i，表声。 … 阅读更多
+来源:知乎 › question 山东为什么有那么多带“ 莱 ”的地名？ - 知乎 2024年3月16日 &amp;#0183; 山东的“莱”确实直接来源于东夷分支莱夷族群，以及由他们建立的莱国。 现在“莱”地名大多集中在胶东半岛，也是由 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+  <div class="footer">自动生成于 2026-10-12 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

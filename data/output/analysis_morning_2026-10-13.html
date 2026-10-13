@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早盘七维分析存档 — 2026-10-13</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 早盘七维分析存档 · 非预测页</div>
+    <h1>2026-10-13</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-10-13.html">predictions_2026-10-13.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>朗斯<span class="tvs">VS</span>里斯本竞技
+      <span style="font-size:.75rem;color:#8d99b0;">(Lens vs Sp Lisbon)</span>
+    </div>
+    <span class="m-meta">开球 00:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (46.2%) · 最可能比分 0-1 (13%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.27 / 平3.42 / 客2.52
+亚盘(主受1.0球): 主4.6 / 平4.25 / 客1.48
+波胆最低赔: 1-1@7.0 / 2-1@8.25 / 1-2@9.5
+模型亚盘倾向: away (价值 +12.0%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: ）。 4. 数学 … === 天气侦察 (未经核实, 仅供参考) === [天气] 朗斯 vs 里斯本竞技 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -1.5,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为客队小胜。模型与市场均指向里斯本竞技占优，客队实力与预期进球更高；最大风险是朗斯主场韧性及客队实际轮换不明。&quot;,
+&quot;次选比分&quot;: &quot;0-2&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主2.27/平3.42/客2.52，亚盘主-1.0下客覆盖72%；Model-Market Edge客+13.5%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;市场与模型方向一致偏向客队，但主胜赔率仍具诱惑力，亚盘深盘下客队覆盖占优，资金面未出现反向信号，小幅利好客队。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主28.3%/平23.1%/客48.7%，预期进球1.07-1.49，ELO差+170&quot;,
+&quot;优势分&quot;: -3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;客队预期进球明显更高，ELO差显著，模型概率客队接近五成，状态与攻防数据均支持客队方向。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及双方伤停，无法区分核心与替补影响，该维度按低权重处理。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未提供近3年交锋记录，阵容变化情况不明，克制关系无法评估。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能恢复充分，该维度对比赛方向影响中性。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气侦察未返回有效信息，权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;官方裁判任命未公布，不猜测，权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;欧冠分组赛，无积分榜分区情报&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;欧冠战意通常较强，但双方轮换意图不明，客队实力占优下更可能争取主动，小幅利好客队。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;里斯本竞技预计掌握更多控球并利用边路推进制造机会。&quot;,
+&quot;无球&quot;: &quot;朗斯需要防范客队快速转换与定位球，中后场压力较大。&quot;,
+&quot;最大变量&quot;: &quot;朗斯若率先取得进球，可能改变客队压上节奏并制造主场冷门。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;客队控球占优并率先破门，朗斯难以持续施压&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;, &quot;0-2&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;朗斯防守紧凑，比赛陷入中场绞杀，双方均难创造绝对机会&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;朗斯利用主场气势先入球，客队轮换后强度下降&quot;,
+&quot;比分&quot;: [&quot;1-0&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;1-2球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场可能较为谨慎，进球数偏少&quot;
+},
+&quot;触发器&quot;: [
+&quot;里斯本竞技首发出现明显轮换，多名核心缺阵&quot;,
+&quot;朗斯公布主力中前场伤停，进攻进一步削弱&quot;,
+&quot;赛前赔率大幅向主队倾斜，亚盘从主-1.0退至平半&quot;,
+&quot;官方公布裁判且其执法风格偏向限制客队控球&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在朗斯主场爆发力被低估，客队在客场未能转化控球优势，比赛以平局或主队小胜收场。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主28.3% 平23.1% 客48.7%&lt;br&gt;预期进球: 1.07 - 1.49&lt;br&gt;大2.5: 55.1% | BTTS: 52.8%&lt;br&gt;贝叶斯后验: 主30.3% 平23.6% 客46.2%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[裁判] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[裁判] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[裁判] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[裁判] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[裁判] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[裁判] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[裁判] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 …
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[天气] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[天气] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[天气] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[天气] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[天气] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[天气] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[天气] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 … 阅读更多
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">UCL · 非五大</span>国际米兰<span class="tvs">VS</span>布鲁日
+      <span style="font-size:.75rem;color:#8d99b0;">(Inter vs Club Brugge KV)</span>
+    </div>
+    <span class="m-meta">开球 时间未定</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (65.9%) · 最可能比分 1-0 (12%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">模型亚盘倾向: away (价值 +15.7%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: ）。 4. 数学 … === 天气侦察 (未经核实, 仅供参考) === [天气] 朗斯 vs 里斯本竞技 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 1.9,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;国米主场控场小胜方向最可能，核心是ELO差+334与预期进球2.02对0.96形成压制；最大风险是亚盘-2.0模型覆盖不足，市场对深盘存疑，可能仅赢1球。&quot;,
+&quot;次选比分&quot;: &quot;2-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主1.18/平5.60/客9.75；亚盘主-2.0模型主覆盖19%/客覆盖62%&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;欧赔主胜极低反映资金看好国米，但亚盘-2.0客覆盖62%显示市场对国米深盘大胜信心不足，模型与市场在让球深度上分歧明显，主胜方向可信但净胜球预期需下调。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差+334；预期进球2.02-0.96；模型主胜63.8%&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;ELO与预期进球均显示国米实力和攻防状态明显占优，布鲁日客场进球预期不足1球，国米控场压制可能性高。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失，无法判断核心主力是否缺阵，按规则降权处理，不编造。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未提供近3年交锋记录，无法评估克制关系，权重降至4。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场/客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程或双线消耗，体能条件对等，不构成明显优势。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气场地，权重记为0，不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;侦察信息无效，裁判未公布，按规则权重记0，不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;欧冠小组赛，国米主场作战&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;国米欧冠主场争胜巩固出线形势，战意较强；布鲁日客场面对强敌可能以稳守为主，国米轮换概率较低。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;国米控球主导，通过边路推进和禁区前沿渗透压制布鲁日低位防线。&quot;,
+&quot;无球&quot;: &quot;国米高位逼抢后若被布鲁日快速转换打身后，存在被反击风险。&quot;,
+&quot;最大变量&quot;: &quot;国米能否在60分钟前打破僵局，若久攻不下可能被布鲁日拖入平局。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;国米上半场取得进球，布鲁日被迫压出后留下空间&quot;,
+&quot;比分&quot;: [&quot;2-0&quot;, &quot;1-0&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;国米久攻不下，布鲁日门将高接抵挡或反击偷袭得手&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;布鲁日率先反击破门，国米深盘压力下心态急躁&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-3球&quot;,
+&quot;净胜球&quot;: &quot;主队1球优势&quot;,
+&quot;上半场&quot;: &quot;国米控场但可能半场0-0或1-0&quot;
+},
+&quot;触发器&quot;: [
+&quot;国米核心前锋或中场赛前确认缺阵&quot;,
+&quot;亚盘从-2.0退至-1.75且主队水位走高&quot;,
+&quot;布鲁日公布首发为全主力且近期客场连续不败&quot;,
+&quot;国米赛前出现双线轮换信号&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在国米深盘压制但转化率不足，布鲁日低位防守成功并利用定位球或反击逼平。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主63.8% 平18.5% 客17.7%&lt;br&gt;预期进球: 2.02 - 0.96&lt;br&gt;大2.5: 59.9% | BTTS: 54.1%&lt;br&gt;贝叶斯后验: 主65.9% 平18.0% 客16.1%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[裁判] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[裁判] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[裁判] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[裁判] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[裁判] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[裁判] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[裁判] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 …
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[天气] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[天气] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[天气] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[天气] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[天气] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[天气] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[天气] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 … 阅读更多
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>阿森纳<span class="tvs">VS</span>里尔
+      <span style="font-size:.75rem;color:#8d99b0;">(Arsenal vs Lille)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (69.4%) · 最可能比分 1-0 (18%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.16 / 平5.70 / 客11.00
+亚盘(主受2.0球): 主2.75 / 平3.95 / 客1.95
+波胆最低赔: 2-0@6.5 / 3-0@7.25 / 1-0@7.75
+模型亚盘倾向: away (价值 +15.8%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: ）。 4. 数学 … === 天气侦察 (未经核实, 仅供参考) === [天气] 朗斯 vs 里斯本竞技 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 3.1,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向阿森纳小胜, 核心是实力与主场优势远胜里尔, 模型预期进球1.84-0.66且最可能比分1-0。最大风险是亚盘主-2.0下市场对深盘覆盖不足, 大胜缺乏资金支持, 若久攻不下易出平局。&quot;,
+&quot;次选比分&quot;: &quot;2-1&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔主1.16/平5.70/客11.00; 亚盘主-2.0模型主覆盖仅19%客覆盖61%&quot;, &quot;优势分&quot;:2, &quot;权重&quot;:23, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场强烈看好阿森纳赢球, 但深盘下主队大胜缺乏资金支撑, 模型与市场在让球深区存在分歧, 主队方向优势存在但不宜高估净胜球。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差+169; 模型概率主67.8%平19.1%客13.1%; 预期进球1.84-0.66&quot;, &quot;优势分&quot;:4, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;ELO与模型概率均显示阿森纳实力明显占优, 里尔预期进球仅0.66, 进攻威胁有限, 主队防守端被攻破概率低, 状态攻防维度对主队方向支撑最强。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提供双方伤停或折损信息, 无法判断核心缺阵影响, 该维度权重降至4并重新分配至市场、状态攻防、赛程体能、战意轮换。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;未提供近3年交锋记录, 无法评估克制关系, 权重降至4, 不作方向判断。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场 / 客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:16, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方均为7天0场, 体能恢复充分, 无密度劣势, 该维度中立, 但因无疲劳差异, 对方向贡献有限。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气场地, 权重记0并重新分配至维度1/2/5/8。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判信息未官方确认, 不猜测, 权重记0并重新分配至维度1/2/5/8。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;欧冠积分与出线诉求未提供, 但阿森纳主场作战且实力占优; 模型主胜概率67.8%&quot;, &quot;优势分&quot;:3, &quot;权重&quot;:19, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;欧冠赛场双方均有取分动机, 阿森纳主场拿分诉求明确, 里尔客场面对强敌或偏保守, 主队战意与主动轮换空间更足, 但缺乏具体积分榜信息, 置信度中等。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;阿森纳控球压制, 通过边路与肋部渗透制造机会, 里尔低位防守并伺机反击。&quot;, &quot;无球&quot;: &quot;阿森纳无球阶段需防里尔快速转换, 里尔无球时主要风险是长时间退守后阵地战失位。&quot;, &quot;最大变量&quot;: &quot;阿森纳若久攻不下, 里尔定位球或反击可能改变比赛走势。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;阿森纳上半场取得进球, 里尔被迫前压留出空间&quot;, &quot;比分&quot;:[&quot;1-0&quot;,&quot;2-0&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;里尔门将高接抵挡或阿森纳门前效率低下, 比赛进入60分钟后仍0-0&quot;, &quot;比分&quot;:[&quot;0-0&quot;,&quot;1-1&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;里尔率先通过定位球或反击得分, 阿森纳情绪波动且强攻无果&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;1-3球&quot;, &quot;净胜球&quot;: &quot;主队0-2球优势&quot;, &quot;上半场&quot;: &quot;上半场节奏偏慢, 阿森纳控球占优但破门可能较晚。&quot;},
+&quot;触发器&quot;: [&quot;阿森纳首发轮换幅度过大, 若核心攻击手未进首发则主胜方向降权&quot;, &quot;里尔若摆出5后卫并成功拖入70分钟, 平局风险上升&quot;, &quot;赛前出现阿森纳核心中卫或后腰伤停消息, 需重新评估防守稳定性&quot;, &quot;市场临场主队水位继续走高或亚盘退回主-1.75, 说明大胜预期进一步减弱&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了, 最可能错在低估里尔低位防守的韧性, 阿森纳虽控球但难以转化为进球, 比赛以0-0或1-1闷平收场。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主67.8% 平19.1% 客13.1%&lt;br&gt;预期进球: 1.84 - 0.66&lt;br&gt;大2.5: 54.1% | BTTS: 47.7%&lt;br&gt;贝叶斯后验: 主69.4% 平18.5% 客12.1%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[裁判] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[裁判] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[裁判] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[裁判] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[裁判] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[裁判] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[裁判] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 …
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[天气] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[天气] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[天气] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[天气] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[天气] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[天气] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[天气] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 … 阅读更多
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>比利亚雷亚尔<span class="tvs">VS</span>那不勒斯
+      <span style="font-size:.75rem;color:#8d99b0;">(Villarreal vs Napoli)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (55.5%) · 最可能比分 0-1 (19%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.04 / 平3.40 / 客2.90
+亚盘(主受1.0球): 主4.05 / 平3.95 / 客1.59
+波胆最低赔: 1-1@6.75 / 2-1@7.75 / 1-2@9.5
+模型亚盘倾向: away (价值 +27.9%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: ）。 4. 数学 … === 天气侦察 (未经核实, 仅供参考) === [天气] 朗斯 vs 里斯本竞技 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -2.7,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;摘要&quot;: &quot;客队那不勒斯实力与市场双优，最可能0-1客胜；但模型与赔率分歧、主队零赛程或助稳守，最大风险是主队主场韧性拖成平局。&quot;,
+&quot;次选比分&quot;: &quot;0-2&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;赔率2.04/3.40/2.90，亚盘主-1.0下客覆盖84%；模型-市场价值方向away&quot;, &quot;优势分&quot;:-3, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;市场与模型均指向客队，但欧赔客胜2.90偏高、模型客胜61.2%与市场融合后降至55.5%，分歧显示市场对客胜有保留，降权处理。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差-47，预期进球0.68-1.57，模型概率客61.2%&quot;, &quot;优势分&quot;:-3, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;实力与预期进球均利客队，主队进攻预期仅0.68球，难以支撑胜势。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及伤停，无法量化影响，权重重新分配。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;近3年交锋无记录，无法评估克制关系，权重重新分配。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;双方7天0场，无密度差异&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:12, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方均无密集赛程，无体能偏差。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气，权重记0并重新分配。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判未公布，不猜测，权重重新分配。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;欧冠小组赛，双方均需积分&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:16, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;两队战意均强，无明显轮换倾向，中性。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;客队那不勒斯主导控球并压制主队防线。&quot;, &quot;无球&quot;: &quot;主队比利亚雷亚尔无球阶段需防客队快速转换与边路渗透。&quot;, &quot;最大变量&quot;: &quot;主队若先入球可能改变客队高压节奏。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;客队率先破门且主队进攻乏力&quot;, &quot;比分&quot;:[&quot;0-1&quot;,&quot;0-2&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;主队稳守反击并抓住定位球机会&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;主队高效利用少数机会且客队防线失误&quot;, &quot;比分&quot;:[&quot;1-0&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;1-2球&quot;, &quot;净胜球&quot;: &quot;客队1球优势&quot;, &quot;上半场&quot;: &quot;上半场大概率0-0或0-1胶着&quot;},
+&quot;触发器&quot;: [&quot;主队核心前锋首发确认&quot;, &quot;那不勒斯轮换主力&quot;, &quot;临场赔率客胜大幅下调&quot;, &quot;天气或场地条件显著恶化&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能是主队主场韧性超出预期、那不勒斯久攻不下被逼平。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主16.5% 平22.3% 客61.2%&lt;br&gt;预期进球: 0.68 - 1.57&lt;br&gt;大2.5: 50.9% | BTTS: 46.9%&lt;br&gt;贝叶斯后验: 主21.5% 平23.0% 客55.5%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[裁判] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[裁判] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[裁判] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[裁判] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[裁判] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[裁判] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[裁判] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 …
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[天气] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[天气] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[天气] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[天气] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[天气] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[天气] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[天气] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 … 阅读更多
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">UCL · 非五大</span>莱比锡红牛<span class="tvs">VS</span>PSV
+      <span style="font-size:.75rem;color:#8d99b0;">(RB Leipzig vs PSV)</span>
+    </div>
+    <span class="m-meta">开球 时间未定</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (44.9%) · 最可能比分 1-2 (9%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">模型亚盘倾向: away (价值 +25.2%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: ）。 4. 数学 … === 天气侦察 (未经核实, 仅供参考) === [天气] 朗斯 vs 里斯本竞技 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.8,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为客队PSV不败偏胜，模型与市场均指向客队价值。核心风险是莱比锡主场强度与历史压制力被低估，且伤停情报缺失。&quot;,
+&quot;次选比分&quot;: &quot;1-3&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主1.60/平4.25/客3.73；模型-市场Edge客+26.0%；亚盘主-1.0客覆盖69%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场与模型同向看低主队，客队价值明显，但高margin下市场信号被部分折价，主队让球过深反映真实定位差弱于盘口。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;预期进球1.65-2.11；ELO差+57；模型概率主31.3%平19.0%客49.7%&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;客队预期进球更高，模型概率客队占优，但ELO差仅57，主队主场未被完全压制，状态攻防对主队略偏空。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未获取双方核心或替补伤停情报，无法量化折损影响，该维度中性处理并降权。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无近3年交锋记录，无法判断克制关系，阵容变化未知，参考价值低。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场/客队7天0场，来源赛程密度&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程，体能条件对等，不构成方向性倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 3,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及天气场地，权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 3,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未获得本场裁判任命，不猜测，权重重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;欧冠小组赛；无积分榜分区情报&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧冠战意通常充分，但缺少具体积分压力与轮换信号，主客战意暂视为均衡。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;PSV有球阶段预计通过中前场快速传递针对莱比锡高位防线身后。&quot;,
+&quot;无球&quot;: &quot;莱比锡无球阶段需警惕PSV转换速度，若压上过猛易被打穿。&quot;,
+&quot;最大变量&quot;: &quot;莱比锡若开场快速进球，可能扭转市场与模型对客队的压制预期。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;PSV率先取得进球并控制中场节奏&quot;,
+&quot;比分&quot;: [&quot;1-2&quot;, &quot;1-3&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;莱比锡主场逼抢奏效，双方互交白卷或各入一球&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;莱比锡利用主场强度零封对手，PSV进攻效率低于预期&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-4球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场预计胶着，进球可能集中在下半场&quot;
+},
+&quot;触发器&quot;: [
+&quot;莱比锡核心攻击手确认缺阵将加剧方向分下行&quot;,
+&quot;PSV出现核心中后场伤停将削弱客胜置信度&quot;,
+&quot;临场赔率主胜继续下探且客胜升水，需重新评估&quot;,
+&quot;赛前确认莱比锡轮换主力放弃欧冠强度&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在莱比锡主场强度被低估，或PSV客场攻坚能力不足，导致主队小胜而非客队取分。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主31.3% 平19.0% 客49.7%&lt;br&gt;预期进球: 1.65 - 2.11&lt;br&gt;大2.5: 67.7% | BTTS: 63.1%&lt;br&gt;贝叶斯后验: 主35.8% 平19.3% 客44.9%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[裁判] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[裁判] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[裁判] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[裁判] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[裁判] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[裁判] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[裁判] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 …
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[天气] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[天气] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[天气] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[天气] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[天气] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[天气] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[天气] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 … 阅读更多
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>加拉塔萨雷<span class="tvs">VS</span>巴塞罗那
+      <span style="font-size:.75rem;color:#8d99b0;">(加拉塔萨雷 vs Barcelona)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (62.9%) · 最可能比分 1-2 (8%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主7.70 / 平6.30 / 客1.19
+亚盘(主让2.0球): 主2.08 / 平4.5 / 客2.35
+波胆最低赔: 1-3@9.0 / 1-2@9.5 / 0-2@12.0
+模型亚盘倾向: home (价值 +18.4%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: ）。 4. 数学 … === 天气侦察 (未经核实, 仅供参考) === [天气] 朗斯 vs 里斯本竞技 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -2.3,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;巴萨客胜为最可能方向, 实力与市场一致指向客队。最大风险是主队主场强度与巴萨轮换导致比分低于预期。&quot;,
+&quot;次选比分&quot;: &quot;1-2&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔客胜1.19, 亚盘主+2.0, 客覆盖仅22%; 市场融合Model 81%/Market 19%, 高margin下市场已折价&quot;,
+&quot;优势分&quot;: -4,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场深度倾向巴萨, 但深盘下主队受让覆盖偏高, 说明市场对巴萨大胜有保留, 客胜方向明确但净胜球不宜高估。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-425, 模型客胜60.3%, 预期进球1.60-2.60, 大2.5概率70.9%&quot;,
+&quot;优势分&quot;: -4,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;巴萨实力与预期进球均占优, 但主队预期1.60球显示其具备进球能力, 巴萨防守非零封形态。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;赛前情报未提及双方伤停, 自动伤停侦察无有效信息&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 12,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;数据不足已降权, 无法判断核心缺阵影响, 默认双方主力框架齐整, 权重下调并转移至市场与状态攻防。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无近3年交锋数据&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无交锋情报, 已降权, 不构成参考。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场, 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程, 体能条件对等, 不构成方向性倾斜, 但巴萨轮换空间更大。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;天气侦察无有效情报&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及, 权重记0并转移至维度1/2/5/8。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判信息未公布, 侦察结果无效&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布, 权重记0并转移至维度1/2/5/8, 不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;巴萨欧冠客场, 主队加拉塔萨雷主场作战, 但积分与出线形势未提供&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;巴萨实力占优但可能控制比赛节奏, 主队主场战意更足, 巴萨存在轮换或领先后降速风险。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;巴萨主导控球, 通过边路与中场渗透压制主队低位防线。&quot;,
+&quot;无球&quot;: &quot;加拉塔萨雷需防范巴萨高位逼抢后的转换, 后场出球风险较大。&quot;,
+&quot;最大变量&quot;: &quot;巴萨是否提前锁定胜局后轮换降速, 影响净胜球。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;巴萨上半场取得进球且控制节奏&quot;,
+&quot;比分&quot;: [&quot;1-2&quot;, &quot;0-2&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;主队利用主场气势先入球, 巴萨轮换后进攻效率下降&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;巴萨大幅轮换且主队定位球或反击高效&quot;,
+&quot;比分&quot;: [&quot;2-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-4球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势或平局&quot;,
+&quot;上半场&quot;: &quot;上半场巴萨控球占优, 可能小比分领先或平局&quot;
+},
+&quot;触发器&quot;: [
+&quot;巴萨首发大幅轮换, 核心进攻球员缺阵&quot;,
+&quot;加拉塔萨雷主场氛围与对抗强度显著提升&quot;,
+&quot;赛前出现巴萨核心伤停或主力轮换信号&quot;,
+&quot;盘口从主+2.0退至主+1.5或更低, 显示市场对巴萨大胜信心减弱&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了, 最可能错在巴萨轮换幅度超预期, 主队利用主场逼平或爆冷获胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主23.1% 平16.6% 客60.3%&lt;br&gt;预期进球: 1.60 - 2.60&lt;br&gt;大2.5: 70.9% | BTTS: 64.6%&lt;br&gt;贝叶斯后验: 主20.9% 平16.2% 客62.9%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[裁判] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[裁判] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[裁判] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[裁判] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[裁判] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[裁判] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[裁判] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 …
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[天气] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[天气] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[天气] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[天气] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[天气] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[天气] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[天气] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 … 阅读更多
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>马德里竞技<span class="tvs">VS</span>曼联
+      <span style="font-size:.75rem;color:#8d99b0;">(Ath Madrid vs Man United)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (77.5%) · 最可能比分 4-1 (7%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.78 / 平3.70 / 客3.37
+亚盘(主受1.0球): 主3.2 / 平3.85 / 客1.8
+波胆最低赔: 1-1@7.5 / 2-1@7.5 / 1-0@11.0
+模型亚盘倾向: home (价值 +42.1%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: ）。 4. 数学 … === 天气侦察 (未经核实, 仅供参考) === [天气] 朗斯 vs 里斯本竞技 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 2.3,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为主队马竞大胜，模型与市场均指向主队，预期进球差极大。最大风险是模型高估进球数且伤停情报缺失，曼联若收缩反击可能缩小分差。&quot;,
+&quot;次选比分&quot;: &quot;3-1&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主1.78/平3.70/客3.37；亚盘主-1.0模型主覆盖70%&quot;,
+&quot;优势分&quot;: 3,
+&quot;权重&quot;: 24,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场与模型方向一致但幅度分歧大，模型概率83.9%远超市场隐含约56%，市场已对极端概率打折并拉低置信度，但仍明确支持主队。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率主83.9%，预期进球4.44-1.55，ELO差+11&quot;,
+&quot;优势分&quot;: 4,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;模型显示主队进攻压制极强，预期进球差近3球，但4.44的预期进球在欧冠淘汰赛偏高，存在高估风险。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;情报未提及双方伤停，自动侦察无有效条目&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 8,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无有效伤停数据，已降权。无法评估核心缺阵影响，不编造。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;未提供近3年交锋记录，无法判断克制关系，权重降至4。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场，客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方赛程密度相同且均无密集消耗，体能维度无明显倾斜，对方向不构成加分。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报未提及，权重记0并重新分配至市场、状态攻防、赛程体能、战意轮换。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无官方裁判任命，不猜测，权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;欧冠淘汰赛，双方无7天密集赛程&quot;,
+&quot;优势分&quot;: 2,
+&quot;权重&quot;: 28,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧冠淘汰赛战意均强，但主队主场作战且模型优势明显，轮换概率低，略倾向主队。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;主队马竞预计控球压制，通过边路与定位球持续创造高预期进球机会。&quot;,
+&quot;无球&quot;: &quot;曼联无球阶段若退防过深，将承受主队连续进攻压力，存在被打穿风险。&quot;,
+&quot;最大变量&quot;: &quot;曼联是否能在开场前30分钟顶住压力并打出有效反击。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;主队前30分钟取得进球且曼联防线持续暴露&quot;,
+&quot;比分&quot;: [&quot;4-1&quot;, &quot;3-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;曼联收缩防守奏效且主队把握机会效率下降&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;曼联利用反击或定位球率先得分并全场限制主队射正&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;3-6球&quot;,
+&quot;净胜球&quot;: &quot;主队2-3球优势&quot;,
+&quot;上半场&quot;: &quot;上半场主队可能已建立1球以上领先&quot;
+},
+&quot;触发器&quot;: [
+&quot;赛前主队核心攻击手或主力中卫确认缺阵&quot;,
+&quot;曼联首发排出五后卫或三中卫防守阵型&quot;,
+&quot;赔率主胜大幅上调至2.0以上&quot;,
+&quot;官方公布主队轮换多名主力&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能是模型严重高估主队进球效率，曼联低位防守成功将比赛拖入低比分，或曼联反击效率超预期。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主83.9% 平8.3% 客7.8%&lt;br&gt;预期进球: 4.44 - 1.55&lt;br&gt;大2.5: 78.1% | BTTS: 66.7%&lt;br&gt;贝叶斯后验: 主77.5% 平11.2% 客11.2%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[裁判] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[裁判] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[裁判] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[裁判] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[裁判] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[裁判] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[裁判] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 …
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[天气] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[天气] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[天气] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[天气] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[天气] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[天气] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[天气] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 … 阅读更多
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>维京<span class="tvs">VS</span>拜仁慕尼黑
+      <span style="font-size:.75rem;color:#8d99b0;">(Viking FK vs Bayern Munich)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (61.9%) · 最可能比分 0-2 (10%) (市场锚点=让球盘反推) (非五大·仅观察)</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 56% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">亚盘(主让3.0球): 主2.0 / 平5.0 / 客2.33
+波胆最低赔: 0-3@9.0 / 0-4@9.0 / 1-3@9.5
+模型亚盘倾向: home (价值 +25.2%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: ）。 4. 数学 … === 天气侦察 (未经核实, 仅供参考) === [天气] 朗斯 vs 里斯本竞技 来</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -3.3,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;拜仁实力与市场双重占优，客胜为最可能方向；但模型概率被市场下修，主队零封风险与BTTS口径存在矛盾，需防冷平。&quot;,
+&quot;次选比分&quot;: &quot;0-2&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;赔率0.08/0.09/0.83，亚盘主+3.0，市场融合后客胜从74.3%降至61.9%&quot;, &quot;优势分&quot;:-4, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;市场强烈看客胜，但融合后客胜置信度被下拉12%，显示市场对拜仁大胜存在保留，方向仍利客队但幅度收窄。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差-445，预期进球0.95-2.60，模型客胜74.3%&quot;, &quot;优势分&quot;:-5, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;ELO与预期进球均显示拜仁实力碾压，攻防两端差距显著，是本场最核心的客胜支撑。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:8, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;未获取到双方伤停情报，无法评估核心主力缺阵影响，已降权处理。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无近3年交锋记录，且两队阵容变化不明，克制关系无法评估，已降权。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;赛程密度：主队7天0场/客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方赛程均宽松，无体能劣势或轮换压力，该维度对方向无显著倾斜。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气，权重记0，已重新分配至市场/状态/赛程/战意。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判任命未公布，不猜测，权重记0，已重新分配至市场/状态/赛程/战意。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;欧冠小组赛，双方赛程宽松，拜仁实力占优&quot;, &quot;优势分&quot;:-3, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;拜仁需确保欧冠积分，战意充分；维京主场作战但实力差距过大，战意难以转化为积分，客队战意优势明显。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;拜仁主导控球并持续压迫维京防线，通过边路传中与肋部渗透制造射门。&quot;, &quot;无球&quot;: &quot;维京低位防守面临拜仁高位逼抢，出球与转换环节存在较大失误风险。&quot;, &quot;最大变量&quot;: &quot;拜仁若轮换主力或维京门将超常发挥，可能改变零封与进球分布。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;拜仁正常主力出战，比赛节奏被拜仁掌控&quot;, &quot;比分&quot;:[&quot;0-2&quot;,&quot;0-1&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;维京门将高接抵挡且拜仁终结效率低迷&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;拜仁大幅轮换且维京定位球或反击得手&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;2-4球&quot;, &quot;净胜球&quot;: &quot;客队1-2球优势&quot;, &quot;上半场&quot;: &quot;上半场拜仁可能已建立领先，但维京或能保持半场不失球。&quot;},
+&quot;触发器&quot;: [&quot;拜仁首发出现大幅轮换，核心攻击手缺阵&quot;, &quot;维京公布主力中卫或门将伤停&quot;, &quot;赛前赔率客胜进一步下调或亚盘升至+3.5&quot;, &quot;天气或场地条件显著恶化&quot;],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能错在拜仁轮换导致进攻效率不足，维京凭借主场与防守拿到平局或小负。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主11.7% 平14.0% 客74.3%&lt;br&gt;预期进球: 0.95 - 2.60&lt;br&gt;大2.5: 65.6% | BTTS: 55.8%&lt;br&gt;贝叶斯后验: 主18.1% 平20.0% 客61.9%&lt;br&gt;市场融合权重: 模型 70% / 市场 30%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[裁判] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[裁判] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[裁判] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[裁判] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[裁判] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[裁判] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[裁判] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 …
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 朗斯 vs 里斯本竞技
+来源:百度 › item 朗 （汉语文字）_百度百科 朗，汉语常用字，一级字，为现代汉语法定规范简化字，读作lǎng。 最早见于篆书，形声字，左声右形，从月，良声。 其本义是月光 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 朗 : ㄌㄤˇ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2021年7月22日 &amp;#0183; 字詞:朗,注音:ㄌㄤˇ,月部+6畫 共10畫 (常用字),釋義: [形] 明亮。 如：「明朗」、「晴朗」。 晉．王羲之〈三月三日蘭 …
+[天气] 国际米兰 vs 布鲁日
+来源:央视 › world 国际 新闻_央视网 ( 吉布提沿海移民船只倾覆事故死亡人数升至139人 吉布提沿海移民船只倾覆事故死亡人数升至139人 国际移民组织11日表示，一艘载 …
+来源:凤凰网 › shanklist 国际 _资讯_凤凰网 1 天前 &amp;#0183; 凤凰网资讯&amp;#183;国际是国际相关内容优质内容入口，从全球要闻到时政新闻全面覆盖，服务关注时事的读者的深度阅读需求，助力 …
+[天气] 阿森纳 vs 里尔
+来源:网络 arsenal. | | Arsenal.: , highlights, .
+来源:懂球帝 › team 阿森纳 - 懂球帝 4 天之前 &amp;#0183; 毛罗：巴黎仍是欧冠最大热门，阿森纳第2，国米排第3 足球2026-10-10 23:44💬 33 塔帅：我提醒球员身穿阿森纳球衣的意 …
+[天气] 比利亚雷亚尔 vs 那不勒斯
+来源:哔哩哔哩 哔哩哔哩 (゜-゜)つロ 干杯~- 哔哩哔哩（ …
+来源:百度 › item 比 （数学中表示相除关系的词语）_百度百科 比值可以用分数表示，也可以用 小数 或整数表示。 例如：1:3的比值=1&amp;#247;3=1/3;1/3也是一种写法，做比时读作一比三，做分数时读作三 …
+[天气] 莱比锡红牛 埃因霍温
+来源:百度 › item › 莱比锡市 莱比锡 市_百度百科 主要居民为德意志民族，使用德语。 莱比锡市位于南部莱比锡盆地，魏斯埃尔斯特、普莱瑟和帕斯三河汇流处，属温带大陆性气候。 …
+来源:网络 › zh › attractions › germany 莱比锡 20 佳景点, 德国 | 2026 2026年7月5日 &amp;#0183; 宗教改革的创始人马丁&amp;#183;路德喜欢光顾当地的餐馆。 20世纪，骚乱从莱比锡开始，柏林墙倒塌，德国重新统一。 莱比 …
+[天气] 加拉塔萨雷 vs 巴塞罗那
+来源:百度 › item 加 _百度百科 加，汉语常用字（一级字），读作jiā，最早见于西周金文。 本义是诬枉、夸大；引申为增加、外加、放置、施行等；又引申为超越、 …
+来源:网络 › cn 一 加 手机官网 - 一 加 Turbo 6X 系列 - OnePlus 活动 「一加杯」高校枪神大赛（秋季赛） &amp;#183;和平精英官方授权的行业领衔赛事 &amp;#183;全国 150+所高校海选赛点 &amp;#183;校决赛冠军直通和平精英高 …
+[天气] 马德里竞技 vs 曼联
+来源:网络 › madrid 马德里 18大必去景点攻略 – 在游记 2023年10月18日 &amp;#0183; 马德里皇宫 （）是西班牙的皇室宫殿，也是欧洲最大的宫殿之一。 作为最出名的马德里景 …
+来源:知乎 › question 马德里 有哪些好玩的地方？ - 知乎 百年老店 是品尝马德里乱炖最著名的餐厅之一 图：穷游er@洋意Ale 若是用一种菜品诠释这种奇妙的气质，那马德里乱 …
+[天气] 维京 vs 拜仁慕尼黑
+来源:百度 › item 维 （汉语文字）_百度百科 说文解字注 “车盖维也”注：车盖之制，详於《考工记》，而其维无考。 许以此篆专系之车盖，盖必有所受矣。 引申之，凡相系者曰 … 阅读更多
+来源:网络 › zuci 维 组词_ 维 字组词_ 维 组词大全-汉语国学 维 [ w&amp;#233;i ] 1. 系，连结。 如 维系。 维絷。 2. 保持。 如 维持。 维护。 维修。 维生素。 3. 纲。 如 纲维（总纲，亦指法度）。 4. 数学 …
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+  <div class="footer">自动生成于 2026-10-13 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>

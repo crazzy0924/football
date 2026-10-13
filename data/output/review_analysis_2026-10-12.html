@@ -75,20 +75,20 @@
     <div class="m-score">3 - 1</div>
   </header>
   <div class="sec-title">A · 比赛与结果核验</div>
-  <div class="arch">赛果 3 - 1 · 联赛 SA · 结果定性: 常规兑现（主胜与让球方向命中，波胆精度不足）</div>
+  <div class="arch">赛果 3 - 1 · 联赛 SA · 结果定性: 常规兑现</div>
   <div class="sec-title">C · 四维逐项对照 (胜平负/波胆/大小球/让球)</div>
   <div class="tb-wrap"><table>
     <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
 <tr><td>胜平负方向</td><td>预测主胜 72% → 实际主胜</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr><tr><td>最可能比分</td><td>最可能比分 2-0 (13%) → 实际 3-1</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>让球盘</td><td>模型倾向home → 实际主赢盘</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr>
   </table></div>
   <div class="sec-title">D · 四维归因 (关联赔率变动/场外情报/自检预警)</div>
-<div class="attr"><div class="q"><span class="verdict-hit">命中</span> <b>胜平负</b></div><div class="meta">归因: 预测主胜72%与实际主胜一致，方向命中。全天主胜赔率由1.46降至1.38，资金流明确倾向主队，与赛果方向一致。场外情报未见亚特兰大核心伤停足以逆转实力差的信息，主胜逻辑未被破坏。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>波胆</b></div><div class="meta">归因: 最可能比分2-0（13%）未中，实际3-1。模型BTTS 48%偏低，未能捕捉到客队进球可能。赔率变动仅反映主胜强化，未提供客队进球信号；场外情报未提示亚特兰大轮换或防守松懈，波胆偏差主要来自对客队进球能力的低估。</div></div><div class="attr"><div class="q"><span class="verdict-hit">命中</span> <b>让球</b></div><div class="meta">归因: 模型倾向主队让-1球，实际主队3-1净胜2球，赢盘命中。主胜赔率持续走低与让球方向一致，资金流支持主队打穿盘口。</div></div>
+<div class="attr"><div class="q"><span class="verdict-hit">命中</span> <b>胜平负</b></div><div class="meta">归因: 主胜方向命中，主胜赔率从1.46降至1.38，资金流持续压低主胜赔率，与主胜结果一致，场外情报无直接伤停利空影响主队核心框架。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>波胆</b></div><div class="meta">归因: 最可能比分2-0未中，实际3-1，模型对客队进球能力低估，BTTS 48%接近临界但未转化为比分预测，赔率变动中客胜赔率升高未提示客队进球可能。</div></div><div class="attr"><div class="q"><span class="verdict-hit">命中</span> <b>让球</b></div><div class="meta">归因: 让-1球方向命中，主胜赔率走低且主队赢盘，说明资金流对主队净胜能力有正向预期，场外情报未显示主队轮换或战意不足。</div></div>
   <div class="sec-title">E · 查漏补缺 (赛前没注意到的信息/信号)</div>
-<ul><li class="lesson">赛前亚特兰大主力后卫科苏努受伤情报已出现，但未评估其对主队零封概率的下调影响，导致BTTS 48%偏低。</li><li class="lesson">主胜赔率从1.46持续下降至1.38，赛前自检仅视为微调，未进一步解读为市场对主队打穿盘口的信心增强。</li><li class="lesson">威尼斯作为升班马客场作战，赛前未核查其近期客场进球分布，错过客队可能偷进一球的信号。</li><li class="lesson">模型最可能比分集中在零封比分（2-0、1-0、3-0），未结合主队防线伤停与客队反击能力做比分分散修正。</li></ul>
+<ul><li class="lesson">赛前未注意到主胜赔率持续走低而平局赔率反向走高，资金流已暗示主队赢球且可能赢盘，但未据此调整让球信心等级。</li><li class="lesson">未结合亚特兰大近期伤停名单中的非核心球员缺阵对防守稳定性的潜在影响，实际主队失球1球，客队进球能力被低估。</li><li class="lesson">模型BTTS 48%接近五五开，但波胆前三均为客队零封比分，内部矛盾未被赛前自检捕捉。</li><li class="lesson">未关注客队威尼斯在无明确伤停情报下可能采取对攻策略，导致实际总进球超出模型默认分布。</li></ul>
   <div class="sec-title">F · 赔率与资金流回顾</div>
-  <div class="arch">全天赔率主胜持续走低，资金流已预示主队赢球且大概率让球赢盘，但未提供客队进球与总进球偏大的明确信号。</div>
+  <div class="arch">全天主胜赔率从1.46降至1.38、客胜赔率从5.05升至5.80，资金流明确预示主胜且可能赢盘，但未预示总进球4球及客队进球。</div>
   <div class="sec-title">G · 教训</div>
-<ul><li class="lesson">当主胜赔率持续下行且让球盘倾向明确时，应同步上调主队打穿盘口概率并降低零封比分权重。</li><li class="lesson">主力后卫伤停情报必须直接映射到BTTS与波胆预测，不能只停留在方向判断。</li><li class="lesson">对升班马或弱旅客场，应单独核查其近期客场进球能力，避免默认其无法破门。</li></ul>
+<ul><li class="lesson">当胜平负与让球方向一致且主胜赔率单边下行时，应同步提升让球盘信心并检查波胆中客队零封假设是否合理。</li><li class="lesson">BTTS概率接近50%时，波胆列表必须包含客队有进球的比分，不能只列零封比分。</li><li class="lesson">赛前自检应增加赔率变动与波胆分布的交叉校验，避免方向命中但比分盲区未被发现。</li></ul>
   <div class="decl">H · 盲测声明: 赛前报告已于 2026-10-12 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
 <article class="match">
@@ -104,13 +104,13 @@
 <tr><td>胜平负方向</td><td>预测主胜 39% → 实际主胜</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr><tr><td>最可能比分</td><td>最可能比分 1-0 (12%) → 实际 2-1</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>让球盘</td><td>模型倾向away → 实际走盘(退款)</td><td class="verdict-push">走盘</td><td><span class="sev sev-none">无</span></td></tr>
   </table></div>
   <div class="sec-title">D · 四维归因 (关联赔率变动/场外情报/自检预警)</div>
-<div class="attr"><div class="q"><span class="verdict-hit">命中</span> <b>胜平负</b></div><div class="meta">归因: 预测主胜39%为最大概率方向，实际主胜命中。全天SPF主胜赔率从2.15微升至2.17，平赔从3.05降至2.80，客胜赔率从2.98升至3.21，资金面未明显打压主胜，平赔下降显示市场对平局有一定防范，但最终主胜方向未被资金否定。场外情报中未发现都灵核心伤停影响战意，预测方向与结果一致。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>波胆</b></div><div class="meta">归因: 最可能比分1-0（12%）未中，实际2-1。预测比分偏保守，未覆盖都灵防守不稳且乌迪内斯能进球的组合。全天赔率平赔下降、客胜赔率上升，显示市场认为乌迪内斯赢球难但可能不输，与2-1赛果不完全一致；场外情报中乌迪内斯扎尼奥洛伤缺疑点若属实，本应降低客队进球预期，但实际乌迪内斯仍进球，说明赛前对双方攻防节奏的把握不足。</div></div><div class="attr"><div class="q"><span class="verdict-push">走盘</span> <b>让球</b></div><div class="meta">归因: 模型倾向away（乌迪内斯受让+1），实际都灵净胜1球，让球盘走盘退款。全天赔率变动显示主胜赔率基本持稳，客胜赔率大幅升高，市场对乌迪内斯赢球信心减弱，但受让+1的走盘结果与资金流无直接矛盾。场外情报中乌迪内斯核心扎尼奥洛伤缺疑点未被有效核实，若该信息虚假，则模型对客队战力的评估可能失真，但让球方向本身未造成实质损失。</div></div>
+<div class="attr"><div class="q"><span class="verdict-hit">命中</span> <b>胜平负</b></div><div class="meta">归因: 预测主胜39%与实际主胜一致，方向命中。但赛前赔率变动中主胜从2.15升至2.17，平局从3.05大幅降至2.80，客胜从2.98升至3.21，资金流似乎更偏向平局，并未明显预示主胜。场外情报显示都灵伤病较多且连续丢球，但未影响主胜方向。赛前自检未对此维度提出预警。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>波胆</b></div><div class="meta">归因: 最可能比分1-0未中，实际2-1。赔率变动中平局赔率大幅下降，暗示比赛可能更胶着，但未指向2-1具体比分。场外情报显示都灵防守不稳且乌迪内斯有进攻隐患，但赛前波胆模型未纳入这些动态因素。赛前自检仅标记P2问题，未对波胆预测进行修正。</div></div><div class="attr"><div class="q"><span class="verdict-push">走盘</span> <b>让球</b></div><div class="meta">归因: 模型倾向away（让-1球），实际走盘退款。赔率变动中客胜赔率从2.98升至3.21，资金流未支持客队方向，反而暗示客队让球能力不足。场外情报未提供乌迪内斯核心攻击手扎尼奥洛伤缺的可靠证据，赛前自检已发现该信息疑似编造，但未进一步修正让球倾向。</div></div>
   <div class="sec-title">E · 查漏补缺 (赛前没注意到的信息/信号)</div>
-<ul><li class="lesson">都灵连续8轮意甲场场丢球的防守惯性未在赛前大小球研判中体现，错失大球倾向信号。</li><li class="lesson">乌迪内斯核心攻击手扎尼奥洛伤缺信息未核实真伪，赛前自检已预警该信息疑似编造，但未进一步查证替代信源。</li><li class="lesson">全天平赔从3.05大幅降至2.80，市场对平局防范明显，但赛前未结合该变动调整波胆中对平局比分的权重。</li><li class="lesson">都灵主场对阵中下游球队时防守不稳、易被对手进球的模式未在赛前情报账本中提取为独立风险点。</li></ul>
+<ul><li class="lesson">都灵连续8轮意甲场场丢球的防守惯性未被用于大小球和波胆判断，错失大球信号。</li><li class="lesson">平局赔率从3.05骤降至2.80，资金流强烈偏向平局，但赛前未据此调整胜平负概率。</li><li class="lesson">乌迪内斯核心攻击手扎尼奥洛伤缺信息虽被自检标记为疑似编造，但未进一步核实真实伤停，导致让球倾向偏差。</li><li class="lesson">都灵伤病名单冗长且后防线不整，赛前未充分评估其对让球盘和波胆的影响。</li></ul>
   <div class="sec-title">F · 赔率与资金流回顾</div>
-  <div class="arch">全天赔率变动整体平稳，主胜赔率微升、平赔下降、客胜赔率上升，资金流未明显预示主胜，但平赔下降对平局的一定防范与最终2-1赛果无直接矛盾。</div>
+  <div class="arch">全天赔率变动中平局赔率大幅下降，资金流更偏向平局而非主胜，但实际赛果为主胜，赔率变动未完全预示结果。</div>
   <div class="sec-title">G · 教训</div>
-<ul><li class="lesson">当赛前发现核心伤停信息疑似编造时，应强制通过至少两个独立信源交叉验证，否则取消该信息对模型的影响。</li><li class="lesson">大小球无信号时，应主动检查双方近期连续丢球或连续进球的趋势，作为补充判断依据。</li><li class="lesson">赔率变动中平赔大幅下降时，应同步上调平局相关比分（如1-1、2-1）的概率，避免波胆预测过于偏向低进球。</li></ul>
+<ul><li class="lesson">当赔率变动中平局赔率大幅下降时，应重新审视胜平负概率分布，避免过度依赖初始模型。</li><li class="lesson">场外情报中的防守惯性或连续丢球记录应自动触发大小球信号复核。</li><li class="lesson">伤停信息真伪存疑时，应优先核实官方名单，不能仅凭单一来源下结论。</li></ul>
   <div class="decl">H · 盲测声明: 赛前报告已于 2026-10-12 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
 <article class="match">
@@ -119,20 +119,20 @@
     <div class="m-score">4 - 1</div>
   </header>
   <div class="sec-title">A · 比赛与结果核验</div>
-  <div class="arch">赛果 4 - 1 · 联赛 PL · 结果定性: 爆冷，主胜方向以10.3%低概率兑现，且让球、波胆、大小球维度均未命中。</div>
+  <div class="arch">赛果 4 - 1 · 联赛 PL · 结果定性: 爆冷</div>
   <div class="sec-title">C · 四维逐项对照 (胜平负/波胆/大小球/让球)</div>
   <div class="tb-wrap"><table>
     <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
 <tr><td>胜平负方向</td><td>预测客胜 68% → 实际主胜 (赛前方向概率68%未兑现, 属爆冷/高置信误判)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p1">P1</span></td></tr><tr><td>最可能比分</td><td>最可能比分 0-1 (21%) → 实际 4-1</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>冷门路径</td><td>赛前最低概率方向 主胜 (10%) 兑现 — 冷门路径</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr><tr><td>让球盘</td><td>模型倾向away → 实际主赢盘</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr>
   </table></div>
   <div class="sec-title">D · 四维归因 (关联赔率变动/场外情报/自检预警)</div>
-<div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>胜平负</b></div><div class="meta">归因: 错在将客胜高置信度（67.7%）作为主方向，忽视了主队主场爆冷可能。全天赔率变动中主胜从2.98升至3.13、客胜从1.96降至1.88，资金流持续流向客队，未预示主胜结果，反而强化了客胜共识，属于高置信误判。场外情报账本仅提供考文垂城市及球队基础百科信息，无伤停、战意或轮换等关键变量，未对方向判断形成有效修正。赛前自检当时预警为通过，未识别出主胜低概率但赔率未同步大幅抬升的异常。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>波胆</b></div><div class="meta">归因: 最可能比分0-1（21%）与实际4-1严重偏离，前三比分均未覆盖主胜大比分。赔率变动中客胜降水强化了低比分客胜预期，未预示高比分主胜。场外情报无进攻效率或防守漏洞相关信息，赛前自检未提示波胆覆盖不足的风险。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>让球</b></div><div class="meta">归因: 错在倾向away（让+1球），实际主队以4-1大胜，主赢盘。全天赔率变动中客胜降水、主胜升水，资金流持续支持客队让球方向，与赛果完全相反，说明市场资金在让球盘同样存在集体误判。场外情报无轮换或裁判信息可解释主队大胜，赛前自检未对让球方向提出异议。</div></div>
+<div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>胜平负</b></div><div class="meta">归因: 错在模型高置信度锁定客胜，完全低估主胜10%概率；全天客胜赔率虽从1.96降至1.88显示客队受注，但主胜赔率从2.98升至3.13并未获得资金支持，场外情报仅为基础百科信息，无伤停或战意提示，赛前自检仅确认方向一致未质疑概率极端性。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>波胆</b></div><div class="meta">归因: 错在最可能比分0-1完全偏离实际4-1；赔率变动未提供比分分布修正信号，场外情报无进攻效率或防守漏洞信息，自检未预警低概率高比分事件。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>让球</b></div><div class="meta">归因: 错在倾向客队让+1球，实际主队大胜赢盘；赔率变动中客胜赔率下降强化了客队优势判断，但主胜赔率上升未引起对主队爆发力的警觉，场外情报无轮换或裁判信息，自检未对让球盘风险做独立校验。</div></div>
   <div class="sec-title">E · 查漏补缺 (赛前没注意到的信息/信号)</div>
-<ul><li class="lesson">赛前未关注考文垂近期主场进攻效率或纽卡斯尔客场防守漏洞，实际主队打入4球，此类数据本可通过赛前技术统计获取。</li><li class="lesson">赛前未核查纽卡斯尔是否进行轮换或存在关键球员缺阵，客队1-4惨败可能与阵容调整有关，情报账本中无相关伤停信息。</li><li class="lesson">赛前未分析主胜赔率从2.98升至3.13但主胜概率仅10.3%的背离现象，该异常本可提示主队被低估。</li><li class="lesson">赛前未结合BTTS模型40%与实际5球高进球场景的偏差，缺少对高比分冷门路径的预警。</li></ul>
+<ul><li class="lesson">主胜赔率从2.98升至3.13的逆向波动未被解读为主队被低估或市场诱导信号</li><li class="lesson">考文垂作为升班马或主场作战时的战意与近期状态数据未纳入模型</li><li class="lesson">纽卡斯尔客场防守近期是否存在隐患未在情报账本中核查</li><li class="lesson">总进球5球对应的大小球市场赔率变动未做二次验证</li></ul>
   <div class="sec-title">F · 赔率与资金流回顾</div>
-  <div class="arch">全天赔率与资金流持续流向客胜，未预示主胜结果，反而强化了客胜共识，属于典型资金流与赛果背离的爆冷案例。</div>
+  <div class="arch">全天赔率资金流整体偏向客队，未预示主队爆冷，主胜赔率上升反而形成反向信号但未被识别。</div>
   <div class="sec-title">G · 教训</div>
-<ul><li class="lesson">当高置信方向（&gt;65%）对应赔率持续下降但对手低概率方向赔率未同步大幅抬升时，应触发冷门复核机制。</li><li class="lesson">对无信号的大小球维度，需强制补充双方近期场均进球、失球数据，避免完全盲区。</li><li class="lesson">波胆预测应至少覆盖一个主胜高比分选项，尤其是当主胜概率虽低但赔率变动未排除爆冷时。</li></ul>
+<ul><li class="lesson">当单一方向概率超过65%时，强制检查反向赔率变动是否出现异常</li><li class="lesson">大小球无信号时仍需记录总进球市场赔率趋势作为后续复盘依据</li><li class="lesson">场外情报账本必须包含双方近期主客场攻防数据，不能仅依赖百科类信息</li></ul>
   <div class="decl">H · 盲测声明: 赛前报告已于 2026-10-12 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
 <article class="match">
@@ -141,20 +141,20 @@
     <div class="m-score">3 - 3</div>
   </header>
   <div class="sec-title">A · 比赛与结果核验</div>
-  <div class="arch">赛果 3 - 3 · 联赛 PD · 结果定性: 冷门路径兑现（平局兑现，且总进球大球方向与赛前无信号形成偏差）</div>
+  <div class="arch">赛果 3 - 3 · 联赛 PD · 结果定性: 冷门路径兑现（平局兑现+大球意外）</div>
   <div class="sec-title">C · 四维逐项对照 (胜平负/波胆/大小球/让球)</div>
   <div class="tb-wrap"><table>
     <tr><th style="width:100px;">预测项</th><th>赛前预测 → 实际</th><th style="width:64px;">判定</th><th style="width:60px;">等级</th></tr>
 <tr><td>胜平负方向</td><td>预测主胜 40% → 实际平局 (均势场方向偏差)</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>最可能比分</td><td>最可能比分 1-1 (10%) → 实际 3-3</td><td class="verdict-miss">未中</td><td><span class="sev sev-p2">P2</span></td></tr><tr><td>冷门路径</td><td>赛前最低概率方向 平局 (26%) 兑现 — 冷门路径</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr><tr><td>让球盘</td><td>模型倾向home → 实际主赢盘</td><td class="verdict-hit">命中</td><td><span class="sev sev-none">无</span></td></tr>
   </table></div>
   <div class="sec-title">D · 四维归因 (关联赔率变动/场外情报/自检预警)</div>
-<div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>胜平负</b></div><div class="meta">归因: 预测主胜40.3%为最高概率方向，但实际平局兑现，且平局是赛前最低概率方向（26%），属于冷门路径。全天赔率变动显示主胜从2.57降至2.47、客胜从2.37升至2.47，资金流略向主队倾斜，但未改变均势格局，未能预示平局。场外情报中莱万特6主力伤停且防线灾难，但塞维利亚同样有伤病困扰，双方实力均被削弱，反而降低分出胜负概率，赛前自检已预警伤停情报时效性与阵容矛盾风险，但未据此调整平局概率。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>波胆</b></div><div class="meta">归因: 最可能比分1-1（10%）未中，实际3-3，比分偏差大。赛前波胆前三均集中在低进球比分（1-1、2-1、1-0），未覆盖高比分平局。全天赔率变动未提供比分结构线索。场外情报中双方防线伤停严重，应提高高比分平局或大球比分的权重，但赛前未做此调整。</div></div><div class="attr"><div class="q"><span class="verdict-hit">命中</span> <b>让球</b></div><div class="meta">归因: 模型倾向home（让+1球），实际主赢盘，判定命中。全天赔率主胜小幅下降、客胜上升，资金流略支持主队，与让球方向一致。场外情报中莱万特虽伤停严重但主场作战，塞维利亚同样伤病不少，主队受让一球具备保护，赛前自检未对让球方向提出预警。</div></div>
+<div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>胜平负</b></div><div class="meta">归因: 错在将主胜定为最高概率方向，但实际平局兑现。赛前自检已预警伤停情报时效性风险，但未据此下调主胜权重；全天赔率主胜从2.57降至2.47、客胜从2.37升至2.47，资金流更接近均势而非明确主胜，未支持主胜方向。</div></div><div class="attr"><div class="q"><span class="verdict-miss">未中</span> <b>波胆</b></div><div class="meta">归因: 最可能比分1-1未中，实际3-3。模型BTTS 56%方向正确，但比分分布未覆盖高比分平局；莱万特与塞维利亚防线均存在明显伤停，双方失球概率被低估。</div></div><div class="attr"><div class="q"><span class="verdict-hit">命中</span> <b>让球</b></div><div class="meta">归因: 命中主赢盘，但含金量有限。莱万特受让+1球，实际平局即赢盘；该命中主要来自盘口保护而非方向判断，且赛前自检已提示伤停情报矛盾，未对让球方向形成有效修正。</div></div>
   <div class="sec-title">E · 查漏补缺 (赛前没注意到的信息/信号)</div>
-<ul><li class="lesson">莱万特6主力伤停且防线被迫启用替补，赛前情报已出现，但未将其转化为大球或高比分平局的信号。</li><li class="lesson">塞维利亚后防与中场多名主力伤停（阿斯皮利奎塔、马尔考等），与莱万特伤停叠加，双方防守同时削弱，赛前未整合双方伤停形成大球倾向。</li><li class="lesson">全天赔率变动显示主胜与客胜赔率趋于接近（2.47 vs 2.47），均势特征明显，赛前未据此提高平局概率。</li><li class="lesson">赛前自检已发现伤停情报时效性风险与阵容矛盾，但未进一步核实或降权，导致对平局和进球数判断偏差。</li></ul>
+<ul><li class="lesson">莱万特6名主力伤停且防线被迫启用替补，赛前情报已出现但未在胜平负和大小球中降权或升权处理</li><li class="lesson">塞维利亚后防与中场伤病集中，双方防线同时残缺，本可提升BTTS及大球概率</li><li class="lesson">全天赔率客胜从2.37升至2.47、主胜仅小幅下降，资金未明显偏向主胜，反而指向均势</li><li class="lesson">赛前自检已发现伤停情报时效性风险，但未触发对主胜方向的强制降权或人工复核</li></ul>
   <div class="sec-title">F · 赔率与资金流回顾</div>
-  <div class="arch">全天赔率变动略向主队倾斜但未突破均势，资金流未预示平局或大球结果。</div>
+  <div class="arch">全天赔率变动显示资金流未明确支持主胜，客胜赔率上升但主胜仅微降，整体指向均势，与最终平局一致。</div>
   <div class="sec-title">G · 教训</div>
-<ul><li class="lesson">当双方均有大量主力伤停且防线削弱时，应主动上调大球及高比分平局的概率权重。</li><li class="lesson">赔率变动显示胜平负赔率趋于接近时，应提高平局方向的概率，而不是维持单一方向最高概率。</li><li class="lesson">赛前自检发现情报时效性或阵容矛盾时，应触发强制复核流程，避免未核实信息影响核心判断。</li></ul>
+<ul><li class="lesson">当赛前自检发现伤停情报时效性风险或维度矛盾时，应强制降低涉及方向权重，而非保留原判</li><li class="lesson">双方防线同时存在伤停潮时，应显式上调BTTS和大球概率，并扩展波胆候选覆盖高比分平局</li><li class="lesson">赔率变动若未支持主胜方向，即使模型主胜概率最高，也应将判断降级为均势或平局优先</li></ul>
   <div class="decl">H · 盲测声明: 赛前报告已于 2026-10-12 存档, 本复盘不事后修改赛前结论; 所有判定基于存档原文与最终赛果。</div>
 </article>
   <div class="footer">自动生成 · 盲测纪律: 赛前结论事后不改写 · <a href="../index.html">返回首页</a></div>

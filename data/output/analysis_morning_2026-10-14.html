@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早盘七维分析存档 — 2026-10-14</title>
+<style>
+  :root { --bg:#0b0f1a; --card:#121a2c; --line:#1e2a42; --txt:#e9eef8; --dim:#8d99b0;
+          --green:#34d399; --amber:#fbbf24; --blue:#5ea8ff; --violet:#a78bfa; --red:#f87171; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:radial-gradient(1000px 400px at 20% -10%, rgba(94,168,255,.12), transparent 60%), var(--bg);
+         color:var(--txt); min-height:100vh; padding:28px 16px 40px; line-height:1.55; }
+  .container { max-width:860px; margin:0 auto; }
+  .hero { text-align:center; padding:30px 10px 20px; }
+  .badge { display:inline-block; font-size:.8rem; color:#bfd7ff;
+           background:linear-gradient(135deg, rgba(94,168,255,.16), rgba(167,139,250,.14));
+           border:1px solid rgba(94,168,255,.35); padding:5px 16px; border-radius:999px; }
+  .hero h1 { font-size:1.9rem; font-weight:800; margin-top:12px;
+             background:linear-gradient(90deg,#e9eef8,#9ec4ff 60%,#c4b5fd);
+             -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero-sub { color:var(--dim); font-size:.85rem; margin-top:8px; }
+  .note-strip { text-align:center; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.3);
+                color:var(--amber); border-radius:10px; padding:10px 16px; font-size:.85rem; margin:10px 0 22px; }
+  .match { background:linear-gradient(180deg, var(--card), #101725); border:1px solid var(--line);
+           border-radius:14px; padding:18px; margin:14px 0; }
+  .m-head { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .m-teams { font-size:1.15rem; font-weight:800; }
+  .m-league { display:inline-block; background:#233150; border-radius:6px; padding:1px 10px;
+              font-size:.75rem; color:#a8c7f0; margin-right:8px; font-weight:600; }
+  .tvs { color:var(--dim); font-weight:400; margin:0 8px; }
+  .m-meta { color:var(--dim); font-size:.8rem; }
+  .pick-line { margin-top:10px; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.35);
+               border-radius:10px; padding:8px 14px; font-size:.95rem; color:#6ee7b7; }
+  .pick-line b { font-size:1.05rem; }
+  .flags-line { margin-top:6px; font-size:.78rem; color:#fcd34d; background:rgba(251,191,36,.08); border-radius:8px; padding:5px 10px; }
+  .ds-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .ds { font-size:.75rem; padding:3px 10px; border-radius:999px; border:1px solid var(--line); }
+  .ds.pos { color:#6ee7b7; background:rgba(52,211,153,.10); border-color:rgba(52,211,153,.3); }
+  .ds.neg { color:#fbbf24; background:rgba(251,191,36,.10); border-color:rgba(251,191,36,.3); }
+  .ds.zero { color:#8d99b0; }
+  .dims { margin-top:12px; display:grid; gap:8px; }
+  .dim { background:#0e1526; border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .dim-label { font-size:.78rem; font-weight:800; letter-spacing:1px; }
+  .dim-body { font-size:.88rem; color:#c6d0e0; margin-top:4px; white-space:pre-wrap; }
+  .dim-1 .dim-label { color:var(--blue); }
+  .dim-2 .dim-label { color:var(--violet); }
+  .dim-3 .dim-label { color:var(--red); }
+  .dim-4 .dim-label { color:var(--amber); }
+  .dim-5 .dim-label { color:#7dd3fc; }
+  .dim-6 .dim-label { color:#f9a8d4; }
+  .dim-7 .dim-label { color:var(--green); }
+  .model-box { margin-top:12px; background:#0a1120; border:1px dashed #2c3c5c; border-radius:10px;
+               padding:10px 14px; font-size:.82rem; color:var(--dim); }
+  .model-box b { color:#a8c7f0; }
+  .cold { color:var(--amber); font-weight:700; }
+  .intel-box { margin-top:10px; background:#0a1120; border:1px solid var(--line); border-radius:10px;
+               max-height:220px; overflow:auto; padding:10px 14px; font-size:.8rem; color:var(--dim); white-space:pre-wrap; }
+  .footer { text-align:center; color:var(--dim); font-size:.78rem; margin-top:26px; }
+  a { color:#38bdf8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="badge">🔍 早盘七维分析存档 · 非预测页</div>
+    <h1>2026-10-14</h1>
+    <div class="hero-sub">聚焦五大联赛 · Dixon-Coles + ELO + 贝叶斯市场融合</div>
+  </div>
+  <div class="note-strip">本页只做七维分析存档 (数据可追溯), 不出预测、不下注建议。<br>
+    终盘预测见 <a href="predictions_2026-10-14.html">predictions_2026-10-14.html</a> (22:00 生成)</div>
+  
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>费耶诺德<span class="tvs">VS</span>科莫
+      <span style="font-size:.75rem;color:#8d99b0;">(Feyenoord vs Como)</span>
+    </div>
+    <span class="m-meta">开球 00:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (46.5%) · 最可能比分 2-1 (8%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.40 / 平3.85 / 客1.74
+亚盘(主让1.0球): 主1.85 / 平3.95 / 客2.98
+波胆最低赔: 1-2@7.5 / 1-1@8.5 / 2-2@10.5
+模型亚盘倾向: home (价值 +21.2%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 183; | ... === 天气侦察 (未经核实, 仅供参考) === [天气] 费耶诺德 vs 科莫 来源</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -0.6,
+&quot;置信度&quot;: &quot;整体置信度: 低&quot;,
+&quot;摘要&quot;: &quot;模型倾向主队但市场明显反向, 客队ELO与赔率优势更强, 最可能方向为客队不败或小胜, 最大风险是主队主场高概率未被市场认可存在盲区.&quot;,
+&quot;次选比分&quot;: &quot;1-2&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔3.40/3.85/1.74, 亚盘主+1.0, 市场融合Model 81%/Market 19%&quot;, &quot;优势分&quot;:-2, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;市场明显倾向客队, 与模型主胜方向分歧大, 市场资金流向拉低主队方向分.&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差-236, 预期进球2.41-1.88, 模型主51.1%&quot;, &quot;优势分&quot;:1, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;模型基于状态与攻防给出主队优势, 但ELO与预期进球显示客队实力更强, 状态面信号混杂.&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:10, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;伤停情报缺失, 无法评估核心缺阵影响, 按规则降权并重新分配.&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无近3年交锋记录, 无法判断克制关系, 权重降至最低.&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场, 客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;双方赛程密度一致, 体能无差异, 该维度中性.&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;情报未提及, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无有效天气情报, 权重归零并重新分配.&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判未公布, 不猜测, 权重归零并重新分配.&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;欧冠联赛, 无积分榜细节&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;欧冠战意通常较高, 但缺乏具体积分榜与轮换情报, 无法量化优势.&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;主队或依托主场控球进攻, 但客队整体实力更强可能主导节奏.&quot;, &quot;无球&quot;: &quot;主队无球阶段需防范客队快速转换与定位球.&quot;, &quot;最大变量&quot;: &quot;客队若轮换或轻敌, 主队主场爆冷概率上升.&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;: &quot;客队正常发挥且主力出战&quot;, &quot;比分&quot;:[&quot;1-2&quot;,&quot;0-1&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;: &quot;主队主场韧性抵消实力差距&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;: &quot;主队率先进球且客队进攻效率低下&quot;, &quot;比分&quot;:[&quot;2-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;2-4球&quot;, &quot;净胜球&quot;: &quot;客队1球优势或平局&quot;, &quot;上半场&quot;: &quot;上半场可能胶着, 进球数偏少&quot;},
+&quot;触发器&quot;: [&quot;客队主力轮换或伤停消息出现&quot;, &quot;赔率大幅向主队调整&quot;, &quot;天气或场地条件恶化&quot;, &quot;主队核心球员临时缺阵&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了, 最可能错在低估了主队主场优势与模型高概率信号, 客队实际战意不足或轮换导致未能取胜.&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主51.1% 平17.8% 客31.0%&lt;br&gt;预期进球: 2.41 - 1.88&lt;br&gt;大2.5: 71.5% | BTTS: 66.2%&lt;br&gt;贝叶斯后验: 主46.5% 平18.8% 客34.7%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 曼城]
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[裁判] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 … 阅读更多
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[裁判] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[裁判] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[裁判] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 …
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[裁判] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[裁判] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 …
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[天气] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 …
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[天气] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[天气] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[天气] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 … 阅读更多
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[天气] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[天气] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 … 阅读更多
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>LASK林茨<span class="tvs">VS</span>利物浦
+      <span style="font-size:.75rem;color:#8d99b0;">(LASK vs Liverpool)</span>
+    </div>
+    <span class="m-meta">开球 00:45:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (69.9%) · 最可能比分 0-1 (15%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主8.75 / 平5.50 / 客1.20
+亚盘(主让1.0球): 主3.52 / 平4.05 / 客1.67
+波胆最低赔: 0-2@7.5 / 1-2@7.5 / 0-3@8.75
+模型亚盘倾向: home (价值 +6.1%, 信心 medium)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 183; | ... === 天气侦察 (未经核实, 仅供参考) === [天气] 费耶诺德 vs 科莫 来源</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -2.4,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;利物浦实力与市场双重占优，客胜为最可能方向；但亚盘深让且LASK主场战意足，客队小胜路径最稳，最大风险是利物浦轮换后攻坚效率不足。&quot;,
+&quot;次选比分&quot;: &quot;0-2&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;欧赔客胜1.20，亚盘主+1.0，模型客胜69.0%略低于市场隐含约83%&quot;, &quot;优势分&quot;:-4, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;市场深度示好客队，模型虽因高margin被部分贴现，但大方向一致，客队优势被充分定价&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;ELO差-164，预期进球0.76-2.02，模型客胜69.0%&quot;, &quot;优势分&quot;:-4, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;实力差显著，利物浦进攻端预期进球超过2球，LASK难以持续制造威胁&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:6, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;伤停情报缺失，无法量化核心缺阵影响，降权处理&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;未提供近3年交锋记录，无法评估克制关系，降权处理&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场/客队7天0场，双方均无密集赛程&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;双方体能均无劣势，该维度中性，不改变方向&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据，已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气，权重记0并重新分配&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布，权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:0, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;裁判未公布，不猜测，权重重新分配&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;LASK主场作战，欧冠小组赛取分战意强；利物浦实力优势大，存在轮换可能&quot;, &quot;优势分&quot;:-2, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;LASK主场战意可抵消部分实力差距，但利物浦即便轮换阵容仍占优，客队方向维持&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;利物浦控球推进，边路传中与中场后插上制造禁区密度&quot;, &quot;无球&quot;: &quot;LASK低位防守，需警惕利物浦高位压迫后的快速转换&quot;, &quot;最大变量&quot;: &quot;利物浦若大幅轮换，前场终结效率可能下降&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;: &quot;利物浦主力框架出战，前30分钟取得进球&quot;, &quot;比分&quot;:[&quot;0-1&quot;,&quot;0-2&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;: &quot;LASK上半场守住0-0，利物浦轮换后攻坚乏力&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;: &quot;LASK定位球或反击率先得分，利物浦情绪波动&quot;, &quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;2-3球&quot;, &quot;净胜球&quot;: &quot;客队1-2球优势&quot;, &quot;上半场&quot;: &quot;利物浦控场，上半场可能0-0或0-1&quot;},
+&quot;触发器&quot;: [&quot;利物浦首发大幅轮换且前场核心缺阵&quot;, &quot;LASK开场15分钟进球&quot;, &quot;亚盘从主+1.0降至主+0.75&quot;, &quot;赛前确认利物浦有重要伤停&quot;],
+&quot;反向验证&quot;: &quot;如果预测错了，最可能错在利物浦轮换幅度超预期，导致进攻效率不足被LASK逼平甚至爆冷&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主13.3% 平17.7% 客69.0%&lt;br&gt;预期进球: 0.76 - 2.02&lt;br&gt;大2.5: 57.6% | BTTS: 50.4%&lt;br&gt;贝叶斯后验: 主12.7% 平17.4% 客69.9%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 曼城]
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[裁判] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 … 阅读更多
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[裁判] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[裁判] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[裁判] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 …
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[裁判] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[裁判] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 …
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[天气] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 …
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[天气] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[天气] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[天气] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 … 阅读更多
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[天气] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[天气] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 … 阅读更多
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>罗马<span class="tvs">VS</span>皇家马德里
+      <span style="font-size:.75rem;color:#8d99b0;">(Roma vs Real Madrid)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (58.9%) · 最可能比分 1-3 (7%) [原始1-2与让球/大小球矛盾, 已按约束修正] (非五大·仅观察)</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 61% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.47 / 平3.95 / 客1.70
+亚盘(主让1.0球): 主1.89 / 平3.9 / 客2.91
+波胆最低赔: 1-2@7.5 / 1-1@9.0 / 2-2@10.5
+模型亚盘倾向: away (价值 +6.9%, 信心 medium)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 183; | ... === 天气侦察 (未经核实, 仅供参考) === [天气] 费耶诺德 vs 科莫 来源</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -2.6,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;皇马客场占优, 模型与市场一致指向客胜, 罗马主场进攻有支撑但防守难挡皇马效率, 最大风险是皇马轮换或罗马高位逼抢制造冷门。&quot;,
+&quot;次选比分&quot;: &quot;1-2&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;, &quot;证据&quot;:&quot;亚盘主+1.0, 欧赔客1.70, 大2.5为66.5%; 模型-市场价值方向away&quot;, &quot;优势分&quot;:-3, &quot;权重&quot;:22, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;资金与模型一致偏客, 客胜方向明确, 但主+1.0覆盖40%说明罗马不惨败也有市场依据。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;, &quot;证据&quot;:&quot;预期进球1.33-2.29, 模型概率客60.5%, ELO差-7&quot;, &quot;优势分&quot;:-3, &quot;权重&quot;:20, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;皇马预期进球明显更高, 攻防效率占优, 罗马需要超常发挥才能限制客队。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;未获取到双方伤停情报, 无法量化核心缺阵影响, 权重已重新分配。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:4, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无近3年交锋数据, 克制关系不可评估, 权重已重新分配。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;, &quot;证据&quot;:&quot;主队7天0场, 客队7天0场&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:14, &quot;置信度&quot;:&quot;高&quot;, &quot;研判&quot;:&quot;双方均无密集赛程, 体能对等, 不构成明显优势。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;, &quot;证据&quot;:&quot;无数据, 已降权&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:2, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;情报未提及天气, 权重记0并重新分配。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;, &quot;证据&quot;:&quot;裁判未公布, 权重记0&quot;, &quot;优势分&quot;:0, &quot;权重&quot;:2, &quot;置信度&quot;:&quot;低&quot;, &quot;研判&quot;:&quot;无官方裁判任命, 不猜测, 权重已重新分配。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;, &quot;证据&quot;:&quot;欧冠积分需求, 皇马客胜概率高&quot;, &quot;优势分&quot;:-2, &quot;权重&quot;:18, &quot;置信度&quot;:&quot;中&quot;, &quot;研判&quot;:&quot;皇马欧冠经验与阵容深度占优, 罗马主场需抢分但实力差距限制战意转化。&quot;}
+],
+&quot;战术&quot;: {&quot;有球&quot;: &quot;皇马控球推进, 利用边路与中场前插压制罗马防线。&quot;, &quot;无球&quot;: &quot;罗马需防皇马快速转换, 中后场回追压力大。&quot;, &quot;最大变量&quot;: &quot;皇马是否轮换以及罗马开局能否顶住高位压迫。&quot;},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;皇马正常首发且罗马防守未超常&quot;, &quot;比分&quot;:[&quot;1-3&quot;,&quot;0-2&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;罗马高效反击或定位球得分, 皇马进攻效率下降&quot;, &quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;罗马高位逼抢迫使皇马失误, 主队先进球&quot;, &quot;比分&quot;:[&quot;2-1&quot;]}
+},
+&quot;扩展&quot;: {&quot;总进球&quot;: &quot;2-4球&quot;, &quot;净胜球&quot;: &quot;客队1-2球优势&quot;, &quot;上半场&quot;: &quot;皇马或较早取得进球, 上半场可能0-1或1-1&quot;},
+&quot;触发器&quot;: [&quot;皇马首发大幅轮换&quot;, &quot;罗马核心中卫伤停&quot;, &quot;临场亚盘退至主+0.75&quot;, &quot;赛前确认罗马主力中锋缺阵&quot;],
+&quot;反向验证&quot;: &quot;如果预测错误, 最可能是罗马主场氛围与高位逼抢打乱皇马节奏, 客队轮换导致进攻效率下降, 出现平局或罗马小胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主21.9% 平17.6% 客60.5%&lt;br&gt;预期进球: 1.33 - 2.29&lt;br&gt;大2.5: 66.5% | BTTS: 60.6%&lt;br&gt;贝叶斯后验: 主22.5% 平18.5% 客58.9%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 曼城]
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[裁判] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 … 阅读更多
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[裁判] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[裁判] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[裁判] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 …
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[裁判] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[裁判] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 …
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[天气] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 …
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[天气] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[天气] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[天气] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 … 阅读更多
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[天气] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[天气] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 … 阅读更多
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>博德闪耀<span class="tvs">VS</span>多特蒙德
+      <span style="font-size:.75rem;color:#8d99b0;">(Bodo Glimt vs Dortmund)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (43.2%) · 最可能比分 1-2 (8%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主3.18 / 平3.90 / 客1.79
+亚盘(主让1.0球): 主1.79 / 平4.05 / 客3.1
+波胆最低赔: 1-2@7.75 / 1-1@9.0 / 2-2@10.0
+模型亚盘倾向: home (价值 +8.9%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 183; | ... === 天气侦察 (未经核实, 仅供参考) === [天气] 费耶诺德 vs 科莫 来源</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: ```json
+{
+&quot;方向分&quot;: -0.6,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为多特蒙德客场小胜，博德闪耀主场有球能力构成阻力。核心是ELO与市场均示好多特，但模型对主队价值边缘偏高形成对冲。最大风险是博德闪耀主场人工草皮与高压逼抢导致客队不适。&quot;,
+&quot;次选比分&quot;: &quot;1-2&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主3.18/平3.90/客1.79；亚盘主+1.0模型主覆盖58%&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场明确示好多特蒙德，客胜为第一方向；但模型与市场存在明显边缘差，主队方向被模型高估，需警惕模型盲区。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;ELO差-266，预期进球1.72-1.81，模型概率客41.8%&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;ELO与预期进球均指向客队多特蒙德综合实力占优，但差距并非碾压级，主队进球预期不低，存在对攻可能。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;伤停情报缺失，无法量化核心缺阵影响，该维度不构成方向驱动。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 3,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;近3年交锋记录缺失，且双方阵容稳定性未知，参考价值极低。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;双方7天均0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程压力，体能处于对等状态，不构成方向性倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无数据，已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气情报缺失，权重记0并重新分配至市场与状态攻防维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布，权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判信息未公布，不猜测，权重重新分配至市场与赛程体能维度。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;欧冠小组赛，双方均有取分需求&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 17,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;欧冠赛场双方战意均不低，多特蒙德实力占优但博德闪耀主场作战具备抢分动机，战意层面中性偏均衡。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;多特蒙德控球推进主导，博德闪耀依靠快速转换与边路冲击制造威胁。&quot;,
+&quot;无球&quot;: &quot;博德闪耀高位逼抢可能暴露身后空当，多特蒙德需防范主队定位球与二点球。&quot;,
+&quot;最大变量&quot;: &quot;博德闪耀主场人工草皮与低温环境对多特蒙德技术流的适应度。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;多特蒙德率先破门且控制中场节奏&quot;,
+&quot;比分&quot;: [&quot;1-2&quot;, &quot;0-1&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;博德闪耀早早进球后收缩防守，多特蒙德破密集乏力&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;博德闪耀上半场领先且多特蒙德核心球员状态低迷&quot;,
+&quot;比分&quot;: [&quot;2-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-4球&quot;,
+&quot;净胜球&quot;: &quot;客队1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场多为试探与节奏控制，进球可能集中在下半场&quot;
+},
+&quot;触发器&quot;: [
+&quot;多特蒙德首发轮换幅度超过预期&quot;,
+&quot;博德闪耀主场天气转为恶劣雨雪&quot;,
+&quot;赛前确认多特蒙德核心中场缺阵&quot;,
+&quot;亚盘从主+1.0调整为主+0.75&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错误，最可能是博德闪耀主场氛围与人工草皮放大主场优势，多特蒙德未能适应导致被逼平或爆冷。&quot;
+}
+```<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主38.2% 平20.0% 客41.8%&lt;br&gt;预期进球: 1.72 - 1.81&lt;br&gt;大2.5: 65.7% | BTTS: 61.9%&lt;br&gt;贝叶斯后验: 主36.3% 平20.5% 客43.2%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 曼城]
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[裁判] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 … 阅读更多
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[裁判] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[裁判] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[裁判] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 …
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[裁判] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[裁判] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 …
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[天气] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 …
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[天气] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[天气] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[天气] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 … 阅读更多
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[天气] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[天气] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 … 阅读更多
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>皇家贝蒂斯<span class="tvs">VS</span>波尔图
+      <span style="font-size:.75rem;color:#8d99b0;">(Betis vs Porto)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (46.5%) · 最可能比分 1-2 (8%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.83 / 平3.50 / 客3.36
+亚盘(主受1.0球): 主3.43 / 平3.75 / 客1.75
+波胆最低赔: 1-1@7.0 / 2-1@7.25 / 1-0@9.0
+模型亚盘倾向: away (价值 +19.2%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 183; | ... === 天气侦察 (未经核实, 仅供参考) === [天气] 费耶诺德 vs 科莫 来源</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: ```json
+{
+&quot;方向分&quot;: -1.2,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;最可能方向为波尔图客胜,模型与市场一致指向客队,但主队主场与ELO优势形成拉力。最大风险是贝蒂斯主场反弹及波尔图预期进球未能兑现。&quot;,
+&quot;次选比分&quot;: &quot;1-2&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主1.83/平3.50/客3.36,亚盘主-1.0下主覆盖仅14%,客覆盖70%;模型-市场价值方向away&quot;,
+&quot;优势分&quot;: -3,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场对主队大胜明显不认可,亚盘深盘下客队覆盖率高,资金流向偏客队,与模型客胜方向一致,对主队不利&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;模型概率客51.1%,贝叶斯客46.5%,预期进球1.68-2.20,ELO差+105利主队&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;预期进球和模型概率指向客队进攻更强,但ELO差显示主队实力占优,两者存在张力,整体略偏客队&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 10,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报包未提供双方具体伤停信息,无法评估核心主力缺阵影响,该维度降权处理&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无数据, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;近3年交锋记录未提供,且双方阵容变化情况不明,该维度参考价值极低,降权&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场/客队7天0场,双方赛程密度相同&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 14,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方均无密集赛程压力,体能恢复充分,该维度对方向判断无明显影响&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;无有效天气情报, 已降权&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 2,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;天气侦察信息为无关内容,无法评估天气影响,权重降至最低并重新分配&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判未公布, 权重记0&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判任命未公布,无法评估执法风格,权重重新分配&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;欧冠联赛,双方积分榜分区未提供,情报未提及轮换意图&quot;,
+&quot;优势分&quot;: 1,
+&quot;权重&quot;: 18,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;欧冠赛事战意通常较高,但缺乏具体积分形势和轮换情报,主队主场作战战意略有利,但置信度低&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;波尔图预计主导控球并利用预期进球优势展开阵地进攻&quot;,
+&quot;无球&quot;: &quot;贝蒂斯需防范波尔图快速转换,后防线在高压下可能暴露空档&quot;,
+&quot;最大变量&quot;: &quot;贝蒂斯主场氛围能否抵消模型与市场一致看衰的信号&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;波尔图预期进球兑现,贝蒂斯防守未能改善&quot;,
+&quot;比分&quot;: [&quot;1-2&quot;, &quot;1-3&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;贝蒂斯主场防守稳固,波尔图进攻效率下降&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;, &quot;0-0&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;贝蒂斯利用主场优势和ELO实力差打出高效反击&quot;,
+&quot;比分&quot;: [&quot;2-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-4球&quot;,
+&quot;净胜球&quot;: &quot;客队0-1球优势&quot;,
+&quot;上半场&quot;: &quot;上半场大概率胶着,进球可能集中在下半场&quot;
+},
+&quot;触发器&quot;: [
+&quot;贝蒂斯核心前锋赛前确认缺阵,则客胜方向加强&quot;,
+&quot;波尔图中场核心伤停,则主队不败概率上升&quot;,
+&quot;临场亚盘降至主-0.5且主队水位走低,则需警惕主队方向&quot;,
+&quot;赛前出现贝蒂斯换帅或更衣室动荡新闻&quot;
+],
+&quot;反向验证&quot;: &quot;如果这场预测错了,最可能错在贝蒂斯主场作战的韧性被低估,波尔图预期进球优势未能转化为实际进球,比赛以主队小胜或平局收场&quot;
+}
+```<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主30.3% 平18.6% 客51.1%&lt;br&gt;预期进球: 1.68 - 2.20&lt;br&gt;大2.5: 68.7% | BTTS: 63.8%&lt;br&gt;贝叶斯后验: 主33.7% 平19.8% 客46.5%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 曼城]
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[裁判] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 … 阅读更多
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[裁判] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[裁判] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[裁判] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 …
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[裁判] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[裁判] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 …
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[天气] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 …
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[天气] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[天气] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[天气] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 … 阅读更多
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[天气] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[天气] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 … 阅读更多
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>曼城<span class="tvs">VS</span>巴黎圣日尔曼
+      <span style="font-size:.75rem;color:#8d99b0;">(Man City vs Paris SG)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>客胜</b> (54.4%) · 最可能比分 1-2 (9%) (非五大·仅观察)</div>
+  
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主2.06 / 平3.65 / 客2.70
+亚盘(主受1.0球): 主3.9 / 平4.1 / 客1.59
+波胆最低赔: 2-1@8.0 / 1-1@8.25 / 1-2@9.5
+模型亚盘倾向: away (价值 +21.3%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 183; | ... === 天气侦察 (未经核实, 仅供参考) === [天气] 费耶诺德 vs 科莫 来源</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: -1.4,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;巴黎客胜为最可能方向, 模型与市场均偏客, 但曼城主场及巴黎防守不确定性限制幅度; 最大风险是曼城主场反弹或巴黎轮换。&quot;,
+&quot;次选比分&quot;: &quot;1-3&quot;,
+&quot;八维&quot;: [
+{
+&quot;维度&quot;: &quot;市场&quot;,
+&quot;证据&quot;: &quot;欧赔主2.06/平3.65/客2.70; 模型-市场价值方向away; 亚盘主-1.0客覆盖77%&quot;,
+&quot;优势分&quot;: -3,
+&quot;权重&quot;: 24,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;市场与模型同向偏客, 但高margin使市场信号被折价, 客队方向资金与模型优势一致, 强化客胜方向但幅度受限。&quot;
+},
+{
+&quot;维度&quot;: &quot;状态攻防&quot;,
+&quot;证据&quot;: &quot;预期进球1.42-2.34; 模型概率客59.3%; ELO差约0&quot;,
+&quot;优势分&quot;: -2,
+&quot;权重&quot;: 22,
+&quot;置信度&quot;: &quot;中&quot;,
+&quot;研判&quot;: &quot;ELO接近但模型概率与预期进球明显偏客, 巴黎进攻效率更被看好, 曼城预期进球偏低反映进攻端信心不足。&quot;
+},
+{
+&quot;维度&quot;: &quot;阵容伤停&quot;,
+&quot;证据&quot;: &quot;自动伤停侦察仅显示曼城官网链接, 无具体伤停名单; 巴黎无数据&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 6,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报不足已降权, 无法量化核心主力缺阵影响, 不编造伤停信息。&quot;
+},
+{
+&quot;维度&quot;: &quot;交锋克制&quot;,
+&quot;证据&quot;: &quot;无近3年交锋数据&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 4,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;无数据, 已降权, 交锋克制维度不参与方向判断。&quot;
+},
+{
+&quot;维度&quot;: &quot;赛程体能&quot;,
+&quot;证据&quot;: &quot;主队7天0场 / 客队7天0场&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 16,
+&quot;置信度&quot;: &quot;高&quot;,
+&quot;研判&quot;: &quot;双方赛程密度一致且均无密集作战, 体能因素中性, 不构成方向倾斜。&quot;
+},
+{
+&quot;维度&quot;: &quot;天气场地&quot;,
+&quot;证据&quot;: &quot;天气侦察无有效比赛天气信息, 仅无关链接&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;情报未提及有效天气, 权重记0并重新分配。&quot;
+},
+{
+&quot;维度&quot;: &quot;裁判&quot;,
+&quot;证据&quot;: &quot;裁判信息侦察无本场有效任命, 仅无关内容&quot;,
+&quot;优势分&quot;: 0,
+&quot;权重&quot;: 0,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;裁判未公布, 权重记0并重新分配, 不猜测。&quot;
+},
+{
+&quot;维度&quot;: &quot;战意轮换&quot;,
+&quot;证据&quot;: &quot;欧冠积分榜未提供, 双方均无明确轮换情报&quot;,
+&quot;优势分&quot;: -1,
+&quot;权重&quot;: 20,
+&quot;置信度&quot;: &quot;低&quot;,
+&quot;研判&quot;: &quot;欧冠战意通常较高, 但缺乏具体分区与轮换信息, 只能保守给客队轻微优势, 因巴黎模型概率更高。&quot;
+}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;巴黎有球阶段预计主导控球与高位推进, 利用边路与肋部创造射门。&quot;,
+&quot;无球&quot;: &quot;曼城无球阶段需防范巴黎快速转换, 中后场回追与禁区前沿保护是风险点。&quot;,
+&quot;最大变量&quot;: &quot;曼城主场若提升高位逼抢强度, 可能打乱巴黎后场出球节奏。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {
+&quot;触发&quot;: &quot;巴黎正常发挥且曼城进攻端延续低效&quot;,
+&quot;比分&quot;: [&quot;1-2&quot;, &quot;1-3&quot;]
+},
+&quot;平局&quot;: {
+&quot;触发&quot;: &quot;曼城主场控住节奏且巴黎终结效率回落&quot;,
+&quot;比分&quot;: [&quot;1-1&quot;]
+},
+&quot;冷门&quot;: {
+&quot;触发&quot;: &quot;曼城主场高压奏效且巴黎后防失误&quot;,
+&quot;比分&quot;: [&quot;0-1&quot;]
+}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;3-4球&quot;,
+&quot;净胜球&quot;: &quot;客队1-2球优势&quot;,
+&quot;上半场&quot;: &quot;上半场可能互有攻守, 巴黎较早进入状态概率略高&quot;
+},
+&quot;触发器&quot;: [
+&quot;曼城首发出现哈兰德等核心进攻球员且状态被官方确认健康&quot;,
+&quot;巴黎首发出现明显轮换或核心缺阵&quot;,
+&quot;亚盘从主-1.0大幅调整至主-0.5或平手&quot;,
+&quot;赛前出现曼城主场天气或场地不利巴黎技术流的有效情报&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了, 最可能错在曼城主场反弹强度被低估, 巴黎客胜概率虽高但实际终结效率未达预期, 导致平局或曼城小胜。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主23.1% 平17.6% 客59.3%&lt;br&gt;预期进球: 1.42 - 2.34&lt;br&gt;大2.5: 67.7% | BTTS: 61.9%&lt;br&gt;贝叶斯后验: 主26.8% 平18.8% 客54.4%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 曼城]
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[裁判] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 … 阅读更多
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[裁判] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[裁判] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[裁判] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 …
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[裁判] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[裁判] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 …
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[天气] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 …
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[天气] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[天气] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[天气] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 … 阅读更多
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[天气] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[天气] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 … 阅读更多
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+<article class="match">
+  <header class="m-head">
+    <div class="m-teams">
+      <span class="m-league">欧冠 · 非五大</span>阿斯顿维拉<span class="tvs">VS</span>费内巴切
+      <span style="font-size:.75rem;color:#8d99b0;">(Aston Villa vs 费内巴切)</span>
+    </div>
+    <span class="m-meta">开球 03:00:00</span>
+  </header>
+  <div class="pick-line">🎯 最可能: <b>主胜</b> (69.0%) · 最可能比分 2-0 (9%) [原始2-1与让球/大小球矛盾, 已按约束修正] (非五大·仅观察)</div>
+  <div class="flags-line">⚠️ 一致性预警: BTTS 58% 与波胆前3中 2 个零封比分口径矛盾, 需交叉校验</div>
+  
+  <div class="dims">
+    <div class="dim dim-1"><div class="dim-label">① 市场视角</div><div class="dim-body">欧赔: 主1.52 / 平3.90 / 客4.65
+亚盘(主受1.0球): 主2.54 / 平3.55 / 客2.2
+波胆最低赔: 2-1@7.0 / 1-1@8.0 / 2-0@8.75
+模型亚盘倾向: home (价值 +13.4%, 信心 high)</div></div>
+    <div class="dim dim-2"><div class="dim-label">② 赛程与体能</div><div class="dim-body">近7天双方均无比赛记录 (新赛季开局/数据未覆盖)</div></div>
+    <div class="dim dim-3"><div class="dim-label">③ 伤停与停赛</div><div class="dim-body">见下方"赛前情报原始存档"(Bing自动侦察)</div></div>
+    <div class="dim dim-4"><div class="dim-label">④ 战意动机</div><div class="dim-body">积分榜暂无数据 (赛季初)</div></div>
+    <div class="dim dim-5"><div class="dim-label">⑤ 天气与场地</div><div class="dim-body">情报片段: 183; | ... === 天气侦察 (未经核实, 仅供参考) === [天气] 费耶诺德 vs 科莫 来源</div></div>
+    <div class="dim dim-6"><div class="dim-label">⑥ 历史交锋(近3年)</div><div class="dim-body">近3年无交锋记录</div></div>
+    <div class="dim dim-7"><div class="dim-label">⑦ 八维结论 + 反向验证 + 自检</div><div class="dim-body">结论: {
+&quot;方向分&quot;: 2.3,
+&quot;置信度&quot;: &quot;整体置信度: 中&quot;,
+&quot;摘要&quot;: &quot;维拉主场优势明显,模型与市场同向看主胜,核心风险是让球盘覆盖不足与零封口径矛盾。&quot;,
+&quot;次选比分&quot;: &quot;3-1&quot;,
+&quot;八维&quot;: [
+{&quot;维度&quot;:&quot;市场&quot;,&quot;证据&quot;:&quot;欧赔主1.52/平3.90/客4.65;亚盘主-1.0模型主覆盖48%&quot;,&quot;优势分&quot;:3,&quot;权重&quot;:24,&quot;置信度&quot;:&quot;高&quot;,&quot;研判&quot;:&quot;市场与模型同向看好主队,但主-1.0盘下模型覆盖未过半,说明市场对让球深度有保留,主胜但赢盘存在阻力。&quot;},
+{&quot;维度&quot;:&quot;状态攻防&quot;,&quot;证据&quot;:&quot;ELO差+109;预期进球2.58-1.07;模型主胜71.4%&quot;,&quot;优势分&quot;:4,&quot;权重&quot;:22,&quot;置信度&quot;:&quot;高&quot;,&quot;研判&quot;:&quot;ELO差超百,预期进球差明显,主队实力与状态占优,是支撑主胜方向的核心维度。&quot;},
+{&quot;维度&quot;:&quot;阵容伤停&quot;,&quot;证据&quot;:&quot;自动伤停侦察仅返回曼城官网链接,无阿斯顿维拉或费内巴切有效伤停信息&quot;,&quot;优势分&quot;:0,&quot;权重&quot;:8,&quot;置信度&quot;:&quot;低&quot;,&quot;研判&quot;:&quot;情报未提及双方具体伤停,数据严重不足已降权,不得推断核心或替补缺阵。&quot;},
+{&quot;维度&quot;:&quot;交锋克制&quot;,&quot;证据&quot;:&quot;无数据, 已降权&quot;,&quot;优势分&quot;:0,&quot;权重&quot;:4,&quot;置信度&quot;:&quot;低&quot;,&quot;研判&quot;:&quot;无近3年交锋记录,且无双方阵容变化信息,无法评估克制关系。&quot;},
+{&quot;维度&quot;:&quot;赛程体能&quot;,&quot;证据&quot;:&quot;主队7天0场/客队7天0场&quot;,&quot;优势分&quot;:0,&quot;权重&quot;:14,&quot;置信度&quot;:&quot;中&quot;,&quot;研判&quot;:&quot;双方均无密集赛程或双线消耗,体能维度无显著差异,权重按规则由天气裁判转移后略增,但对方向无贡献。&quot;},
+{&quot;维度&quot;:&quot;天气场地&quot;,&quot;证据&quot;:&quot;天气侦察返回阿斯顿维拉官网链接,无有效天气信息&quot;,&quot;优势分&quot;:0,&quot;权重&quot;:0,&quot;置信度&quot;:&quot;低&quot;,&quot;研判&quot;:&quot;情报未提及有效天气,权重记0,已按规则转移至市场/状态/赛程/战意。&quot;},
+{&quot;维度&quot;:&quot;裁判&quot;,&quot;证据&quot;:&quot;裁判信息侦察返回百度百科与官网链接,无本场裁判任命&quot;,&quot;优势分&quot;:0,&quot;权重&quot;:0,&quot;置信度&quot;:&quot;低&quot;,&quot;研判&quot;:&quot;裁判未公布,权重记0,不猜测,已按规则转移。&quot;},
+{&quot;维度&quot;:&quot;战意轮换&quot;,&quot;证据&quot;:&quot;欧冠联赛,主队为英超球队,客队为土超球队,无积分榜分区细节&quot;,&quot;优势分&quot;:2,&quot;权重&quot;:28,&quot;置信度&quot;:&quot;中&quot;,&quot;研判&quot;:&quot;欧冠小组赛阶段战意通常较高,主队有主场抢分需求,但缺乏具体轮换情报,优势分保守给正。&quot;}
+],
+&quot;战术&quot;: {
+&quot;有球&quot;: &quot;维拉作为主攻方,预计通过边路推进与中场压迫制造高预期进球机会。&quot;,
+&quot;无球&quot;: &quot;费内巴切无球阶段需警惕维拉快速转换,客队防线在高压下可能暴露空当。&quot;,
+&quot;最大变量&quot;: &quot;若维拉主力攻击手缺阵或费内巴切高效反击,可能改变净胜球幅度。&quot;
+},
+&quot;路径&quot;: {
+&quot;常规&quot;: {&quot;触发&quot;:&quot;维拉正常发挥,前30分钟取得进球或持续压制&quot;,&quot;比分&quot;:[&quot;2-0&quot;,&quot;3-0&quot;]},
+&quot;平局&quot;: {&quot;触发&quot;:&quot;费内巴切成功收缩防线,维拉久攻不下且被反击拖住&quot;,&quot;比分&quot;:[&quot;1-1&quot;,&quot;0-0&quot;]},
+&quot;冷门&quot;: {&quot;触发&quot;:&quot;费内巴切先入球且维拉进攻效率明显低于预期&quot;,&quot;比分&quot;:[&quot;0-1&quot;]}
+},
+&quot;扩展&quot;: {
+&quot;总进球&quot;: &quot;2-4球&quot;,
+&quot;净胜球&quot;: &quot;主队1-2球优势&quot;,
+&quot;上半场&quot;: &quot;上半场主队可能主导控球,形态偏向主队领先或0-0僵持。&quot;
+},
+&quot;触发器&quot;: [
+&quot;维拉核心攻击手赛前确认缺阵&quot;,
+&quot;费内巴切公布阵容无重要伤停且全主力出战&quot;,
+&quot;亚盘从主-1.0退至主-0.75&quot;,
+&quot;天气预报显示极端天气影响比赛节奏&quot;
+],
+&quot;反向验证&quot;: &quot;如果预测错了,最可能错在费内巴切防守韧性被低估,维拉预期进球未能转化为实际进球,导致平局或小比分冷门。&quot;
+}<br><br>反向验证: 暂无</div></div>
+  </div>
+  <div class="model-box"><b>模型存档参考</b> (仅供终盘对比追溯, 非投注建议)<br>模型概率: 主71.4% 平14.8% 客13.8%&lt;br&gt;预期进球: 2.58 - 1.07&lt;br&gt;大2.5: 66.6% | BTTS: 57.9%&lt;br&gt;贝叶斯后验: 主69.0% 平16.2% 客14.8%&lt;br&gt;市场融合权重: 模型 81% / 市场 19%</div>
+  <div class="intel-box"><b style="color:#8d99b0;">证据账本 · 赛前情报 (带来源与日期)</b>
+=== 自动伤停侦察 (Bing搜索摘要, 未经核实, 仅供分析师参考) ===
+[ / 曼城]
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+=== 裁判信息侦察 (未经官方确认, 仅供参考) ===
+[裁判] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[裁判] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 … 阅读更多
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[裁判] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[裁判] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[裁判] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 …
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[裁判] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[裁判] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 …
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 天气侦察 (未经核实, 仅供参考) ===
+[天气] 费耶诺德 vs 科莫
+来源:百度 › item 费 姓（中华姓氏）_百度百科 费姓，中国汉族姓氏。 费姓在全国分布较广，在宋版《百家姓》中排名第65位。 据《史记》记载，若木子孙在上古至夏朝时，已“或在 …
+来源:知乎 › question “ 费 ”字作为姓时何时念“fei”何时念“ bi ”？ - 知乎 2024年2月26日 &amp;#0183; “费”字作为姓时何时念“fei”何时念“bi”？ 以前曾经在百度上看过“费”字做姓时念做“bi”。 后来初中学《出师表》的时候 …
+[天气] LASK林茨 vs 利物浦
+来源:百度 › item › 林茨足球俱乐部 林茨足球俱乐部_百度百科 林茨足球俱乐部（外文名：）是位于奥地利上奥地利州首府林茨的足球俱乐部，成立于1908年8月7日。 俱乐部主场为可容 …
+来源:网络 lask.at › 2025年9月23日 &amp;#0183; &amp;#227; 9/5/2025
+[天气] 罗马 vs 皇家马德里
+来源:哔哩哔哩 › bangumi › play 罗马 第一季第1集-电视剧-全集-高清正版在线观看- 3 天之前 &amp;#0183; 简介： 公元前52年，罗马共和国正值鼎盛时期，执政官庞贝（里克•沃登 饰）坐守都城，盟友凯撒（塞伦•希德 …
+来源:百度 › item › 罗马帝国 罗马 帝国（公元前27年—公元1453年欧洲历史上的帝国 ... 罗马帝国（英语：；公元前27年—公元1453年），是以地中海为中心，跨越欧、亚、非三大洲的大帝国。 395年后按照 …
+[天气] 博德闪耀 vs 多特蒙德
+来源:百度 › item 搏_百度百科 【卯集中】【手部】搏 《唐韵》补各切，《集韵》《韵会》《正韵》伯各切，并音博。 《说文》：索持也。 《礼&amp;#183;月令》：孟秋务博 …
+来源:网络 moe.edu.tw › dictView.jsp &amp;lt; 博 : ㄅㄛˊ &amp;gt;辭典檢視 - 教育部《重編國語辭典修訂本》2021 2025年11月19日 &amp;#0183; 字詞:博,注音:ㄅㄛˊ,十部+10畫 共12畫 (常用字),釋義: [形] 1.廣大、眾多的意思。 《廣韻．入聲．鐸韻》：「博，廣 …
+[天气] 皇家贝蒂斯 vs 波尔图
+来源:网络 .cn 皇家 宠物食品 皇家X首爱“流浪动物救助领养医疗车”2026全新升级，打通“从救助到领养”的公益闭环 走进13城、救助3300只流浪犬猫：2026皇家X首 … 阅读更多
+来源:百度 › item › 皇家猫粮 皇家 猫粮_百度百科 皇家在中国市场与超10000家宠物医院存在合作关系，其大零售渠道线下服务近20000家宠物门店 [26] [35]。 处方粮在中国的销售占皇 …
+[天气] 曼城 vs 巴黎圣日尔曼
+来源:百度 › item › 曼彻斯特城足球俱乐部 曼彻斯特城足球俱乐部 - 百度百科 2026年9月29日 &amp;#0183; 曼彻斯特城足球俱乐部（.C.），简称曼城，绰号“蓝月亮”，成立于1880年，是一家位于英国曼彻斯 …
+来源:网络 mancity. - .C.. .C. , , fixtures, player
+[天气] 阿斯顿维拉 vs 费内巴切
+来源:百度 › item › 阿斯顿维拉足球俱乐部 阿斯顿维拉 足球俱乐部_百度百科 2025年4月16日 &amp;#0183; 阿斯顿维拉是英格兰历史最悠久的球队之一，为1888年英格兰甲级联赛及1992年英格兰足球超级联赛的创始球队。 … 阅读更多
+来源:网络 .uk | 1 天前 &amp;#0183; | ...
+=== 情报矛盾检测 (复盘经验库规则10) ===
+(本日未发现矛盾条目)</div>
+</article>
+  <div class="footer">自动生成于 2026-10-14 · 早盘分析 → 午盘分析 → 终盘预测 全程存档可追溯 · <a href="../index.html">返回首页</a></div>
+</div>
+</body>
+</html>
